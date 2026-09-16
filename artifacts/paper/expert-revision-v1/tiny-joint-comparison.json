@@ -1,0 +1,86 @@
+{
+  "artifact": "matched_parameter_two_token_joint_comparison",
+  "source_sha256": {
+    "tiny/results.json": "aff5a94c6069982855d94e8e2bf6fb8c0d8fc1cbc458fe5a6aae670f10d2832b",
+    "tiny/rank2_results.json": "3151c713fb083f04e28597837aa6b0bee50c662eb727f245e1a656918d560efd",
+    "tiny/figure_matched.json": "e4d779676a573fdc5b87cdf681dceb0e627ec94d4451e181fcf9010442ed4aeb"
+  },
+  "seed": 1,
+  "task": "opposite",
+  "panel_order": [
+    "Target",
+    "Tied factors",
+    "Separate\nendpoints",
+    "Same marginals,\nindependent draws"
+  ],
+  "panels": [
+    [
+      [
+        0.0,
+        0.5
+      ],
+      [
+        0.5,
+        0.0
+      ]
+    ],
+    [
+      [
+        0.24999982863668202,
+        0.2500000372528952
+      ],
+      [
+        0.2499999478459467,
+        0.25000018626447607
+      ]
+    ],
+    [
+      [
+        0.00012513273764698618,
+        0.5033164172814923
+      ],
+      [
+        0.4964215305844328,
+        0.0001369193964279201
+      ]
+    ],
+    [
+      [
+        0.24998222183969956,
+        0.2534593281794398
+      ],
+      [
+        0.24656444148238021,
+        0.24999400849848047
+      ]
+    ]
+  ],
+  "shared_variant": "shared_contextual_warmup",
+  "directional_variant": "directional_contextual_rank2_warmup",
+  "shared_config": {
+    "name": "shared_contextual_warmup",
+    "kind": "shared",
+    "factor_mode": "dynamic",
+    "init_std": 0.25,
+    "warmup_steps": 100
+  },
+  "directional_config": {
+    "name": "directional_contextual_rank2_warmup",
+    "kind": "directional",
+    "factor_mode": "dynamic",
+    "init_std": 0.25,
+    "warmup_steps": 100,
+    "rank": 2
+  },
+  "shared_gradient_active_parameter_count": 274,
+  "directional_gradient_active_parameter_count": 274,
+  "caption_details": "AA and BB are invalid. Both learned models use Gaussian factor initialization std=0.25, uniform frozen unaries, full vocabulary, one fixed edge, and exact likelihood training. The final panel is the exact distribution of independent draws from the directional model marginals. The seed was fixed to 1 before plotting; no examples selected.",
+  "plot_script_sha256": "b8d671baa3468ebc1526e8928a52d32c28c598e20718e4a45b0f258a8c414b6a",
+  "layout_inches": [
+    5.5,
+    2.4
+  ],
+  "minimum_font_points": 8.0,
+  "output_pdf_sha256": "ddd741666974017faa92e5b01967a25d27d5ecaa6462db6e88feed2c99e814cc",
+  "output_png_sha256": "36b312c3ba762b7a2a0bcce967cb58eb25a0aa4f13ab0cb59ac4624a4d2027d6"
+}

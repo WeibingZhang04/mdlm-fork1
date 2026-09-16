@@ -21,9 +21,9 @@ from matplotlib.lines import Line2D
 
 
 ARMS = {
-  'shared': ('Shared factors', '#697581', (0, (2, 1.6))),
-  'directional': ('Separate factors', '#0072B2', '-'),
-  'unary': ('Unary adapter', '#D55E00', (0, (5, 1.6, 1, 1.6))),
+  'shared': ('Tied factors', '#697581', (0, (2, 1.6))),
+  'directional': ('Separate endpoints', '#0072B2', '-'),
+  'unary': ('Independent adapter', '#D55E00', (0, (5, 1.6, 1, 1.6))),
 }
 NLL = 'joint_nll_per_masked_token'
 DEPENDENCE = 'dependence_gain_nats_per_masked_token'
@@ -223,6 +223,7 @@ def draw(run_dir: Path, output: Path):
     'seed': arguments.get('seed'), 'planned_updates': arguments.get('steps'),
     'backbone_nll': baselines, 'support_floor_display': floor_display,
     'plotted_curves': curves,
+    'display_labels': {name: ARMS[name][0] for name in curves},
     'dependence_definition': 'held-out log joint probability minus sum of '
       'log singleton marginals from that same model, divided by masked tokens',
     'sign': 'positive helps; negative hurts relative to the same singleton marginals',
