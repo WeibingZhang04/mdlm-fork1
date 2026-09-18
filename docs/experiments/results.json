@@ -1,0 +1,2070 @@
+{
+  "schema_version": 1,
+  "collected_utc": "2026-09-18T00:51:28.875146+00:00",
+  "protocol": {
+    "length": 1024,
+    "batch_size": 1,
+    "ccf_candidate_k": 128,
+    "reference_lm": "gpt2-large",
+    "reference_lm_revision": "32b71b12589c2f8d625668d2335a01cac3249519",
+    "ppl": "exp(total evaluator NLL / scored tokens); score through first nonleading EOS",
+    "pilot_seeds": "91001-91020",
+    "fresh_confirmation_seeds": "100001-100100",
+    "implementation": "L level-batched for CCF; factorized harness for MDLM"
+  },
+  "completed": {
+    "four_step": {
+      "configurations": 19,
+      "samples": 1900
+    },
+    "confirmation_8_16_32": {
+      "configurations": 57,
+      "samples": 5700
+    },
+    "pilot_8_16_32": {
+      "configurations": 171,
+      "samples": 3420
+    },
+    "screen_500_steps": {
+      "configurations": 33,
+      "samples": 66
+    },
+    "screen_1000_steps": {
+      "configurations": 28,
+      "samples": 140
+    }
+  },
+  "primary_100_sample_results": [
+    {
+      "study": "four-step",
+      "model": "MDLM",
+      "arm": null,
+      "code_arm": null,
+      "checkpoint": null,
+      "reverse_steps": 4,
+      "samples": 100,
+      "ppl": 1946.8793776948046,
+      "scored_tokens": 69972,
+      "seconds_per_sample": 0.07251780203543604,
+      "actual_nfe": [
+        5
+      ],
+      "pilot_selected_primary": true
+    },
+    {
+      "study": "four-step",
+      "model": "Separate R16 DD",
+      "arm": "DD",
+      "code_arm": "dynamic_dynamic",
+      "checkpoint": 6000,
+      "reverse_steps": 4,
+      "samples": 100,
+      "ppl": 1749.489803316247,
+      "scored_tokens": 73620,
+      "seconds_per_sample": 0.2752751461137086,
+      "actual_nfe": [
+        4,
+        5
+      ],
+      "pilot_selected_primary": true
+    },
+    {
+      "study": "four-step",
+      "model": "Separate R16 SD",
+      "arm": "SD",
+      "code_arm": "fixed_dynamic",
+      "checkpoint": 6000,
+      "reverse_steps": 4,
+      "samples": 100,
+      "ppl": 1582.269052470904,
+      "scored_tokens": 80776,
+      "seconds_per_sample": 0.21801261653192341,
+      "actual_nfe": [
+        4,
+        5
+      ],
+      "pilot_selected_primary": true
+    },
+    {
+      "study": "four-step",
+      "model": "Separate R8 DD",
+      "arm": "DD",
+      "code_arm": "dynamic_dynamic",
+      "checkpoint": 2000,
+      "reverse_steps": 4,
+      "samples": 100,
+      "ppl": 1680.8019220663566,
+      "scored_tokens": 73794,
+      "seconds_per_sample": 0.2672312639467418,
+      "actual_nfe": [
+        4,
+        5
+      ],
+      "pilot_selected_primary": true
+    },
+    {
+      "study": "four-step",
+      "model": "Separate R8 SD",
+      "arm": "SD",
+      "code_arm": "fixed_dynamic",
+      "checkpoint": 6000,
+      "reverse_steps": 4,
+      "samples": 100,
+      "ppl": 1632.0523465714905,
+      "scored_tokens": 74655,
+      "seconds_per_sample": 0.2148505953978747,
+      "actual_nfe": [
+        4,
+        5
+      ],
+      "pilot_selected_primary": true
+    },
+    {
+      "study": "four-step",
+      "model": "Shared R16 DD",
+      "arm": "DD",
+      "code_arm": "dynamic_dynamic",
+      "checkpoint": 3000,
+      "reverse_steps": 4,
+      "samples": 100,
+      "ppl": 1667.8672213279606,
+      "scored_tokens": 73998,
+      "seconds_per_sample": 0.269157419744879,
+      "actual_nfe": [
+        4,
+        5
+      ],
+      "pilot_selected_primary": true
+    },
+    {
+      "study": "four-step",
+      "model": "Shared R16 SD",
+      "arm": "SD",
+      "code_arm": "fixed_dynamic",
+      "checkpoint": 6000,
+      "reverse_steps": 4,
+      "samples": 100,
+      "ppl": 1623.3630665602839,
+      "scored_tokens": 71844,
+      "seconds_per_sample": 0.2197231781296432,
+      "actual_nfe": [
+        4,
+        5
+      ],
+      "pilot_selected_primary": true
+    },
+    {
+      "study": "confirmation",
+      "model": "MDLM",
+      "arm": null,
+      "code_arm": null,
+      "checkpoint": null,
+      "reverse_steps": 8,
+      "samples": 100,
+      "ppl": 815.0553937085621,
+      "scored_tokens": 60693,
+      "seconds_per_sample": 0.13183452860685066,
+      "actual_nfe": [
+        9
+      ],
+      "pilot_selected_primary": true
+    },
+    {
+      "study": "confirmation",
+      "model": "Separate R16 DD",
+      "arm": "DD",
+      "code_arm": "dynamic_dynamic",
+      "checkpoint": 6000,
+      "reverse_steps": 8,
+      "samples": 100,
+      "ppl": 664.9496136672667,
+      "scored_tokens": 66095,
+      "seconds_per_sample": 0.5476966260187328,
+      "actual_nfe": [
+        8,
+        9
+      ],
+      "pilot_selected_primary": true
+    },
+    {
+      "study": "confirmation",
+      "model": "Separate R16 SD",
+      "arm": "SD",
+      "code_arm": "fixed_dynamic",
+      "checkpoint": 6000,
+      "reverse_steps": 8,
+      "samples": 100,
+      "ppl": 605.8526645877848,
+      "scored_tokens": 62768,
+      "seconds_per_sample": 0.4091052165068686,
+      "actual_nfe": [
+        8,
+        9
+      ],
+      "pilot_selected_primary": true
+    },
+    {
+      "study": "confirmation",
+      "model": "Separate R8 DD",
+      "arm": "DD",
+      "code_arm": "dynamic_dynamic",
+      "checkpoint": 2000,
+      "reverse_steps": 8,
+      "samples": 100,
+      "ppl": 687.4454952168587,
+      "scored_tokens": 63716,
+      "seconds_per_sample": 0.5438559411349706,
+      "actual_nfe": [
+        8,
+        9
+      ],
+      "pilot_selected_primary": true
+    },
+    {
+      "study": "confirmation",
+      "model": "Separate R8 SD",
+      "arm": "SD",
+      "code_arm": "fixed_dynamic",
+      "checkpoint": 6000,
+      "reverse_steps": 8,
+      "samples": 100,
+      "ppl": 625.0343614845755,
+      "scored_tokens": 67037,
+      "seconds_per_sample": 0.4081688181497157,
+      "actual_nfe": [
+        8,
+        9
+      ],
+      "pilot_selected_primary": true
+    },
+    {
+      "study": "confirmation",
+      "model": "Shared R16 DD",
+      "arm": "DD",
+      "code_arm": "dynamic_dynamic",
+      "checkpoint": 3000,
+      "reverse_steps": 8,
+      "samples": 100,
+      "ppl": 618.9975572832183,
+      "scored_tokens": 64021,
+      "seconds_per_sample": 0.5241636425140314,
+      "actual_nfe": [
+        8,
+        9
+      ],
+      "pilot_selected_primary": true
+    },
+    {
+      "study": "confirmation",
+      "model": "Shared R16 SD",
+      "arm": "SD",
+      "code_arm": "fixed_dynamic",
+      "checkpoint": 6000,
+      "reverse_steps": 8,
+      "samples": 100,
+      "ppl": 606.686522444555,
+      "scored_tokens": 64114,
+      "seconds_per_sample": 0.41322810826823114,
+      "actual_nfe": [
+        8,
+        9
+      ],
+      "pilot_selected_primary": true
+    },
+    {
+      "study": "confirmation",
+      "model": "MDLM",
+      "arm": null,
+      "code_arm": null,
+      "checkpoint": null,
+      "reverse_steps": 16,
+      "samples": 100,
+      "ppl": 313.7835238246645,
+      "scored_tokens": 50771,
+      "seconds_per_sample": 0.20980106310918928,
+      "actual_nfe": [
+        17
+      ],
+      "pilot_selected_primary": true
+    },
+    {
+      "study": "confirmation",
+      "model": "Separate R16 DD",
+      "arm": "DD",
+      "code_arm": "dynamic_dynamic",
+      "checkpoint": 2000,
+      "reverse_steps": 16,
+      "samples": 100,
+      "ppl": 282.946640792353,
+      "scored_tokens": 46949,
+      "seconds_per_sample": 1.052552939055022,
+      "actual_nfe": [
+        16,
+        17
+      ],
+      "pilot_selected_primary": true
+    },
+    {
+      "study": "confirmation",
+      "model": "Separate R16 SD",
+      "arm": "SD",
+      "code_arm": "fixed_dynamic",
+      "checkpoint": 5000,
+      "reverse_steps": 16,
+      "samples": 100,
+      "ppl": 248.79610791583764,
+      "scored_tokens": 57907,
+      "seconds_per_sample": 0.8071850423212164,
+      "actual_nfe": [
+        16,
+        17
+      ],
+      "pilot_selected_primary": true
+    },
+    {
+      "study": "confirmation",
+      "model": "Separate R8 DD",
+      "arm": "DD",
+      "code_arm": "dynamic_dynamic",
+      "checkpoint": 6000,
+      "reverse_steps": 16,
+      "samples": 100,
+      "ppl": 276.07791669628966,
+      "scored_tokens": 54277,
+      "seconds_per_sample": 1.0820556725375354,
+      "actual_nfe": [
+        16,
+        17
+      ],
+      "pilot_selected_primary": true
+    },
+    {
+      "study": "confirmation",
+      "model": "Separate R8 SD",
+      "arm": "SD",
+      "code_arm": "fixed_dynamic",
+      "checkpoint": 5000,
+      "reverse_steps": 16,
+      "samples": 100,
+      "ppl": 248.81727474502023,
+      "scored_tokens": 54467,
+      "seconds_per_sample": 0.8409817866142839,
+      "actual_nfe": [
+        16,
+        17
+      ],
+      "pilot_selected_primary": true
+    },
+    {
+      "study": "confirmation",
+      "model": "Shared R16 DD",
+      "arm": "DD",
+      "code_arm": "dynamic_dynamic",
+      "checkpoint": 7000,
+      "reverse_steps": 16,
+      "samples": 100,
+      "ppl": 298.95913264949337,
+      "scored_tokens": 52606,
+      "seconds_per_sample": 1.0498326589306817,
+      "actual_nfe": [
+        16,
+        17
+      ],
+      "pilot_selected_primary": true
+    },
+    {
+      "study": "confirmation",
+      "model": "Shared R16 SD",
+      "arm": "SD",
+      "code_arm": "fixed_dynamic",
+      "checkpoint": 6000,
+      "reverse_steps": 16,
+      "samples": 100,
+      "ppl": 244.04992654574278,
+      "scored_tokens": 53225,
+      "seconds_per_sample": 0.8215410021925345,
+      "actual_nfe": [
+        16,
+        17
+      ],
+      "pilot_selected_primary": true
+    },
+    {
+      "study": "confirmation",
+      "model": "MDLM",
+      "arm": null,
+      "code_arm": null,
+      "checkpoint": null,
+      "reverse_steps": 32,
+      "samples": 100,
+      "ppl": 162.56253857698485,
+      "scored_tokens": 53118,
+      "seconds_per_sample": 0.40307383561506865,
+      "actual_nfe": [
+        33
+      ],
+      "pilot_selected_primary": true
+    },
+    {
+      "study": "confirmation",
+      "model": "Separate R16 DD",
+      "arm": "DD",
+      "code_arm": "dynamic_dynamic",
+      "checkpoint": 3000,
+      "reverse_steps": 32,
+      "samples": 100,
+      "ppl": 159.23860644130386,
+      "scored_tokens": 48794,
+      "seconds_per_sample": 1.913957711912226,
+      "actual_nfe": [
+        32,
+        33
+      ],
+      "pilot_selected_primary": true
+    },
+    {
+      "study": "confirmation",
+      "model": "Separate R16 SD",
+      "arm": "SD",
+      "code_arm": "fixed_dynamic",
+      "checkpoint": 3000,
+      "reverse_steps": 32,
+      "samples": 100,
+      "ppl": 150.77373185450037,
+      "scored_tokens": 48300,
+      "seconds_per_sample": 1.6562629856914282,
+      "actual_nfe": [
+        32,
+        33
+      ],
+      "pilot_selected_primary": true
+    },
+    {
+      "study": "confirmation",
+      "model": "Separate R8 DD",
+      "arm": "DD",
+      "code_arm": "dynamic_dynamic",
+      "checkpoint": 2000,
+      "reverse_steps": 32,
+      "samples": 100,
+      "ppl": 153.37159190675737,
+      "scored_tokens": 52721,
+      "seconds_per_sample": 1.9324030495766784,
+      "actual_nfe": [
+        32,
+        33
+      ],
+      "pilot_selected_primary": true
+    },
+    {
+      "study": "confirmation",
+      "model": "Separate R8 SD",
+      "arm": "SD",
+      "code_arm": "fixed_dynamic",
+      "checkpoint": 6000,
+      "reverse_steps": 32,
+      "samples": 100,
+      "ppl": 135.74277524075927,
+      "scored_tokens": 48668,
+      "seconds_per_sample": 1.602482532686554,
+      "actual_nfe": [
+        32,
+        33
+      ],
+      "pilot_selected_primary": true
+    },
+    {
+      "study": "confirmation",
+      "model": "Shared R16 DD",
+      "arm": "DD",
+      "code_arm": "dynamic_dynamic",
+      "checkpoint": 5000,
+      "reverse_steps": 32,
+      "samples": 100,
+      "ppl": 152.0405202481848,
+      "scored_tokens": 48411,
+      "seconds_per_sample": 2.1177082479628733,
+      "actual_nfe": [
+        32,
+        33
+      ],
+      "pilot_selected_primary": true
+    },
+    {
+      "study": "confirmation",
+      "model": "Shared R16 SD",
+      "arm": "SD",
+      "code_arm": "fixed_dynamic",
+      "checkpoint": 2000,
+      "reverse_steps": 32,
+      "samples": 100,
+      "ppl": 146.31798497398592,
+      "scored_tokens": 48442,
+      "seconds_per_sample": 1.6046531378431246,
+      "actual_nfe": [
+        32,
+        33
+      ],
+      "pilot_selected_primary": true
+    }
+  ],
+  "all_100_sample_results": [
+    {
+      "study": "four-step",
+      "model": "MDLM",
+      "arm": null,
+      "code_arm": null,
+      "checkpoint": null,
+      "reverse_steps": 4,
+      "samples": 100,
+      "ppl": 1946.8793776948046,
+      "scored_tokens": 69972,
+      "seconds_per_sample": 0.07251780203543604,
+      "actual_nfe": [
+        5
+      ],
+      "pilot_selected_primary": true
+    },
+    {
+      "study": "four-step",
+      "model": "Separate R16 DD",
+      "arm": "DD",
+      "code_arm": "dynamic_dynamic",
+      "checkpoint": 2000,
+      "reverse_steps": 4,
+      "samples": 100,
+      "ppl": 1733.8951590910815,
+      "scored_tokens": 70550,
+      "seconds_per_sample": 0.2755554418824613,
+      "actual_nfe": [
+        4,
+        5
+      ],
+      "pilot_selected_primary": false
+    },
+    {
+      "study": "four-step",
+      "model": "Separate R16 DD",
+      "arm": "DD",
+      "code_arm": "dynamic_dynamic",
+      "checkpoint": 3000,
+      "reverse_steps": 4,
+      "samples": 100,
+      "ppl": 1772.1700119360487,
+      "scored_tokens": 72824,
+      "seconds_per_sample": 0.2861397708207369,
+      "actual_nfe": [
+        4,
+        5
+      ],
+      "pilot_selected_primary": false
+    },
+    {
+      "study": "four-step",
+      "model": "Separate R16 DD",
+      "arm": "DD",
+      "code_arm": "dynamic_dynamic",
+      "checkpoint": 6000,
+      "reverse_steps": 4,
+      "samples": 100,
+      "ppl": 1749.489803316247,
+      "scored_tokens": 73620,
+      "seconds_per_sample": 0.2752751461137086,
+      "actual_nfe": [
+        4,
+        5
+      ],
+      "pilot_selected_primary": true
+    },
+    {
+      "study": "four-step",
+      "model": "Separate R16 SD",
+      "arm": "SD",
+      "code_arm": "fixed_dynamic",
+      "checkpoint": 2000,
+      "reverse_steps": 4,
+      "samples": 100,
+      "ppl": 1723.3268624306609,
+      "scored_tokens": 75609,
+      "seconds_per_sample": 0.21284177497029305,
+      "actual_nfe": [
+        4,
+        5
+      ],
+      "pilot_selected_primary": false
+    },
+    {
+      "study": "four-step",
+      "model": "Separate R16 SD",
+      "arm": "SD",
+      "code_arm": "fixed_dynamic",
+      "checkpoint": 5000,
+      "reverse_steps": 4,
+      "samples": 100,
+      "ppl": 1626.8289217708164,
+      "scored_tokens": 78074,
+      "seconds_per_sample": 0.21783598315902053,
+      "actual_nfe": [
+        4,
+        5
+      ],
+      "pilot_selected_primary": false
+    },
+    {
+      "study": "four-step",
+      "model": "Separate R16 SD",
+      "arm": "SD",
+      "code_arm": "fixed_dynamic",
+      "checkpoint": 6000,
+      "reverse_steps": 4,
+      "samples": 100,
+      "ppl": 1582.269052470904,
+      "scored_tokens": 80776,
+      "seconds_per_sample": 0.21801261653192341,
+      "actual_nfe": [
+        4,
+        5
+      ],
+      "pilot_selected_primary": true
+    },
+    {
+      "study": "four-step",
+      "model": "Separate R8 DD",
+      "arm": "DD",
+      "code_arm": "dynamic_dynamic",
+      "checkpoint": 2000,
+      "reverse_steps": 4,
+      "samples": 100,
+      "ppl": 1680.8019220663566,
+      "scored_tokens": 73794,
+      "seconds_per_sample": 0.2672312639467418,
+      "actual_nfe": [
+        4,
+        5
+      ],
+      "pilot_selected_primary": true
+    },
+    {
+      "study": "four-step",
+      "model": "Separate R8 DD",
+      "arm": "DD",
+      "code_arm": "dynamic_dynamic",
+      "checkpoint": 4000,
+      "reverse_steps": 4,
+      "samples": 100,
+      "ppl": 1884.154755807857,
+      "scored_tokens": 72495,
+      "seconds_per_sample": 0.28724677255377173,
+      "actual_nfe": [
+        4,
+        5
+      ],
+      "pilot_selected_primary": false
+    },
+    {
+      "study": "four-step",
+      "model": "Separate R8 DD",
+      "arm": "DD",
+      "code_arm": "dynamic_dynamic",
+      "checkpoint": 5000,
+      "reverse_steps": 4,
+      "samples": 100,
+      "ppl": 1759.752480242563,
+      "scored_tokens": 72721,
+      "seconds_per_sample": 0.2809198632556945,
+      "actual_nfe": [
+        4,
+        5
+      ],
+      "pilot_selected_primary": false
+    },
+    {
+      "study": "four-step",
+      "model": "Separate R8 SD",
+      "arm": "SD",
+      "code_arm": "fixed_dynamic",
+      "checkpoint": 1000,
+      "reverse_steps": 4,
+      "samples": 100,
+      "ppl": 1681.318914954641,
+      "scored_tokens": 74032,
+      "seconds_per_sample": 0.2247573847975582,
+      "actual_nfe": [
+        4,
+        5
+      ],
+      "pilot_selected_primary": false
+    },
+    {
+      "study": "four-step",
+      "model": "Separate R8 SD",
+      "arm": "SD",
+      "code_arm": "fixed_dynamic",
+      "checkpoint": 3000,
+      "reverse_steps": 4,
+      "samples": 100,
+      "ppl": 1688.6641550345419,
+      "scored_tokens": 75583,
+      "seconds_per_sample": 0.21991392233408988,
+      "actual_nfe": [
+        4,
+        5
+      ],
+      "pilot_selected_primary": false
+    },
+    {
+      "study": "four-step",
+      "model": "Separate R8 SD",
+      "arm": "SD",
+      "code_arm": "fixed_dynamic",
+      "checkpoint": 6000,
+      "reverse_steps": 4,
+      "samples": 100,
+      "ppl": 1632.0523465714905,
+      "scored_tokens": 74655,
+      "seconds_per_sample": 0.2148505953978747,
+      "actual_nfe": [
+        4,
+        5
+      ],
+      "pilot_selected_primary": true
+    },
+    {
+      "study": "four-step",
+      "model": "Shared R16 DD",
+      "arm": "DD",
+      "code_arm": "dynamic_dynamic",
+      "checkpoint": 3000,
+      "reverse_steps": 4,
+      "samples": 100,
+      "ppl": 1667.8672213279606,
+      "scored_tokens": 73998,
+      "seconds_per_sample": 0.269157419744879,
+      "actual_nfe": [
+        4,
+        5
+      ],
+      "pilot_selected_primary": true
+    },
+    {
+      "study": "four-step",
+      "model": "Shared R16 DD",
+      "arm": "DD",
+      "code_arm": "dynamic_dynamic",
+      "checkpoint": 5000,
+      "reverse_steps": 4,
+      "samples": 100,
+      "ppl": 1705.6348037426155,
+      "scored_tokens": 74765,
+      "seconds_per_sample": 0.2786055037006736,
+      "actual_nfe": [
+        4,
+        5
+      ],
+      "pilot_selected_primary": false
+    },
+    {
+      "study": "four-step",
+      "model": "Shared R16 DD",
+      "arm": "DD",
+      "code_arm": "dynamic_dynamic",
+      "checkpoint": 7000,
+      "reverse_steps": 4,
+      "samples": 100,
+      "ppl": 1858.687851251616,
+      "scored_tokens": 73280,
+      "seconds_per_sample": 0.281097822887823,
+      "actual_nfe": [
+        4,
+        5
+      ],
+      "pilot_selected_primary": false
+    },
+    {
+      "study": "four-step",
+      "model": "Shared R16 SD",
+      "arm": "SD",
+      "code_arm": "fixed_dynamic",
+      "checkpoint": 3000,
+      "reverse_steps": 4,
+      "samples": 100,
+      "ppl": 1709.24946967371,
+      "scored_tokens": 74405,
+      "seconds_per_sample": 0.21389554989524184,
+      "actual_nfe": [
+        4,
+        5
+      ],
+      "pilot_selected_primary": false
+    },
+    {
+      "study": "four-step",
+      "model": "Shared R16 SD",
+      "arm": "SD",
+      "code_arm": "fixed_dynamic",
+      "checkpoint": 4000,
+      "reverse_steps": 4,
+      "samples": 100,
+      "ppl": 1618.6359593536354,
+      "scored_tokens": 75410,
+      "seconds_per_sample": 0.21533893438987434,
+      "actual_nfe": [
+        4,
+        5
+      ],
+      "pilot_selected_primary": false
+    },
+    {
+      "study": "four-step",
+      "model": "Shared R16 SD",
+      "arm": "SD",
+      "code_arm": "fixed_dynamic",
+      "checkpoint": 6000,
+      "reverse_steps": 4,
+      "samples": 100,
+      "ppl": 1623.3630665602839,
+      "scored_tokens": 71844,
+      "seconds_per_sample": 0.2197231781296432,
+      "actual_nfe": [
+        4,
+        5
+      ],
+      "pilot_selected_primary": true
+    },
+    {
+      "study": "confirmation",
+      "model": "MDLM",
+      "arm": null,
+      "code_arm": null,
+      "checkpoint": null,
+      "reverse_steps": 8,
+      "samples": 100,
+      "ppl": 815.0553937085621,
+      "scored_tokens": 60693,
+      "seconds_per_sample": 0.13183452860685066,
+      "actual_nfe": [
+        9
+      ],
+      "pilot_selected_primary": true
+    },
+    {
+      "study": "confirmation",
+      "model": "Separate R16 DD",
+      "arm": "DD",
+      "code_arm": "dynamic_dynamic",
+      "checkpoint": 2000,
+      "reverse_steps": 8,
+      "samples": 100,
+      "ppl": 686.5712736740597,
+      "scored_tokens": 59684,
+      "seconds_per_sample": 0.5308725532190874,
+      "actual_nfe": [
+        8,
+        9
+      ],
+      "pilot_selected_primary": false
+    },
+    {
+      "study": "confirmation",
+      "model": "Separate R16 DD",
+      "arm": "DD",
+      "code_arm": "dynamic_dynamic",
+      "checkpoint": 3000,
+      "reverse_steps": 8,
+      "samples": 100,
+      "ppl": 710.3449901932262,
+      "scored_tokens": 66808,
+      "seconds_per_sample": 0.5305861157481558,
+      "actual_nfe": [
+        8,
+        9
+      ],
+      "pilot_selected_primary": false
+    },
+    {
+      "study": "confirmation",
+      "model": "Separate R16 DD",
+      "arm": "DD",
+      "code_arm": "dynamic_dynamic",
+      "checkpoint": 6000,
+      "reverse_steps": 8,
+      "samples": 100,
+      "ppl": 664.9496136672667,
+      "scored_tokens": 66095,
+      "seconds_per_sample": 0.5476966260187328,
+      "actual_nfe": [
+        8,
+        9
+      ],
+      "pilot_selected_primary": true
+    },
+    {
+      "study": "confirmation",
+      "model": "Separate R16 SD",
+      "arm": "SD",
+      "code_arm": "fixed_dynamic",
+      "checkpoint": 2000,
+      "reverse_steps": 8,
+      "samples": 100,
+      "ppl": 696.3746099001312,
+      "scored_tokens": 63471,
+      "seconds_per_sample": 0.4128926008241251,
+      "actual_nfe": [
+        8,
+        9
+      ],
+      "pilot_selected_primary": false
+    },
+    {
+      "study": "confirmation",
+      "model": "Separate R16 SD",
+      "arm": "SD",
+      "code_arm": "fixed_dynamic",
+      "checkpoint": 5000,
+      "reverse_steps": 8,
+      "samples": 100,
+      "ppl": 613.0878161077002,
+      "scored_tokens": 59269,
+      "seconds_per_sample": 0.434322650663089,
+      "actual_nfe": [
+        8,
+        9
+      ],
+      "pilot_selected_primary": false
+    },
+    {
+      "study": "confirmation",
+      "model": "Separate R16 SD",
+      "arm": "SD",
+      "code_arm": "fixed_dynamic",
+      "checkpoint": 6000,
+      "reverse_steps": 8,
+      "samples": 100,
+      "ppl": 605.8526645877848,
+      "scored_tokens": 62768,
+      "seconds_per_sample": 0.4091052165068686,
+      "actual_nfe": [
+        8,
+        9
+      ],
+      "pilot_selected_primary": true
+    },
+    {
+      "study": "confirmation",
+      "model": "Separate R8 DD",
+      "arm": "DD",
+      "code_arm": "dynamic_dynamic",
+      "checkpoint": 2000,
+      "reverse_steps": 8,
+      "samples": 100,
+      "ppl": 687.4454952168587,
+      "scored_tokens": 63716,
+      "seconds_per_sample": 0.5438559411349706,
+      "actual_nfe": [
+        8,
+        9
+      ],
+      "pilot_selected_primary": true
+    },
+    {
+      "study": "confirmation",
+      "model": "Separate R8 DD",
+      "arm": "DD",
+      "code_arm": "dynamic_dynamic",
+      "checkpoint": 4000,
+      "reverse_steps": 8,
+      "samples": 100,
+      "ppl": 734.9257354095469,
+      "scored_tokens": 63092,
+      "seconds_per_sample": 0.5249540513893589,
+      "actual_nfe": [
+        8,
+        9
+      ],
+      "pilot_selected_primary": false
+    },
+    {
+      "study": "confirmation",
+      "model": "Separate R8 DD",
+      "arm": "DD",
+      "code_arm": "dynamic_dynamic",
+      "checkpoint": 5000,
+      "reverse_steps": 8,
+      "samples": 100,
+      "ppl": 677.0012329444778,
+      "scored_tokens": 65569,
+      "seconds_per_sample": 0.5309186894213781,
+      "actual_nfe": [
+        8,
+        9
+      ],
+      "pilot_selected_primary": false
+    },
+    {
+      "study": "confirmation",
+      "model": "Separate R8 SD",
+      "arm": "SD",
+      "code_arm": "fixed_dynamic",
+      "checkpoint": 1000,
+      "reverse_steps": 8,
+      "samples": 100,
+      "ppl": 712.5774514888949,
+      "scored_tokens": 62344,
+      "seconds_per_sample": 0.41082376121310515,
+      "actual_nfe": [
+        8,
+        9
+      ],
+      "pilot_selected_primary": false
+    },
+    {
+      "study": "confirmation",
+      "model": "Separate R8 SD",
+      "arm": "SD",
+      "code_arm": "fixed_dynamic",
+      "checkpoint": 3000,
+      "reverse_steps": 8,
+      "samples": 100,
+      "ppl": 659.6316043346393,
+      "scored_tokens": 59934,
+      "seconds_per_sample": 0.4103734709881246,
+      "actual_nfe": [
+        8,
+        9
+      ],
+      "pilot_selected_primary": false
+    },
+    {
+      "study": "confirmation",
+      "model": "Separate R8 SD",
+      "arm": "SD",
+      "code_arm": "fixed_dynamic",
+      "checkpoint": 6000,
+      "reverse_steps": 8,
+      "samples": 100,
+      "ppl": 625.0343614845755,
+      "scored_tokens": 67037,
+      "seconds_per_sample": 0.4081688181497157,
+      "actual_nfe": [
+        8,
+        9
+      ],
+      "pilot_selected_primary": true
+    },
+    {
+      "study": "confirmation",
+      "model": "Shared R16 DD",
+      "arm": "DD",
+      "code_arm": "dynamic_dynamic",
+      "checkpoint": 3000,
+      "reverse_steps": 8,
+      "samples": 100,
+      "ppl": 618.9975572832183,
+      "scored_tokens": 64021,
+      "seconds_per_sample": 0.5241636425140314,
+      "actual_nfe": [
+        8,
+        9
+      ],
+      "pilot_selected_primary": true
+    },
+    {
+      "study": "confirmation",
+      "model": "Shared R16 DD",
+      "arm": "DD",
+      "code_arm": "dynamic_dynamic",
+      "checkpoint": 5000,
+      "reverse_steps": 8,
+      "samples": 100,
+      "ppl": 673.3005443897522,
+      "scored_tokens": 64569,
+      "seconds_per_sample": 0.5271162141673267,
+      "actual_nfe": [
+        8,
+        9
+      ],
+      "pilot_selected_primary": false
+    },
+    {
+      "study": "confirmation",
+      "model": "Shared R16 DD",
+      "arm": "DD",
+      "code_arm": "dynamic_dynamic",
+      "checkpoint": 7000,
+      "reverse_steps": 8,
+      "samples": 100,
+      "ppl": 719.3017685619483,
+      "scored_tokens": 64591,
+      "seconds_per_sample": 0.5236601464869455,
+      "actual_nfe": [
+        8,
+        9
+      ],
+      "pilot_selected_primary": false
+    },
+    {
+      "study": "confirmation",
+      "model": "Shared R16 SD",
+      "arm": "SD",
+      "code_arm": "fixed_dynamic",
+      "checkpoint": 3000,
+      "reverse_steps": 8,
+      "samples": 100,
+      "ppl": 691.4325927023973,
+      "scored_tokens": 66367,
+      "seconds_per_sample": 0.4246535824751481,
+      "actual_nfe": [
+        8,
+        9
+      ],
+      "pilot_selected_primary": false
+    },
+    {
+      "study": "confirmation",
+      "model": "Shared R16 SD",
+      "arm": "SD",
+      "code_arm": "fixed_dynamic",
+      "checkpoint": 4000,
+      "reverse_steps": 8,
+      "samples": 100,
+      "ppl": 633.0118958402289,
+      "scored_tokens": 68805,
+      "seconds_per_sample": 0.4053704192931764,
+      "actual_nfe": [
+        8,
+        9
+      ],
+      "pilot_selected_primary": false
+    },
+    {
+      "study": "confirmation",
+      "model": "Shared R16 SD",
+      "arm": "SD",
+      "code_arm": "fixed_dynamic",
+      "checkpoint": 6000,
+      "reverse_steps": 8,
+      "samples": 100,
+      "ppl": 606.686522444555,
+      "scored_tokens": 64114,
+      "seconds_per_sample": 0.41322810826823114,
+      "actual_nfe": [
+        8,
+        9
+      ],
+      "pilot_selected_primary": true
+    },
+    {
+      "study": "confirmation",
+      "model": "MDLM",
+      "arm": null,
+      "code_arm": null,
+      "checkpoint": null,
+      "reverse_steps": 16,
+      "samples": 100,
+      "ppl": 313.7835238246645,
+      "scored_tokens": 50771,
+      "seconds_per_sample": 0.20980106310918928,
+      "actual_nfe": [
+        17
+      ],
+      "pilot_selected_primary": true
+    },
+    {
+      "study": "confirmation",
+      "model": "Separate R16 DD",
+      "arm": "DD",
+      "code_arm": "dynamic_dynamic",
+      "checkpoint": 2000,
+      "reverse_steps": 16,
+      "samples": 100,
+      "ppl": 282.946640792353,
+      "scored_tokens": 46949,
+      "seconds_per_sample": 1.052552939055022,
+      "actual_nfe": [
+        16,
+        17
+      ],
+      "pilot_selected_primary": true
+    },
+    {
+      "study": "confirmation",
+      "model": "Separate R16 DD",
+      "arm": "DD",
+      "code_arm": "dynamic_dynamic",
+      "checkpoint": 5000,
+      "reverse_steps": 16,
+      "samples": 100,
+      "ppl": 266.62851067745555,
+      "scored_tokens": 54515,
+      "seconds_per_sample": 1.087059184552636,
+      "actual_nfe": [
+        16,
+        17
+      ],
+      "pilot_selected_primary": false
+    },
+    {
+      "study": "confirmation",
+      "model": "Separate R16 DD",
+      "arm": "DD",
+      "code_arm": "dynamic_dynamic",
+      "checkpoint": 6000,
+      "reverse_steps": 16,
+      "samples": 100,
+      "ppl": 265.50858858966694,
+      "scored_tokens": 56095,
+      "seconds_per_sample": 1.0656458062934688,
+      "actual_nfe": [
+        16,
+        17
+      ],
+      "pilot_selected_primary": false
+    },
+    {
+      "study": "confirmation",
+      "model": "Separate R16 SD",
+      "arm": "SD",
+      "code_arm": "fixed_dynamic",
+      "checkpoint": 1000,
+      "reverse_steps": 16,
+      "samples": 100,
+      "ppl": 281.2106701836193,
+      "scored_tokens": 51214,
+      "seconds_per_sample": 0.8231570101110265,
+      "actual_nfe": [
+        16,
+        17
+      ],
+      "pilot_selected_primary": false
+    },
+    {
+      "study": "confirmation",
+      "model": "Separate R16 SD",
+      "arm": "SD",
+      "code_arm": "fixed_dynamic",
+      "checkpoint": 5000,
+      "reverse_steps": 16,
+      "samples": 100,
+      "ppl": 248.79610791583764,
+      "scored_tokens": 57907,
+      "seconds_per_sample": 0.8071850423212164,
+      "actual_nfe": [
+        16,
+        17
+      ],
+      "pilot_selected_primary": true
+    },
+    {
+      "study": "confirmation",
+      "model": "Separate R16 SD",
+      "arm": "SD",
+      "code_arm": "fixed_dynamic",
+      "checkpoint": 6000,
+      "reverse_steps": 16,
+      "samples": 100,
+      "ppl": 253.09708094822054,
+      "scored_tokens": 52070,
+      "seconds_per_sample": 0.8181815091962926,
+      "actual_nfe": [
+        16,
+        17
+      ],
+      "pilot_selected_primary": false
+    },
+    {
+      "study": "confirmation",
+      "model": "Separate R8 DD",
+      "arm": "DD",
+      "code_arm": "dynamic_dynamic",
+      "checkpoint": 4000,
+      "reverse_steps": 16,
+      "samples": 100,
+      "ppl": 300.1419209035179,
+      "scored_tokens": 51828,
+      "seconds_per_sample": 1.0609002283844164,
+      "actual_nfe": [
+        16,
+        17
+      ],
+      "pilot_selected_primary": false
+    },
+    {
+      "study": "confirmation",
+      "model": "Separate R8 DD",
+      "arm": "DD",
+      "code_arm": "dynamic_dynamic",
+      "checkpoint": 5000,
+      "reverse_steps": 16,
+      "samples": 100,
+      "ppl": 255.0378729197812,
+      "scored_tokens": 47410,
+      "seconds_per_sample": 1.076603336322587,
+      "actual_nfe": [
+        16,
+        17
+      ],
+      "pilot_selected_primary": false
+    },
+    {
+      "study": "confirmation",
+      "model": "Separate R8 DD",
+      "arm": "DD",
+      "code_arm": "dynamic_dynamic",
+      "checkpoint": 6000,
+      "reverse_steps": 16,
+      "samples": 100,
+      "ppl": 276.07791669628966,
+      "scored_tokens": 54277,
+      "seconds_per_sample": 1.0820556725375354,
+      "actual_nfe": [
+        16,
+        17
+      ],
+      "pilot_selected_primary": true
+    },
+    {
+      "study": "confirmation",
+      "model": "Separate R8 SD",
+      "arm": "SD",
+      "code_arm": "fixed_dynamic",
+      "checkpoint": 1000,
+      "reverse_steps": 16,
+      "samples": 100,
+      "ppl": 276.5477625805478,
+      "scored_tokens": 50457,
+      "seconds_per_sample": 0.8079760171705856,
+      "actual_nfe": [
+        16,
+        17
+      ],
+      "pilot_selected_primary": false
+    },
+    {
+      "study": "confirmation",
+      "model": "Separate R8 SD",
+      "arm": "SD",
+      "code_arm": "fixed_dynamic",
+      "checkpoint": 5000,
+      "reverse_steps": 16,
+      "samples": 100,
+      "ppl": 248.81727474502023,
+      "scored_tokens": 54467,
+      "seconds_per_sample": 0.8409817866142839,
+      "actual_nfe": [
+        16,
+        17
+      ],
+      "pilot_selected_primary": true
+    },
+    {
+      "study": "confirmation",
+      "model": "Separate R8 SD",
+      "arm": "SD",
+      "code_arm": "fixed_dynamic",
+      "checkpoint": 6000,
+      "reverse_steps": 16,
+      "samples": 100,
+      "ppl": 259.49846938324873,
+      "scored_tokens": 57076,
+      "seconds_per_sample": 0.8305023049353621,
+      "actual_nfe": [
+        16,
+        17
+      ],
+      "pilot_selected_primary": false
+    },
+    {
+      "study": "confirmation",
+      "model": "Shared R16 DD",
+      "arm": "DD",
+      "code_arm": "dynamic_dynamic",
+      "checkpoint": 3000,
+      "reverse_steps": 16,
+      "samples": 100,
+      "ppl": 264.12299837705467,
+      "scored_tokens": 57568,
+      "seconds_per_sample": 1.0761202870891429,
+      "actual_nfe": [
+        16,
+        17
+      ],
+      "pilot_selected_primary": false
+    },
+    {
+      "study": "confirmation",
+      "model": "Shared R16 DD",
+      "arm": "DD",
+      "code_arm": "dynamic_dynamic",
+      "checkpoint": 6000,
+      "reverse_steps": 16,
+      "samples": 100,
+      "ppl": 280.1819344518976,
+      "scored_tokens": 51699,
+      "seconds_per_sample": 1.051880996648688,
+      "actual_nfe": [
+        16,
+        17
+      ],
+      "pilot_selected_primary": false
+    },
+    {
+      "study": "confirmation",
+      "model": "Shared R16 DD",
+      "arm": "DD",
+      "code_arm": "dynamic_dynamic",
+      "checkpoint": 7000,
+      "reverse_steps": 16,
+      "samples": 100,
+      "ppl": 298.95913264949337,
+      "scored_tokens": 52606,
+      "seconds_per_sample": 1.0498326589306817,
+      "actual_nfe": [
+        16,
+        17
+      ],
+      "pilot_selected_primary": true
+    },
+    {
+      "study": "confirmation",
+      "model": "Shared R16 SD",
+      "arm": "SD",
+      "code_arm": "fixed_dynamic",
+      "checkpoint": 4000,
+      "reverse_steps": 16,
+      "samples": 100,
+      "ppl": 267.9944609774246,
+      "scored_tokens": 51350,
+      "seconds_per_sample": 0.8352311704168096,
+      "actual_nfe": [
+        16,
+        17
+      ],
+      "pilot_selected_primary": false
+    },
+    {
+      "study": "confirmation",
+      "model": "Shared R16 SD",
+      "arm": "SD",
+      "code_arm": "fixed_dynamic",
+      "checkpoint": 5000,
+      "reverse_steps": 16,
+      "samples": 100,
+      "ppl": 256.36175024706745,
+      "scored_tokens": 46214,
+      "seconds_per_sample": 0.8118721640552394,
+      "actual_nfe": [
+        16,
+        17
+      ],
+      "pilot_selected_primary": false
+    },
+    {
+      "study": "confirmation",
+      "model": "Shared R16 SD",
+      "arm": "SD",
+      "code_arm": "fixed_dynamic",
+      "checkpoint": 6000,
+      "reverse_steps": 16,
+      "samples": 100,
+      "ppl": 244.04992654574278,
+      "scored_tokens": 53225,
+      "seconds_per_sample": 0.8215410021925345,
+      "actual_nfe": [
+        16,
+        17
+      ],
+      "pilot_selected_primary": true
+    },
+    {
+      "study": "confirmation",
+      "model": "MDLM",
+      "arm": null,
+      "code_arm": null,
+      "checkpoint": null,
+      "reverse_steps": 32,
+      "samples": 100,
+      "ppl": 162.56253857698485,
+      "scored_tokens": 53118,
+      "seconds_per_sample": 0.40307383561506865,
+      "actual_nfe": [
+        33
+      ],
+      "pilot_selected_primary": true
+    },
+    {
+      "study": "confirmation",
+      "model": "Separate R16 DD",
+      "arm": "DD",
+      "code_arm": "dynamic_dynamic",
+      "checkpoint": 2000,
+      "reverse_steps": 32,
+      "samples": 100,
+      "ppl": 140.84115448912834,
+      "scored_tokens": 49825,
+      "seconds_per_sample": 2.2540326438937335,
+      "actual_nfe": [
+        32,
+        33
+      ],
+      "pilot_selected_primary": false
+    },
+    {
+      "study": "confirmation",
+      "model": "Separate R16 DD",
+      "arm": "DD",
+      "code_arm": "dynamic_dynamic",
+      "checkpoint": 3000,
+      "reverse_steps": 32,
+      "samples": 100,
+      "ppl": 159.23860644130386,
+      "scored_tokens": 48794,
+      "seconds_per_sample": 1.913957711912226,
+      "actual_nfe": [
+        32,
+        33
+      ],
+      "pilot_selected_primary": true
+    },
+    {
+      "study": "confirmation",
+      "model": "Separate R16 DD",
+      "arm": "DD",
+      "code_arm": "dynamic_dynamic",
+      "checkpoint": 6000,
+      "reverse_steps": 32,
+      "samples": 100,
+      "ppl": 156.0507933801888,
+      "scored_tokens": 53979,
+      "seconds_per_sample": 1.8965437806572298,
+      "actual_nfe": [
+        32,
+        33
+      ],
+      "pilot_selected_primary": false
+    },
+    {
+      "study": "confirmation",
+      "model": "Separate R16 SD",
+      "arm": "SD",
+      "code_arm": "fixed_dynamic",
+      "checkpoint": 3000,
+      "reverse_steps": 32,
+      "samples": 100,
+      "ppl": 150.77373185450037,
+      "scored_tokens": 48300,
+      "seconds_per_sample": 1.6562629856914282,
+      "actual_nfe": [
+        32,
+        33
+      ],
+      "pilot_selected_primary": true
+    },
+    {
+      "study": "confirmation",
+      "model": "Separate R16 SD",
+      "arm": "SD",
+      "code_arm": "fixed_dynamic",
+      "checkpoint": 5000,
+      "reverse_steps": 32,
+      "samples": 100,
+      "ppl": 133.42990654099248,
+      "scored_tokens": 50781,
+      "seconds_per_sample": 1.6822775561828167,
+      "actual_nfe": [
+        32,
+        33
+      ],
+      "pilot_selected_primary": false
+    },
+    {
+      "study": "confirmation",
+      "model": "Separate R16 SD",
+      "arm": "SD",
+      "code_arm": "fixed_dynamic",
+      "checkpoint": 6000,
+      "reverse_steps": 32,
+      "samples": 100,
+      "ppl": 142.39940064363495,
+      "scored_tokens": 50843,
+      "seconds_per_sample": 1.4947649252193513,
+      "actual_nfe": [
+        32,
+        33
+      ],
+      "pilot_selected_primary": false
+    },
+    {
+      "study": "confirmation",
+      "model": "Separate R8 DD",
+      "arm": "DD",
+      "code_arm": "dynamic_dynamic",
+      "checkpoint": 2000,
+      "reverse_steps": 32,
+      "samples": 100,
+      "ppl": 153.37159190675737,
+      "scored_tokens": 52721,
+      "seconds_per_sample": 1.9324030495766784,
+      "actual_nfe": [
+        32,
+        33
+      ],
+      "pilot_selected_primary": true
+    },
+    {
+      "study": "confirmation",
+      "model": "Separate R8 DD",
+      "arm": "DD",
+      "code_arm": "dynamic_dynamic",
+      "checkpoint": 4000,
+      "reverse_steps": 32,
+      "samples": 100,
+      "ppl": 161.10410107871672,
+      "scored_tokens": 51812,
+      "seconds_per_sample": 1.8972101030539488,
+      "actual_nfe": [
+        32,
+        33
+      ],
+      "pilot_selected_primary": false
+    },
+    {
+      "study": "confirmation",
+      "model": "Separate R8 DD",
+      "arm": "DD",
+      "code_arm": "dynamic_dynamic",
+      "checkpoint": 6000,
+      "reverse_steps": 32,
+      "samples": 100,
+      "ppl": 158.63584387787108,
+      "scored_tokens": 51555,
+      "seconds_per_sample": 2.261651202542707,
+      "actual_nfe": [
+        32,
+        33
+      ],
+      "pilot_selected_primary": false
+    },
+    {
+      "study": "confirmation",
+      "model": "Separate R8 SD",
+      "arm": "SD",
+      "code_arm": "fixed_dynamic",
+      "checkpoint": 2000,
+      "reverse_steps": 32,
+      "samples": 100,
+      "ppl": 158.4940586930045,
+      "scored_tokens": 49294,
+      "seconds_per_sample": 1.677457025172189,
+      "actual_nfe": [
+        32,
+        33
+      ],
+      "pilot_selected_primary": false
+    },
+    {
+      "study": "confirmation",
+      "model": "Separate R8 SD",
+      "arm": "SD",
+      "code_arm": "fixed_dynamic",
+      "checkpoint": 3000,
+      "reverse_steps": 32,
+      "samples": 100,
+      "ppl": 152.95015552683248,
+      "scored_tokens": 48502,
+      "seconds_per_sample": 1.57047801139066,
+      "actual_nfe": [
+        32,
+        33
+      ],
+      "pilot_selected_primary": false
+    },
+    {
+      "study": "confirmation",
+      "model": "Separate R8 SD",
+      "arm": "SD",
+      "code_arm": "fixed_dynamic",
+      "checkpoint": 6000,
+      "reverse_steps": 32,
+      "samples": 100,
+      "ppl": 135.74277524075927,
+      "scored_tokens": 48668,
+      "seconds_per_sample": 1.602482532686554,
+      "actual_nfe": [
+        32,
+        33
+      ],
+      "pilot_selected_primary": true
+    },
+    {
+      "study": "confirmation",
+      "model": "Shared R16 DD",
+      "arm": "DD",
+      "code_arm": "dynamic_dynamic",
+      "checkpoint": 3000,
+      "reverse_steps": 32,
+      "samples": 100,
+      "ppl": 145.68314624610835,
+      "scored_tokens": 55213,
+      "seconds_per_sample": 2.1207844838569874,
+      "actual_nfe": [
+        32,
+        33
+      ],
+      "pilot_selected_primary": false
+    },
+    {
+      "study": "confirmation",
+      "model": "Shared R16 DD",
+      "arm": "DD",
+      "code_arm": "dynamic_dynamic",
+      "checkpoint": 5000,
+      "reverse_steps": 32,
+      "samples": 100,
+      "ppl": 152.0405202481848,
+      "scored_tokens": 48411,
+      "seconds_per_sample": 2.1177082479628733,
+      "actual_nfe": [
+        32,
+        33
+      ],
+      "pilot_selected_primary": true
+    },
+    {
+      "study": "confirmation",
+      "model": "Shared R16 DD",
+      "arm": "DD",
+      "code_arm": "dynamic_dynamic",
+      "checkpoint": 6000,
+      "reverse_steps": 32,
+      "samples": 100,
+      "ppl": 150.84115660328493,
+      "scored_tokens": 47010,
+      "seconds_per_sample": 2.095918233667035,
+      "actual_nfe": [
+        32,
+        33
+      ],
+      "pilot_selected_primary": false
+    },
+    {
+      "study": "confirmation",
+      "model": "Shared R16 SD",
+      "arm": "SD",
+      "code_arm": "fixed_dynamic",
+      "checkpoint": 2000,
+      "reverse_steps": 32,
+      "samples": 100,
+      "ppl": 146.31798497398592,
+      "scored_tokens": 48442,
+      "seconds_per_sample": 1.6046531378431246,
+      "actual_nfe": [
+        32,
+        33
+      ],
+      "pilot_selected_primary": true
+    },
+    {
+      "study": "confirmation",
+      "model": "Shared R16 SD",
+      "arm": "SD",
+      "code_arm": "fixed_dynamic",
+      "checkpoint": 3000,
+      "reverse_steps": 32,
+      "samples": 100,
+      "ppl": 148.93145871495588,
+      "scored_tokens": 49221,
+      "seconds_per_sample": 1.662043350043241,
+      "actual_nfe": [
+        32,
+        33
+      ],
+      "pilot_selected_primary": false
+    },
+    {
+      "study": "confirmation",
+      "model": "Shared R16 SD",
+      "arm": "SD",
+      "code_arm": "fixed_dynamic",
+      "checkpoint": 6000,
+      "reverse_steps": 32,
+      "samples": 100,
+      "ppl": 133.4155291333702,
+      "scored_tokens": 50867,
+      "seconds_per_sample": 1.6082507320865989,
+      "actual_nfe": [
+        32,
+        33
+      ],
+      "pilot_selected_primary": false
+    }
+  ],
+  "pilot_best_observed": [
+    {
+      "model": "MDLM",
+      "checkpoint": null,
+      "reverse_steps": 8,
+      "samples": 20,
+      "ppl": 929.7529905152336,
+      "selection_note": "minimum on the same 20 pilot samples; exploratory"
+    },
+    {
+      "model": "MDLM",
+      "checkpoint": null,
+      "reverse_steps": 16,
+      "samples": 20,
+      "ppl": 311.7825222652105,
+      "selection_note": "minimum on the same 20 pilot samples; exploratory"
+    },
+    {
+      "model": "MDLM",
+      "checkpoint": null,
+      "reverse_steps": 32,
+      "samples": 20,
+      "ppl": 136.3403076136824,
+      "selection_note": "minimum on the same 20 pilot samples; exploratory"
+    },
+    {
+      "model": "Separate R16 DD",
+      "checkpoint": 6000,
+      "reverse_steps": 8,
+      "samples": 20,
+      "ppl": 638.4029243782111,
+      "selection_note": "minimum on the same 20 pilot samples; exploratory"
+    },
+    {
+      "model": "Separate R16 DD",
+      "checkpoint": 2000,
+      "reverse_steps": 16,
+      "samples": 20,
+      "ppl": 277.2881054489368,
+      "selection_note": "minimum on the same 20 pilot samples; exploratory"
+    },
+    {
+      "model": "Separate R16 DD",
+      "checkpoint": 3000,
+      "reverse_steps": 32,
+      "samples": 20,
+      "ppl": 151.60227818170208,
+      "selection_note": "minimum on the same 20 pilot samples; exploratory"
+    },
+    {
+      "model": "Separate R16 SD",
+      "checkpoint": 6000,
+      "reverse_steps": 8,
+      "samples": 20,
+      "ppl": 665.8148837202075,
+      "selection_note": "minimum on the same 20 pilot samples; exploratory"
+    },
+    {
+      "model": "Separate R16 SD",
+      "checkpoint": 5000,
+      "reverse_steps": 16,
+      "samples": 20,
+      "ppl": 239.69456881630623,
+      "selection_note": "minimum on the same 20 pilot samples; exploratory"
+    },
+    {
+      "model": "Separate R16 SD",
+      "checkpoint": 3000,
+      "reverse_steps": 32,
+      "samples": 20,
+      "ppl": 131.57362762720635,
+      "selection_note": "minimum on the same 20 pilot samples; exploratory"
+    },
+    {
+      "model": "Separate R8 DD",
+      "checkpoint": 2000,
+      "reverse_steps": 8,
+      "samples": 20,
+      "ppl": 668.0037372546248,
+      "selection_note": "minimum on the same 20 pilot samples; exploratory"
+    },
+    {
+      "model": "Separate R8 DD",
+      "checkpoint": 6000,
+      "reverse_steps": 16,
+      "samples": 20,
+      "ppl": 248.13959844061898,
+      "selection_note": "minimum on the same 20 pilot samples; exploratory"
+    },
+    {
+      "model": "Separate R8 DD",
+      "checkpoint": 2000,
+      "reverse_steps": 32,
+      "samples": 20,
+      "ppl": 130.89146487416764,
+      "selection_note": "minimum on the same 20 pilot samples; exploratory"
+    },
+    {
+      "model": "Separate R8 SD",
+      "checkpoint": 6000,
+      "reverse_steps": 8,
+      "samples": 20,
+      "ppl": 666.1428434762472,
+      "selection_note": "minimum on the same 20 pilot samples; exploratory"
+    },
+    {
+      "model": "Separate R8 SD",
+      "checkpoint": 5000,
+      "reverse_steps": 16,
+      "samples": 20,
+      "ppl": 248.50470340706994,
+      "selection_note": "minimum on the same 20 pilot samples; exploratory"
+    },
+    {
+      "model": "Separate R8 SD",
+      "checkpoint": 6000,
+      "reverse_steps": 32,
+      "samples": 20,
+      "ppl": 130.75566042895284,
+      "selection_note": "minimum on the same 20 pilot samples; exploratory"
+    },
+    {
+      "model": "Shared R16 DD",
+      "checkpoint": 3000,
+      "reverse_steps": 8,
+      "samples": 20,
+      "ppl": 655.3251951463028,
+      "selection_note": "minimum on the same 20 pilot samples; exploratory"
+    },
+    {
+      "model": "Shared R16 DD",
+      "checkpoint": 7000,
+      "reverse_steps": 16,
+      "samples": 20,
+      "ppl": 258.7460281853351,
+      "selection_note": "minimum on the same 20 pilot samples; exploratory"
+    },
+    {
+      "model": "Shared R16 DD",
+      "checkpoint": 5000,
+      "reverse_steps": 32,
+      "samples": 20,
+      "ppl": 132.2998690762931,
+      "selection_note": "minimum on the same 20 pilot samples; exploratory"
+    },
+    {
+      "model": "Shared R16 DS",
+      "checkpoint": 5000,
+      "reverse_steps": 8,
+      "samples": 20,
+      "ppl": 835.0897127584354,
+      "selection_note": "minimum on the same 20 pilot samples; exploratory"
+    },
+    {
+      "model": "Shared R16 DS",
+      "checkpoint": 5000,
+      "reverse_steps": 16,
+      "samples": 20,
+      "ppl": 351.6451177739829,
+      "selection_note": "minimum on the same 20 pilot samples; exploratory"
+    },
+    {
+      "model": "Shared R16 DS",
+      "checkpoint": 7000,
+      "reverse_steps": 32,
+      "samples": 20,
+      "ppl": 197.69382759186098,
+      "selection_note": "minimum on the same 20 pilot samples; exploratory"
+    },
+    {
+      "model": "Shared R16 SD",
+      "checkpoint": 6000,
+      "reverse_steps": 8,
+      "samples": 20,
+      "ppl": 669.687855802742,
+      "selection_note": "minimum on the same 20 pilot samples; exploratory"
+    },
+    {
+      "model": "Shared R16 SD",
+      "checkpoint": 6000,
+      "reverse_steps": 16,
+      "samples": 20,
+      "ppl": 221.93495744787455,
+      "selection_note": "minimum on the same 20 pilot samples; exploratory"
+    },
+    {
+      "model": "Shared R16 SD",
+      "checkpoint": 2000,
+      "reverse_steps": 32,
+      "samples": 20,
+      "ppl": 126.83031512021132,
+      "selection_note": "minimum on the same 20 pilot samples; exploratory"
+    },
+    {
+      "model": "Shared R16 SS",
+      "checkpoint": 1000,
+      "reverse_steps": 8,
+      "samples": 20,
+      "ppl": 892.7424828107585,
+      "selection_note": "minimum on the same 20 pilot samples; exploratory"
+    },
+    {
+      "model": "Shared R16 SS",
+      "checkpoint": 6000,
+      "reverse_steps": 16,
+      "samples": 20,
+      "ppl": 320.85883334250934,
+      "selection_note": "minimum on the same 20 pilot samples; exploratory"
+    },
+    {
+      "model": "Shared R16 SS",
+      "checkpoint": 3000,
+      "reverse_steps": 32,
+      "samples": 20,
+      "ppl": 178.89658882707178,
+      "selection_note": "minimum on the same 20 pilot samples; exploratory"
+    }
+  ],
+  "other_key_results": [
+    {
+      "reverse_steps": 500,
+      "samples_per_cell": 2,
+      "model": "MDLM",
+      "ppl": 45.24894231191672
+    },
+    {
+      "reverse_steps": 500,
+      "samples_per_cell": 2,
+      "model": "Shared R16 DD",
+      "checkpoint": 6000,
+      "ppl": 54.06967773745926
+    },
+    {
+      "reverse_steps": 1000,
+      "samples_per_cell": 5,
+      "model": "MDLM",
+      "ppl": 32.775
+    },
+    {
+      "reverse_steps": 1000,
+      "samples_per_cell": 5,
+      "model": "Separate R16 DD",
+      "checkpoint": 2000,
+      "ppl": 73.126
+    }
+  ],
+  "quality_tradeoff": {
+    "comparison": "Shared R16 SD 6k versus MDLM at 16 reverse steps",
+    "samples_per_model": 100,
+    "ppl": {
+      "mdlm": 313.7835238246645,
+      "ccf": 244.04992654574278
+    },
+    "repetition_4_percent": {
+      "mdlm": 0.2780173538289885,
+      "ccf": 0.7764361847385345
+    },
+    "distinct_2_percent": {
+      "mdlm": 76.45209758412084,
+      "ccf": 71.97405389097355
+    },
+    "scope": "evaluator_content_to_eos"
+  },
+  "limitations": [
+    "Most recent model-family comparisons use one training trajectory per family.",
+    "Pilot checkpoint minima are selected on the same 20 samples and are exploratory.",
+    "Lower external PPL can accompany higher repetition; no human evaluation is included.",
+    "Runtime uses mixed GPU types and is not a controlled hardware comparison."
+  ]
+}
