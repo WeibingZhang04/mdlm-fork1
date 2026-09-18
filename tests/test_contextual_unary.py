@@ -4,9 +4,11 @@ import copy
 import io
 import itertools
 import unittest
+from unittest import mock
 
 import torch
 
+import runtime_validation
 from models.contextual_unary import ContextualUnaryAdapter
 from models.structured_decoder import ContextualCouplingForestHead
 
@@ -255,8 +257,10 @@ class ContextualUnaryTest(unittest.TestCase):
       head(self.hidden, self.base, self.time, self.active.float())
     with self.assertRaisesRegex(ValueError, 'chunk sizes'):
       head.target_log_probs(self.hidden, self.base, self.time, self.targets, vocab_chunk_size=0)
-    with self.assertRaisesRegex(ValueError, 'valid vocabulary'):
-      head.target_log_probs(self.hidden, self.base, self.time, self.targets + 11)
+    with mock.patch.object(runtime_validation, 'DEBUG_VALIDATION', True):
+      with self.assertRaisesRegex(ValueError, 'valid vocabulary'):
+        head.target_log_probs(
+          self.hidden, self.base, self.time, self.targets + 11)
     with self.assertRaisesRegex(ValueError, 'candidate correction'):
       self.head('full').candidate_lattice(self.hidden, self.base, self.time)
 

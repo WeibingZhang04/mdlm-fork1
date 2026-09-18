@@ -55,6 +55,11 @@ export CCF_CODE_ROOT=/path/to/checkout
 export CCF_CACHE_ROOT=/path/to/checkpoints-cache
 ```
 
+Set `MDLM_DEBUG_VALIDATION=1` before starting Python to enable full-tensor
+NaN/Inf and endpoint-positivity scans at every forest inference call. Normal
+runs retain shape, dtype, device, topology, and finite-result checks without
+the accelerator-synchronizing input, clamp, and support scans.
+
 Run `evaluate_ccf_confirmation.py --inventory` with a selection file and its SHA-256 before any GPU submission. The frozen selections are `experiments/confirmation-4.json` and `experiments/confirmation-8-16-32.json`. Each CCF cell performs a same-runtime first-sample token/NFE/RNG gate. Check for existing completed work before launching anything.
 
 For the next agent: keep pilot seeds 91001–91020 separate from confirmation seeds 100001–100100, do not count the gate duplicate as another scored sample, and do not interpret generation seeds as independent training runs. Record checkpoint/source hashes and actual NFE for every new result.

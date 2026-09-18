@@ -33,7 +33,10 @@ class StagedCandidateIdentityTest(unittest.TestCase):
     self.assertLess(shapes[-1][0], 32)
     report = audit_batch(self.logits, self.targets, self.active, top_k=8)
     self.assertEqual(report['ordered_id_differing_rows'], int((pair_ids[self.active] != ids).any(-1).sum()))
-    self.assertEqual(report['pair_gold_hits'], int(pair_ids[self.active].eq(self.targets[self.active, None]).any(-1).sum()))
+    active_targets = self.targets[self.active][:, None]
+    self.assertEqual(
+      report['pair_gold_hits'],
+      int(pair_ids[self.active].eq(active_targets).any(-1).sum()))
     self.assertGreater(report['active_rows_with_boundary_ties'], 0)
 
   def test_tied_swap_changes_gold_membership_but_not_retained_mass(self):

@@ -3,9 +3,11 @@
 import itertools
 import math
 import unittest
+from unittest import mock
 
 import torch
 
+import runtime_validation
 from models.centered_forest import FrozenUnaryCenteredForestHead, centered_forest_log_probability
 from models.contextual_unary import ContextualUnaryAdapter
 from models.structured_decoder import StructuredDecoderOutput
@@ -277,10 +279,11 @@ class CenteredForestTest(unittest.TestCase):
         FrozenUnaryCenteredForestHead(unary, **changes)
     with self.assertRaisesRegex(ValueError, 'candidate policy'):
       head(hidden, logits.bfloat16(), sigma, active)
-    with self.assertRaisesRegex(ValueError, 'nonempty logit support'):
-      head(hidden, torch.full_like(logits, -torch.inf), sigma, active)
-    with self.assertRaisesRegex(ValueError, 'nonempty logit support'):
-      head(hidden, logits, sigma * torch.nan, active)
+    with mock.patch.object(runtime_validation, 'DEBUG_VALIDATION', True):
+      with self.assertRaisesRegex(ValueError, 'nonempty logit support'):
+        head(hidden, torch.full_like(logits, -torch.inf), sigma, active)
+      with self.assertRaisesRegex(ValueError, 'nonempty logit support'):
+        head(hidden, logits, sigma * torch.nan, active)
 
   def test_learns_ab_ba_with_fixed_half_half_marginals_and_existing_sampler(self):
     # eta=.95 caps valid mass at .975; >.95 demonstrates useful expressivity,

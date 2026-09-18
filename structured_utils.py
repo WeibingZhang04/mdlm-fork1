@@ -30,6 +30,8 @@ from typing import List, Optional, Sequence, Tuple
 import torch
 import torch.nn.functional as F
 
+import runtime_validation
+
 
 @dataclass(frozen=True)
 class ForestMarginals:
@@ -296,9 +298,10 @@ def _constrain_nodes(node_log_potentials: torch.Tensor,
       clamped_states, dtype=torch.long, device=node_log_potentials.device)
     _require(clamped_states.shape == (batch_size, num_nodes),
              'clamped_states must have shape (batch, nodes)')
-    _require(bool(((clamped_states >= -1)
-                   & (clamped_states < num_states)).all().item()),
-             'clamped state indices must be -1 or valid state indices')
+    if runtime_validation.enabled():
+      _require(bool(((clamped_states >= -1)
+                     & (clamped_states < num_states)).all().item()),
+               'clamped state indices must be -1 or valid state indices')
     is_clamped = clamped_states >= 0
     state_ids = torch.arange(
       num_states, device=node_log_potentials.device)
@@ -307,8 +310,9 @@ def _constrain_nodes(node_log_potentials: torch.Tensor,
       | (state_ids == clamped_states.clamp_min(0).unsqueeze(-1)))
     allowed = allowed & clamp_allowed
 
-  _require(bool(allowed.any(dim=-1).all().item()),
-           'every node must retain at least one allowed state')
+  if runtime_validation.enabled():
+    _require(bool(allowed.any(dim=-1).all().item()),
+             'every node must retain at least one allowed state')
   return node_log_potentials.masked_fill(~allowed, -torch.inf)
 
 
@@ -343,12 +347,14 @@ def _validate_inputs(
            'node and pair potentials have different batch sizes')
   _require(log_pair_factors.shape[2:] == (num_states, num_states),
            'pair-factor state axes must match node state count')
-  _require(not bool(torch.isnan(node_log_potentials).any().item())
-           and not bool(torch.isposinf(node_log_potentials).any().item()),
-           'node_log_potentials may contain -inf, but not NaN or +inf')
-  # Strict positivity of pair factors is equivalent to finite log factors.
-  _require(bool(torch.isfinite(log_pair_factors).all().item()),
-           'all pair factors must be strictly positive (finite in log-space)')
+  if runtime_validation.enabled():
+    _require(not bool(torch.isnan(node_log_potentials).any().item())
+             and not bool(torch.isposinf(node_log_potentials).any().item()),
+             'node_log_potentials may contain -inf, but not NaN or +inf')
+    # Strict positivity of pair factors is equivalent to finite log factors.
+    _require(bool(torch.isfinite(log_pair_factors).all().item()),
+             'all pair factors must be strictly positive '
+             '(finite in log-space)')
 
   edge_count = log_pair_factors.shape[1]
   edge_index, edge_mask = _canonical_topology(
@@ -401,18 +407,19 @@ def _validate_low_rank_inputs(
            'endpoint factors need positive state and rank dimensions')
   _require(num_states == explicit_states + 1,
            'node states must be explicit endpoint states plus one residual')
-  invalid_nodes = (
-    torch.isnan(node_log_potentials).any()
-    | torch.isposinf(node_log_potentials).any())
-  _require(not bool(invalid_nodes.item()),
-           'node_log_potentials may contain -inf, but not NaN or +inf')
-  valid_factors = (
-    torch.isfinite(left_factors).all()
-    & torch.isfinite(right_factors).all()
-    & (left_factors > 0).all()
-    & (right_factors > 0).all())
-  _require(bool(valid_factors.item()),
-           'all endpoint factors must be finite and strictly positive')
+  if runtime_validation.enabled():
+    invalid_nodes = (
+      torch.isnan(node_log_potentials).any()
+      | torch.isposinf(node_log_potentials).any())
+    _require(not bool(invalid_nodes.item()),
+             'node_log_potentials may contain -inf, but not NaN or +inf')
+    valid_factors = (
+      torch.isfinite(left_factors).all()
+      & torch.isfinite(right_factors).all()
+      & (left_factors > 0).all()
+      & (right_factors > 0).all())
+    _require(bool(valid_factors.item()),
+             'all endpoint factors must be finite and strictly positive')
 
   edge_index, edge_mask = _canonical_topology(
     edge_index, edge_mask, batch_size, edge_count,

@@ -36,6 +36,7 @@ from models.contextual_unary import ContextualUnaryAdapter
 from models.structured_decoder import (
   ScalarTimestepEmbedding, StructuredDecoderOutput, _fixed_chain_edges,
 )
+import runtime_validation
 
 
 @dataclass
@@ -183,11 +184,14 @@ class FrozenUnaryCenteredForestHead(nn.Module):
     if raw_logits.dtype not in (torch.float32, torch.float64):
       raise ValueError('raw_logits must be FP32 or FP64 to specify the candidate policy')
     sigma = torch.as_tensor(sigma, device=hidden.device).detach()
-    if (hidden.device != self.hidden_norm.weight.device
-        or not bool(torch.isfinite(hidden).all()) or not bool(torch.isfinite(sigma).all())
-        or bool((torch.isnan(raw_logits) | torch.isposinf(raw_logits)).any())
-        or not bool(torch.isfinite(raw_logits).any(-1).all())):
-      raise ValueError('inputs need finite context and nonempty logit support on the head device')
+    if hidden.device != self.hidden_norm.weight.device:
+      raise ValueError('inputs must be on the head device')
+    if (runtime_validation.enabled()
+        and (not bool(torch.isfinite(hidden).all())
+             or not bool(torch.isfinite(sigma).all())
+             or bool((torch.isnan(raw_logits) | torch.isposinf(raw_logits)).any())
+             or not bool(torch.isfinite(raw_logits).any(-1).all()))):
+      raise ValueError('inputs need finite context and nonempty logit support')
     hidden, raw_logits = hidden.detach(), raw_logits.detach()
     with torch.autocast(device_type=hidden.device.type, enabled=False):
       with torch.no_grad():
@@ -197,7 +201,8 @@ class FrozenUnaryCenteredForestHead(nn.Module):
         log_beliefs = lattice.unary_log_potentials.double().log_softmax(-1)
         # The within-residual conditional, in contrast, is normalized FP64.
         tail = self._frozen_unary._tail_log_mass(raw_logits.double(), lattice.candidate_ids, 4096)
-        if bool(torch.isnan(log_beliefs).any()):
+        if (runtime_validation.enabled()
+            and bool(torch.isnan(log_beliefs).any())):
           raise ValueError('frozen unary produced nonfinite corrected support')
         beliefs = log_beliefs.exp()
         ids = lattice.candidate_ids
@@ -250,7 +255,8 @@ def centered_forest_log_probability(output: CenteredForestOutput, raw_logits: to
     raise ValueError('active_mask must equal the forward mask')
   if (targets.shape != active.shape or targets.dtype != torch.long
       or targets.device != active.device
-      or bool(((targets < 0) | (targets >= output.vocab_size)).any())):
+      or (runtime_validation.enabled()
+          and bool(((targets < 0) | (targets >= output.vocab_size)).any()))):
     raise ValueError('targets must be valid long [B,L] vocabulary IDs on device')
   with torch.autocast(device_type=active.device.type, enabled=False):
     safe_targets = torch.where(active, targets, output.candidate_ids[..., 0])

@@ -25,6 +25,7 @@ from torch import nn
 from torch.utils.checkpoint import checkpoint
 
 from models.structured_decoder import ScalarTimestepEmbedding
+import runtime_validation
 
 
 @dataclass
@@ -225,7 +226,8 @@ class ContextualUnaryAdapter(nn.Module):
     if targets.shape != active.shape or targets.dtype != torch.long:
       raise ValueError('targets must be a long [B,L] tensor')
     if (targets.device != hidden.device
-        or bool(((targets < 0) | (targets >= self.vocab_size)).any())):
+        or (runtime_validation.enabled()
+            and bool(((targets < 0) | (targets >= self.vocab_size)).any()))):
       raise ValueError('targets must be valid vocabulary IDs on device')
     features = self.context_features(hidden, timestep).reshape(-1, self.rank)
     selected = active.flatten().nonzero().flatten()

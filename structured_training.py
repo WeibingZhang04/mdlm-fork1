@@ -110,7 +110,9 @@ class StructuredDenoisingLoss:
   retained_mass: torch.Tensor
   active_tokens: torch.Tensor
   nll_sum: torch.Tensor
+  candidate_hits_per_example: torch.Tensor
   candidate_hits: torch.Tensor
+  retained_mass_sum_per_example: torch.Tensor
   retained_mass_sum: torch.Tensor
 
 
@@ -161,7 +163,6 @@ def structured_denoising_loss(
   sites solely so the repository's token-weighted metric accumulator can log
   the same per-masked-token quantity.
   """
-  _validate_token_batch(output, clean_tokens, active_mask)
   log_probability = structured_token_log_probability(
     output=output,
     unary_logits=unary_logits,
@@ -179,14 +180,21 @@ def structured_denoising_loss(
 
   target_is_explicit = output.candidate_ids.eq(
     clean_tokens[:, :, None]).any(dim=-1)
-  candidate_hits = (target_is_explicit & active_mask).sum().to(loss.dtype)
-  retained_mass_sum = output.retained_mass.masked_fill(
-    ~active_mask, 0.0).sum()
+  candidate_hits_per_example = (
+    target_is_explicit & active_mask).sum(dim=-1)
+  candidate_hits = candidate_hits_per_example.sum().to(loss.dtype)
+  masked_retained_mass = output.retained_mass.masked_fill(
+    ~active_mask, 0.0)
+  retained_mass_sum_per_example = masked_retained_mass.sum(dim=-1)
+  retained_mass_sum = masked_retained_mass.sum()
   candidate_recall = candidate_hits / active_tokens.clamp_min(1)
   retained_mass = retained_mass_sum / active_tokens.clamp_min(1)
-  if not bool(active_tokens.item()):
-    candidate_recall = candidate_recall.new_tensor(1.0)
-    retained_mass = retained_mass.new_tensor(1.0)
+  candidate_recall = torch.where(
+    active_tokens > 0, candidate_recall,
+    candidate_recall.new_tensor(1.0))
+  retained_mass = torch.where(
+    active_tokens > 0, retained_mass,
+    retained_mass.new_tensor(1.0))
   return StructuredDenoisingLoss(
     loss=loss,
     per_example_nll=per_example_nll,
@@ -195,7 +203,9 @@ def structured_denoising_loss(
     retained_mass=retained_mass,
     active_tokens=active_tokens,
     nll_sum=nll_sum,
+    candidate_hits_per_example=candidate_hits_per_example,
     candidate_hits=candidate_hits,
+    retained_mass_sum_per_example=retained_mass_sum_per_example,
     retained_mass_sum=retained_mass_sum)
 
 

@@ -7,6 +7,7 @@ from typing import Optional, Union
 
 import torch
 
+import runtime_validation
 import structured_utils
 from models.structured_decoder import StructuredDecoderOutput
 
@@ -46,9 +47,21 @@ def compressed_states_for_tokens(
   states = torch.where(explicit, explicit_state, residual)
   allowed = torch.gather(
     output.candidate_state_mask, -1, states[:, :, None]).squeeze(-1)
-  if not bool(allowed.all().item()):
+  if (runtime_validation.enabled()
+      and not bool(allowed.all().item())):
     raise ValueError('a token maps to a disabled residual state')
   return states
+
+
+def _validate_token_inputs(
+    output: StructuredDecoderOutput,
+    unary_logits: torch.Tensor,
+    token_ids: torch.Tensor) -> None:
+  if unary_logits.shape[:2] != token_ids.shape:
+    raise ValueError('unary_logits and token_ids leading shapes differ')
+  if (runtime_validation.enabled()
+      and unary_logits.shape[-1] <= int(output.candidate_ids.max().item())):
+    raise ValueError('unary_logits vocabulary is incompatible with candidates')
 
 
 def _structured_clamped_states(active_mask: torch.Tensor) -> torch.Tensor:
@@ -78,6 +91,15 @@ def infer_structured_distribution(
     backend: str = 'auto') -> StructuredInference:
   """Run exact sum-product, cancelling nodes outside the masked set."""
   active_mask = _validate_active_mask(output, active_mask)
+  return _infer_structured_distribution_from_validated(
+    output, active_mask, backend)
+
+
+def _infer_structured_distribution_from_validated(
+    output: StructuredDecoderOutput,
+    active_mask: torch.Tensor,
+    backend: str = 'auto') -> StructuredInference:
+  """Run inference after the public boundary validated ``active_mask``."""
   clamped_states = _structured_clamped_states(active_mask)
   backend = _structured_backend(output, backend)
   log_pair_factors = None
@@ -122,14 +144,12 @@ def structured_token_log_probability(
   are clamped and cancel from the normalized likelihood.
   """
   active_mask = _validate_active_mask(output, active_mask)
-  if unary_logits.shape[:2] != token_ids.shape:
-    raise ValueError('unary_logits and token_ids leading shapes differ')
-  if unary_logits.shape[-1] <= int(output.candidate_ids.max().item()):
-    raise ValueError('unary_logits vocabulary is incompatible with candidates')
+  _validate_token_inputs(output, unary_logits, token_ids)
   states = compressed_states_for_tokens(output, token_ids)
   states = torch.where(
     active_mask, states, torch.zeros_like(states))
-  inference = inference or infer_structured_distribution(output, active_mask)
+  inference = inference or _infer_structured_distribution_from_validated(
+    output, active_mask)
 
   node_score = torch.gather(
     output.unary_log_potentials, -1, states[:, :, None]).squeeze(-1).sum(-1)
@@ -199,12 +219,10 @@ def structured_marginal_token_log_probability(
   prohibitively large for the released MDLM vocabulary.
   """
   active_mask = _validate_active_mask(output, active_mask)
-  if unary_logits.shape[:2] != token_ids.shape:
-    raise ValueError('unary_logits and token_ids leading shapes differ')
-  if unary_logits.shape[-1] <= int(output.candidate_ids.max().item()):
-    raise ValueError('unary_logits vocabulary is incompatible with candidates')
+  _validate_token_inputs(output, unary_logits, token_ids)
 
-  inference = inference or infer_structured_distribution(output, active_mask)
+  inference = inference or _infer_structured_distribution_from_validated(
+    output, active_mask)
   states = compressed_states_for_tokens(output, token_ids)
   states = torch.where(active_mask, states, torch.zeros_like(states))
   compressed_log_probability = torch.gather(
@@ -261,7 +279,8 @@ def full_vocabulary_marginals(
     inference: Optional[StructuredInference] = None) -> torch.Tensor:
   """Expand exact compressed node marginals back to the full vocabulary."""
   active_mask = _validate_active_mask(output, active_mask)
-  inference = inference or infer_structured_distribution(output, active_mask)
+  inference = inference or _infer_structured_distribution_from_validated(
+    output, active_mask)
   vocab_size = unary_logits.shape[-1]
   result = unary_logits.new_zeros(
     *unary_logits.shape, dtype=inference.marginals.node_marginals.dtype)
@@ -353,7 +372,6 @@ def sample_structured_marginal_tokens(
   """
   if num_samples < 1:
     raise ValueError('num_samples must be positive')
-  active_mask = _validate_active_mask(output, active_mask)
   probabilities = full_vocabulary_marginals(
     output=output,
     unary_logits=unary_logits,

@@ -5,10 +5,12 @@ depends only on PyTorch and the local ``structured_utils`` module.
 """
 
 import unittest
+from unittest import mock
 
 import torch
 import torch.nn.functional as F
 
+import runtime_validation
 import structured_utils
 
 
@@ -189,11 +191,12 @@ class ClampAndTopologyTest(Float64TestCase):
     with self.assertRaisesRegex(ValueError, 'strictly positive'):
       structured_utils.positive_pair_factors_to_log(
         torch.tensor([[1.0, 0.0], [2.0, 3.0]]))
-    with self.assertRaisesRegex(ValueError, 'strictly positive'):
-      structured_utils.forest_sum_product(
-        torch.zeros(1, 2, 2),
-        torch.tensor([[[[0.0, -torch.inf], [0.0, 0.0]]]]),
-        torch.tensor([[0, 1]]))
+    with mock.patch.object(runtime_validation, 'DEBUG_VALIDATION', True):
+      with self.assertRaisesRegex(ValueError, 'strictly positive'):
+        structured_utils.forest_sum_product(
+          torch.zeros(1, 2, 2),
+          torch.tensor([[[[0.0, -torch.inf], [0.0, 0.0]]]]),
+          torch.tensor([[0, 1]]))
 
 
 class JointSamplingTest(Float64TestCase):
@@ -687,9 +690,10 @@ class LowRankProductionPathTest(Float64TestCase):
       structured_utils.forest_sum_product_low_rank(
         torch.zeros(1, 2, 4), left, right, edges)
     left[0, 0, 0, 0] = 0.0
-    with self.assertRaisesRegex(ValueError, 'strictly positive'):
-      structured_utils.forest_sum_product_low_rank(
-        node, left, right, edges)
+    with mock.patch.object(runtime_validation, 'DEBUG_VALIDATION', True):
+      with self.assertRaisesRegex(ValueError, 'strictly positive'):
+        structured_utils.forest_sum_product_low_rank(
+          node, left, right, edges)
 
 
 class SeparableReverseMixtureTest(Float64TestCase):
