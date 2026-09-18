@@ -1,0 +1,184 @@
+{
+  "schema_version": 1,
+  "selection_rule": "Use the same three checkpoints per FD/DD variant already selected for the eight-step confirmation from the 20-sample pilot; keep the selection fixed before observing four-step results. Include a fresh released MDLM baseline. Four reverse steps plus final cleanup means requested NFE budget 5.",
+  "pilot_snapshot_utc": "2026-09-17T18:22:09.497247+00:00",
+  "pilot_snapshot_sha256": "a366ea06dd38cc8ad33628e0b12efa7ad1cfeea1ef6a0d1ba2ec613149bf6423",
+  "num_samples": 100,
+  "base_seed": 100001,
+  "sampling_budgets": [
+    4
+  ],
+  "cells": [
+    {
+      "family": "A",
+      "arm": "static_static",
+      "step": 7000,
+      "sampling_steps": 4,
+      "pilot_ppl": 929.7529905152336,
+      "pilot_samples": 20,
+      "pilot_sampling_steps": 8
+    },
+    {
+      "family": "B",
+      "arm": "fixed_dynamic",
+      "step": 6000,
+      "sampling_steps": 4,
+      "pilot_ppl": 669.687855802742,
+      "pilot_samples": 20,
+      "pilot_sampling_steps": 8
+    },
+    {
+      "family": "B",
+      "arm": "fixed_dynamic",
+      "step": 3000,
+      "sampling_steps": 4,
+      "pilot_ppl": 673.4271858142553,
+      "pilot_samples": 20,
+      "pilot_sampling_steps": 8
+    },
+    {
+      "family": "B",
+      "arm": "fixed_dynamic",
+      "step": 4000,
+      "sampling_steps": 4,
+      "pilot_ppl": 679.259606929814,
+      "pilot_samples": 20,
+      "pilot_sampling_steps": 8
+    },
+    {
+      "family": "B",
+      "arm": "dynamic_dynamic",
+      "step": 3000,
+      "sampling_steps": 4,
+      "pilot_ppl": 655.3251951463028,
+      "pilot_samples": 20,
+      "pilot_sampling_steps": 8
+    },
+    {
+      "family": "B",
+      "arm": "dynamic_dynamic",
+      "step": 5000,
+      "sampling_steps": 4,
+      "pilot_ppl": 670.4491224880903,
+      "pilot_samples": 20,
+      "pilot_sampling_steps": 8
+    },
+    {
+      "family": "B",
+      "arm": "dynamic_dynamic",
+      "step": 7000,
+      "sampling_steps": 4,
+      "pilot_ppl": 700.2495764083958,
+      "pilot_samples": 20,
+      "pilot_sampling_steps": 8
+    },
+    {
+      "family": "C",
+      "arm": "fixed_dynamic",
+      "step": 6000,
+      "sampling_steps": 4,
+      "pilot_ppl": 666.1428434762472,
+      "pilot_samples": 20,
+      "pilot_sampling_steps": 8
+    },
+    {
+      "family": "C",
+      "arm": "fixed_dynamic",
+      "step": 3000,
+      "sampling_steps": 4,
+      "pilot_ppl": 689.2977754716967,
+      "pilot_samples": 20,
+      "pilot_sampling_steps": 8
+    },
+    {
+      "family": "C",
+      "arm": "fixed_dynamic",
+      "step": 1000,
+      "sampling_steps": 4,
+      "pilot_ppl": 697.3110203034241,
+      "pilot_samples": 20,
+      "pilot_sampling_steps": 8
+    },
+    {
+      "family": "C",
+      "arm": "dynamic_dynamic",
+      "step": 2000,
+      "sampling_steps": 4,
+      "pilot_ppl": 668.0037372546248,
+      "pilot_samples": 20,
+      "pilot_sampling_steps": 8
+    },
+    {
+      "family": "C",
+      "arm": "dynamic_dynamic",
+      "step": 4000,
+      "sampling_steps": 4,
+      "pilot_ppl": 692.2862732754602,
+      "pilot_samples": 20,
+      "pilot_sampling_steps": 8
+    },
+    {
+      "family": "C",
+      "arm": "dynamic_dynamic",
+      "step": 5000,
+      "sampling_steps": 4,
+      "pilot_ppl": 694.2144235951001,
+      "pilot_samples": 20,
+      "pilot_sampling_steps": 8
+    },
+    {
+      "family": "D",
+      "arm": "fixed_dynamic",
+      "step": 6000,
+      "sampling_steps": 4,
+      "pilot_ppl": 665.8148837202075,
+      "pilot_samples": 20,
+      "pilot_sampling_steps": 8
+    },
+    {
+      "family": "D",
+      "arm": "fixed_dynamic",
+      "step": 5000,
+      "sampling_steps": 4,
+      "pilot_ppl": 691.5769947311657,
+      "pilot_samples": 20,
+      "pilot_sampling_steps": 8
+    },
+    {
+      "family": "D",
+      "arm": "fixed_dynamic",
+      "step": 2000,
+      "sampling_steps": 4,
+      "pilot_ppl": 692.4646539525919,
+      "pilot_samples": 20,
+      "pilot_sampling_steps": 8
+    },
+    {
+      "family": "D",
+      "arm": "dynamic_dynamic",
+      "step": 6000,
+      "sampling_steps": 4,
+      "pilot_ppl": 638.4029243782111,
+      "pilot_samples": 20,
+      "pilot_sampling_steps": 8
+    },
+    {
+      "family": "D",
+      "arm": "dynamic_dynamic",
+      "step": 3000,
+      "sampling_steps": 4,
+      "pilot_ppl": 676.6102219318627,
+      "pilot_samples": 20,
+      "pilot_sampling_steps": 8
+    },
+    {
+      "family": "D",
+      "arm": "dynamic_dynamic",
+      "step": 2000,
+      "sampling_steps": 4,
+      "pilot_ppl": 699.8655051493665,
+      "pilot_samples": 20,
+      "pilot_sampling_steps": 8
+    }
+  ]
+}
