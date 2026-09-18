@@ -531,6 +531,25 @@ def _single_forest_sum_product(
   return log_partition, node_log_marginals, edge_log_marginals
 
 
+def _forest_sum_product_from_validated(
+    constrained_nodes: torch.Tensor,
+    log_pair_factors: torch.Tensor,
+    edge_index: torch.Tensor,
+    topologies: Sequence[_ForestTopology],
+    ) -> ForestMarginals:
+  """Compute dense forest marginals from already validated inputs."""
+  outputs = [
+    _single_forest_sum_product(
+      constrained_nodes[batch_index], log_pair_factors[batch_index],
+      edge_index[batch_index], topologies[batch_index])
+    for batch_index in range(constrained_nodes.shape[0])
+  ]
+  return ForestMarginals(
+    log_partition=torch.stack([output[0] for output in outputs]),
+    node_log_marginals=torch.stack([output[1] for output in outputs]),
+    edge_log_marginals=torch.stack([output[2] for output in outputs]))
+
+
 def forest_sum_product(
     node_log_potentials: torch.Tensor,
     log_pair_factors: torch.Tensor,
@@ -565,16 +584,8 @@ def forest_sum_product(
   constrained_nodes, edge_index, _, topologies = _validate_inputs(
     node_log_potentials, log_pair_factors, edge_index, edge_mask,
     state_mask, clamped_states, max_components, max_component_size)
-  outputs = [
-    _single_forest_sum_product(
-      constrained_nodes[batch_index], log_pair_factors[batch_index],
-      edge_index[batch_index], topologies[batch_index])
-    for batch_index in range(node_log_potentials.shape[0])
-  ]
-  return ForestMarginals(
-    log_partition=torch.stack([output[0] for output in outputs]),
-    node_log_marginals=torch.stack([output[1] for output in outputs]),
-    edge_log_marginals=torch.stack([output[2] for output in outputs]))
+  return _forest_sum_product_from_validated(
+    constrained_nodes, log_pair_factors, edge_index, topologies)
 
 
 def _sample_rows(logits: torch.Tensor,
@@ -608,14 +619,11 @@ def sample_forest(
   """
   _require(isinstance(num_samples, int) and num_samples > 0,
            'num_samples must be a positive integer')
-  result = forest_sum_product(
-    node_log_potentials, log_pair_factors, edge_index,
-    edge_mask=edge_mask, state_mask=state_mask,
-    clamped_states=clamped_states, max_components=max_components,
-    max_component_size=max_component_size)
-  _, canonical_edges, canonical_mask, topologies = _validate_inputs(
+  constrained_nodes, canonical_edges, _, topologies = _validate_inputs(
     node_log_potentials, log_pair_factors, edge_index, edge_mask,
     state_mask, clamped_states, max_components, max_component_size)
+  result = _forest_sum_product_from_validated(
+    constrained_nodes, log_pair_factors, canonical_edges, topologies)
 
   batch_samples = []
   for batch_index, topology in enumerate(topologies):
