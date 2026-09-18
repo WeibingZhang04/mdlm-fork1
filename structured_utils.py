@@ -108,6 +108,8 @@ class _ForestTopology:
   order: Tuple[int, ...]
   component: Tuple[int, ...]
   active_edges: Tuple[int, ...]
+  # Already transferred by _build_topology; avoid per-edge GPU .item() calls.
+  edge_left: Tuple[int, ...]
 
 
 @dataclass(frozen=True)
@@ -272,7 +274,8 @@ def _build_topology(edge_index: torch.Tensor,
       parent_edge=tuple(parent_edge),
       order=tuple(order),
       component=tuple(component),
-      active_edges=tuple(active_edges)))
+      active_edges=tuple(active_edges),
+      edge_left=tuple(edge[0] for edge in host_edges[batch_index])))
   return topologies
 
 
@@ -577,9 +580,7 @@ def forest_sum_product(
 def _sample_rows(logits: torch.Tensor,
                  generator: Optional[torch.Generator]) -> torch.Tensor:
   probabilities = torch.softmax(logits, dim=-1)
-  _require(bool(torch.isfinite(probabilities).all().item())
-           and bool((probabilities.sum(dim=-1) > 0).all().item()),
-           'cannot sample from an empty or non-finite categorical row')
+  # multinomial already validates its weights; avoid two extra host syncs.
   return torch.multinomial(
     probabilities, num_samples=1, replacement=True,
     generator=generator).squeeze(-1)
@@ -1025,7 +1026,8 @@ def _single_low_rank_sum_product(
     right_log_factors: torch.Tensor,
     edge_index: torch.Tensor,
     topology: _ForestTopology,
-    ) -> Tuple[torch.Tensor, torch.Tensor, dict]:
+    *, sampling_only: bool = False,
+    ) -> tuple:
   num_nodes = node_log_potentials.shape[0]
   messages = {}
 
@@ -1039,7 +1041,7 @@ def _single_low_rank_sum_product(
       if neighbor != parent:
         local = local + messages[(neighbor, node)]
     edge_id = topology.parent_edge[node]
-    left = int(edge_index[edge_id, 0].item())
+    left = topology.edge_left[edge_id]
     if left == node:
       source, target = (
         left_log_factors[edge_id], right_log_factors[edge_id])
@@ -1049,8 +1051,8 @@ def _single_low_rank_sum_product(
     messages[(node, parent)] = _low_rank_message(
       local, source, target)
 
-  # Roots to leaves.
-  for node in topology.order:
+  # Joint sampling needs only upward messages; full marginals need both ways.
+  for node in (() if sampling_only else topology.order):
     neighbors = topology.adjacency[node]
     incoming = [messages[(neighbor, node)]
                 for neighbor, _, _ in neighbors]
@@ -1080,12 +1082,12 @@ def _single_low_rank_sum_product(
       messages[(node, neighbor)] = _low_rank_message(
         local, source, target)
 
-  node_beliefs = []
-  for node in range(num_nodes):
+  node_beliefs = {}
+  for node in (topology.roots if sampling_only else range(num_nodes)):
     belief = node_log_potentials[node]
     for neighbor, _, _ in topology.adjacency[node]:
       belief = belief + messages[(neighbor, node)]
-    node_beliefs.append(belief)
+    node_beliefs[node] = belief
 
   component_log_partitions = torch.stack([
     torch.logsumexp(node_beliefs[root], dim=-1)
@@ -1094,13 +1096,15 @@ def _single_low_rank_sum_product(
   _require(bool(torch.isfinite(component_log_partitions).all().item()),
            'constraints leave the forest with no finite-probability state')
   log_partition = component_log_partitions.sum()
-  node_log_marginals = []
-  for node, belief in enumerate(node_beliefs):
+  node_log_marginals = {}
+  for node, belief in node_beliefs.items():
     log_marginal = (
       belief - component_log_partitions[topology.component[node]])
     log_marginal = log_marginal - torch.logsumexp(log_marginal, dim=-1)
-    node_log_marginals.append(log_marginal)
-  return log_partition, torch.stack(node_log_marginals), messages
+    node_log_marginals[node] = log_marginal
+  if not sampling_only:
+    node_log_marginals = torch.stack(list(node_log_marginals.values()))
+  return log_partition, node_log_marginals, messages
 
 
 def forest_sum_product_low_rank(
@@ -1214,7 +1218,7 @@ def sample_forest_low_rank(
     _, node_log_marginals, messages = _single_low_rank_sum_product(
       constrained_nodes[batch_index],
       left_log_factors[batch_index], right_log_factors[batch_index],
-      edge_index[batch_index], topology)
+      edge_index[batch_index], topology, sampling_only=True)
     samples = torch.empty(
       num_samples, node_log_potentials.shape[1], dtype=torch.long,
       device=node_log_potentials.device)
@@ -1231,7 +1235,7 @@ def sample_forest_low_rank(
       for neighbor, _, _ in topology.adjacency[node]:
         if neighbor != parent:
           local = local + messages[(neighbor, node)]
-      left = int(edge_index[batch_index, edge_id, 0].item())
+      left = topology.edge_left[edge_id]
       if left == parent:
         source, target = (
           left_log_factors[batch_index, edge_id],

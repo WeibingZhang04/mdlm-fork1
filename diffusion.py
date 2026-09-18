@@ -368,6 +368,10 @@ class Diffusion(L.LightningModule):
         topology_mode=str(
           structured_cfg.get('topology_mode', 'dynamic')),
         factor_mode=str(structured_cfg.get('factor_mode', 'dynamic')),
+        factor_embedding_mode=str(
+          structured_cfg.get('factor_embedding_mode', 'shared')),
+        factor_conditioner_hidden_dim=structured_cfg.get(
+          'factor_conditioner_hidden_dim', 0),
         independent_mode=bool(
           structured_cfg.get('independent_mode', False)),
         min_edge_score=structured_cfg.get('min_edge_score', None)))

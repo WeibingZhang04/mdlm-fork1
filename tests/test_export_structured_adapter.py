@@ -67,6 +67,117 @@ def _structured_config(**overrides):
 
 class ExportStructuredAdapterTest(unittest.TestCase):
 
+  def test_embedding_mode_identity_preserves_shared_and_binds_separate(self):
+    legacy = structured_decoder_identity_from_config(_structured_config())
+    shared = structured_decoder_identity_from_config(
+      _structured_config(factor_embedding_mode='shared'))
+    separate = structured_decoder_identity_from_config(
+      _structured_config(factor_embedding_mode='separate'))
+    self.assertEqual(legacy, shared)
+    self.assertNotEqual(shared[1], separate[1])
+    self.assertEqual(separate[0]['head_semantics']['factor_embedding_mode'],
+                     'separate')
+    with self.assertRaisesRegex(ValueError, 'factor_embedding_mode'):
+      structured_decoder_identity_from_config(
+        _structured_config(factor_embedding_mode='typo'))
+
+  def test_conditioner_identity_preserves_default_and_binds_width(self):
+    legacy = structured_decoder_identity_from_config(_structured_config())
+    disabled = structured_decoder_identity_from_config(
+      _structured_config(factor_conditioner_hidden_dim=0))
+    mlp = structured_decoder_identity_from_config(
+      _structured_config(factor_conditioner_hidden_dim=128))
+    self.assertEqual(legacy, disabled)
+    self.assertNotEqual(legacy[1], mlp[1])
+    self.assertEqual(mlp[0]['head_semantics']['factor_conditioner_hidden_dim'], 128)
+    for bad in (-1, True, 1.5):
+      with self.subTest(width=bad), self.assertRaises(ValueError):
+        structured_decoder_identity_from_config(
+          _structured_config(factor_conditioner_hidden_dim=bad))
+
+  def test_mlp_adapter_roundtrip_and_disabled_conditioner_rejection(self):
+    from models.structured_decoder import ContextualCouplingForestHead
+
+    config = _structured_config(factor_conditioner_hidden_dim=16, top_k=2,
+                                rank=3, topology_dim=8)
+    def head(width):
+      return ContextualCouplingForestHead(
+        hidden_size=5, vocab_size=4, top_k=2, rank=3, topology_dim=8,
+        factor_conditioner_hidden_dim=width)
+    source = head(16)
+    with tempfile.TemporaryDirectory() as directory:
+      root = Path(directory)
+      checkpoint, adapter, manifest_path = (
+        root / 'model.ckpt', root / 'adapter.safetensors', root / 'manifest.json')
+      self._checkpoint(checkpoint)
+      payload = torch.load(checkpoint, weights_only=False)
+      payload['hyper_parameters']['config']['model']['structured_decoder'] = config
+      payload['state_dict'] = {
+        **{k: v for k, v in payload['state_dict'].items() if k.startswith('backbone.')},
+        **{f'structured_head.{k}': v for k, v in source.state_dict().items()},
+      }
+      torch.save(payload, checkpoint)
+      manifest = export_adapter(
+        checkpoint, adapter, manifest_path,
+        expected_checkpoint_sha256=self._sha256(checkpoint),
+        expected_global_step=7, expected_structured_head=source,
+        **{**ADAPTER_IDENTITY, 'candidate_k': 2})
+      common = dict(manifest_path=manifest_path,
+                    expected_sha256=manifest['adapter_sha256'],
+                    expected_manifest_sha256=self._sha256(manifest_path))
+      identity, _ = structured_decoder_identity_from_config(config)
+      restored = head(16)
+      load_adapter_into_head(restored, adapter, expected_identity=identity, **common)
+      for name, value in source.state_dict().items():
+        torch.testing.assert_close(restored.state_dict()[name], value, atol=0, rtol=0)
+      wrong_identity, _ = structured_decoder_identity_from_config(
+        {**config, 'factor_conditioner_hidden_dim': 0})
+      with self.assertRaisesRegex(ValueError, 'identity differs'):
+        load_adapter_into_head(head(0), adapter, expected_identity=wrong_identity, **common)
+
+  def test_separate_head_export_load_roundtrip_and_shared_rejection(self):
+    from models.structured_decoder import ContextualCouplingForestHead
+
+    config = _structured_config(factor_embedding_mode='separate', top_k=2,
+                                rank=3, topology_dim=8)
+    def head(mode):
+      return ContextualCouplingForestHead(
+        hidden_size=5, vocab_size=4, top_k=2, rank=3, topology_dim=8,
+        factor_embedding_mode=mode)
+    source = head('separate')
+    with tempfile.TemporaryDirectory() as directory:
+      root = Path(directory)
+      checkpoint, adapter, manifest_path = (
+        root / 'model.ckpt', root / 'adapter.safetensors', root / 'manifest.json')
+      self._checkpoint(checkpoint)
+      payload = torch.load(checkpoint, weights_only=False)
+      payload['hyper_parameters']['config']['model']['structured_decoder'] = config
+      payload['state_dict'] = {
+        **{k: v for k, v in payload['state_dict'].items()
+           if k.startswith('backbone.')},
+        **{f'structured_head.{k}': v for k, v in source.state_dict().items()},
+      }
+      torch.save(payload, checkpoint)
+      manifest = export_adapter(
+        checkpoint, adapter, manifest_path,
+        expected_checkpoint_sha256=self._sha256(checkpoint),
+        expected_global_step=7, expected_structured_head=source,
+        **{**ADAPTER_IDENTITY, 'candidate_k': 2})
+      common = dict(
+        manifest_path=manifest_path,
+        expected_sha256=manifest['adapter_sha256'],
+        expected_manifest_sha256=self._sha256(manifest_path))
+      restored = head('separate')
+      identity, _ = structured_decoder_identity_from_config(config)
+      load_adapter_into_head(restored, adapter, expected_identity=identity, **common)
+      for name, value in source.state_dict().items():
+        torch.testing.assert_close(restored.state_dict()[name], value, atol=0, rtol=0)
+      shared_identity, _ = structured_decoder_identity_from_config(
+        {**config, 'factor_embedding_mode': 'shared'})
+      with self.assertRaisesRegex(ValueError, 'identity differs'):
+        load_adapter_into_head(head('shared'), adapter,
+                               expected_identity=shared_identity, **common)
+
   def _sha256(self, path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
 

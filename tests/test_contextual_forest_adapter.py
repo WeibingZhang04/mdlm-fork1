@@ -158,6 +158,42 @@ class TinyContextualForest(torch.nn.Module):
 
 class ContextualForestAdapterTest(unittest.TestCase):
 
+  def test_diffusion_initializes_both_endpoint_options(self):
+    from omegaconf import OmegaConf
+    from models import structured_decoder
+    from structured_training import validate_structured_sampling_mode
+
+    diffusion_class = _diffusion_class_for_loader_test()
+    method_globals = diffusion_class._initialize_structured_decoder.__globals__
+    method_globals['models'].structured_decoder = structured_decoder
+    method_globals['structured_training'].validate_structured_sampling_mode = (
+      validate_structured_sampling_mode)
+    for mode, width in ((None, 0), ('shared', 0), ('separate', 0),
+                        ('shared', 16), ('separate', 16)):
+      with self.subTest(mode=mode, width=width):
+        structured = _structured_config(enabled=True, top_k=2, rank=3,
+                                         topology_dim=8)
+        structured['factor_conditioner_hidden_dim'] = width
+        structured['training']['backbone_mode'] = 'joint'
+        structured['sampling'] = {'mode': 'structured_joint'}
+        if mode is not None:
+          structured['factor_embedding_mode'] = mode
+        model = diffusion_class.__new__(diffusion_class)
+        torch.nn.Module.__init__(model)
+        model.config = OmegaConf.create({
+          'backbone': 'dit', 'mode': 'train', 'eval': {}, 'checkpointing': {},
+          'model': {'hidden_size': 5, 'structured_decoder': structured},
+        })
+        model.vocab_size = 4
+        model.backbone = torch.nn.Linear(5, 4)
+        model._initialize_structured_decoder()
+        self.assertEqual(model.structured_head.factor_embedding_mode,
+                         mode or 'shared')
+        self.assertEqual(model.structured_head.factor_conditioner_hidden_dim, width)
+        self.assertEqual(hasattr(model.structured_head,
+                                 'right_token_factor_embedding'),
+                         mode == 'separate')
+
   def _seed_201_config(self, *, cache: Path, output: Path):
     config = {}
     for dotted_path, value in EXPECTED_RUNTIME_CONFIG.items():

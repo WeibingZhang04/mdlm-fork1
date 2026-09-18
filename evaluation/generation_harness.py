@@ -398,6 +398,9 @@ def _sample_from_initial_state(
   x = initial_tokens.clone().to(model.device)
   observed = initial_tokens.ne(model.mask_index).to(model.device)
   observed_values = initial_tokens.to(model.device)
+  # Unconditional runs have no evidence to check. Determine this once, not
+  # with GPU boolean indexing/equality after each of the ~1000 updates.
+  has_observed = bool(observed.any().item())
   timesteps = torch.linspace(1, eps, num_steps + 1, device=model.device)
   dt = (1 - eps) / num_steps
   measured_nfe = 0
@@ -447,7 +450,7 @@ def _sample_from_initial_state(
           'trajectory capture requires at most one model call per sampler '
           'state transition')
       # Fail closed if a future core sampler starts modifying evidence.
-      if not torch.equal(x[observed], observed_values[observed]):
+      if has_observed and not torch.equal(x[observed], observed_values[observed]):
         raise AssertionError('sampling kernel modified observed prompt tokens')
       if trajectory_recorder is not None:
         is_final_state = not final_call and index == num_steps - 1
@@ -479,7 +482,7 @@ def _sample_from_initial_state(
           timestep=t,
           stage='final',
           force=True)
-    if not torch.equal(x[observed], observed_values[observed]):
+    if has_observed and not torch.equal(x[observed], observed_values[observed]):
       raise AssertionError('final denoiser modified observed prompt tokens')
   finally:
     if handle is not None:
