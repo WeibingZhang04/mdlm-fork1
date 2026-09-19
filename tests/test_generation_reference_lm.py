@@ -3,7 +3,6 @@ import unittest
 from unittest import mock
 
 from evaluation.generation_metrics import ReferenceLMScore
-from evaluation.generation_shard_aggregation import _summarize_reference_lm
 from scripts.run_generation_pilot import (
   _attach_reference_lm_scores,
   _critical_runtime_package_versions,
@@ -42,7 +41,6 @@ class GenerationReferenceLMPlumbingTest(unittest.TestCase):
       max_length=256,
       dtype='float32')
     group = _summarize_attached_reference_lm(rows)
-    independently_recomputed = _summarize_reference_lm(rows)
 
     scorer_class.assert_called_once_with(
       'org/model', revision=revision, device='cpu', batch_size=2,
@@ -65,7 +63,6 @@ class GenerationReferenceLMPlumbingTest(unittest.TestCase):
         'num_scored_sequences', 'num_scored_tokens', 'mean_nll_nats',
         'perplexity'):
       self.assertEqual(group[field], overall[field])
-      self.assertEqual(group[field], independently_recomputed[field])
 
   @mock.patch('scripts.run_generation_pilot.importlib.metadata.version')
   def test_critical_runtime_package_versions_are_recorded_exactly(

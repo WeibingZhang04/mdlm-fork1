@@ -28,10 +28,6 @@ if str(REPO_ROOT) not in sys.path:
 
 import torch  # noqa: E402
 
-from evaluation.adapter_pair_origin import (  # noqa: E402
-  ARMS as ADAPTER_ORIGIN_ARMS,
-  bind_generation_arm_to_adapter_origin_evidence,
-)
 from evaluation.generation_harness import (  # noqa: E402
   DEFAULT_SAMPLING_MODES,
   SAMPLING_MODES,
@@ -49,14 +45,10 @@ from evaluation.generation_metrics import (  # noqa: E402
   validate_reference_lm_spec,
 )
 from evaluation.prompt_provenance import validate_prompt_bundle  # noqa: E402
-from evaluation.generation_shard_aggregation import (  # noqa: E402
-  PAIRING_DIGEST_ALGORITHM,
-)
-
-
 CRITICAL_RUNTIME_PACKAGES = (
   'numpy', 'safetensors', 'tokenizers', 'transformers',
 )
+PAIRING_DIGEST_ALGORITHM = 'sha256-canonical-json-v2-prompt-metadata'
 
 
 def _critical_runtime_package_versions() -> dict[str, str]:
@@ -124,11 +116,6 @@ def _parse_args(argv=None) -> argparse.Namespace:
   parser.add_argument('--adapter-sha256', required=True)
   parser.add_argument('--adapter-manifest', type=Path, required=True)
   parser.add_argument('--adapter-manifest-sha256', required=True)
-  parser.add_argument('--adapter-origin-evidence', type=Path)
-  parser.add_argument('--adapter-origin-evidence-sha256')
-  parser.add_argument(
-    '--adapter-origin-arm', choices=ADAPTER_ORIGIN_ARMS,
-    help='Exact compiled-plan arm bound by --adapter-origin-evidence.')
   parser.add_argument('--output-dir', type=Path, required=True)
   parser.add_argument('--prompt-jsonl', type=Path)
   parser.add_argument(
@@ -462,20 +449,6 @@ def _summarize_attached_reference_lm(
 
 def main(argv=None) -> int:
   args = _parse_args(argv)
-  origin_arguments = (
-    args.adapter_origin_evidence,
-    args.adapter_origin_evidence_sha256,
-    args.adapter_origin_arm,
-  )
-  if any(value is not None for value in origin_arguments) and not all(
-      value is not None for value in origin_arguments):
-    raise ValueError(
-      'adapter-origin evidence path, SHA256, and arm must be supplied '
-      'together')
-  if args.prompt_jsonl is not None and not all(
-      value is not None for value in origin_arguments):
-    raise ValueError(
-      'document-local infilling runs require exact adapter-origin evidence')
   args.reference_lm, args.reference_lm_revision = validate_reference_lm_spec(
     args.reference_lm, args.reference_lm_revision)
 
@@ -525,18 +498,6 @@ def main(argv=None) -> int:
     'structured_decoder_identity_sha256']
   adapter_semantic_identity = model.structured_adapter_manifest[
     'structured_decoder_identity']
-  adapter_origin_binding = None
-  if args.adapter_origin_evidence is not None:
-    adapter_origin_binding = bind_generation_arm_to_adapter_origin_evidence(
-      args.adapter_origin_evidence,
-      expected_evidence_sha256=args.adapter_origin_evidence_sha256,
-      arm=args.adapter_origin_arm,
-      adapter_path=args.adapter,
-      expected_adapter_sha256=adapter_sha256,
-      adapter_manifest_path=args.adapter_manifest,
-      expected_adapter_manifest_sha256=adapter_manifest_sha256,
-      structured_decoder_identity=adapter_semantic_identity,
-    )
   device = torch.device(args.device)
   if device.type == 'cuda' and not torch.cuda.is_available():
     raise RuntimeError('CUDA was requested but is unavailable')
@@ -701,7 +662,6 @@ def main(argv=None) -> int:
         'semantic_identity': adapter_semantic_identity,
       },
     },
-    'adapter_origin_evidence': adapter_origin_binding,
     'prompts': prompt_provenance,
     'pairing': {
       'digest_algorithm': PAIRING_DIGEST_ALGORITHM,

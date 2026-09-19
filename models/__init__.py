@@ -7,9 +7,7 @@ def __getattr__(name):
   environment.  In particular, importing the coupling head does not require
   OmegaConf, Transformers, FlashAttention, or the Mamba kernels.
   """
-  if name in {
-      'dit', 'ema', 'crf_decoder', 'structured_decoder',
-      'dimamba', 'autoregressive'}:
+  if name in {'dit', 'ema', 'structured_decoder'}:
     module = importlib.import_module(f'{__name__}.{name}')
     globals()[name] = module
     return module
