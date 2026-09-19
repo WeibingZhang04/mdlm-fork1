@@ -28,11 +28,6 @@ loader:
 
 sampling:
   predictor: ddpm_cache  # analytic, ddpm, ddpm_cache
-  # CRF-only reveal rule. `independent` reproduces the original sampler;
-  # `sequential` reveals one most-confident site per example per step;
-  # `gated` reveals the schedule's most-confident sites with argmax tokens;
-  # `gated_stochastic` keeps the gate but samples their token identities.
-  crf_reveal: gated
   steps: 128
   noise_removal: True
   # TODO(yair): @subham, why aren't these params under `eval`?
@@ -51,36 +46,12 @@ training:
 
 eval:
   checkpoint_path: ''  # Used to evaluate a checkpoint after training.
-  # Portable frozen-backbone evaluation alternative to checkpoint_path.
-  # The structured head is loaded strictly from safetensors after the pinned
-  # backbone in model.structured_decoder.training.backbone_checkpoint.
-  adapter_checkpoint: ''
-  adapter_sha256: ''
-  # Required provenance pair for adapter_checkpoint. The runtime checks the
-  # adapter byte hash and exact structured-decoder identity before loading.
-  adapter_manifest: ''
-  adapter_manifest_sha256: ''
   disable_ema: False
   compute_generative_perplexity: False
   perplexity_batch_size: 8
   compute_perplexity_on_sanity: False
   gen_ppl_eval_model_name_or_path: gpt2-large  # gpt2-large, meta-llama/Llama-2-7b-hf
   generate_samples: True
-  # Submission conditional-denoising evaluation controls.  Set both for a
-  # fixed Bernoulli mask-rate run; null preserves the legacy random-time path.
-  structured_mask_rate: null
-  corruption_seed: null
-  conditional_records:
-    enabled: false
-    # v1 records the structured joint score and support at the adapter K.
-    # v2 additionally records factorized, singleton-product, no-edge, and
-    # matched-permuted-topology scores plus a multi-K support sweep.
-    schema_version: 1
-    support_candidate_ks: []
-    protocol_id: null
-    job_id: null
-    arm: null
-    train_seed: null
 
 optim:
   weight_decay: 0

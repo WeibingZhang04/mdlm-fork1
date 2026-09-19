@@ -12,8 +12,6 @@ import lightning
 import torch
 from timm.scheduler import CosineLRScheduler
 
-import runtime_validation
-
 
 def fsspec_exists(filename):
   """Check if a file exists using fsspec."""
@@ -34,7 +32,7 @@ def fsspec_mkdirs(dirname, exist_ok=True):
 
 
 def print_nans(tensor, name):
-  if runtime_validation.enabled() and torch.isnan(tensor).any():
+  if torch.isnan(tensor).any():
     print(name, tensor)
 
 

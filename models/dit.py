@@ -1,16 +1,8 @@
 import math
 import typing
 
-try:
-  import flash_attn
-  import flash_attn.layers.rotary
-  FLASH_ATTN_AVAILABLE = True
-except (ImportError, OSError):
-  # FlashAttention wheels are architecture-specific. PyTorch SDPA below is a
-  # correctness fallback for unsupported GPUs (for example Blackwell with an
-  # older wheel) and CPU-only environments.
-  flash_attn = None
-  FLASH_ATTN_AVAILABLE = False
+import flash_attn
+import flash_attn.layers.rotary
 import huggingface_hub
 import omegaconf
 import torch
@@ -118,33 +110,9 @@ def rotate_half(x):
 
 
 def apply_rotary_pos_emb(qkv, cos, sin):
-  """Apply non-interleaved rotary embeddings to Q/K and leave V unchanged."""
-  if FLASH_ATTN_AVAILABLE and qkv.is_cuda:
-    cos_half = cos[0, :, 0, 0, :cos.shape[-1] // 2]
-    sin_half = sin[0, :, 0, 0, :sin.shape[-1] // 2]
-    return flash_attn.layers.rotary.apply_rotary_emb_qkv_(
-      qkv, cos_half, sin_half)
-  return qkv * cos + rotate_half(qkv) * sin
-
-
-def scaled_dot_product_attention_qkv(qkv):
-  """PyTorch SDPA equivalent of non-causal packed self-attention.
-
-  Args:
-    qkv: (batch, sequence, 3, heads, head_dim)
-  Returns:
-    (batch, sequence, heads, head_dim)
-  """
-  if qkv.ndim != 5 or qkv.shape[2] != 3:
-    raise ValueError(
-      'qkv must have shape (batch, sequence, 3, heads, head_dim)')
-  q, k, v = qkv.unbind(dim=2)
-  q = q.transpose(1, 2)
-  k = k.transpose(1, 2)
-  v = v.transpose(1, 2)
-  output = F.scaled_dot_product_attention(
-    q, k, v, dropout_p=0.0, is_causal=False)
-  return output.transpose(1, 2).contiguous()
+  cos = cos[0,:,0,0,:cos.shape[-1]//2]
+  sin = sin[0,:,0,0,:sin.shape[-1]//2]
+  return flash_attn.layers.rotary.apply_rotary_emb_qkv_(qkv, cos, sin)
 
 
 # function overload
@@ -294,25 +262,17 @@ class DDiTBlock(nn.Module):
       cos, sin = rotary_cos_sin
       qkv = apply_rotary_pos_emb(
         qkv, cos.to(qkv.dtype), sin.to(qkv.dtype))
-
-    if FLASH_ATTN_AVAILABLE and qkv.is_cuda:
-      qkv = rearrange(qkv, 'b s ... -> (b s) ...')
-      if seqlens is None:
-        cu_seqlens = torch.arange(
-          0, (batch_size + 1) * seq_len, step=seq_len,
-          dtype=torch.int32, device=qkv.device)
-      else:
-        cu_seqlens = seqlens.cumsum(-1)
-      x = flash_attn.flash_attn_interface.\
-        flash_attn_varlen_qkvpacked_func(
-          qkv, cu_seqlens, seq_len, 0., causal=False)
-      x = rearrange(x, '(b s) h d -> b s (h d)', b=batch_size)
+    qkv = rearrange(qkv, 'b s ... -> (b s) ...')
+    if seqlens is None:
+      cu_seqlens = torch.arange(
+        0, (batch_size + 1) * seq_len, step=seq_len,
+        dtype=torch.int32, device=qkv.device)
     else:
-      if seqlens is not None:
-        raise RuntimeError(
-          'PyTorch SDPA fallback currently requires seqlens=None')
-      x = scaled_dot_product_attention_qkv(qkv)
-      x = x.reshape(batch_size, seq_len, -1)
+      cu_seqlens = seqlens.cumsum(-1)
+    x = flash_attn.flash_attn_interface.flash_attn_varlen_qkvpacked_func(
+      qkv, cu_seqlens, seq_len, 0., causal=False)
+    
+    x = rearrange(x, '(b s) h d -> b s (h d)', b=batch_size)
 
     x = bias_dropout_scale_fn(self.attn_out(x),
                               None,
@@ -396,8 +356,7 @@ class DIT(nn.Module, huggingface_hub.PyTorchModelHubMixin):
     else:
       return  bias_dropout_add_scale_fused_inference
 
-  def encode(self, indices, sigma):
-    """Return final hidden states and timestep conditioning."""
+  def forward(self, indices, sigma):
     x = self.vocab_embed(indices)
     c = F.silu(self.sigma_map(sigma))
 
@@ -406,13 +365,6 @@ class DIT(nn.Module, huggingface_hub.PyTorchModelHubMixin):
     with torch.cuda.amp.autocast(dtype=torch.bfloat16):
       for i in range(len(self.blocks)):
         x = self.blocks[i](x, rotary_cos_sin, c, seqlens=None)
-    return x, c
+      x = self.output_layer(x, c)
 
-  def decode(self, hidden_states, conditioning):
-    """Map encoded states to the ordinary factorized unary logits."""
-    with torch.cuda.amp.autocast(dtype=torch.bfloat16):
-      return self.output_layer(hidden_states, conditioning)
-
-  def forward(self, indices, sigma):
-    hidden_states, conditioning = self.encode(indices, sigma)
-    return self.decode(hidden_states, conditioning)
+    return x

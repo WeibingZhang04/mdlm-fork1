@@ -23,8 +23,7 @@ omegaconf.OmegaConf.register_new_resolver(
 
 
 def _load_from_checkpoint(config, tokenizer):
-  if ('hf' in config.backbone
-      or config.eval.get('adapter_checkpoint', None)):
+  if 'hf' in config.backbone:
     return diffusion.Diffusion(
       config, tokenizer=tokenizer).to('cuda')
   
@@ -110,11 +109,9 @@ def generate_samples(config, logger, tokenizer):
       samples = model.restore_model_and_sample(
         num_steps=config.sampling.steps)
       text_samples = model.tokenizer.batch_decode(samples)
-      if config.eval.compute_generative_perplexity:
-        model.compute_generative_perplexity(text_samples)
+      model.compute_generative_perplexity(text_samples)
   print('Text samples:', text_samples)
-  if (not config.sampling.semi_ar
-      and config.eval.compute_generative_perplexity):
+  if not config.sampling.semi_ar:
     print('Generative perplexity:',
           model.gen_ppl_metric.compute())
   return text_samples
