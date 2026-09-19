@@ -92,7 +92,7 @@ class DitSdpaFallbackTest(unittest.TestCase):
     self.assertIsNotNone(qkv.grad)
     self.assertGreater(qkv.grad.abs().sum().item(), 0.0)
 
-  def test_crf_package_import_does_not_eagerly_import_ar_backend(self):
+  def test_model_package_exposes_only_retained_backends_lazily(self):
     saved_models = {
       name: module for name, module in sys.modules.items()
       if name == 'models' or name.startswith('models.')}
@@ -101,10 +101,13 @@ class DitSdpaFallbackTest(unittest.TestCase):
     try:
       with stub_optional_dependencies():
         package = importlib.import_module('models')
-        self.assertNotIn('crf_decoder', vars(package))
-        self.assertNotIn('autoregressive', vars(package))
-        self.assertIsNotNone(package.crf_decoder)
-        self.assertIn('crf_decoder', vars(package))
+        self.assertNotIn('structured_decoder', vars(package))
+        self.assertIsNotNone(package.structured_decoder)
+        self.assertIn('structured_decoder', vars(package))
+        with self.assertRaises(AttributeError):
+          _ = package.autoregressive
+        with self.assertRaises(AttributeError):
+          _ = package.crf_decoder
         self.assertFalse(package.dit.FLASH_ATTN_AVAILABLE)
     finally:
       for name in list(sys.modules):
