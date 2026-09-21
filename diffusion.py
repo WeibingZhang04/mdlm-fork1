@@ -456,7 +456,7 @@ class Diffusion(L.LightningModule):
           pin_memory=self.config.loader.pin_memory,
           sampler=dl_sampler,
           shuffle=False,
-          persistent_workers=True))
+          persistent_workers=(self.config.loader.num_workers > 0)))
     self.trainer.fit_loop._combined_loader.flattened = updated_dls
 
   def optimizer_step(self, *args, **kwargs):
@@ -721,7 +721,9 @@ class Diffusion(L.LightningModule):
     scheduler_dict = {
       'scheduler': scheduler,
       'interval': 'step',
-      'monitor': 'val/loss',
+      'monitor': (self.config.model.get(
+        'monitor_metric', 'val/conditional_nll_per_masked_token')
+        if self.structured_enabled else 'val/loss'),
       'name': 'trainer/lr',
     }
     return [optimizer], [scheduler_dict]

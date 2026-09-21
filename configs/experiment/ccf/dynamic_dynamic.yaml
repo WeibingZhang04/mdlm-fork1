@@ -1,0 +1,11 @@
+# @package _global_
+defaults:
+  - /experiment/ccf/common
+  - _self_
+
+model:
+  structured_decoder:
+    topology_mode: dynamic
+    factor_mode: dynamic
+    training:
+      topology_weight: 0.1

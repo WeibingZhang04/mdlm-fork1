@@ -1,0 +1,53 @@
+# @package _global_
+defaults:
+  - override /model: contextual-forest-small
+  - override /data: ccf_explicit
+  - _self_
+
+mode: train
+seed: 1
+backbone: dit
+parameterization: subs
+time_conditioning: false
+T: 0
+subs_masking: false
+model:
+  structured_decoder:
+    top_k: 128
+training:
+  ema: 0
+  antithetic_sampling: true
+  importance_sampling: false
+  sampling_eps: 0.001
+  change_of_variables: false
+optim:
+  lr: 0.0003
+  weight_decay: 0
+lr_scheduler:
+  num_warmup_steps: 50
+trainer:
+  devices: 1
+  precision: bf16-mixed
+  max_steps: 1000
+  val_check_interval: 500
+  limit_val_batches: 32
+  num_sanity_val_steps: 0
+loader:
+  global_batch_size: 4
+  eval_global_batch_size: 4
+  batch_size: 4
+  eval_batch_size: 4
+  num_workers: 0
+strategy:
+  find_unused_parameters: true
+eval:
+  generate_samples: false
+  compute_generative_perplexity: false
+callbacks:
+  checkpoint_monitor:
+    monitor: ${model.monitor_metric}
+  checkpoint_every_n_steps:
+    every_n_train_steps: 500
+checkpointing:
+  resume_from_ckpt: false
+wandb: null

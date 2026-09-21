@@ -1,0 +1,6 @@
+train: ???
+valid: ???
+cache_dir: ???
+tokenizer_name_or_path: gpt2
+wrap: true
+streaming: false
