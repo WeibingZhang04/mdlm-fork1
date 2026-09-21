@@ -1,0 +1,36 @@
+{
+  "root": "/u401/n23zhang/mdlm_data/tree_mdlm_cache/runs/original_table_repro_checks/fd_seed1_retry_453g2op1/study",
+  "submitted": true,
+  "job": "1557830",
+  "command": [
+    "sbatch",
+    "--parsable",
+    "--partition=ALL",
+    "--gres=gpu:1",
+    "--mem=40G",
+    "--cpus-per-task=4",
+    "--ntasks=1",
+    "--time=12:00:00",
+    "--no-requeue",
+    "--exclude=watgpu1008,watgpu1109,watgpu608,watgpu908",
+    "--mail-user=n23zhang@uwaterloo.ca",
+    "--mail-type=ALL,TIME_LIMIT,TIME_LIMIT_90,TIME_LIMIT_80,TIME_LIMIT_50,ARRAY_TASKS",
+    "--job-name=ccf-original-fd-s1-check",
+    "--output=/u401/n23zhang/mdlm_data/tree_mdlm_cache/runs/original_table_repro_checks/fd_seed1_retry_453g2op1/study/job-%j.out",
+    "--error=/u401/n23zhang/mdlm_data/tree_mdlm_cache/runs/original_table_repro_checks/fd_seed1_retry_453g2op1/study/job-%j.err",
+    "/u401/n23zhang/mdlm_data/tree_mdlm_cache/runs/original_table_repro_checks/fd_seed1_retry_453g2op1/study/run.sh"
+  ],
+  "source_commit": "15eae0c3f82bc76bb8ea6c95f326343c35e8cb46",
+  "training_tree": "12a4579956339c48c80b074ef6b6d5d4e9691a44",
+  "branch": "new_rerun_original_table_crf-recovery",
+  "previous_failed_attempt": {
+    "job": "1557817",
+    "state": "FAILED",
+    "before_training": true,
+    "root": "/u401/n23zhang/mdlm_data/tree_mdlm_cache/runs/original_table_repro_checks/fd_seed1_5t2oxxzp/study",
+    "error": "python: can't open file '/var/spool/slurm/d/job1557817/run_check.py': [Errno 2] No such file or directory\n",
+    "repair": "Use the explicit prepared study path because Slurm executes a spool copy of run.sh; do not derive it from $0.",
+    "scientific_changes": false
+  },
+  "slurm_spool_path_check": true
+}
