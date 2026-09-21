@@ -1,0 +1,171 @@
+{
+  "base_commit": "8e1772f4687a78a48b6a330f9f095e9880540de2",
+  "base_runtime_sha256": {
+    "configs/callbacks/checkpoint_every_n_steps.yaml": "5be220e8d655d135cfd519d717d4452a1d42fd8ce347e2c12408702970438d19",
+    "configs/callbacks/checkpoint_monitor.yaml": "5b0d2e98bb8549dd891a8446582280c5b8f18b5d673afb4b5b1f2395d54d1921",
+    "configs/callbacks/learning_rate_monitor.yaml": "fd2606a3aaf6960a1b57d7ddf62e3c2d294f91a3789d1db4a3b4151b06209cc1",
+    "configs/config.yaml": "c83f533c388fe26868097608b54efceca49fe2ceeebc27c5f117d2526de1d3da",
+    "configs/data/ag_news.yaml": "2404d40db639603ff5a9ac47a962a64fcf102b0d62c42699a74b01dd17abfecf",
+    "configs/data/eval_openwebtext_heldout_pinned.yaml": "48329e22d58414fc069bcb35d76ebdd71fd555cb8cda73c1a35b4c513037451e",
+    "configs/data/eval_scientific_papers_arxiv_pinned.yaml": "651bc0b9be186244abdb6a0547b2ccb507fe84b28807fe9914f047de85f69046",
+    "configs/data/eval_scientific_papers_pubmed_pinned.yaml": "e006d73ab8555e8bfebbb83b6bce912110c77adf944b4c1029b219427f4cfbe8",
+    "configs/data/eval_wikitext103_pinned.yaml": "07b2be9c3211bb9e9c7e99664b6990e86f9fd8560050d8362bbeac0082b2ce54",
+    "configs/data/lambada.yaml": "d453cfff487a491ec415a23df35ba9e192cab90238bfcb7611e912c9325f0246",
+    "configs/data/lm1b-gpt2.yaml": "a8aad591748a724c736f5b410685574c369b174dabe953633fe633ba50f937ab",
+    "configs/data/lm1b-streaming.yaml": "e0cb7de0c93087772d8900e3036fcd3d7955df5f1b34be89c834c7648d964bfa",
+    "configs/data/lm1b.yaml": "7f71670cdc588c0ed0e701d514f7ba931e0350c04a01b840f62123ff6e2547b9",
+    "configs/data/openwebtext-split.yaml": "b1b41c46001c0f572582a161e49130dbff8426c63add91b52709add4d56b52bb",
+    "configs/data/openwebtext-streaming.yaml": "96ea95014d9cf79768a34e4e5a6ef50e9f88675f9d2634f5fea43c1bd1fdb827",
+    "configs/data/openwebtext.yaml": "a7065e36df7a456f8c4d932a66a73883ba7725e819fbe0aabe617c2fed0d293a",
+    "configs/data/ptb.yaml": "621937018c87098469aefb8f164cf727c160cc0c20a77d62fde84990944b95f3",
+    "configs/data/scientific_papers_arxiv.yaml": "9d9480c1a136c0a05f25f7b2fe5708fcb04f5747bc580d8493121357f9fe5c46",
+    "configs/data/scientific_papers_pubmed.yaml": "2a4dd3294c0ecd2eca46483c5dddddc750fce80d4b3ce402b586bbe3056838e5",
+    "configs/data/text8-crop.yaml": "7a362a7d2a51438b64968caeb023aa7a2deb91b28a034615f98a951a2cd960b9",
+    "configs/data/text8.yaml": "c3b2d8f4f6c6271c10f3f15e1e4bf896465cccda5b0d6236bd336c467cac315f",
+    "configs/data/train_openwebtext_pinned.yaml": "a1c9641a5bb9910c38f1f305b74409f35327c7016740c569e04d8fad72d4e6ad",
+    "configs/data/wikitext103.yaml": "95e224c465ca12c5c4b68b86b2b8a6f5634b70591f2fc7beba1ee793f492eb78",
+    "configs/data/wikitext2.yaml": "78729db7e295f7340ac7b78857efe10005c8d0ff2bc0b6fc1ad578f2ac091814",
+    "configs/evaluation/contextual-forest-topology-diagnostics-v1.json": "275474bcb3617cf743f94b14eec3d6beeb1a36be2f681340ec01c44dc9138e3f",
+    "configs/experiment/contextual-forest-causal-evidence-v1.yaml": "611780e313cc0264b40334507844333a5d2dfee661cbf3191d32d128b93a1ca6",
+    "configs/experiment/contextual-forest-causal-smoke-promotion-policy-template.yaml": "c4cf2d6e65e9b9b5554fe5ac4a888e69a8432222dc0a7bd2241eb519879d4fc8",
+    "configs/experiment/contextual-forest-expansion-v1-promotion-policy.yaml": "5c36ce40ba60a350757845967a7567ec938621f02c4ae62e33f98099e2759077",
+    "configs/experiment/contextual-forest-expansion-v1.yaml": "aa9f7269a202f88985793f4f48e58d7289bc80da5c370a1f209e469b7fb02b93",
+    "configs/experiment/contextual-forest-g1.yaml": "5b5dd30f8b8c57609f31f07109a3fc78d6d4ed2bd17f281a075481339a685240",
+    "configs/experiment/contextual-forest-generation-paper-v1.yaml": "8b48305568495434836b39f1770342e1b9366b49746e45f7af85cf4233d0b837",
+    "configs/experiment/contextual-forest-k128-promotion-policy-template.yaml": "3f1e85b0467843c8cc300aa22120c4788c48443571e39836776e79478eab6608",
+    "configs/experiment/contextual-forest-tensor-train-matched-v1.yaml": "356f1fa0084abf9dae070b4838c8d9295e10870d15c4d936d43dc2e5db68b522",
+    "configs/experiment/tensor-train-owt-feasibility-v1.yaml": "2227fcb10f09d6e424cc7c839583c00384e29cd813c9aad635484b16e771eaa1",
+    "configs/lr_scheduler/constant_warmup.yaml": "f9828ad807d5d32def6e8cc6706553fb55585becc17bcc0ccf5191a710f234f8",
+    "configs/lr_scheduler/cosine_decay_warmup.yaml": "90bf1b21df14c7b0387d336c04b406260241c4f6012266756175cfdedd1c4bc5",
+    "configs/model/contextual-forest-small.yaml": "d19f76c3305f7005de4f3a626ef918a8f731d72ebc45a164d2f8af08e6043a1e",
+    "configs/model/contextual-forest-tiny.yaml": "bcd39fc10e4f5dbf2ea347fc33128591fcc3d53ed538b302994e5d02f7556142",
+    "configs/model/medium.yaml": "46590019e840a5ecd3637d65d57d02c17f617a499bfc17657c382cbae557d0db",
+    "configs/model/small-ar.yaml": "382903fa055efb0f8772d0e411b0c9816baca027afab8da9996cd8bf43703b89",
+    "configs/model/small-crf.yaml": "264f92393e73788114ca0ceff417cbda12588236a2f73c3380d7aec8a08fe22a",
+    "configs/model/small.yaml": "6583e3fa5fe4fcb0b771045f127a8365a61627d89f18a53c249a6027ea4dae3f",
+    "configs/model/tiny-ar.yaml": "ddab87a25faaf33a0f873d5d4c3043a9e6a26072f215b6dc65bdcb15dce0061b",
+    "configs/model/tiny-crf.yaml": "7223fc92ca3a45326d042288d3f9bf3275048c28d03c46e3309602f752ce0f2c",
+    "configs/model/tiny-dimamba.yaml": "339090beb75b1f185839326725bb3f21d920635c1d2a29132367bf1ae4c9773a",
+    "configs/model/tiny.yaml": "461d83f2a242bdd116dcce2f60081047f0d6c0b62a7416a65a441df2e101308f",
+    "configs/noise/ar.yaml": "0612b03ff5c790b1a1866ac0c2577159c7b9aa586ba64ca5bfefda680f28f652",
+    "configs/noise/linear.yaml": "179e5f731fb8a3fc0e2d3edd0fd77ee1f5aa1396dec6b60ccec9b43d526d3fbb",
+    "configs/noise/loglinear.yaml": "07e6e898f93eb54563170e95e2eb313dbf7927d4a1c6793d8c29ea407f31142d",
+    "configs/noise/polynomial.yaml": "0d01540408e1b8432495742b77b507f90b1c93addc70297dd4d257d54b855995",
+    "configs/strategy/ddp.yaml": "214271acf4b3b93c218471c2615946242424266e6032c9637fe5deda1a1a5d19",
+    "configs/strategy/fsdp.yaml": "b23a1902f0a517e01e81c6503d4074987cd918bf579b7498f5fd0399b4c21296",
+    "crf_utils.py": "b51fbf043e3d1c648a22a77356060d3115a7f65a34e1d1dba641bdc3b9968f7e",
+    "data_provenance.py": "390237fb7ef3913b3f18ce7a24b9cbd634a9ca3d6f12202b04b1ed2b9fdc019c",
+    "dataloader.py": "bfe0dcd6e3143be285ff20eb7c3eef09f550299908c3de3cda3187335e8005a9",
+    "diffusion.py": "204aa815b73799de7eeacc760ec494adda5d546983fd750884d74ac704f7e825",
+    "evaluation/__init__.py": "6b72bf5b04f0c555acd73f7d128738f84950b8d68f327d34f32ee5119f50934a",
+    "evaluation/adapter_pair_origin.py": "f47c288a82da47338b1da108d13276af461c7c3ae63e52b3677c1da64a9af1e0",
+    "evaluation/causal_denoising.py": "77261899fab88aebf079c67a8426d1260691779b4cf62b1ea2f5dbedc520e7b3",
+    "evaluation/centered_coupling.py": "1ea2c16ecce5417c7e8c3d7dcf7854257e8b46956ff6bac1228db5dc6a282b55",
+    "evaluation/conditional_denoising_records.py": "1cae9f4ca203166317c7453c0e4dc4f7189b298a302dcbfa352b733505cc0b2f",
+    "evaluation/decode_integrity.py": "13c1c98d57c3858529efab5cbc232b658abd1419df47f1ed0e8fec12e0096028",
+    "evaluation/dependence_diagnostics.py": "41289287f1b418cbac65fe5d8b43d20271048904523c3c3c7a1844cf1ee0f9a4",
+    "evaluation/fixed_group_sampling.py": "b0063d943197ac1be4bfae2714a6628bc8713cb70ebf4e6292e5bb44490ebeee",
+    "evaluation/fresh_pair_statistics.py": "0657a63d30fa8c06c3012c810a0d4746c3c2e05be53b00ce4518ce5214667729",
+    "evaluation/generation_adapter_comparison.py": "f5133b399744d69d5a8f6b1ce9dd8d2e069b5438b0e98338e136d7e7d289004c",
+    "evaluation/generation_analysis_artifacts.py": "b0b69c3e799dd136d17171d45e780f73c17f2336f0617a4c7493adb8017ea1cf",
+    "evaluation/generation_harness.py": "4d8735386b85d42982492adeb369ebf89d1ae95e294fa30791b1c8732c899c63",
+    "evaluation/generation_metrics.py": "ab911c6dfbed67253b2a102e6ab8168115f01ec5927c073a102d2107d4f1ca26",
+    "evaluation/generation_protocol.py": "ce1927b543cec3b04fcebca3ada4b8aa8a2d9d2c1cbb0019c3b0289403852ced",
+    "evaluation/generation_queue_artifacts.py": "ad6d08bd52cfe5f728795e8db028b4f212e64f3d7592131cf8e845311d0bb11b",
+    "evaluation/generation_shard_aggregation.py": "224ae66d89341b2a44d873e0812c901c2336c16d7c59b4b00f0d79023c5df379",
+    "evaluation/hierarchical_causal_statistics.py": "9d492fde26c17486ea8f5725c920e0f7bd3cff489a3693d3a7e4bf56bc1eaf6e",
+    "evaluation/infilling_prompts.py": "a15a90de841c0e0f63403e1ecb49741f5689d941a31ad568c0112cc41360b2d8",
+    "evaluation/prompt_provenance.py": "e0faea005c5a6fefd45fe6681ffc47782b4afcb59bb89fbbbd2fc3021fce86e1",
+    "evaluation/staged_generation.py": "bba98324f87ac1613a2e9741ee7b0ef68dbebf2ea3f6564cc640249c2f148ee8",
+    "evaluation/structured_metrics.py": "129c3b44e4f2e73861d53b9aa22075ccfbd21495f20f2f34404a8933481201e2",
+    "evaluation/tensor_train_baseline.py": "ca4aa8103e2573b40d1a47fab740fa948d7bac38fe3eab88003f06f14358cb46",
+    "evaluation/topology_diagnostics.py": "f89815b789aa200c864d99ba462baaad4d1e821af1b075b50787273df75f7cbc",
+    "main.py": "0cf668359e791980ada5ea3fae8e488cd3ae72503bd67a801b5099ff46cbb183",
+    "models/__init__.py": "533cb562e8b8a7719cae5753f1b5280af7f9275b6d041716e4f6999f58702cd2",
+    "models/autoregressive.py": "eabc0b5e993e46e744b13d67f3df5eba17d4bdda2b106137285833d01e81a1ce",
+    "models/centered_forest.py": "5d146676b4a2a408df67449690bf3178b3b1e9816eb25d780de80d1a58dc27c3",
+    "models/contextual_unary.py": "c252baf7502d8f4c13dd495dbfe482ae3a754f8413d5238b126c36973a640a2b",
+    "models/crf_decoder.py": "14493b3b110b7077a94d7e5413b780dd0cf02b73723f903bcb05912a0de73a35",
+    "models/dimamba.py": "17f1b4e11e5dd63acebd441532f37de51e5822f2583ef7c41fdabbe0a6a34ccc",
+    "models/directional_forest.py": "5c81101e1c44e2cb30c3567eb2e27dce2129014157be63d1dc5686c663cb94e1",
+    "models/dit.py": "2ad0ea896f2a59947b0baa72679851f7238b2836d336e39975b44b3cc95d8377",
+    "models/ema.py": "f1417e66a46b2c2144e3fd47bb5c91c819f8c55f6bd18c75b72a75dc36bafb60",
+    "models/structured_decoder.py": "b90fd02618d5162f8908f266fef1bdb2418a4bc172ede0863cd60ddeaa0f257a",
+    "noise_schedule.py": "da16320cebbc727c03e8e45297593505fb41a597c7a5ef29eacd7043207a763c",
+    "requirements.yaml": "c8bf24de932388bed3ff8fe80380bb3833dfcd27ec5063ffa7f49c92e74465cd",
+    "structured_objective.py": "57f54eef2c1bbc6d1efb313a4ec3b936c7175c5a93294a1f850ddfd567a787c9",
+    "structured_pairing.py": "5133fa6a98ebdb085390f14159d0aa3d8b91e00c42e17203a680eec432ec68e0",
+    "structured_training.py": "0a242f3a437f9193cb69fdb336bbd4414451d6d621135cbd9a97a1a9f998bbdf",
+    "structured_utils.py": "9c26e3ecd764945fcdf171d205e22f5f331f2822baa1e7418358908a1dda9226",
+    "utils.py": "bd514e4e46f89e0815d351bcc5bf4ed753166d6da991b2413974ec7a35c2fd21",
+    "scripts/export_structured_adapter.py": "55c17ad4602b493bbf737c505c87058edc6d8947ea92ee8846a681602693a791",
+    "scripts/run_generation_pilot.py": "d65b5a26615377454a43aa76e78db4a329d0368c2ffeaadd173dac25ec48b910"
+  },
+  "variants": {
+    "r8": {
+      "source_snapshot": "ccf_separate7k.GfwIX1",
+      "patch_sha256": "a26850e15b679ff98c9ec49f91a9d2e1293fcf4381b6d9848ec5aaf82999d199",
+      "changed_sha256": {
+        "configs/model/contextual-forest-tiny.yaml": "93910c295b5e31d8a763fcfc85c47b0d99cea20c044d7b394e9db5cd429a65d3",
+        "diffusion.py": "8c34a739370e582b2717349a9ed7b6aea9ea768826577052dbde46ec85a8fe0c",
+        "models/directional_forest.py": "9010b64a3a9548ceae50234505bbaec581b4d2600a5e3f28d2f794f70d376317",
+        "models/structured_decoder.py": "d4af19670d09c99444ecca758e7a6c69bc6df9f4cddeeeacd0d7bc48717c78aa",
+        "scripts/export_structured_adapter.py": "50c9d433810db12ab3bca5680b41914ed9f8c298912eee7e33a2a6bc146a241e"
+      }
+    },
+    "r16": {
+      "source_snapshot": "ccf_separate_rank16.9FKflg",
+      "patch_sha256": "8c9d418e603d8993cf2ad9689bedf8eee18fa35fd84f6fb55f00a3cc64781458",
+      "changed_sha256": {
+        "evaluation/generation_harness.py": "2a5dac8c8df5367a8517c3c7d10d07d4a3f9fc104709156aef9d25e5960638bb",
+        "structured_objective.py": "cb9bffabb63e2b28b5a0f4f160d37487508e716e87c1679c74954c3250ef4776",
+        "structured_utils.py": "61892523cb59ad6da842326df3fcf319989d5b9efb50da8d0b039aa99e0a15bf"
+      }
+    },
+    "eval": {
+      "source_snapshot": "ccf_confirmation_100.daiam2ji",
+      "patch_sha256": "fa957527840094eb36227748034f9fd376de281294a07bc0c10fb22800210242",
+      "changed_sha256": {
+        "structured_utils.py": "cf7661da2c02ba0cf7ee455b9654d6298807a13118d92953133f0aff76b87400"
+      }
+    }
+  },
+  "sampler_extraction": {
+    "v3_source_sha256": "07c7cd17edec2b8502ea89d8d9745ecfe269353236986603e91bfef9922d75c8",
+    "v4_source_sha256": "bd0e6c204346dfcd10ce30bb83b05b5ede12204074b22a7632ae306ac448420b",
+    "computational_function_ast_identity": true,
+    "selected_mode": "level_draws",
+    "omitted": "CLI, benchmark and unused alternative modes"
+  },
+  "gate_source_sha256": "282e36b80f522cdaae387a8e28f57d8d85481ce5ee58c1c17231e65d1b715b54",
+  "training_launchers": {
+    "basic_1000": {
+      "name": "train_four_adaptors.sh",
+      "sha256": "79fff02ed5806ad2ce6d800cb28574f6010b773ebfb24bdb2232aa460bc38187"
+    },
+    "basic_3000": {
+      "name": "continue_four_ccf_matched_to_3k.sh",
+      "sha256": "91228c91c3b97329a678cb57d0994aa44f89b1a9ee14e69d883d3d51174e5f43"
+    },
+    "basic_6000": {
+      "name": "continue_four_ccf_matched_3k_to_6k.sh",
+      "sha256": "919b526cf94c0f350e327d7de03678059e90dab1e9f76cc30dffe1f35549106f"
+    },
+    "basic_10000": {
+      "name": "continue_four_ccf_matched_6k_to_10k.sh",
+      "sha256": "2646d687cfbf2fe7a079ecbf4a69381e3605cfd15bc069a05c66998e5746a48c"
+    },
+    "r8_fd": {
+      "name": "r8_fd",
+      "sha256": "bfd723bb32e5cd1b2fdd7d3389fa0a5ca8e2258c8971e4b200da5fa9f690dd19"
+    },
+    "r8_dd": {
+      "name": "r8_dd",
+      "sha256": "18b04560f5de9e063ac4fd155f4d27cde0af42afbc65e275c56bad14a06d1eeb"
+    },
+    "r16": {
+      "name": "r16",
+      "sha256": "6809560cc2cd899e1b03bce92ab69c45a3c57c6caa529e54461d99a96a6717fe"
+    }
+  }
+}

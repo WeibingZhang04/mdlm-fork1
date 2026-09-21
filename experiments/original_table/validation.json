@@ -1,0 +1,127 @@
+{
+  "training_cli_checks": [
+    {
+      "arm": "basic_ff",
+      "phase": "basic_1000",
+      "identical_arguments_except_paths": true
+    },
+    {
+      "arm": "basic_ff",
+      "phase": "basic_3000",
+      "identical_arguments_except_paths": true
+    },
+    {
+      "arm": "basic_ff",
+      "phase": "basic_6000",
+      "identical_arguments_except_paths": true
+    },
+    {
+      "arm": "basic_ff",
+      "phase": "basic_10000",
+      "identical_arguments_except_paths": true
+    },
+    {
+      "arm": "basic_fd",
+      "phase": "basic_1000",
+      "identical_arguments_except_paths": true
+    },
+    {
+      "arm": "basic_fd",
+      "phase": "basic_3000",
+      "identical_arguments_except_paths": true
+    },
+    {
+      "arm": "basic_fd",
+      "phase": "basic_6000",
+      "identical_arguments_except_paths": true
+    },
+    {
+      "arm": "basic_fd",
+      "phase": "basic_10000",
+      "identical_arguments_except_paths": true
+    },
+    {
+      "arm": "basic_df",
+      "phase": "basic_1000",
+      "identical_arguments_except_paths": true
+    },
+    {
+      "arm": "basic_df",
+      "phase": "basic_3000",
+      "identical_arguments_except_paths": true
+    },
+    {
+      "arm": "basic_df",
+      "phase": "basic_6000",
+      "identical_arguments_except_paths": true
+    },
+    {
+      "arm": "basic_df",
+      "phase": "basic_10000",
+      "identical_arguments_except_paths": true
+    },
+    {
+      "arm": "basic_dd",
+      "phase": "basic_1000",
+      "identical_arguments_except_paths": true
+    },
+    {
+      "arm": "basic_dd",
+      "phase": "basic_3000",
+      "identical_arguments_except_paths": true
+    },
+    {
+      "arm": "basic_dd",
+      "phase": "basic_6000",
+      "identical_arguments_except_paths": true
+    },
+    {
+      "arm": "basic_dd",
+      "phase": "basic_10000",
+      "identical_arguments_except_paths": true
+    },
+    {
+      "arm": "r8_fd",
+      "phase": "r8_fd",
+      "identical_arguments_except_paths": true
+    },
+    {
+      "arm": "r8_dd",
+      "phase": "r8_dd",
+      "identical_arguments_except_paths": true
+    },
+    {
+      "arm": "r16_fd",
+      "phase": "r16",
+      "identical_arguments_except_paths": true
+    },
+    {
+      "arm": "r16_dd",
+      "phase": "r16",
+      "identical_arguments_except_paths": true
+    }
+  ],
+  "pilot_cells": 171,
+  "confirmation_cells": 76,
+  "total_samples": 11020,
+  "historical_sampler_functions_ast_identical": true,
+  "historical_sampler_mode": "unchecked_batched_roots_kruskal + level_draws",
+  "syntax_checks": "passed",
+  "privacy_pattern_scan": {
+    "matches": [],
+    "scope": "New package only; common token/key patterns plus personal paths/emails. Not a comprehensive secret audit."
+  },
+  "gpu_jobs_submitted": 0,
+  "source_reconstruction": {
+    "status": "passed",
+    "verified_files": 398,
+    "scope": "Local CPU reconstruction from the exact hashed base-runtime files; temporary fixture commit substitutes only its Git identity. All reconstructed runtime contents match the original recorded hashes. No model loaded."
+  },
+  "ppl_reproduction": "Not yet measured for this wrapper.",
+  "remote_source_reconstruction": {
+    "status": "passed",
+    "base_commit": "8e1772f4687a78a48b6a330f9f095e9880540de2",
+    "verified_files": 398,
+    "model_loaded": false
+  }
+}
