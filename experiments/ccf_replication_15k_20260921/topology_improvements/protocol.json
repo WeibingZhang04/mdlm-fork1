@@ -1,0 +1,77 @@
+{
+  "declared_at_utc": "2026-09-21T06:30:23.439330+00:00",
+  "source_head": "2051502329429a252d3b806e0ed195ff379c42b6",
+  "inference_variants": [
+    "native",
+    "active_chain",
+    "chain_coverage",
+    "chain_unique_anchors",
+    "chain_no_absolute_local",
+    "chain_absolute_window4"
+  ],
+  "dev": {
+    "samples": 20,
+    "base_seed": 210001,
+    "lengths": [
+      128,
+      1024
+    ],
+    "model_variant_indices": [
+      3,
+      7
+    ],
+    "denoising_steps": [
+      8,
+      32
+    ]
+  },
+  "confirmation": {
+    "samples": 100,
+    "base_seed": 220001,
+    "lengths": [
+      1024
+    ],
+    "model_variant_indices": [
+      3,
+      7
+    ],
+    "denoising_steps": [
+      8,
+      32
+    ],
+    "primary_contrast": "Basic DD active_chain versus native at 8 denoising steps",
+    "selection": "All six variants evaluated regardless of development outcomes"
+  },
+  "training": {
+    "variants": [
+      "native",
+      "active_chain",
+      "chain_dense_teacher"
+    ],
+    "initial_step": 6000,
+    "final_step": 8000,
+    "additional_updates": 2000,
+    "seed": 1,
+    "optimizer_restored": true,
+    "restarted_training_stream": "Identical across arms"
+  },
+  "trained_confirmation": {
+    "samples": 100,
+    "base_seed": 230001,
+    "length": 1024,
+    "denoising_steps": [
+      8,
+      32
+    ],
+    "same_job_all_models": true
+  },
+  "integrity": {
+    "no_gold_in_generation": true,
+    "no_sample_filtering": true,
+    "no_seed_selection": true,
+    "same_scoring_and_eos_policy": true,
+    "report_all_outcomes": true,
+    "secondary_comparisons_exploratory": true,
+    "training_seed_count": 1
+  }
+}

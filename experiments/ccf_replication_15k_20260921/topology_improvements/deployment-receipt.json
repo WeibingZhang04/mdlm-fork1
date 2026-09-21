@@ -1,0 +1,194 @@
+{
+  "root": "/u401/n23zhang/mdlm_data/tree_mdlm_cache/runs/ccf_replication15k_20260921.wmjngfco/topology_improvements/study_0pwo7qw7",
+  "source_head": "2051502329429a252d3b806e0ed195ff379c42b6",
+  "source_code": "/u401/n23zhang/mdlm_data/tree_mdlm_cache/runs/ccf_replication15k_20260921.wmjngfco/code",
+  "helper_sha256": {
+    "README.md": "20f1c260e9014ad9730dcccb8443618d658d0ccd4ad14b85eb9b13e33c213e9b",
+    "train_variant.py": "ca33ec640e237f87fb4e1fa34d8270c085ca02555515414b4d2c3de719a4ad03",
+    "smoke_gate.py": "c88a7a14efc663eb9a04e90b001f0e6d054e3ff2408dbd44ba80f9648ce84e5f",
+    "deploy_repairs.py": "0875e0513f4359f6b7b6721ca6964fdac21dfeaaa9bc3de267eefbf7b24604ec",
+    "generation_worker.py": "71b973833373aef44d5e346e2e2be5356ce4d6bc12661aaf042f741cc80c0ab4",
+    "deploy_improvements.py": "187776dfd41bbc2788a03794fb7412bd68f8a5f4e463acaa1b45f35332104901",
+    "repair-receipt.json": "fe30f1644222b81eba6dbe680e88dd69a477c88aca0a7e861ff2854b288566c1",
+    "variant_observer.py": "7a63a404efefd47d16f8b972acef703bd2813662cd6dac9d9f10bc4fb883be1c",
+    "run_variant_generation.py": "ee4b62a2da3243784a809760dcc5e66d76edcfc1b47733c58affa677884cd43c",
+    "topology_variants.py": "74abedf48c7c2b4e0796cc51a12346cd194b7aadd9f8ad3451ca885a8afd8f57",
+    "protocol.json": "e292b80bf90e772febfcc8c150cb55a58b815f0bc739d2bed840e88c328aa60d",
+    "evaluate_trained.py": "be60bd32164c1a19e17a7c9a0c4d27d0b7fb729c6a79825424a1337a35149d71",
+    "test_topology_variants.py": "14a2360dbd4bfa85106658b69c15ea6303b856f539fb2703c1b8c0b324b20eeb"
+  },
+  "jobs": {
+    "gate": "1557038",
+    "dev": "1557039",
+    "confirm": "1557040",
+    "train": "1557041",
+    "trained_confirm": "1557042"
+  },
+  "commands": {
+    "gate": [
+      "sbatch",
+      "--parsable",
+      "--job-name=ccf-topo-gate",
+      "--partition=ALL",
+      "--time=01:00:00",
+      "--mem=40G",
+      "--cpus-per-task=4",
+      "--gres=gpu:1",
+      "--exclude=watgpu1008,watgpu1109,watgpu608,watgpu908",
+      "--mail-user=n23zhang@uwaterloo.ca",
+      "--mail-type=ALL,ARRAY_TASKS,TIME_LIMIT",
+      "--output=/u401/n23zhang/mdlm_data/tree_mdlm_cache/runs/ccf_replication15k_20260921.wmjngfco/topology_improvements/study_0pwo7qw7/gate-%A_%a.out",
+      "--error=/u401/n23zhang/mdlm_data/tree_mdlm_cache/runs/ccf_replication15k_20260921.wmjngfco/topology_improvements/study_0pwo7qw7/gate-%A_%a.err",
+      "/u401/n23zhang/mdlm_data/tree_mdlm_cache/runs/ccf_replication15k_20260921.wmjngfco/topology_improvements/study_0pwo7qw7/gate.sh"
+    ],
+    "dev": [
+      "sbatch",
+      "--parsable",
+      "--job-name=ccf-topo-dev",
+      "--partition=ALL",
+      "--time=04:00:00",
+      "--mem=40G",
+      "--cpus-per-task=4",
+      "--gres=gpu:1",
+      "--exclude=watgpu1008,watgpu1109,watgpu608,watgpu908",
+      "--mail-user=n23zhang@uwaterloo.ca",
+      "--mail-type=ALL,ARRAY_TASKS,TIME_LIMIT",
+      "--output=/u401/n23zhang/mdlm_data/tree_mdlm_cache/runs/ccf_replication15k_20260921.wmjngfco/topology_improvements/study_0pwo7qw7/dev-%A_%a.out",
+      "--error=/u401/n23zhang/mdlm_data/tree_mdlm_cache/runs/ccf_replication15k_20260921.wmjngfco/topology_improvements/study_0pwo7qw7/dev-%A_%a.err",
+      "--array=0-3%1",
+      "--dependency=afterok:1557038",
+      "/u401/n23zhang/mdlm_data/tree_mdlm_cache/runs/ccf_replication15k_20260921.wmjngfco/topology_improvements/study_0pwo7qw7/dev.sh"
+    ],
+    "confirm": [
+      "sbatch",
+      "--parsable",
+      "--job-name=ccf-topo-confirm",
+      "--partition=ALL",
+      "--time=08:00:00",
+      "--mem=40G",
+      "--cpus-per-task=4",
+      "--gres=gpu:1",
+      "--exclude=watgpu1008,watgpu1109,watgpu608,watgpu908",
+      "--mail-user=n23zhang@uwaterloo.ca",
+      "--mail-type=ALL,ARRAY_TASKS,TIME_LIMIT",
+      "--output=/u401/n23zhang/mdlm_data/tree_mdlm_cache/runs/ccf_replication15k_20260921.wmjngfco/topology_improvements/study_0pwo7qw7/confirm-%A_%a.out",
+      "--error=/u401/n23zhang/mdlm_data/tree_mdlm_cache/runs/ccf_replication15k_20260921.wmjngfco/topology_improvements/study_0pwo7qw7/confirm-%A_%a.err",
+      "--array=0-1%1",
+      "--dependency=afterok:1557039",
+      "/u401/n23zhang/mdlm_data/tree_mdlm_cache/runs/ccf_replication15k_20260921.wmjngfco/topology_improvements/study_0pwo7qw7/confirm.sh"
+    ],
+    "train": [
+      "sbatch",
+      "--parsable",
+      "--job-name=ccf-topo-train",
+      "--partition=ALL",
+      "--time=08:00:00",
+      "--mem=40G",
+      "--cpus-per-task=4",
+      "--gres=gpu:1",
+      "--exclude=watgpu1008,watgpu1109,watgpu608,watgpu908",
+      "--mail-user=n23zhang@uwaterloo.ca",
+      "--mail-type=ALL,ARRAY_TASKS,TIME_LIMIT",
+      "--output=/u401/n23zhang/mdlm_data/tree_mdlm_cache/runs/ccf_replication15k_20260921.wmjngfco/topology_improvements/study_0pwo7qw7/train-%A_%a.out",
+      "--error=/u401/n23zhang/mdlm_data/tree_mdlm_cache/runs/ccf_replication15k_20260921.wmjngfco/topology_improvements/study_0pwo7qw7/train-%A_%a.err",
+      "--array=0-2%1",
+      "--dependency=afterok:1557038",
+      "/u401/n23zhang/mdlm_data/tree_mdlm_cache/runs/ccf_replication15k_20260921.wmjngfco/topology_improvements/study_0pwo7qw7/train.sh"
+    ],
+    "trained_confirm": [
+      "sbatch",
+      "--parsable",
+      "--job-name=ccf-topo-trained_confirm",
+      "--partition=ALL",
+      "--time=08:00:00",
+      "--mem=40G",
+      "--cpus-per-task=4",
+      "--gres=gpu:1",
+      "--exclude=watgpu1008,watgpu1109,watgpu608,watgpu908",
+      "--mail-user=n23zhang@uwaterloo.ca",
+      "--mail-type=ALL,ARRAY_TASKS,TIME_LIMIT",
+      "--output=/u401/n23zhang/mdlm_data/tree_mdlm_cache/runs/ccf_replication15k_20260921.wmjngfco/topology_improvements/study_0pwo7qw7/trained_confirm-%A_%a.out",
+      "--error=/u401/n23zhang/mdlm_data/tree_mdlm_cache/runs/ccf_replication15k_20260921.wmjngfco/topology_improvements/study_0pwo7qw7/trained_confirm-%A_%a.err",
+      "--dependency=afterok:1557041",
+      "/u401/n23zhang/mdlm_data/tree_mdlm_cache/runs/ccf_replication15k_20260921.wmjngfco/topology_improvements/study_0pwo7qw7/trained_confirm.sh"
+    ]
+  },
+  "declared_protocol": {
+    "declared_at_utc": "2026-09-21T06:30:23.439330+00:00",
+    "source_head": "2051502329429a252d3b806e0ed195ff379c42b6",
+    "inference_variants": [
+      "native",
+      "active_chain",
+      "chain_coverage",
+      "chain_unique_anchors",
+      "chain_no_absolute_local",
+      "chain_absolute_window4"
+    ],
+    "dev": {
+      "samples": 20,
+      "base_seed": 210001,
+      "lengths": [
+        128,
+        1024
+      ],
+      "model_variant_indices": [
+        3,
+        7
+      ],
+      "denoising_steps": [
+        8,
+        32
+      ]
+    },
+    "confirmation": {
+      "samples": 100,
+      "base_seed": 220001,
+      "lengths": [
+        1024
+      ],
+      "model_variant_indices": [
+        3,
+        7
+      ],
+      "denoising_steps": [
+        8,
+        32
+      ],
+      "primary_contrast": "Basic DD active_chain versus native at 8 denoising steps",
+      "selection": "All six variants evaluated regardless of development outcomes"
+    },
+    "training": {
+      "variants": [
+        "native",
+        "active_chain",
+        "chain_dense_teacher"
+      ],
+      "initial_step": 6000,
+      "final_step": 8000,
+      "additional_updates": 2000,
+      "seed": 1,
+      "optimizer_restored": true,
+      "restarted_training_stream": "Identical across arms"
+    },
+    "trained_confirmation": {
+      "samples": 100,
+      "base_seed": 230001,
+      "length": 1024,
+      "denoising_steps": [
+        8,
+        32
+      ],
+      "same_job_all_models": true
+    },
+    "integrity": {
+      "no_gold_in_generation": true,
+      "no_sample_filtering": true,
+      "no_seed_selection": true,
+      "same_scoring_and_eos_policy": true,
+      "report_all_outcomes": true,
+      "secondary_comparisons_exploratory": true,
+      "training_seed_count": 1
+    }
+  },
+  "submitted_utc": "2026-09-21T06:32:12.081635+00:00"
+}

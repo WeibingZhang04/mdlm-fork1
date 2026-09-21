@@ -1,0 +1,11 @@
+{
+  "collected_utc": "2026-09-21T06:34:47.054114+00:00",
+  "gate_passed": false,
+  "cells": [],
+  "comparisons": [],
+  "jobs": {
+    "squeue": "1557038|PENDING|0:00|(Priority)\n1557042|PENDING|0:00|(Dependency)\n1557041_[0-2%1]|PENDING|0:00|(Dependency)\n1557040_[0-1%1]|PENDING|0:00|(Dependency)\n1557039_[0-3%1]|PENDING|0:00|(Dependency)\n",
+    "sacct": "1557038|PENDING|00:00:00|0:0|None assigned\n1557042|PENDING|00:00:00|0:0|None assigned\n1557039_[0-3%1]|PENDING|00:00:00|0:0|None assigned\n1557040_[0-1%1]|PENDING|00:00:00|0:0|None assigned\n1557041_[0-2%1]|PENDING|00:00:00|0:0|None assigned\n"
+  },
+  "interpretation": "All outcomes retained. New random seeds assess sampling stability, not an untouched corpus test. Evaluate repetition/EOS tradeoffs alongside PPL. No completed cell implies no quality conclusion."
+}

@@ -1,0 +1,62 @@
+{
+  "new_jobs": {
+    "weights": "1557034",
+    "graph_generation": "1557035"
+  },
+  "helper_dir": "/u401/n23zhang/mdlm_data/tree_mdlm_cache/runs/ccf_replication15k_20260921.wmjngfco/diagnostic-repairs-v2",
+  "helper_sha256": {
+    "campaign_observer.py": "49ecba6a60c8b54a3fa0510ebc0111b8a19b61f4101f56eb9f0f6092658c68d3",
+    "legacy_replay.py": "476f310e2539b2685d7ae471f5a22467a4aa7ecf7ee32c5015b396d274c748b8",
+    "evaluate_arm.py": "3ccc9a9f142d53db29dd9cac765024eceab73cfc4f08b0a442a41dbd3427da51",
+    "runtime_probe.py": "cc25475176eb5f2e3a6ac288e10e8bdca4142a8a0fe1735459bed1eaaed31188",
+    "gate.py": "71bbd0b1016cb24be87cf405911f67e320224da8edd30e9537d954bda6c99a11",
+    "campaign_common.py": "3f51a94bad3f3629581eb7f3757c635b6705811bb8a043fcd796fdbb9bf92773",
+    "train_arm.py": "75afb7f5698db1ee64564e17bf8de4b0f5d1730162b6f2195b5d389e66dafccb",
+    "run_graph_intervention.py": "52109a287ae19cf5c60acc4002034ec80504ec0b7f6ae1fec3759091d5825b50",
+    "run_pilot.py": "9e1bf0d5a58204d68254d22aab7ce6a45a5ecb4b102afb10f50e1488b133ec81",
+    "smoke.py": "ba6fba335d9a80e17ca83ef5a50d328a6eccd6711aedbefbed23b758975c786a",
+    "weight_observer.py": "52eed2aee21c9d887266ad2f8b8cd13b1887859c40c638e75abbfbd4e4a01c4d",
+    "topology_diagnosis.py": "807bad2e59b05b6f1d78f2ce0b31bc1ec612ea8a52884d324d8a4e29e3c8f77f",
+    "teacher_probe.py": "f34363cc1ca96a655f5dd92c09d3439b8d5800e45c1837e41be8051cef0b0c67",
+    "weight_eval.py": "fc5de95ad3d2032b853025bdb326416ab61a3e9a2b23e4e1e8524a434540c729",
+    "weight_trial.py": "c919d739eb8283ca6a4a3cd369408f1d3f38f902bb9f14f043bad25619ad9112",
+    "graph_generation.py": "815a91ee81efd449bd76b46f865b82f7dbaaad48649f40da520e611694d25a29"
+  },
+  "commands": {
+    "weights": [
+      "sbatch",
+      "--parsable",
+      "--array=0-2%1",
+      "--job-name=ccf15k-weights-retry2",
+      "--partition=ALL",
+      "--time=08:00:00",
+      "--mem=36G",
+      "--cpus-per-task=4",
+      "--gres=gpu:1",
+      "--exclude=watgpu1008,watgpu1109,watgpu608,watgpu908",
+      "--mail-user=n23zhang@uwaterloo.ca",
+      "--mail-type=ALL,ARRAY_TASKS,TIME_LIMIT",
+      "--output=/u401/n23zhang/mdlm_data/tree_mdlm_cache/runs/ccf_replication15k_20260921.wmjngfco/logs/weights-retry2-%A_%a.out",
+      "--error=/u401/n23zhang/mdlm_data/tree_mdlm_cache/runs/ccf_replication15k_20260921.wmjngfco/logs/weights-retry2-%A_%a.err",
+      "/u401/n23zhang/mdlm_data/tree_mdlm_cache/runs/ccf_replication15k_20260921.wmjngfco/weights-retry2.sh"
+    ],
+    "graph_generation": [
+      "sbatch",
+      "--parsable",
+      "--array=0-3%1",
+      "--job-name=ccf15k-graph_generation-retry2",
+      "--partition=ALL",
+      "--time=04:00:00",
+      "--mem=36G",
+      "--cpus-per-task=4",
+      "--gres=gpu:1",
+      "--exclude=watgpu1008,watgpu1109,watgpu608,watgpu908",
+      "--mail-user=n23zhang@uwaterloo.ca",
+      "--mail-type=ALL,ARRAY_TASKS,TIME_LIMIT",
+      "--output=/u401/n23zhang/mdlm_data/tree_mdlm_cache/runs/ccf_replication15k_20260921.wmjngfco/logs/graph_generation-retry2-%A_%a.out",
+      "--error=/u401/n23zhang/mdlm_data/tree_mdlm_cache/runs/ccf_replication15k_20260921.wmjngfco/logs/graph_generation-retry2-%A_%a.err",
+      "/u401/n23zhang/mdlm_data/tree_mdlm_cache/runs/ccf_replication15k_20260921.wmjngfco/graph_generation-retry2.sh"
+    ]
+  },
+  "original_artifacts_preserved": true
+}
