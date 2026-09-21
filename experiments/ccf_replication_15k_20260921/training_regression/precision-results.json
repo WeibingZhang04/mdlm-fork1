@@ -1,0 +1,1046 @@
+{
+  "new_cold": {
+    "case": "cold",
+    "code": "/u401/n23zhang/mdlm_data/tree_mdlm_cache/runs/ccf_replication15k_20260921.wmjngfco/code",
+    "gpu": "NVIDIA RTX 6000 Ada Generation",
+    "torch": "2.2.2+cu121",
+    "initial_head": {
+      "hidden_norm.weight": "9107f3ba55602154349710bf6dfd7b861c4c17f8b61b9f542e5d3301ef6f9a5a",
+      "hidden_norm.bias": "e80232b4d18d0bb7e794be263ba937626f383f9917d4b8a737ba893a8f752293",
+      "time_embedding.mlp.0.weight": "24147f61820099ecf818a910034b6ec8bf02e642762a06bdf04e7d9a0dfb9703",
+      "time_embedding.mlp.0.bias": "496dc6beb089e4e7d59f4a9c8fc6888ca72fb2f6dae93412055b9ccea67fb541",
+      "time_embedding.mlp.2.weight": "3649d476721da271294bd3a9f2cfc4358c8918970b31c451604aeeb48f9ab40e",
+      "time_embedding.mlp.2.bias": "ff9662d881da5135e652e4597f19af35b76d9a32e95daa23cea161a938f22fd2",
+      "topology_hidden_projection.weight": "f7031a4f3393865a4f18b6cd8e3d3761b0c24b6dd9e05b5b716fef5d7ee21fd8",
+      "topology_hidden_projection.bias": "10bd04e12153b785dfba15245b83fc41b095636227a7d322bc06c66a3fe7ae38",
+      "topology_time_projection.weight": "c194399e9aa27ed496be75c3b73f9827b3efde9427de3a1b4aad18ed79656fdd",
+      "edge_proposer.anchor_projection.weight": "1c4554b6dbd450878ecc73ebded02651be56e69744076b07ab5005292ce99581",
+      "edge_proposer.anchor_projection.bias": "06d98c39566ec2a88201e22f2deeb5a691cbd0f659360dc1bfc2005459f1ae41",
+      "edge_proposer.slot_projection.weight": "8dd8febf5dbedf8373de484b8a526f0aa8ed3569ca2fc30e135c9a0c0fef16da",
+      "edge_proposer.slot_projection.bias": "2783dcbc971695ab0858b69a4e7359842c08ee1daebbdc9741e0bb617a3f6ffa",
+      "edge_proposer.edge_scorer.0.weight": "a7c5adafc70f1828e6ceadbfa93d6bf95ba219e871dbbc98d67e4099a7f4e7bf",
+      "edge_proposer.edge_scorer.0.bias": "13bce8834bbdd88e3a396c677c93cb270c08510c56b748d9b0aa53cab0c8e937",
+      "edge_proposer.edge_scorer.2.weight": "6839df2d4aa84e76a79a7962c8ec744b8b4633eefa28f2a7e3549e926f9279b5",
+      "edge_proposer.edge_scorer.2.bias": "9219dbe1fb9c45cf41151cfb91fd85b48ecf27ac7f60dc1719aa73faa640ab06",
+      "token_factor_embedding.weight": "36502cbd9f7bf6068bd9372f3cc48bed6b1a78a11a4c5548779a3825c6ffcc7a",
+      "factor_hidden_projection.weight": "5c2516f5709bc56d501e53a433493e5eb84d0d753ecfec07e24ca31e57a3efbf",
+      "factor_hidden_projection.bias": "f5a5fd42d16a20302798ef6ed309979b43003d2320d9f0e8ea9831a92759fb4b",
+      "factor_time_projection.weight": "61fa1c1a123616ce29a9fcb6e4710baaf6624e59775c611ff0322aaf6eb1d40d",
+      "right_token_factor_embedding.weight": "b1f489caf6e63944633f6e99ebe6eb12672fb4a4227fccec6bb074372443932a",
+      "right_factor_hidden_projection.weight": "5c2516f5709bc56d501e53a433493e5eb84d0d753ecfec07e24ca31e57a3efbf",
+      "right_factor_hidden_projection.bias": "f5a5fd42d16a20302798ef6ed309979b43003d2320d9f0e8ea9831a92759fb4b",
+      "right_factor_time_projection.weight": "61fa1c1a123616ce29a9fcb6e4710baaf6624e59775c611ff0322aaf6eb1d40d"
+    },
+    "preview_sha256": "bc8ec2e4bf3a6c647aa043ab4e4b7867e5ea9bdd64993fe323efd4b152960b1c",
+    "warm_cache": {
+      "length": null,
+      "cos_dtype": null,
+      "cos_sha256": null
+    },
+    "rows": [
+      {
+        "step": 1,
+        "tokens_sha256": "bc8ec2e4bf3a6c647aa043ab4e4b7867e5ea9bdd64993fe323efd4b152960b1c",
+        "loss": 5.429705619812012,
+        "metrics": {
+          "loss": 5.429705619812012,
+          "active_fraction": 0.55615234375,
+          "selected_edges": 551.25,
+          "factorized_aux_nll": 5.429202556610107,
+          "topology_loss": 0.0,
+          "topology_edge_loss": 0.0,
+          "topology_anchor_loss": 0.0,
+          "topology_slot_loss": 0.0,
+          "topology_valid_examples": 0.0,
+          "topology_teacher_influence": 0.0
+        },
+        "cache": {
+          "length": 1024,
+          "cos_dtype": "torch.bfloat16",
+          "cos_sha256": "5f9de4d7566ddd6c2779d64df25403a3cf0bfafa18ba5194a5cf08b93bbdae21"
+        }
+      },
+      {
+        "step": 2,
+        "tokens_sha256": "e551e0401b5cb6c689fd588b359a529b37f13af6b5f8b13e426eda108b33ec10",
+        "loss": 5.994450569152832,
+        "metrics": {
+          "loss": 5.994450569152832,
+          "active_fraction": 0.487548828125,
+          "selected_edges": 483.25,
+          "factorized_aux_nll": 5.994731426239014,
+          "topology_loss": 0.0,
+          "topology_edge_loss": 0.0,
+          "topology_anchor_loss": 0.0,
+          "topology_slot_loss": 0.0,
+          "topology_valid_examples": 0.0,
+          "topology_teacher_influence": 0.0
+        },
+        "cache": {
+          "length": 1024,
+          "cos_dtype": "torch.bfloat16",
+          "cos_sha256": "5f9de4d7566ddd6c2779d64df25403a3cf0bfafa18ba5194a5cf08b93bbdae21"
+        }
+      },
+      {
+        "step": 3,
+        "tokens_sha256": "324dfac99d9e9001d8aeeda438486d861906cf38ab25bed51091eeca1aa18c20",
+        "loss": 5.778454780578613,
+        "metrics": {
+          "loss": 5.778454780578613,
+          "active_fraction": 0.511962890625,
+          "selected_edges": 507.25,
+          "factorized_aux_nll": 5.778438568115234,
+          "topology_loss": 0.0,
+          "topology_edge_loss": 0.0,
+          "topology_anchor_loss": 0.0,
+          "topology_slot_loss": 0.0,
+          "topology_valid_examples": 0.0,
+          "topology_teacher_influence": 0.0
+        },
+        "cache": {
+          "length": 1024,
+          "cos_dtype": "torch.bfloat16",
+          "cos_sha256": "5f9de4d7566ddd6c2779d64df25403a3cf0bfafa18ba5194a5cf08b93bbdae21"
+        }
+      },
+      {
+        "step": 4,
+        "tokens_sha256": "e9961a7ebd0c7d341ba9b0782b86efb205939fac421ad201de232df38c6b944f",
+        "loss": 5.387049198150635,
+        "metrics": {
+          "loss": 5.387049198150635,
+          "active_fraction": 0.527099609375,
+          "selected_edges": 522.25,
+          "factorized_aux_nll": 5.386870861053467,
+          "topology_loss": 0.0,
+          "topology_edge_loss": 0.0,
+          "topology_anchor_loss": 0.0,
+          "topology_slot_loss": 0.0,
+          "topology_valid_examples": 0.0,
+          "topology_teacher_influence": 0.0
+        },
+        "cache": {
+          "length": 1024,
+          "cos_dtype": "torch.bfloat16",
+          "cos_sha256": "5f9de4d7566ddd6c2779d64df25403a3cf0bfafa18ba5194a5cf08b93bbdae21"
+        }
+      },
+      {
+        "step": 5,
+        "tokens_sha256": "9e3b9271c02a35badfd3a49b363c3445b5cdebc0dd067365e495ba7cb0fec320",
+        "loss": 5.252592086791992,
+        "metrics": {
+          "loss": 5.252592086791992,
+          "active_fraction": 0.535400390625,
+          "selected_edges": 530.5,
+          "factorized_aux_nll": 5.252101898193359,
+          "topology_loss": 0.0,
+          "topology_edge_loss": 0.0,
+          "topology_anchor_loss": 0.0,
+          "topology_slot_loss": 0.0,
+          "topology_valid_examples": 0.0,
+          "topology_teacher_influence": 0.0
+        },
+        "cache": {
+          "length": 1024,
+          "cos_dtype": "torch.bfloat16",
+          "cos_sha256": "5f9de4d7566ddd6c2779d64df25403a3cf0bfafa18ba5194a5cf08b93bbdae21"
+        }
+      },
+      {
+        "step": 6,
+        "tokens_sha256": "bfa95d7be83efba42b41e7d16cd49c01630427ecfe1a32ff96b7ee3ff04d8e68",
+        "loss": 5.819465637207031,
+        "metrics": {
+          "loss": 5.819465637207031,
+          "active_fraction": 0.474365234375,
+          "selected_edges": 470.25,
+          "factorized_aux_nll": 5.819021224975586,
+          "topology_loss": 0.0,
+          "topology_edge_loss": 0.0,
+          "topology_anchor_loss": 0.0,
+          "topology_slot_loss": 0.0,
+          "topology_valid_examples": 0.0,
+          "topology_teacher_influence": 0.0
+        },
+        "cache": {
+          "length": 1024,
+          "cos_dtype": "torch.bfloat16",
+          "cos_sha256": "5f9de4d7566ddd6c2779d64df25403a3cf0bfafa18ba5194a5cf08b93bbdae21"
+        }
+      },
+      {
+        "step": 7,
+        "tokens_sha256": "66a8c37b2d9b73930074fd7cdae826168eae1b1ba2ac84f0c5b0f885bb34ce0a",
+        "loss": 5.763944149017334,
+        "metrics": {
+          "loss": 5.763944149017334,
+          "active_fraction": 0.49267578125,
+          "selected_edges": 488.5,
+          "factorized_aux_nll": 5.764232158660889,
+          "topology_loss": 0.0,
+          "topology_edge_loss": 0.0,
+          "topology_anchor_loss": 0.0,
+          "topology_slot_loss": 0.0,
+          "topology_valid_examples": 0.0,
+          "topology_teacher_influence": 0.0
+        },
+        "cache": {
+          "length": 1024,
+          "cos_dtype": "torch.bfloat16",
+          "cos_sha256": "5f9de4d7566ddd6c2779d64df25403a3cf0bfafa18ba5194a5cf08b93bbdae21"
+        }
+      },
+      {
+        "step": 8,
+        "tokens_sha256": "a29d8014304b87654fcc2bba90f9ef64d0b5666fc56bfd7d9b2a35314c5e1de5",
+        "loss": 5.624855995178223,
+        "metrics": {
+          "loss": 5.624855995178223,
+          "active_fraction": 0.449951171875,
+          "selected_edges": 446.0,
+          "factorized_aux_nll": 5.62492036819458,
+          "topology_loss": 0.0,
+          "topology_edge_loss": 0.0,
+          "topology_anchor_loss": 0.0,
+          "topology_slot_loss": 0.0,
+          "topology_valid_examples": 0.0,
+          "topology_teacher_influence": 0.0
+        },
+        "cache": {
+          "length": 1024,
+          "cos_dtype": "torch.bfloat16",
+          "cos_sha256": "5f9de4d7566ddd6c2779d64df25403a3cf0bfafa18ba5194a5cf08b93bbdae21"
+        }
+      },
+      {
+        "step": 9,
+        "tokens_sha256": "fb7add556ddacb41a0d76e23b427fb31d646f16dc57514d50a886df6bfba12ca",
+        "loss": 6.427972316741943,
+        "metrics": {
+          "loss": 6.427972316741943,
+          "active_fraction": 0.472900390625,
+          "selected_edges": 468.5,
+          "factorized_aux_nll": 6.427683353424072,
+          "topology_loss": 0.0,
+          "topology_edge_loss": 0.0,
+          "topology_anchor_loss": 0.0,
+          "topology_slot_loss": 0.0,
+          "topology_valid_examples": 0.0,
+          "topology_teacher_influence": 0.0
+        },
+        "cache": {
+          "length": 1024,
+          "cos_dtype": "torch.bfloat16",
+          "cos_sha256": "5f9de4d7566ddd6c2779d64df25403a3cf0bfafa18ba5194a5cf08b93bbdae21"
+        }
+      },
+      {
+        "step": 10,
+        "tokens_sha256": "19b9f78b1d84544abaf0b91186803239c4a3b6039b2ade1362ca505fcf640897",
+        "loss": 5.533212661743164,
+        "metrics": {
+          "loss": 5.533212661743164,
+          "active_fraction": 0.498291015625,
+          "selected_edges": 494.0,
+          "factorized_aux_nll": 5.532752513885498,
+          "topology_loss": 0.0,
+          "topology_edge_loss": 0.0,
+          "topology_anchor_loss": 0.0,
+          "topology_slot_loss": 0.0,
+          "topology_valid_examples": 0.0,
+          "topology_teacher_influence": 0.0
+        },
+        "cache": {
+          "length": 1024,
+          "cos_dtype": "torch.bfloat16",
+          "cos_sha256": "5f9de4d7566ddd6c2779d64df25403a3cf0bfafa18ba5194a5cf08b93bbdae21"
+        }
+      }
+    ]
+  },
+  "new_warm_bf16": {
+    "case": "warm_bf16",
+    "code": "/u401/n23zhang/mdlm_data/tree_mdlm_cache/runs/ccf_replication15k_20260921.wmjngfco/code",
+    "gpu": "NVIDIA RTX 6000 Ada Generation",
+    "torch": "2.2.2+cu121",
+    "initial_head": {
+      "hidden_norm.weight": "9107f3ba55602154349710bf6dfd7b861c4c17f8b61b9f542e5d3301ef6f9a5a",
+      "hidden_norm.bias": "e80232b4d18d0bb7e794be263ba937626f383f9917d4b8a737ba893a8f752293",
+      "time_embedding.mlp.0.weight": "24147f61820099ecf818a910034b6ec8bf02e642762a06bdf04e7d9a0dfb9703",
+      "time_embedding.mlp.0.bias": "496dc6beb089e4e7d59f4a9c8fc6888ca72fb2f6dae93412055b9ccea67fb541",
+      "time_embedding.mlp.2.weight": "3649d476721da271294bd3a9f2cfc4358c8918970b31c451604aeeb48f9ab40e",
+      "time_embedding.mlp.2.bias": "ff9662d881da5135e652e4597f19af35b76d9a32e95daa23cea161a938f22fd2",
+      "topology_hidden_projection.weight": "f7031a4f3393865a4f18b6cd8e3d3761b0c24b6dd9e05b5b716fef5d7ee21fd8",
+      "topology_hidden_projection.bias": "10bd04e12153b785dfba15245b83fc41b095636227a7d322bc06c66a3fe7ae38",
+      "topology_time_projection.weight": "c194399e9aa27ed496be75c3b73f9827b3efde9427de3a1b4aad18ed79656fdd",
+      "edge_proposer.anchor_projection.weight": "1c4554b6dbd450878ecc73ebded02651be56e69744076b07ab5005292ce99581",
+      "edge_proposer.anchor_projection.bias": "06d98c39566ec2a88201e22f2deeb5a691cbd0f659360dc1bfc2005459f1ae41",
+      "edge_proposer.slot_projection.weight": "8dd8febf5dbedf8373de484b8a526f0aa8ed3569ca2fc30e135c9a0c0fef16da",
+      "edge_proposer.slot_projection.bias": "2783dcbc971695ab0858b69a4e7359842c08ee1daebbdc9741e0bb617a3f6ffa",
+      "edge_proposer.edge_scorer.0.weight": "a7c5adafc70f1828e6ceadbfa93d6bf95ba219e871dbbc98d67e4099a7f4e7bf",
+      "edge_proposer.edge_scorer.0.bias": "13bce8834bbdd88e3a396c677c93cb270c08510c56b748d9b0aa53cab0c8e937",
+      "edge_proposer.edge_scorer.2.weight": "6839df2d4aa84e76a79a7962c8ec744b8b4633eefa28f2a7e3549e926f9279b5",
+      "edge_proposer.edge_scorer.2.bias": "9219dbe1fb9c45cf41151cfb91fd85b48ecf27ac7f60dc1719aa73faa640ab06",
+      "token_factor_embedding.weight": "36502cbd9f7bf6068bd9372f3cc48bed6b1a78a11a4c5548779a3825c6ffcc7a",
+      "factor_hidden_projection.weight": "5c2516f5709bc56d501e53a433493e5eb84d0d753ecfec07e24ca31e57a3efbf",
+      "factor_hidden_projection.bias": "f5a5fd42d16a20302798ef6ed309979b43003d2320d9f0e8ea9831a92759fb4b",
+      "factor_time_projection.weight": "61fa1c1a123616ce29a9fcb6e4710baaf6624e59775c611ff0322aaf6eb1d40d",
+      "right_token_factor_embedding.weight": "b1f489caf6e63944633f6e99ebe6eb12672fb4a4227fccec6bb074372443932a",
+      "right_factor_hidden_projection.weight": "5c2516f5709bc56d501e53a433493e5eb84d0d753ecfec07e24ca31e57a3efbf",
+      "right_factor_hidden_projection.bias": "f5a5fd42d16a20302798ef6ed309979b43003d2320d9f0e8ea9831a92759fb4b",
+      "right_factor_time_projection.weight": "61fa1c1a123616ce29a9fcb6e4710baaf6624e59775c611ff0322aaf6eb1d40d"
+    },
+    "preview_sha256": "bc8ec2e4bf3a6c647aa043ab4e4b7867e5ea9bdd64993fe323efd4b152960b1c",
+    "warm_cache": {
+      "length": 1024,
+      "cos_dtype": "torch.bfloat16",
+      "cos_sha256": "5f9de4d7566ddd6c2779d64df25403a3cf0bfafa18ba5194a5cf08b93bbdae21"
+    },
+    "rows": [
+      {
+        "step": 1,
+        "tokens_sha256": "bc8ec2e4bf3a6c647aa043ab4e4b7867e5ea9bdd64993fe323efd4b152960b1c",
+        "loss": 5.429705619812012,
+        "metrics": {
+          "loss": 5.429705619812012,
+          "active_fraction": 0.55615234375,
+          "selected_edges": 551.25,
+          "factorized_aux_nll": 5.429202556610107,
+          "topology_loss": 0.0,
+          "topology_edge_loss": 0.0,
+          "topology_anchor_loss": 0.0,
+          "topology_slot_loss": 0.0,
+          "topology_valid_examples": 0.0,
+          "topology_teacher_influence": 0.0
+        },
+        "cache": {
+          "length": 1024,
+          "cos_dtype": "torch.bfloat16",
+          "cos_sha256": "5f9de4d7566ddd6c2779d64df25403a3cf0bfafa18ba5194a5cf08b93bbdae21"
+        }
+      },
+      {
+        "step": 2,
+        "tokens_sha256": "e551e0401b5cb6c689fd588b359a529b37f13af6b5f8b13e426eda108b33ec10",
+        "loss": 5.994450569152832,
+        "metrics": {
+          "loss": 5.994450569152832,
+          "active_fraction": 0.487548828125,
+          "selected_edges": 483.25,
+          "factorized_aux_nll": 5.994731426239014,
+          "topology_loss": 0.0,
+          "topology_edge_loss": 0.0,
+          "topology_anchor_loss": 0.0,
+          "topology_slot_loss": 0.0,
+          "topology_valid_examples": 0.0,
+          "topology_teacher_influence": 0.0
+        },
+        "cache": {
+          "length": 1024,
+          "cos_dtype": "torch.bfloat16",
+          "cos_sha256": "5f9de4d7566ddd6c2779d64df25403a3cf0bfafa18ba5194a5cf08b93bbdae21"
+        }
+      },
+      {
+        "step": 3,
+        "tokens_sha256": "324dfac99d9e9001d8aeeda438486d861906cf38ab25bed51091eeca1aa18c20",
+        "loss": 5.778454780578613,
+        "metrics": {
+          "loss": 5.778454780578613,
+          "active_fraction": 0.511962890625,
+          "selected_edges": 507.25,
+          "factorized_aux_nll": 5.778438568115234,
+          "topology_loss": 0.0,
+          "topology_edge_loss": 0.0,
+          "topology_anchor_loss": 0.0,
+          "topology_slot_loss": 0.0,
+          "topology_valid_examples": 0.0,
+          "topology_teacher_influence": 0.0
+        },
+        "cache": {
+          "length": 1024,
+          "cos_dtype": "torch.bfloat16",
+          "cos_sha256": "5f9de4d7566ddd6c2779d64df25403a3cf0bfafa18ba5194a5cf08b93bbdae21"
+        }
+      },
+      {
+        "step": 4,
+        "tokens_sha256": "e9961a7ebd0c7d341ba9b0782b86efb205939fac421ad201de232df38c6b944f",
+        "loss": 5.387049198150635,
+        "metrics": {
+          "loss": 5.387049198150635,
+          "active_fraction": 0.527099609375,
+          "selected_edges": 522.25,
+          "factorized_aux_nll": 5.386870861053467,
+          "topology_loss": 0.0,
+          "topology_edge_loss": 0.0,
+          "topology_anchor_loss": 0.0,
+          "topology_slot_loss": 0.0,
+          "topology_valid_examples": 0.0,
+          "topology_teacher_influence": 0.0
+        },
+        "cache": {
+          "length": 1024,
+          "cos_dtype": "torch.bfloat16",
+          "cos_sha256": "5f9de4d7566ddd6c2779d64df25403a3cf0bfafa18ba5194a5cf08b93bbdae21"
+        }
+      },
+      {
+        "step": 5,
+        "tokens_sha256": "9e3b9271c02a35badfd3a49b363c3445b5cdebc0dd067365e495ba7cb0fec320",
+        "loss": 5.252592086791992,
+        "metrics": {
+          "loss": 5.252592086791992,
+          "active_fraction": 0.535400390625,
+          "selected_edges": 530.5,
+          "factorized_aux_nll": 5.252101898193359,
+          "topology_loss": 0.0,
+          "topology_edge_loss": 0.0,
+          "topology_anchor_loss": 0.0,
+          "topology_slot_loss": 0.0,
+          "topology_valid_examples": 0.0,
+          "topology_teacher_influence": 0.0
+        },
+        "cache": {
+          "length": 1024,
+          "cos_dtype": "torch.bfloat16",
+          "cos_sha256": "5f9de4d7566ddd6c2779d64df25403a3cf0bfafa18ba5194a5cf08b93bbdae21"
+        }
+      },
+      {
+        "step": 6,
+        "tokens_sha256": "bfa95d7be83efba42b41e7d16cd49c01630427ecfe1a32ff96b7ee3ff04d8e68",
+        "loss": 5.819465637207031,
+        "metrics": {
+          "loss": 5.819465637207031,
+          "active_fraction": 0.474365234375,
+          "selected_edges": 470.25,
+          "factorized_aux_nll": 5.819021224975586,
+          "topology_loss": 0.0,
+          "topology_edge_loss": 0.0,
+          "topology_anchor_loss": 0.0,
+          "topology_slot_loss": 0.0,
+          "topology_valid_examples": 0.0,
+          "topology_teacher_influence": 0.0
+        },
+        "cache": {
+          "length": 1024,
+          "cos_dtype": "torch.bfloat16",
+          "cos_sha256": "5f9de4d7566ddd6c2779d64df25403a3cf0bfafa18ba5194a5cf08b93bbdae21"
+        }
+      },
+      {
+        "step": 7,
+        "tokens_sha256": "66a8c37b2d9b73930074fd7cdae826168eae1b1ba2ac84f0c5b0f885bb34ce0a",
+        "loss": 5.763944149017334,
+        "metrics": {
+          "loss": 5.763944149017334,
+          "active_fraction": 0.49267578125,
+          "selected_edges": 488.5,
+          "factorized_aux_nll": 5.764232158660889,
+          "topology_loss": 0.0,
+          "topology_edge_loss": 0.0,
+          "topology_anchor_loss": 0.0,
+          "topology_slot_loss": 0.0,
+          "topology_valid_examples": 0.0,
+          "topology_teacher_influence": 0.0
+        },
+        "cache": {
+          "length": 1024,
+          "cos_dtype": "torch.bfloat16",
+          "cos_sha256": "5f9de4d7566ddd6c2779d64df25403a3cf0bfafa18ba5194a5cf08b93bbdae21"
+        }
+      },
+      {
+        "step": 8,
+        "tokens_sha256": "a29d8014304b87654fcc2bba90f9ef64d0b5666fc56bfd7d9b2a35314c5e1de5",
+        "loss": 5.624855995178223,
+        "metrics": {
+          "loss": 5.624855995178223,
+          "active_fraction": 0.449951171875,
+          "selected_edges": 446.0,
+          "factorized_aux_nll": 5.62492036819458,
+          "topology_loss": 0.0,
+          "topology_edge_loss": 0.0,
+          "topology_anchor_loss": 0.0,
+          "topology_slot_loss": 0.0,
+          "topology_valid_examples": 0.0,
+          "topology_teacher_influence": 0.0
+        },
+        "cache": {
+          "length": 1024,
+          "cos_dtype": "torch.bfloat16",
+          "cos_sha256": "5f9de4d7566ddd6c2779d64df25403a3cf0bfafa18ba5194a5cf08b93bbdae21"
+        }
+      },
+      {
+        "step": 9,
+        "tokens_sha256": "fb7add556ddacb41a0d76e23b427fb31d646f16dc57514d50a886df6bfba12ca",
+        "loss": 6.427972316741943,
+        "metrics": {
+          "loss": 6.427972316741943,
+          "active_fraction": 0.472900390625,
+          "selected_edges": 468.5,
+          "factorized_aux_nll": 6.427683353424072,
+          "topology_loss": 0.0,
+          "topology_edge_loss": 0.0,
+          "topology_anchor_loss": 0.0,
+          "topology_slot_loss": 0.0,
+          "topology_valid_examples": 0.0,
+          "topology_teacher_influence": 0.0
+        },
+        "cache": {
+          "length": 1024,
+          "cos_dtype": "torch.bfloat16",
+          "cos_sha256": "5f9de4d7566ddd6c2779d64df25403a3cf0bfafa18ba5194a5cf08b93bbdae21"
+        }
+      },
+      {
+        "step": 10,
+        "tokens_sha256": "19b9f78b1d84544abaf0b91186803239c4a3b6039b2ade1362ca505fcf640897",
+        "loss": 5.533212661743164,
+        "metrics": {
+          "loss": 5.533212661743164,
+          "active_fraction": 0.498291015625,
+          "selected_edges": 494.0,
+          "factorized_aux_nll": 5.532752513885498,
+          "topology_loss": 0.0,
+          "topology_edge_loss": 0.0,
+          "topology_anchor_loss": 0.0,
+          "topology_slot_loss": 0.0,
+          "topology_valid_examples": 0.0,
+          "topology_teacher_influence": 0.0
+        },
+        "cache": {
+          "length": 1024,
+          "cos_dtype": "torch.bfloat16",
+          "cos_sha256": "5f9de4d7566ddd6c2779d64df25403a3cf0bfafa18ba5194a5cf08b93bbdae21"
+        }
+      }
+    ]
+  },
+  "new_warm_fp32": {
+    "case": "warm_fp32",
+    "code": "/u401/n23zhang/mdlm_data/tree_mdlm_cache/runs/ccf_replication15k_20260921.wmjngfco/code",
+    "gpu": "NVIDIA RTX 6000 Ada Generation",
+    "torch": "2.2.2+cu121",
+    "initial_head": {
+      "hidden_norm.weight": "9107f3ba55602154349710bf6dfd7b861c4c17f8b61b9f542e5d3301ef6f9a5a",
+      "hidden_norm.bias": "e80232b4d18d0bb7e794be263ba937626f383f9917d4b8a737ba893a8f752293",
+      "time_embedding.mlp.0.weight": "24147f61820099ecf818a910034b6ec8bf02e642762a06bdf04e7d9a0dfb9703",
+      "time_embedding.mlp.0.bias": "496dc6beb089e4e7d59f4a9c8fc6888ca72fb2f6dae93412055b9ccea67fb541",
+      "time_embedding.mlp.2.weight": "3649d476721da271294bd3a9f2cfc4358c8918970b31c451604aeeb48f9ab40e",
+      "time_embedding.mlp.2.bias": "ff9662d881da5135e652e4597f19af35b76d9a32e95daa23cea161a938f22fd2",
+      "topology_hidden_projection.weight": "f7031a4f3393865a4f18b6cd8e3d3761b0c24b6dd9e05b5b716fef5d7ee21fd8",
+      "topology_hidden_projection.bias": "10bd04e12153b785dfba15245b83fc41b095636227a7d322bc06c66a3fe7ae38",
+      "topology_time_projection.weight": "c194399e9aa27ed496be75c3b73f9827b3efde9427de3a1b4aad18ed79656fdd",
+      "edge_proposer.anchor_projection.weight": "1c4554b6dbd450878ecc73ebded02651be56e69744076b07ab5005292ce99581",
+      "edge_proposer.anchor_projection.bias": "06d98c39566ec2a88201e22f2deeb5a691cbd0f659360dc1bfc2005459f1ae41",
+      "edge_proposer.slot_projection.weight": "8dd8febf5dbedf8373de484b8a526f0aa8ed3569ca2fc30e135c9a0c0fef16da",
+      "edge_proposer.slot_projection.bias": "2783dcbc971695ab0858b69a4e7359842c08ee1daebbdc9741e0bb617a3f6ffa",
+      "edge_proposer.edge_scorer.0.weight": "a7c5adafc70f1828e6ceadbfa93d6bf95ba219e871dbbc98d67e4099a7f4e7bf",
+      "edge_proposer.edge_scorer.0.bias": "13bce8834bbdd88e3a396c677c93cb270c08510c56b748d9b0aa53cab0c8e937",
+      "edge_proposer.edge_scorer.2.weight": "6839df2d4aa84e76a79a7962c8ec744b8b4633eefa28f2a7e3549e926f9279b5",
+      "edge_proposer.edge_scorer.2.bias": "9219dbe1fb9c45cf41151cfb91fd85b48ecf27ac7f60dc1719aa73faa640ab06",
+      "token_factor_embedding.weight": "36502cbd9f7bf6068bd9372f3cc48bed6b1a78a11a4c5548779a3825c6ffcc7a",
+      "factor_hidden_projection.weight": "5c2516f5709bc56d501e53a433493e5eb84d0d753ecfec07e24ca31e57a3efbf",
+      "factor_hidden_projection.bias": "f5a5fd42d16a20302798ef6ed309979b43003d2320d9f0e8ea9831a92759fb4b",
+      "factor_time_projection.weight": "61fa1c1a123616ce29a9fcb6e4710baaf6624e59775c611ff0322aaf6eb1d40d",
+      "right_token_factor_embedding.weight": "b1f489caf6e63944633f6e99ebe6eb12672fb4a4227fccec6bb074372443932a",
+      "right_factor_hidden_projection.weight": "5c2516f5709bc56d501e53a433493e5eb84d0d753ecfec07e24ca31e57a3efbf",
+      "right_factor_hidden_projection.bias": "f5a5fd42d16a20302798ef6ed309979b43003d2320d9f0e8ea9831a92759fb4b",
+      "right_factor_time_projection.weight": "61fa1c1a123616ce29a9fcb6e4710baaf6624e59775c611ff0322aaf6eb1d40d"
+    },
+    "preview_sha256": "bc8ec2e4bf3a6c647aa043ab4e4b7867e5ea9bdd64993fe323efd4b152960b1c",
+    "warm_cache": {
+      "length": 1024,
+      "cos_dtype": "torch.float32",
+      "cos_sha256": "3570734209f607daa7962368e32d6f65a8186072757123788438046bc48c994c"
+    },
+    "rows": [
+      {
+        "step": 1,
+        "tokens_sha256": "bc8ec2e4bf3a6c647aa043ab4e4b7867e5ea9bdd64993fe323efd4b152960b1c",
+        "loss": 3.7971537113189697,
+        "metrics": {
+          "loss": 3.7971537113189697,
+          "active_fraction": 0.55615234375,
+          "selected_edges": 551.25,
+          "factorized_aux_nll": 3.796858310699463,
+          "topology_loss": 0.0,
+          "topology_edge_loss": 0.0,
+          "topology_anchor_loss": 0.0,
+          "topology_slot_loss": 0.0,
+          "topology_valid_examples": 0.0,
+          "topology_teacher_influence": 0.0
+        },
+        "cache": {
+          "length": 1024,
+          "cos_dtype": "torch.float32",
+          "cos_sha256": "3570734209f607daa7962368e32d6f65a8186072757123788438046bc48c994c"
+        }
+      },
+      {
+        "step": 2,
+        "tokens_sha256": "e551e0401b5cb6c689fd588b359a529b37f13af6b5f8b13e426eda108b33ec10",
+        "loss": 4.297000885009766,
+        "metrics": {
+          "loss": 4.297000885009766,
+          "active_fraction": 0.487548828125,
+          "selected_edges": 483.25,
+          "factorized_aux_nll": 4.297428131103516,
+          "topology_loss": 0.0,
+          "topology_edge_loss": 0.0,
+          "topology_anchor_loss": 0.0,
+          "topology_slot_loss": 0.0,
+          "topology_valid_examples": 0.0,
+          "topology_teacher_influence": 0.0
+        },
+        "cache": {
+          "length": 1024,
+          "cos_dtype": "torch.float32",
+          "cos_sha256": "3570734209f607daa7962368e32d6f65a8186072757123788438046bc48c994c"
+        }
+      },
+      {
+        "step": 3,
+        "tokens_sha256": "324dfac99d9e9001d8aeeda438486d861906cf38ab25bed51091eeca1aa18c20",
+        "loss": 4.092983722686768,
+        "metrics": {
+          "loss": 4.092983722686768,
+          "active_fraction": 0.511962890625,
+          "selected_edges": 507.25,
+          "factorized_aux_nll": 4.092691898345947,
+          "topology_loss": 0.0,
+          "topology_edge_loss": 0.0,
+          "topology_anchor_loss": 0.0,
+          "topology_slot_loss": 0.0,
+          "topology_valid_examples": 0.0,
+          "topology_teacher_influence": 0.0
+        },
+        "cache": {
+          "length": 1024,
+          "cos_dtype": "torch.float32",
+          "cos_sha256": "3570734209f607daa7962368e32d6f65a8186072757123788438046bc48c994c"
+        }
+      },
+      {
+        "step": 4,
+        "tokens_sha256": "e9961a7ebd0c7d341ba9b0782b86efb205939fac421ad201de232df38c6b944f",
+        "loss": 3.736255407333374,
+        "metrics": {
+          "loss": 3.736255407333374,
+          "active_fraction": 0.527099609375,
+          "selected_edges": 522.25,
+          "factorized_aux_nll": 3.736647129058838,
+          "topology_loss": 0.0,
+          "topology_edge_loss": 0.0,
+          "topology_anchor_loss": 0.0,
+          "topology_slot_loss": 0.0,
+          "topology_valid_examples": 0.0,
+          "topology_teacher_influence": 0.0
+        },
+        "cache": {
+          "length": 1024,
+          "cos_dtype": "torch.float32",
+          "cos_sha256": "3570734209f607daa7962368e32d6f65a8186072757123788438046bc48c994c"
+        }
+      },
+      {
+        "step": 5,
+        "tokens_sha256": "9e3b9271c02a35badfd3a49b363c3445b5cdebc0dd067365e495ba7cb0fec320",
+        "loss": 3.526655912399292,
+        "metrics": {
+          "loss": 3.526655912399292,
+          "active_fraction": 0.535400390625,
+          "selected_edges": 530.5,
+          "factorized_aux_nll": 3.5262808799743652,
+          "topology_loss": 0.0,
+          "topology_edge_loss": 0.0,
+          "topology_anchor_loss": 0.0,
+          "topology_slot_loss": 0.0,
+          "topology_valid_examples": 0.0,
+          "topology_teacher_influence": 0.0
+        },
+        "cache": {
+          "length": 1024,
+          "cos_dtype": "torch.float32",
+          "cos_sha256": "3570734209f607daa7962368e32d6f65a8186072757123788438046bc48c994c"
+        }
+      },
+      {
+        "step": 6,
+        "tokens_sha256": "bfa95d7be83efba42b41e7d16cd49c01630427ecfe1a32ff96b7ee3ff04d8e68",
+        "loss": 4.237360000610352,
+        "metrics": {
+          "loss": 4.237360000610352,
+          "active_fraction": 0.474365234375,
+          "selected_edges": 470.25,
+          "factorized_aux_nll": 4.2377705574035645,
+          "topology_loss": 0.0,
+          "topology_edge_loss": 0.0,
+          "topology_anchor_loss": 0.0,
+          "topology_slot_loss": 0.0,
+          "topology_valid_examples": 0.0,
+          "topology_teacher_influence": 0.0
+        },
+        "cache": {
+          "length": 1024,
+          "cos_dtype": "torch.float32",
+          "cos_sha256": "3570734209f607daa7962368e32d6f65a8186072757123788438046bc48c994c"
+        }
+      },
+      {
+        "step": 7,
+        "tokens_sha256": "66a8c37b2d9b73930074fd7cdae826168eae1b1ba2ac84f0c5b0f885bb34ce0a",
+        "loss": 4.392225742340088,
+        "metrics": {
+          "loss": 4.392225742340088,
+          "active_fraction": 0.49267578125,
+          "selected_edges": 488.5,
+          "factorized_aux_nll": 4.39232063293457,
+          "topology_loss": 0.0,
+          "topology_edge_loss": 0.0,
+          "topology_anchor_loss": 0.0,
+          "topology_slot_loss": 0.0,
+          "topology_valid_examples": 0.0,
+          "topology_teacher_influence": 0.0
+        },
+        "cache": {
+          "length": 1024,
+          "cos_dtype": "torch.float32",
+          "cos_sha256": "3570734209f607daa7962368e32d6f65a8186072757123788438046bc48c994c"
+        }
+      },
+      {
+        "step": 8,
+        "tokens_sha256": "a29d8014304b87654fcc2bba90f9ef64d0b5666fc56bfd7d9b2a35314c5e1de5",
+        "loss": 3.958477020263672,
+        "metrics": {
+          "loss": 3.958477020263672,
+          "active_fraction": 0.449951171875,
+          "selected_edges": 446.0,
+          "factorized_aux_nll": 3.9584317207336426,
+          "topology_loss": 0.0,
+          "topology_edge_loss": 0.0,
+          "topology_anchor_loss": 0.0,
+          "topology_slot_loss": 0.0,
+          "topology_valid_examples": 0.0,
+          "topology_teacher_influence": 0.0
+        },
+        "cache": {
+          "length": 1024,
+          "cos_dtype": "torch.float32",
+          "cos_sha256": "3570734209f607daa7962368e32d6f65a8186072757123788438046bc48c994c"
+        }
+      },
+      {
+        "step": 9,
+        "tokens_sha256": "fb7add556ddacb41a0d76e23b427fb31d646f16dc57514d50a886df6bfba12ca",
+        "loss": 5.045220375061035,
+        "metrics": {
+          "loss": 5.045220375061035,
+          "active_fraction": 0.472900390625,
+          "selected_edges": 468.5,
+          "factorized_aux_nll": 5.045305252075195,
+          "topology_loss": 0.0,
+          "topology_edge_loss": 0.0,
+          "topology_anchor_loss": 0.0,
+          "topology_slot_loss": 0.0,
+          "topology_valid_examples": 0.0,
+          "topology_teacher_influence": 0.0
+        },
+        "cache": {
+          "length": 1024,
+          "cos_dtype": "torch.float32",
+          "cos_sha256": "3570734209f607daa7962368e32d6f65a8186072757123788438046bc48c994c"
+        }
+      },
+      {
+        "step": 10,
+        "tokens_sha256": "19b9f78b1d84544abaf0b91186803239c4a3b6039b2ade1362ca505fcf640897",
+        "loss": 3.885044574737549,
+        "metrics": {
+          "loss": 3.885044574737549,
+          "active_fraction": 0.498291015625,
+          "selected_edges": 494.0,
+          "factorized_aux_nll": 3.884809970855713,
+          "topology_loss": 0.0,
+          "topology_edge_loss": 0.0,
+          "topology_anchor_loss": 0.0,
+          "topology_slot_loss": 0.0,
+          "topology_valid_examples": 0.0,
+          "topology_teacher_influence": 0.0
+        },
+        "cache": {
+          "length": 1024,
+          "cos_dtype": "torch.float32",
+          "cos_sha256": "3570734209f607daa7962368e32d6f65a8186072757123788438046bc48c994c"
+        }
+      }
+    ]
+  },
+  "old_cold": {
+    "case": "cold",
+    "code": "/u401/n23zhang/mdlm_data/tree_mdlm_cache/code/ccf_confirmation_100.daiam2ji",
+    "gpu": "NVIDIA RTX 6000 Ada Generation",
+    "torch": "2.2.2+cu121",
+    "initial_head": {
+      "hidden_norm.weight": "9107f3ba55602154349710bf6dfd7b861c4c17f8b61b9f542e5d3301ef6f9a5a",
+      "hidden_norm.bias": "e80232b4d18d0bb7e794be263ba937626f383f9917d4b8a737ba893a8f752293",
+      "time_embedding.mlp.0.weight": "24147f61820099ecf818a910034b6ec8bf02e642762a06bdf04e7d9a0dfb9703",
+      "time_embedding.mlp.0.bias": "496dc6beb089e4e7d59f4a9c8fc6888ca72fb2f6dae93412055b9ccea67fb541",
+      "time_embedding.mlp.2.weight": "3649d476721da271294bd3a9f2cfc4358c8918970b31c451604aeeb48f9ab40e",
+      "time_embedding.mlp.2.bias": "ff9662d881da5135e652e4597f19af35b76d9a32e95daa23cea161a938f22fd2",
+      "topology_hidden_projection.weight": "f7031a4f3393865a4f18b6cd8e3d3761b0c24b6dd9e05b5b716fef5d7ee21fd8",
+      "topology_hidden_projection.bias": "10bd04e12153b785dfba15245b83fc41b095636227a7d322bc06c66a3fe7ae38",
+      "topology_time_projection.weight": "c194399e9aa27ed496be75c3b73f9827b3efde9427de3a1b4aad18ed79656fdd",
+      "edge_proposer.anchor_projection.weight": "1c4554b6dbd450878ecc73ebded02651be56e69744076b07ab5005292ce99581",
+      "edge_proposer.anchor_projection.bias": "06d98c39566ec2a88201e22f2deeb5a691cbd0f659360dc1bfc2005459f1ae41",
+      "edge_proposer.slot_projection.weight": "8dd8febf5dbedf8373de484b8a526f0aa8ed3569ca2fc30e135c9a0c0fef16da",
+      "edge_proposer.slot_projection.bias": "2783dcbc971695ab0858b69a4e7359842c08ee1daebbdc9741e0bb617a3f6ffa",
+      "edge_proposer.edge_scorer.0.weight": "a7c5adafc70f1828e6ceadbfa93d6bf95ba219e871dbbc98d67e4099a7f4e7bf",
+      "edge_proposer.edge_scorer.0.bias": "13bce8834bbdd88e3a396c677c93cb270c08510c56b748d9b0aa53cab0c8e937",
+      "edge_proposer.edge_scorer.2.weight": "6839df2d4aa84e76a79a7962c8ec744b8b4633eefa28f2a7e3549e926f9279b5",
+      "edge_proposer.edge_scorer.2.bias": "9219dbe1fb9c45cf41151cfb91fd85b48ecf27ac7f60dc1719aa73faa640ab06",
+      "token_factor_embedding.weight": "36502cbd9f7bf6068bd9372f3cc48bed6b1a78a11a4c5548779a3825c6ffcc7a",
+      "factor_hidden_projection.weight": "5c2516f5709bc56d501e53a433493e5eb84d0d753ecfec07e24ca31e57a3efbf",
+      "factor_hidden_projection.bias": "f5a5fd42d16a20302798ef6ed309979b43003d2320d9f0e8ea9831a92759fb4b",
+      "factor_time_projection.weight": "61fa1c1a123616ce29a9fcb6e4710baaf6624e59775c611ff0322aaf6eb1d40d",
+      "right_token_factor_embedding.weight": "b1f489caf6e63944633f6e99ebe6eb12672fb4a4227fccec6bb074372443932a",
+      "right_factor_hidden_projection.weight": "5c2516f5709bc56d501e53a433493e5eb84d0d753ecfec07e24ca31e57a3efbf",
+      "right_factor_hidden_projection.bias": "f5a5fd42d16a20302798ef6ed309979b43003d2320d9f0e8ea9831a92759fb4b",
+      "right_factor_time_projection.weight": "61fa1c1a123616ce29a9fcb6e4710baaf6624e59775c611ff0322aaf6eb1d40d"
+    },
+    "preview_sha256": "bc8ec2e4bf3a6c647aa043ab4e4b7867e5ea9bdd64993fe323efd4b152960b1c",
+    "warm_cache": {
+      "length": null,
+      "cos_dtype": null,
+      "cos_sha256": null
+    },
+    "rows": [
+      {
+        "step": 1,
+        "tokens_sha256": "bc8ec2e4bf3a6c647aa043ab4e4b7867e5ea9bdd64993fe323efd4b152960b1c",
+        "loss": 5.429705619812012,
+        "metrics": {
+          "loss": 5.429705619812012,
+          "active_fraction": 0.55615234375,
+          "selected_edges": 551.25,
+          "factorized_aux_nll": 5.429202556610107,
+          "topology_loss": 0.0,
+          "topology_edge_loss": 0.0,
+          "topology_anchor_loss": 0.0,
+          "topology_slot_loss": 0.0,
+          "topology_valid_examples": 0.0,
+          "topology_teacher_influence": 0.0
+        },
+        "cache": {
+          "length": 1024,
+          "cos_dtype": "torch.bfloat16",
+          "cos_sha256": "5f9de4d7566ddd6c2779d64df25403a3cf0bfafa18ba5194a5cf08b93bbdae21"
+        }
+      },
+      {
+        "step": 2,
+        "tokens_sha256": "e551e0401b5cb6c689fd588b359a529b37f13af6b5f8b13e426eda108b33ec10",
+        "loss": 5.994450569152832,
+        "metrics": {
+          "loss": 5.994450569152832,
+          "active_fraction": 0.487548828125,
+          "selected_edges": 483.25,
+          "factorized_aux_nll": 5.994731426239014,
+          "topology_loss": 0.0,
+          "topology_edge_loss": 0.0,
+          "topology_anchor_loss": 0.0,
+          "topology_slot_loss": 0.0,
+          "topology_valid_examples": 0.0,
+          "topology_teacher_influence": 0.0
+        },
+        "cache": {
+          "length": 1024,
+          "cos_dtype": "torch.bfloat16",
+          "cos_sha256": "5f9de4d7566ddd6c2779d64df25403a3cf0bfafa18ba5194a5cf08b93bbdae21"
+        }
+      },
+      {
+        "step": 3,
+        "tokens_sha256": "324dfac99d9e9001d8aeeda438486d861906cf38ab25bed51091eeca1aa18c20",
+        "loss": 5.778454780578613,
+        "metrics": {
+          "loss": 5.778454780578613,
+          "active_fraction": 0.511962890625,
+          "selected_edges": 507.25,
+          "factorized_aux_nll": 5.778438568115234,
+          "topology_loss": 0.0,
+          "topology_edge_loss": 0.0,
+          "topology_anchor_loss": 0.0,
+          "topology_slot_loss": 0.0,
+          "topology_valid_examples": 0.0,
+          "topology_teacher_influence": 0.0
+        },
+        "cache": {
+          "length": 1024,
+          "cos_dtype": "torch.bfloat16",
+          "cos_sha256": "5f9de4d7566ddd6c2779d64df25403a3cf0bfafa18ba5194a5cf08b93bbdae21"
+        }
+      },
+      {
+        "step": 4,
+        "tokens_sha256": "e9961a7ebd0c7d341ba9b0782b86efb205939fac421ad201de232df38c6b944f",
+        "loss": 5.387049198150635,
+        "metrics": {
+          "loss": 5.387049198150635,
+          "active_fraction": 0.527099609375,
+          "selected_edges": 522.25,
+          "factorized_aux_nll": 5.386870861053467,
+          "topology_loss": 0.0,
+          "topology_edge_loss": 0.0,
+          "topology_anchor_loss": 0.0,
+          "topology_slot_loss": 0.0,
+          "topology_valid_examples": 0.0,
+          "topology_teacher_influence": 0.0
+        },
+        "cache": {
+          "length": 1024,
+          "cos_dtype": "torch.bfloat16",
+          "cos_sha256": "5f9de4d7566ddd6c2779d64df25403a3cf0bfafa18ba5194a5cf08b93bbdae21"
+        }
+      },
+      {
+        "step": 5,
+        "tokens_sha256": "9e3b9271c02a35badfd3a49b363c3445b5cdebc0dd067365e495ba7cb0fec320",
+        "loss": 5.252592086791992,
+        "metrics": {
+          "loss": 5.252592086791992,
+          "active_fraction": 0.535400390625,
+          "selected_edges": 530.5,
+          "factorized_aux_nll": 5.252101898193359,
+          "topology_loss": 0.0,
+          "topology_edge_loss": 0.0,
+          "topology_anchor_loss": 0.0,
+          "topology_slot_loss": 0.0,
+          "topology_valid_examples": 0.0,
+          "topology_teacher_influence": 0.0
+        },
+        "cache": {
+          "length": 1024,
+          "cos_dtype": "torch.bfloat16",
+          "cos_sha256": "5f9de4d7566ddd6c2779d64df25403a3cf0bfafa18ba5194a5cf08b93bbdae21"
+        }
+      },
+      {
+        "step": 6,
+        "tokens_sha256": "bfa95d7be83efba42b41e7d16cd49c01630427ecfe1a32ff96b7ee3ff04d8e68",
+        "loss": 5.819465637207031,
+        "metrics": {
+          "loss": 5.819465637207031,
+          "active_fraction": 0.474365234375,
+          "selected_edges": 470.25,
+          "factorized_aux_nll": 5.819021224975586,
+          "topology_loss": 0.0,
+          "topology_edge_loss": 0.0,
+          "topology_anchor_loss": 0.0,
+          "topology_slot_loss": 0.0,
+          "topology_valid_examples": 0.0,
+          "topology_teacher_influence": 0.0
+        },
+        "cache": {
+          "length": 1024,
+          "cos_dtype": "torch.bfloat16",
+          "cos_sha256": "5f9de4d7566ddd6c2779d64df25403a3cf0bfafa18ba5194a5cf08b93bbdae21"
+        }
+      },
+      {
+        "step": 7,
+        "tokens_sha256": "66a8c37b2d9b73930074fd7cdae826168eae1b1ba2ac84f0c5b0f885bb34ce0a",
+        "loss": 5.763944149017334,
+        "metrics": {
+          "loss": 5.763944149017334,
+          "active_fraction": 0.49267578125,
+          "selected_edges": 488.5,
+          "factorized_aux_nll": 5.764232158660889,
+          "topology_loss": 0.0,
+          "topology_edge_loss": 0.0,
+          "topology_anchor_loss": 0.0,
+          "topology_slot_loss": 0.0,
+          "topology_valid_examples": 0.0,
+          "topology_teacher_influence": 0.0
+        },
+        "cache": {
+          "length": 1024,
+          "cos_dtype": "torch.bfloat16",
+          "cos_sha256": "5f9de4d7566ddd6c2779d64df25403a3cf0bfafa18ba5194a5cf08b93bbdae21"
+        }
+      },
+      {
+        "step": 8,
+        "tokens_sha256": "a29d8014304b87654fcc2bba90f9ef64d0b5666fc56bfd7d9b2a35314c5e1de5",
+        "loss": 5.624855995178223,
+        "metrics": {
+          "loss": 5.624855995178223,
+          "active_fraction": 0.449951171875,
+          "selected_edges": 446.0,
+          "factorized_aux_nll": 5.62492036819458,
+          "topology_loss": 0.0,
+          "topology_edge_loss": 0.0,
+          "topology_anchor_loss": 0.0,
+          "topology_slot_loss": 0.0,
+          "topology_valid_examples": 0.0,
+          "topology_teacher_influence": 0.0
+        },
+        "cache": {
+          "length": 1024,
+          "cos_dtype": "torch.bfloat16",
+          "cos_sha256": "5f9de4d7566ddd6c2779d64df25403a3cf0bfafa18ba5194a5cf08b93bbdae21"
+        }
+      },
+      {
+        "step": 9,
+        "tokens_sha256": "fb7add556ddacb41a0d76e23b427fb31d646f16dc57514d50a886df6bfba12ca",
+        "loss": 6.427972316741943,
+        "metrics": {
+          "loss": 6.427972316741943,
+          "active_fraction": 0.472900390625,
+          "selected_edges": 468.5,
+          "factorized_aux_nll": 6.427683353424072,
+          "topology_loss": 0.0,
+          "topology_edge_loss": 0.0,
+          "topology_anchor_loss": 0.0,
+          "topology_slot_loss": 0.0,
+          "topology_valid_examples": 0.0,
+          "topology_teacher_influence": 0.0
+        },
+        "cache": {
+          "length": 1024,
+          "cos_dtype": "torch.bfloat16",
+          "cos_sha256": "5f9de4d7566ddd6c2779d64df25403a3cf0bfafa18ba5194a5cf08b93bbdae21"
+        }
+      },
+      {
+        "step": 10,
+        "tokens_sha256": "19b9f78b1d84544abaf0b91186803239c4a3b6039b2ade1362ca505fcf640897",
+        "loss": 5.533212661743164,
+        "metrics": {
+          "loss": 5.533212661743164,
+          "active_fraction": 0.498291015625,
+          "selected_edges": 494.0,
+          "factorized_aux_nll": 5.532752513885498,
+          "topology_loss": 0.0,
+          "topology_edge_loss": 0.0,
+          "topology_anchor_loss": 0.0,
+          "topology_slot_loss": 0.0,
+          "topology_valid_examples": 0.0,
+          "topology_teacher_influence": 0.0
+        },
+        "cache": {
+          "length": 1024,
+          "cos_dtype": "torch.bfloat16",
+          "cos_sha256": "5f9de4d7566ddd6c2779d64df25403a3cf0bfafa18ba5194a5cf08b93bbdae21"
+        }
+      }
+    ]
+  }
+}

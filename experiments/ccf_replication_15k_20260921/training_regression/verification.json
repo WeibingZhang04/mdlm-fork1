@@ -1,0 +1,8 @@
+{
+  "status": "passed",
+  "job": "1557313",
+  "initial_head_and_ten_input_batches_equal": true,
+  "old_new_cold_and_bf16_warmed_all_ten_loss_metrics_exact": true,
+  "historical_and_fresh_step10_frozen_backbone_losses_reproduced_exactly": true,
+  "full_training_ppl_causal_effect": "not_yet_measured"
+}
