@@ -1,0 +1,2044 @@
+diff --git a/models/__init__.py b/models/__init__.py
+index 5606453..04fbb3b 100644
+--- a/models/__init__.py
++++ b/models/__init__.py
+@@ -1,4 +1,16 @@
+-from . import dit
+-from . import dimamba
+-from . import ema
+-from . import autoregressive
++import importlib
++
++def __getattr__(name):
++  """Load model modules only when selected.
++
++  This keeps the exact structured utilities usable in a minimal Torch-only
++  environment.  In particular, importing the coupling head does not require
++  OmegaConf, Transformers, FlashAttention, or the Mamba kernels.
++  """
++  if name in {
++      'dit', 'ema', 'crf_decoder', 'structured_decoder',
++      'dimamba', 'autoregressive'}:
++    module = importlib.import_module(f'{__name__}.{name}')
++    globals()[name] = module
++    return module
++  raise AttributeError(f'module {__name__!r} has no attribute {name!r}')
+diff --git a/models/centered_forest.py b/models/centered_forest.py
+new file mode 100644
+index 0000000..f0fe148
+--- /dev/null
++++ b/models/centered_forest.py
+@@ -0,0 +1,285 @@
++"""Experimental forest coupling that cannot change a frozen unary adapter.
++
++This is a standalone learning test, not a production head or a real-text
++result. A private, frozen candidate-only unary adapter supplies normalized
++FP64 singleton beliefs b_i. On the natural-order chain of active positions,
++each edge has ratio 1 + eta * mean_r f_i,r g_j,r, with features centered under
++their endpoint beliefs. Consequently the forest has normalizer one and
++exactly the supplied singleton marginals (up to FP64 arithmetic).
++
++Only explicit top-K candidates interact. Residual interactions are neutral,
++and the omitted-token conditional remains the backbone conditional. Positive
++PMI per edge is bounded by log(1+eta); this is not a universal coupling family.
++Endpoint rank is 2*feature_dim+1, not feature_dim. Existing forest inference
++accepts the explicit factors and inserts neutral residual rows/columns itself.
++
++The reference unary distribution matches the selected-test evaluator: evaluate
++the frozen adapter's compact lattice in its ordinary precision, then promote
++and normalize that lattice in FP64. Separately normalize the within-residual
++backbone conditional in FP64. This deliberately retains the original compact
++residual mass, not a newly recomputed FP64 aggregate. Original-dtype top-K and
++explicit logit addition are preserved. Autocast is disabled. All backbone
++inputs are detached; no backbone or copied unary parameter receives gradients.
++"""
++
++from __future__ import annotations
++
++import copy
++from dataclasses import dataclass
++import math
++
++import torch
++from torch import nn
++
++from evaluation.centered_coupling import centered_coupling
++from models.contextual_unary import ContextualUnaryAdapter
++from models.structured_decoder import (
++  ScalarTimestepEmbedding, StructuredDecoderOutput, _fixed_chain_edges,
++)
++import runtime_validation
++
++
++@dataclass
++class CenteredForestOutput(StructuredDecoderOutput):
++  """Structured output plus the fixed context needed for direct scoring.
++
++  ``residual_log_mass`` is the normalized residual-state log probability;
++  ``base_tail_log_mass`` is the unnormalized omitted backbone logit mass.
++  Do not modify this bundle or score it with a different backbone-logit input.
++  """
++
++  base_tail_log_mass: torch.Tensor          # [B,L], detached FP64
++  scoring_active_mask: torch.Tensor         # [B,L], detached boolean copy
++  vocab_size: int
++
++  def _validate_logits(self, unary_logits: torch.Tensor) -> None:
++    if (unary_logits.shape != (*self.candidate_ids.shape[:2], self.vocab_size)
++        or unary_logits.device != self.candidate_ids.device
++        or not unary_logits.is_floating_point()):
++      raise ValueError('unary_logits must be the original floating [B,L,V] tensor on device')
++
++  def residual_log_probs(self, unary_logits: torch.Tensor) -> torch.Tensor:
++    """FP64 omitted-token conditional with a safe zero-mass extension.
++
++    An empty residual has probability zero, so its conditional is undefined.
++    Define that unused conditional as a point mass on candidate zero. Existing
++    joint sampling draws residual tokens eagerly for every node; this extension
++    avoids zero-sum multinomial rows in mixed-support batches. It cannot affect
++    scores or marginals, and a disabled residual state is never sampled.
++    """
++    self._validate_logits(unary_logits)
++    with torch.autocast(device_type=unary_logits.device.type, enabled=False):
++      tail = unary_logits.detach().double().clone()
++      tail.scatter_(-1, self.candidate_ids, -torch.inf)
++      has_tail = torch.isfinite(self.base_tail_log_mass)
++      normalizer = torch.where(has_tail, self.base_tail_log_mass,
++                               torch.zeros_like(self.base_tail_log_mass))
++      conditional = tail - normalizer[..., None]
++      fallback = torch.full_like(tail, -torch.inf)
++      fallback.scatter_(-1, self.candidate_ids[..., :1], 0.0)
++      return torch.where(has_tail[..., None], conditional, fallback)
++
++  def materialize_pair_factors(self) -> torch.Tensor:
++    with torch.autocast(device_type=self.pair_left_factors.device.type, enabled=False):
++      return super().materialize_pair_factors()
++
++
++class FrozenUnaryCenteredForestHead(nn.Module):
++  """Learn bounded dependence while keeping a private unary model frozen.
++
++  ``forward(hidden, raw_logits, sigma, active_mask)`` accepts the backbone's
++  frozen context; sigma is its scalar noise conditioning, not a mask rate.
++  No targets enter candidate selection, topology, or coupling construction.
++
++  Endpoint features are separate token embeddings, each multiplied by
++  ``1 + W_h LN(hidden) + W_t time(sigma)``. Projections start at zero. The left
++  embedding starts random and the right starts zero: initialization is exact
++  independence with a nonzero right-embedding gradient on dependent examples.
++  Other branches receive gradients after the right embedding leaves zero.
++
++  The supplied adapter is deep-copied, not modified. Standard ``train`` and
++  ``requires_grad_`` calls keep the private copy frozen. Converting this entire
++  module's dtype also converts its private unary reference, as with any PyTorch
++  module; construct it from the intended reference dtype before comparison.
++  """
++
++  def __init__(self, unary_adapter: ContextualUnaryAdapter, feature_dim: int = 8,
++               time_embed_dim: int | None = None, eta: float = 0.95,
++               embedding_init_std: float = 0.5):
++    super().__init__()
++    if not isinstance(unary_adapter, ContextualUnaryAdapter):
++      raise ValueError('unary_adapter must be a preloaded ContextualUnaryAdapter')
++    if unary_adapter.correction_domain != 'candidates':
++      raise ValueError('the frozen unary adapter must use candidate-only corrections')
++    if type(feature_dim) is not int or feature_dim < 1:
++      raise ValueError('feature_dim must be a positive integer')
++    if not math.isfinite(eta) or not 0 < eta < 1:
++      raise ValueError('eta must lie strictly between zero and one')
++    if not math.isfinite(embedding_init_std) or embedding_init_std <= 0:
++      raise ValueError('embedding_init_std must be finite and positive')
++    time_embed_dim = unary_adapter.time_embed_dim if time_embed_dim is None else time_embed_dim
++    if type(time_embed_dim) is not int or time_embed_dim < 2:
++      raise ValueError('time_embed_dim must be an integer >= 2')
++    parameters = tuple(unary_adapter.parameters())
++    device, dtype = parameters[0].device, parameters[0].dtype
++    if (dtype not in (torch.float32, torch.float64)
++        or any(p.device != device or p.dtype != dtype for p in parameters)):
++      raise ValueError('the frozen adapter must have uniform FP32 or FP64 parameters')
++    self.hidden_size = unary_adapter.hidden_size
++    self.vocab_size = unary_adapter.vocab_size
++    self.top_k = unary_adapter.top_k
++    self.feature_dim = feature_dim
++    self.rank = 2 * feature_dim + 1
++    self.time_embed_dim = time_embed_dim
++    self.eta = float(eta)
++    self._frozen_unary = copy.deepcopy(unary_adapter).requires_grad_(False).eval()
++    self.hidden_norm = nn.LayerNorm(self.hidden_size)
++    self.time_embedding = ScalarTimestepEmbedding(time_embed_dim)
++    self.left_token_embedding = nn.Embedding(self.vocab_size, feature_dim)
++    self.right_token_embedding = nn.Embedding(self.vocab_size, feature_dim)
++    self.left_hidden_projection = nn.Linear(self.hidden_size, feature_dim)
++    self.right_hidden_projection = nn.Linear(self.hidden_size, feature_dim)
++    self.left_time_projection = nn.Linear(time_embed_dim, feature_dim, bias=False)
++    self.right_time_projection = nn.Linear(time_embed_dim, feature_dim, bias=False)
++    nn.init.normal_(self.left_token_embedding.weight, std=embedding_init_std)
++    nn.init.zeros_(self.right_token_embedding.weight)
++    for projection in (self.left_hidden_projection, self.right_hidden_projection,
++                       self.left_time_projection, self.right_time_projection):
++      nn.init.zeros_(projection.weight)
++      if projection.bias is not None:
++        nn.init.zeros_(projection.bias)
++    self.to(device=device, dtype=dtype)
++
++  def train(self, mode: bool = True):
++    super().train(mode)
++    self._frozen_unary.eval()
++    return self
++
++  def requires_grad_(self, requires_grad: bool = True):
++    super().requires_grad_(requires_grad)
++    self._frozen_unary.requires_grad_(False)
++    return self
++
++  @property
++  def parameter_count(self) -> int:
++    return sum(parameter.numel() for parameter in self.parameters() if parameter.requires_grad)
++
++  def parameter_summary(self) -> dict:
++    return {
++      'trainable_parameters': self.parameter_count,
++      'frozen_unary_parameters': sum(p.numel() for p in self._frozen_unary.parameters()),
++      'feature_dim': self.feature_dim,
++      'positive_factor_rank': self.rank,
++      'eta': self.eta,
++      'top_k': self.top_k,
++      'topology': 'natural_order_active_chain',
++      'status': 'standalone_experimental',
++    }
++
++  def forward(self, hidden: torch.Tensor, raw_logits: torch.Tensor,
++              sigma: torch.Tensor, active_mask: torch.Tensor) -> CenteredForestOutput:
++    active = self._frozen_unary._validate(hidden, raw_logits, active_mask)
++    if hidden.shape[0] < 1 or hidden.shape[1] < 1:
++      raise ValueError('batch and sequence dimensions must be nonempty')
++    if raw_logits.dtype not in (torch.float32, torch.float64):
++      raise ValueError('raw_logits must be FP32 or FP64 to specify the candidate policy')
++    sigma = torch.as_tensor(sigma, device=hidden.device).detach()
++    if hidden.device != self.hidden_norm.weight.device:
++      raise ValueError('inputs must be on the head device')
++    if (runtime_validation.enabled()
++        and (not bool(torch.isfinite(hidden).all())
++             or not bool(torch.isfinite(sigma).all())
++             or bool((torch.isnan(raw_logits) | torch.isposinf(raw_logits)).any())
++             or not bool(torch.isfinite(raw_logits).any(-1).all()))):
++      raise ValueError('inputs need finite context and nonempty logit support')
++    hidden, raw_logits = hidden.detach(), raw_logits.detach()
++    with torch.autocast(device_type=hidden.device.type, enabled=False):
++      with torch.no_grad():
++        lattice = self._frozen_unary.candidate_lattice(hidden, raw_logits, sigma, active)
++        # Match score_head_fp64's reference exactly. Recomputing the aggregate
++        # residual before this normalization would change the frozen baseline.
++        log_beliefs = lattice.unary_log_potentials.double().log_softmax(-1)
++        # The within-residual conditional, in contrast, is normalized FP64.
++        tail = self._frozen_unary._tail_log_mass(raw_logits.double(), lattice.candidate_ids, 4096)
++        if (runtime_validation.enabled()
++            and bool(torch.isnan(log_beliefs).any())):
++          raise ValueError('frozen unary produced nonfinite corrected support')
++        beliefs = log_beliefs.exp()
++        ids = lattice.candidate_ids
++      context = self.hidden_norm(hidden.to(self.hidden_norm.weight.dtype))
++      time = self.time_embedding(sigma, hidden.shape[0])
++      left_scale = 1 + self.left_hidden_projection(context) + self.left_time_projection(time)[:, None]
++      right_scale = 1 + self.right_hidden_projection(context) + self.right_time_projection(time)[:, None]
++      raw_left = self.left_token_embedding(ids) * left_scale[..., None, :]
++      raw_right = self.right_token_embedding(ids) * right_scale[..., None, :]
++      edges, edge_mask = _fixed_chain_edges(active, component_size_cap=0)
++      batch = torch.arange(hidden.shape[0], device=hidden.device)[:, None]
++      left_nodes, right_nodes = edges[..., 0], edges[..., 1]
++      coupling = centered_coupling(
++        beliefs[batch, left_nodes], beliefs[batch, right_nodes],
++        raw_left[batch, left_nodes], raw_right[batch, right_nodes], eta=self.eta)
++      left, right = coupling.left_factors[..., :-1, :], coupling.right_factors[..., :-1, :]
++      batch_size, length = active.shape
++      return CenteredForestOutput(
++        candidate_ids=ids, unary_log_potentials=log_beliefs,
++        candidate_state_mask=torch.isfinite(log_beliefs),
++        retained_mass=beliefs[..., :-1].sum(-1), residual_log_mass=log_beliefs[..., -1],
++        proposal_edge_index=edges[:, :0], proposal_edge_mask=edge_mask[:, :0],
++        proposal_scores=log_beliefs.new_empty(batch_size, 0),
++        anchor_logits=log_beliefs.new_empty(batch_size, length, 0),
++        anchor_indices=edges.new_empty(batch_size, 0),
++        slot_logits=log_beliefs.new_empty(batch_size, length, 0),
++        edge_index=edges, edge_mask=edge_mask, edge_scores=log_beliefs.new_zeros(edge_mask.shape),
++        pair_left_factors=left, pair_right_factors=right,
++        topology_mode='fixed', factor_mode='dynamic', independent_mode=False,
++        base_tail_log_mass=tail, scoring_active_mask=active.detach().clone(), vocab_size=self.vocab_size,
++      )
++
++
++def centered_forest_log_probability(output: CenteredForestOutput, raw_logits: torch.Tensor,
++                                    targets: torch.Tensor,
++                                    active_mask: torch.Tensor | None = None) -> torch.Tensor:
++  """Exact active-token log score [B], with O(E*d) observed edge scoring.
++
++  Top-K membership lookup additionally costs O(B*L*K). No partition function,
++  messages, or E*K*K tensor is computed. Use the unchanged raw_logits supplied
++  to forward. Inactive target values are ignored. Impossible active targets
++  have score -inf and must not be used as finite training losses.
++  """
++  if not isinstance(output, CenteredForestOutput):
++    raise ValueError('direct scoring requires an unmodified CenteredForestOutput')
++  output._validate_logits(raw_logits)
++  active = output.scoring_active_mask
++  if active_mask is not None and (active_mask.device != active.device
++      or active_mask.dtype != torch.bool or not torch.equal(active_mask, active)):
++    raise ValueError('active_mask must equal the forward mask')
++  if (targets.shape != active.shape or targets.dtype != torch.long
++      or targets.device != active.device
++      or (runtime_validation.enabled()
++          and bool(((targets < 0) | (targets >= output.vocab_size)).any()))):
++    raise ValueError('targets must be valid long [B,L] vocabulary IDs on device')
++  with torch.autocast(device_type=active.device.type, enabled=False):
++    safe_targets = torch.where(active, targets, output.candidate_ids[..., 0])
++    matches = output.candidate_ids.eq(safe_targets[..., None])
++    explicit = matches.any(-1)
++    count = output.candidate_ids.shape[-1]
++    states = torch.where(explicit, matches.long().argmax(-1),
++                         torch.full_like(safe_targets, count))
++    unary = output.unary_log_potentials.gather(-1, states[..., None]).squeeze(-1)
++    unary = torch.where(active, unary, torch.zeros_like(unary)).sum(-1)
++    target_logits = raw_logits.detach().double().gather(-1, safe_targets[..., None]).squeeze(-1)
++    safe_tail = torch.where(torch.isfinite(output.base_tail_log_mass), output.base_tail_log_mass,
++                            torch.zeros_like(output.base_tail_log_mass))
++    tail_correction = torch.where(active & ~explicit, target_logits - safe_tail,
++                                  torch.zeros_like(target_logits)).sum(-1)
++    left_states = states.gather(1, output.edge_index[..., 0])
++    right_states = states.gather(1, output.edge_index[..., 1])
++    rank = output.pair_left_factors.shape[-1]
++    left = output.pair_left_factors.gather(
++      2, left_states.clamp_max(count - 1)[..., None, None].expand(-1, -1, 1, rank)).squeeze(2)
++    right = output.pair_right_factors.gather(
++      2, right_states.clamp_max(count - 1)[..., None, None].expand(-1, -1, 1, rank)).squeeze(2)
++    edge_scores = torch.logsumexp(left.log() + right.log(), -1)
++    interacting = output.edge_mask & (left_states < count) & (right_states < count)
++    edge_scores = torch.where(interacting, edge_scores, torch.zeros_like(edge_scores)).sum(-1)
++    return unary + tail_correction + edge_scores
+diff --git a/models/contextual_unary.py b/models/contextual_unary.py
+new file mode 100644
+index 0000000..0c6b0ba
+--- /dev/null
++++ b/models/contextual_unary.py
+@@ -0,0 +1,291 @@
++"""An active unary control for a contextual token-pair output layer.
++
++The adapter adds ``<E[token], W_h LN(hidden) + W_t time> / sqrt(rank)``
++to each base logit. Every distribution still factorizes across positions.
++There are no graph parameters, pair factors, or deliberately unused parameters.
++
++``correction_domain='candidates'`` changes only the base model's top-K logits.
++All omitted tokens keep their base logits, exactly matching the forest head's
++candidate support and unchanged within-residual distribution. ``'full'`` allows
++corrections to every vocabulary item and should be reported as a separate
++baseline. Candidates are selected from base logits without seeing targets.
++
++The time embedding, hidden normalization and V-by-R token embedding match the
++forest pair branch. The context projections emit R values instead of its 2R
++FiLM values, so this control has R*(H+T+1) fewer active parameters. Report that
++difference; topology parameters in the forest do not belong to its pair branch.
++"""
++
++from dataclasses import dataclass
++import math
++from typing import Optional
++
++import torch
++from torch import nn
++from torch.utils.checkpoint import checkpoint
++
++from models.structured_decoder import ScalarTimestepEmbedding
++import runtime_validation
++
++
++@dataclass
++class CandidateUnaryLattice:
++  """Exact compact distribution: K explicit tokens and one residual state."""
++
++  candidate_ids: torch.Tensor
++  unary_log_potentials: torch.Tensor
++  candidate_state_mask: torch.Tensor
++  residual_log_mass: torch.Tensor
++
++  @property
++  def log_probs(self) -> torch.Tensor:
++    return self.unary_log_potentials.log_softmax(dim=-1)
++
++
++class ContextualUnaryAdapter(nn.Module):
++  """Low-rank contextual corrections to a frozen backbone's unary logits.
++
++  ``forward`` returns exact full-vocabulary logits for ordinary sampling.
++  ``target_log_probs`` avoids materializing corrected B-by-L-by-V logits and
++  uses checkpointed vocabulary chunks during training. ``candidate_lattice``
++  exposes the equivalent K+1-state distribution in candidate mode.
++
++  Projection weights start at zero and token embeddings start nonzero. Thus
++  the first forward preserves the backbone exactly, the first backward trains
++  the projections, and subsequent backwards also train the embedding, hidden
++  normalization, and time MLP. No parameter is permanently inactive.
++
++  Backbone freezing belongs to the caller: use ``torch.no_grad()`` around the
++  backbone pass, or pass detached logits and hidden states.
++  """
++
++  def __init__(self, hidden_size: int, vocab_size: int, rank: int = 16,
++               time_embed_dim: int = 64, top_k: int = 64,
++               correction_domain: str = 'candidates'):
++    super().__init__()
++    if hidden_size < 1 or vocab_size < 2 or rank < 1:
++      raise ValueError('hidden_size/rank must be positive and vocab_size >= 2')
++    if not 1 <= top_k <= vocab_size:
++      raise ValueError('top_k must lie in [1, vocab_size]')
++    if correction_domain not in ('full', 'candidates'):
++      raise ValueError("correction_domain must be 'full' or 'candidates'")
++    self.hidden_size = hidden_size
++    self.vocab_size = vocab_size
++    self.rank = rank
++    self.time_embed_dim = time_embed_dim
++    self.top_k = top_k
++    self.correction_domain = correction_domain
++    self.hidden_norm = nn.LayerNorm(hidden_size)
++    self.time_embedding = ScalarTimestepEmbedding(time_embed_dim)
++    self.token_embedding = nn.Embedding(vocab_size, rank)
++    self.hidden_projection = nn.Linear(hidden_size, rank)
++    self.time_projection = nn.Linear(time_embed_dim, rank, bias=False)
++    nn.init.normal_(self.token_embedding.weight, std=0.02)
++    nn.init.zeros_(self.hidden_projection.weight)
++    nn.init.zeros_(self.hidden_projection.bias)
++    nn.init.zeros_(self.time_projection.weight)
++
++  @property
++  def parameter_count(self) -> int:
++    return sum(p.numel() for p in self.parameters() if p.requires_grad)
++
++  def parameter_summary(self) -> dict:
++    """Actual active capacity and the corresponding forest pair-branch count."""
++    projection_difference = self.rank * (
++      self.hidden_size + self.time_embed_dim + 1)
++    return {
++      'trainable_parameters': self.parameter_count,
++      'forest_pair_branch_parameters': (
++        self.parameter_count + projection_difference),
++      'difference_from_forest_pair_branch': -projection_difference,
++      'correction_domain': self.correction_domain,
++      'top_k': self.top_k,
++      'rank': self.rank,
++    }
++
++  def _validate(self, hidden: torch.Tensor, base_logits: torch.Tensor,
++                active_mask: Optional[torch.Tensor]) -> torch.Tensor:
++    if hidden.ndim != 3 or hidden.shape[-1] != self.hidden_size:
++      raise ValueError('hidden must have shape [B,L,hidden_size]')
++    if (base_logits.ndim != 3
++        or base_logits.shape[:2] != hidden.shape[:2]
++        or base_logits.shape[-1] != self.vocab_size):
++      raise ValueError('base_logits must have shape [B,L,vocab_size]')
++    if hidden.device != base_logits.device:
++      raise ValueError('hidden and base_logits must be on the same device')
++    if active_mask is None:
++      return torch.ones(hidden.shape[:2], dtype=torch.bool, device=hidden.device)
++    if (active_mask.shape != hidden.shape[:2]
++        or active_mask.dtype != torch.bool
++        or active_mask.device != hidden.device):
++      raise ValueError('active_mask must be a boolean [B,L] tensor on device')
++    return active_mask
++
++  @staticmethod
++  def _work_dtype(logits: torch.Tensor) -> torch.dtype:
++    return torch.float64 if logits.dtype == torch.float64 else torch.float32
++
++  def context_features(self, hidden: torch.Tensor,
++                       timestep: torch.Tensor) -> torch.Tensor:
++    """Compute one R-vector per position; no target tokens enter this path."""
++    hidden = hidden.to(dtype=self.hidden_norm.weight.dtype)
++    time = self.time_embedding(
++      torch.as_tensor(timestep, device=hidden.device), hidden.shape[0])
++    return (self.hidden_projection(self.hidden_norm(hidden))
++            + self.time_projection(time)[:, None, :]) / math.sqrt(self.rank)
++
++  def _corrections(self, features: torch.Tensor,
++                   candidate_ids: Optional[torch.Tensor] = None) -> torch.Tensor:
++    if candidate_ids is None:
++      return features @ self.token_embedding.weight.T
++    return (features.unsqueeze(-2)
++            * self.token_embedding(candidate_ids)).sum(dim=-1)
++
++  def forward(self, hidden: torch.Tensor, base_logits: torch.Tensor,
++              timestep: torch.Tensor,
++              active_mask: Optional[torch.Tensor] = None) -> torch.Tensor:
++    """Return corrected full-vocabulary logits; inactive rows stay unchanged."""
++    active = self._validate(hidden, base_logits, active_mask)
++    features = self.context_features(hidden, timestep)
++    work = base_logits.to(self._work_dtype(base_logits))
++    if self.correction_domain == 'full':
++      correction = self._corrections(features).to(work.dtype)
++      return work + correction * active.unsqueeze(-1)
++    ids = base_logits.topk(self.top_k, dim=-1).indices
++    correction = self._corrections(features, ids).to(work.dtype)
++    return work.scatter_add(-1, ids, correction * active.unsqueeze(-1))
++
++  @staticmethod
++  def _tail_log_mass(base: torch.Tensor, ids: torch.Tensor,
++                     vocab_chunk_size: int) -> torch.Tensor:
++    """Sum omitted base logits exactly, including nearly zero-mass tails."""
++    tail = base.new_full(base.shape[:-1], -torch.inf)
++    for start in range(0, base.shape[-1], vocab_chunk_size):
++      stop = min(start + vocab_chunk_size, base.shape[-1])
++      chunk = base[..., start:stop].clone()
++      inside = (ids >= start) & (ids < stop)
++      # Duplicate clamped indices are safe here: scatter_add counts membership
++      # instead of overwriting a valid exclusion with an out-of-chunk entry.
++      excluded = torch.zeros_like(chunk, dtype=torch.int32)
++      excluded.scatter_add_(
++        -1, (ids - start).clamp(0, stop - start - 1), inside.to(torch.int32))
++      chunk = chunk.masked_fill(excluded.bool(), -torch.inf)
++      finite_chunk = torch.isfinite(chunk).any(dim=-1)
++      safe_chunk = torch.where(finite_chunk[..., None], chunk, torch.zeros_like(chunk))
++      chunk_mass = torch.logsumexp(safe_chunk, dim=-1).masked_fill(
++        ~finite_chunk, -torch.inf)
++      has_mass = torch.isfinite(tail) | finite_chunk
++      # Avoid differentiating logsumexp/logaddexp at an all--infinity input
++      # when a chunk contains only explicit states (or K covers the vocabulary).
++      tail = torch.logaddexp(
++        torch.where(has_mass, tail, torch.zeros_like(tail)),
++        torch.where(has_mass, chunk_mass, torch.zeros_like(chunk_mass)),
++      ).masked_fill(~has_mass, -torch.inf)
++    return tail
++
++  def candidate_lattice(self, hidden: torch.Tensor, base_logits: torch.Tensor,
++                        timestep: torch.Tensor,
++                        active_mask: Optional[torch.Tensor] = None,
++                        vocab_chunk_size: int = 4096) -> CandidateUnaryLattice:
++    """Return the exact K+1 lattice with unmodified omitted-token conditionals.
++
++    Only available in candidate mode. The returned residual probability is
++    allocated among omitted tokens in proportion to their original base logits.
++    """
++    if self.correction_domain != 'candidates':
++      raise ValueError('candidate_lattice requires candidate correction mode')
++    if vocab_chunk_size < 1:
++      raise ValueError('vocab_chunk_size must be positive')
++    active = self._validate(hidden, base_logits, active_mask)
++    features = self.context_features(hidden, timestep)
++    base = base_logits.to(self._work_dtype(base_logits))
++    values, ids = base.topk(self.top_k, dim=-1)
++    values = values + self._corrections(features, ids).to(base.dtype) * active[..., None]
++    residual = self._tail_log_mass(base, ids, vocab_chunk_size)
++    potentials = torch.cat((values, residual[..., None]), dim=-1)
++    return CandidateUnaryLattice(ids, potentials, torch.isfinite(potentials), residual)
++
++  def target_log_probs(self, hidden: torch.Tensor, base_logits: torch.Tensor,
++                       timestep: torch.Tensor, targets: torch.Tensor,
++                       active_mask: Optional[torch.Tensor] = None,
++                       position_chunk_size: int = 32,
++                       vocab_chunk_size: int = 4096,
++                       checkpoint_chunks: bool = True) -> torch.Tensor:
++    """Exact log p(target) at active positions, with zeros at inactive ones.
++
++    Additional full-vocabulary working tensors are at most
++    ``position_chunk_size * vocab_size`` for the selected base rows, and
++    ``position_chunk_size * vocab_chunk_size`` for corrected vocabulary chunks.
++    Checkpointing recomputes chunk logits in backward instead of retaining all
++    corrected vocabulary activations. There are never V-by-V allocations.
++    Targets must be valid vocabulary IDs even when their positions are inactive.
++    """
++    if position_chunk_size < 1 or vocab_chunk_size < 1:
++      raise ValueError('chunk sizes must be positive')
++    active = self._validate(hidden, base_logits, active_mask)
++    if targets.shape != active.shape or targets.dtype != torch.long:
++      raise ValueError('targets must be a long [B,L] tensor')
++    if (targets.device != hidden.device
++        or (runtime_validation.enabled()
++            and bool(((targets < 0) | (targets >= self.vocab_size)).any()))):
++      raise ValueError('targets must be valid vocabulary IDs on device')
++    features = self.context_features(hidden, timestep).reshape(-1, self.rank)
++    selected = active.flatten().nonzero().flatten()
++    result = base_logits.new_zeros(active.numel(), dtype=self._work_dtype(base_logits))
++    # Preserve a differentiable zero for all-observed batches.
++    result = result + features.sum() * 0.0
++    base_flat = base_logits.reshape(-1, self.vocab_size)
++    targets_flat = targets.flatten()
++    values = []
++    for offset in range(0, selected.numel(), position_chunk_size):
++      indices = selected[offset:offset + position_chunk_size]
++      base = base_flat[indices].to(result.dtype)
++      feat = features[indices]
++      target = targets_flat[indices]
++      target_logits = base.gather(-1, target[:, None]).squeeze(-1)
++      if self.correction_domain == 'candidates':
++        candidate_logits, ids = base.topk(self.top_k, dim=-1)
++        correction = self._corrections(feat, ids).to(base.dtype)
++        residual = self._tail_log_mass(base, ids, vocab_chunk_size)
++        normalizer = torch.logsumexp(torch.cat((
++          candidate_logits + correction, residual[:, None]), dim=-1), dim=-1)
++        matches = ids == target[:, None]
++        target_logits = target_logits + (correction * matches).sum(dim=-1)
++      else:
++        target_logits = target_logits + (
++          feat * self.token_embedding(target)).sum(dim=-1).to(base.dtype)
++        normalizer = base.new_full((base.shape[0],), -torch.inf)
++        for start in range(0, self.vocab_size, vocab_chunk_size):
++          stop = min(start + vocab_chunk_size, self.vocab_size)
++
++          def chunk_log_mass(base_chunk, context, embedding):
++            corrected = base_chunk + (context @ embedding.T).to(base_chunk.dtype)
++            nonempty = ~torch.isneginf(corrected).all(dim=-1)
++            safe = torch.where(nonempty[:, None], corrected, torch.zeros_like(corrected))
++            # A chunk containing only excluded tokens has zero probability.
++            # Evaluate its reduction at finite values before masking it out,
++            # so backward never encounters the undefined all--inf derivative.
++            return torch.logsumexp(safe, dim=-1).masked_fill(~nonempty, -torch.inf)
++
++          args = (base[:, start:stop], feat, self.token_embedding.weight[start:stop])
++          if checkpoint_chunks and torch.is_grad_enabled():
++            mass = checkpoint(chunk_log_mass, *args, use_reentrant=False)
++          else:
++            mass = chunk_log_mass(*args)
++          nonempty = ~torch.isneginf(normalizer) | ~torch.isneginf(mass)
++          normalizer = torch.logaddexp(
++            torch.where(nonempty, normalizer, torch.zeros_like(normalizer)),
++            torch.where(nonempty, mass, torch.zeros_like(mass)),
++          ).masked_fill(~nonempty, -torch.inf)
++      values.append(target_logits - normalizer)
++    if values:
++      result = result.index_copy(0, selected, torch.cat(values))
++    return result.reshape(active.shape)
++
++  def nll_loss(self, hidden: torch.Tensor, base_logits: torch.Tensor,
++               timestep: torch.Tensor, targets: torch.Tensor,
++               active_mask: torch.Tensor, **chunk_options) -> torch.Tensor:
++    """Mean conditional denoising NLL over masked tokens (zero if empty)."""
++    log_probs = self.target_log_probs(
++      hidden, base_logits, timestep, targets, active_mask, **chunk_options)
++    return -log_probs.sum() / active_mask.sum().clamp_min(1)
+diff --git a/models/crf_decoder.py b/models/crf_decoder.py
+new file mode 100644
+index 0000000..51d2d4a
+--- /dev/null
++++ b/models/crf_decoder.py
+@@ -0,0 +1,285 @@
++import math
++
++import omegaconf
++import torch
++import torch.nn as nn
++import torch.nn.functional as F
++
++from .dit import (
++  DDiTBlock, DDitFinalLayer, EmbeddingLayer,
++  TimestepEmbedder, Rotary, LayerNorm
++)
++
++
++class CRFDecoderBlock(nn.Module):
++  """Cross-attention decoder block for CRF transitions.
++
++  Each block: LayerNorm → cross-attention(Q=decoder, KV=encoder) → residual
++              → LayerNorm → FFN → residual
++  """
++
++  def __init__(self, decoder_dim, n_heads, encoder_dim,
++               mlp_ratio=4, dropout=0.1):
++    super().__init__()
++    self.n_heads = n_heads
++    self.head_dim = decoder_dim // n_heads
++
++    self.norm1 = LayerNorm(decoder_dim)
++    self.q_proj = nn.Linear(decoder_dim, decoder_dim, bias=False)
++    self.kv_proj = nn.Linear(
++      encoder_dim, 2 * decoder_dim, bias=False)
++    self.out_proj = nn.Linear(decoder_dim, decoder_dim, bias=False)
++
++    self.norm2 = LayerNorm(decoder_dim)
++    self.mlp = nn.Sequential(
++      nn.Linear(decoder_dim, mlp_ratio * decoder_dim, bias=True),
++      nn.GELU(approximate='tanh'),
++      nn.Linear(mlp_ratio * decoder_dim, decoder_dim, bias=True))
++    self.dropout_p = dropout
++
++  def forward(self, x, encoder_hidden):
++    """Cross-attention from decoder queries to encoder KV.
++
++    Args:
++      x: (batch, L_dec, decoder_dim)
++      encoder_hidden: (batch, L_enc, encoder_dim)
++    Returns:
++      (batch, L_dec, decoder_dim)
++    """
++    residual = x
++    x = self.norm1(x)
++
++    batch, L_dec, _ = x.shape
++    L_enc = encoder_hidden.shape[1]
++
++    q = self.q_proj(x).view(
++      batch, L_dec, self.n_heads, self.head_dim).transpose(1, 2)
++    kv = self.kv_proj(encoder_hidden)
++    k, v = kv.chunk(2, dim=-1)
++    k = k.view(
++      batch, L_enc, self.n_heads, self.head_dim).transpose(1, 2)
++    v = v.view(
++      batch, L_enc, self.n_heads, self.head_dim).transpose(1, 2)
++
++    attn_out = F.scaled_dot_product_attention(
++      q, k, v,
++      dropout_p=self.dropout_p if self.training else 0.0)
++    attn_out = attn_out.transpose(1, 2).contiguous().view(
++      batch, L_dec, -1)
++    x = residual + self.out_proj(attn_out)
++
++    x = x + self.mlp(self.norm2(x))
++    return x
++
++
++class CRFDecoder(nn.Module):
++  """First-order CRF decoder with cross-attention to encoder
++  hidden states.
++
++  Computes log P(x_{0,i} | x_{0,i-1}, x_t) for each position i:
++    1. Embed previous token x_{0,i-1} + position embedding
++    2. Cross-attend to encoder hidden states H
++    3. Project to vocabulary logits
++  """
++
++  def __init__(self, decoder_dim, n_heads, encoder_dim,
++               n_layers, vocab_size, max_seq_len, dropout=0.1):
++    super().__init__()
++    self.decoder_dim = decoder_dim
++    self.vocab_size = vocab_size
++
++    self.token_embed = nn.Embedding(vocab_size, decoder_dim)
++    self.pos_embed = nn.Embedding(max_seq_len, decoder_dim)
++    self.start_embed = nn.Parameter(
++      torch.randn(decoder_dim) * 0.02)
++
++    if encoder_dim != decoder_dim:
++      self.encoder_proj = nn.Linear(
++        encoder_dim, decoder_dim, bias=False)
++    else:
++      self.encoder_proj = nn.Identity()
++
++    self.blocks = nn.ModuleList([
++      CRFDecoderBlock(decoder_dim, n_heads, decoder_dim,
++                      dropout=dropout)
++      for _ in range(n_layers)
++    ])
++
++    self.norm = LayerNorm(decoder_dim)
++    self.output_proj = nn.Linear(decoder_dim, vocab_size)
++    nn.init.zeros_(self.output_proj.weight)
++    nn.init.zeros_(self.output_proj.bias)
++
++  def forward(self, prev_tokens, positions, encoder_hidden,
++              use_start_for_first=True):
++    """Teacher-forced forward: prev_tokens contains ground truth.
++
++    Args:
++      prev_tokens: (batch, L) previous token indices.
++          Position 0 is ignored when use_start_for_first=True.
++      positions: (L,) or (batch, L) position indices
++          (the output positions, i.e. which position we predict)
++      encoder_hidden: (batch, L_enc, encoder_dim)
++      use_start_for_first: replace position-0 embedding
++          with the learnable start embedding
++    Returns:
++      logits: (batch, L, vocab_size)
++    """
++    encoder_hidden = self.encoder_proj(encoder_hidden)
++
++    x = self.token_embed(prev_tokens)
++    if use_start_for_first:
++      x[:, 0, :] = self.start_embed
++
++    if positions.ndim == 1:
++      x = x + self.pos_embed(positions)[None, :, :]
++    else:
++      x = x + self.pos_embed(positions)
++
++    for block in self.blocks:
++      x = block(x, encoder_hidden)
++
++    x = self.norm(x)
++    return self.output_proj(x)
++
++  def forward_batched(self, token_indices, positions,
++                      encoder_hidden):
++    """Batched forward for inference where query length
++    may differ from encoder length.
++
++    Args:
++      token_indices: (batch, L_q) token indices
++      positions: (L_q,) or (batch, L_q) position indices
++      encoder_hidden: (batch, L_enc, encoder_dim)
++    Returns:
++      logits: (batch, L_q, vocab_size)
++    """
++    encoder_hidden = self.encoder_proj(encoder_hidden)
++
++    x = self.token_embed(token_indices)
++    if positions.ndim == 1:
++      x = x + self.pos_embed(positions)[None, :, :]
++    else:
++      x = x + self.pos_embed(positions)
++
++    for block in self.blocks:
++      x = block(x, encoder_hidden)
++
++    x = self.norm(x)
++    return self.output_proj(x)
++
++
++class CRFDiT(nn.Module):
++  """DiT encoder + CRF decoder backbone.
++
++  The encoder processes noisy input x_t into hidden states H.
++  The CRF decoder cross-attends to H to produce first-order
++  transition probabilities P(x_{0,i} | x_{0,i-1}, x_t).
++  """
++
++  def __init__(self, config, vocab_size: int):
++    super().__init__()
++    if type(config) == dict:
++      config = omegaconf.OmegaConf.create(config)
++
++    self.config = config
++    self.vocab_size = vocab_size
++    encoder_dim = config.model.hidden_size
++
++    # --- Encoder (same architecture as DIT) ---
++    self.vocab_embed = EmbeddingLayer(encoder_dim, vocab_size)
++    self.sigma_map = TimestepEmbedder(config.model.cond_dim)
++    self.rotary_emb = Rotary(
++      encoder_dim // config.model.n_heads)
++
++    self.blocks = nn.ModuleList([
++      DDiTBlock(encoder_dim,
++                config.model.n_heads,
++                config.model.cond_dim,
++                dropout=config.model.dropout)
++      for _ in range(config.model.n_blocks)
++    ])
++
++    self.output_layer = DDitFinalLayer(
++      encoder_dim, vocab_size, config.model.cond_dim)
++    self.scale_by_sigma = config.model.scale_by_sigma
++
++    # --- CRF decoder ---
++    crf_cfg = config.model.crf
++    self.crf_decoder = CRFDecoder(
++      decoder_dim=crf_cfg.decoder_dim,
++      n_heads=crf_cfg.decoder_heads,
++      encoder_dim=encoder_dim,
++      n_layers=crf_cfg.decoder_layers,
++      vocab_size=vocab_size,
++      max_seq_len=config.model.length,
++      dropout=config.model.dropout)
++    self.top_k = crf_cfg.top_k
++    self.inference_query_chunk_size = int(
++      crf_cfg.get('inference_query_chunk_size', 0))
++
++  def encode(self, indices, sigma):
++    """Encode noisy input x_t into hidden states.
++
++    Args:
++      indices: (batch, seq_len) token indices
++      sigma: (batch,) noise level (1-D)
++    Returns:
++      H: (batch, seq_len, hidden_size) encoder hidden states
++      c: (batch, cond_dim) timestep conditioning
++    """
++    x = self.vocab_embed(indices)
++    c = F.silu(self.sigma_map(sigma))
++    rotary_cos_sin = self.rotary_emb(x)
++
++    with torch.cuda.amp.autocast(dtype=torch.bfloat16):
++      for block in self.blocks:
++        x = block(x, rotary_cos_sin, c, seqlens=None)
++
++    return x, c
++
++  def forward(self, indices, sigma):
++    """Unigram logits (same interface as DIT)."""
++    H, c = self.encode(indices, sigma)
++    with torch.cuda.amp.autocast(dtype=torch.bfloat16):
++      return self.output_layer(H, c)
++
++  def forward_crf_train(self, xt, sigma, x0,
++                        return_unigram_logits=False):
++    """Teacher-forced CRF training forward pass.
++
++    Args:
++      xt: (batch, seq_len) noisy token indices
++      sigma: (batch,) noise level (1-D)
++      x0: (batch, seq_len) clean token indices
++      return_unigram_logits: also return the encoder's unigram head. This is
++          used by the optional auxiliary denoising objective that trains the
++          same head later used to choose the CRF's top-K candidates.
++    Returns:
++      logits: (batch, seq_len, vocab_size) CRF transition logits.
++          logits[b,i,v] corresponds to unnormalised
++          log P(x_{0,i}=v | x_{0,i-1}=x0[b,i-1], x_t).
++      If return_unigram_logits=True, returns
++          (logits, unigram_logits) with matching shapes.
++    """
++    H, c = self.encode(xt, sigma)
++
++    batch, seq_len = x0.shape
++    # Shifted x0: [dummy, x0[0], ..., x0[N-2]]
++    # Position 0 will use the learnable start embedding.
++    prev_tokens = torch.cat([
++      x0[:, :1],   # placeholder; replaced by start_embed
++      x0[:, :-1]
++    ], dim=1)
++    positions = torch.arange(seq_len, device=x0.device)
++
++    with torch.cuda.amp.autocast(dtype=torch.bfloat16):
++      logits = self.crf_decoder(
++        prev_tokens, positions, H, use_start_for_first=True)
++
++      if return_unigram_logits:
++        unigram_logits = self.output_layer(H, c)
++
++    if return_unigram_logits:
++      return logits, unigram_logits
++    return logits
+diff --git a/models/directional_forest.py b/models/directional_forest.py
+new file mode 100644
+index 0000000..56bda86
+--- /dev/null
++++ b/models/directional_forest.py
+@@ -0,0 +1,25 @@
++"""A forest head with separate token factors for the two ends of an edge.
++
++The original head shares its token embedding across both endpoints.  Its
++positive contextual scaling cannot reverse a token ordering in any factor
++dimension.  With uniform unaries and vocabulary {A, B}, this implies
++F(A,A) + F(B,B) >= F(A,B) + F(B,A).  In particular it cannot fit a balanced
++AB/BA distribution.  Separate endpoint embeddings remove that restriction.
++
++This backward-compatible name now selects the normal head's ``separate``
++option. Existing directional checkpoints retain their parameter names.
++At equal rank, the parameters added are V*R + (H+1)*2R + T*2R; halve the rank
++to match the shared head's parameter count.
++"""
++
++from models.structured_decoder import ContextualCouplingForestHead
++
++
++class DirectionalCouplingForestHead(ContextualCouplingForestHead):
++  """Use position-ordered left/right factors on canonical forest edges."""
++
++  def __init__(self, *args, **kwargs):
++    mode = kwargs.pop('factor_embedding_mode', 'separate')
++    if mode != 'separate':
++      raise ValueError('DirectionalCouplingForestHead requires separate factors')
++    super().__init__(*args, factor_embedding_mode=mode, **kwargs)
+diff --git a/models/dit.py b/models/dit.py
+index ed1399b..35b0592 100644
+--- a/models/dit.py
++++ b/models/dit.py
+@@ -1,8 +1,16 @@
+ import math
+ import typing
+ 
+-import flash_attn
+-import flash_attn.layers.rotary
++try:
++  import flash_attn
++  import flash_attn.layers.rotary
++  FLASH_ATTN_AVAILABLE = True
++except (ImportError, OSError):
++  # FlashAttention wheels are architecture-specific. PyTorch SDPA below is a
++  # correctness fallback for unsupported GPUs (for example Blackwell with an
++  # older wheel) and CPU-only environments.
++  flash_attn = None
++  FLASH_ATTN_AVAILABLE = False
+ import huggingface_hub
+ import omegaconf
+ import torch
+@@ -110,9 +118,33 @@ def rotate_half(x):
+ 
+ 
+ def apply_rotary_pos_emb(qkv, cos, sin):
+-  cos = cos[0,:,0,0,:cos.shape[-1]//2]
+-  sin = sin[0,:,0,0,:sin.shape[-1]//2]
+-  return flash_attn.layers.rotary.apply_rotary_emb_qkv_(qkv, cos, sin)
++  """Apply non-interleaved rotary embeddings to Q/K and leave V unchanged."""
++  if FLASH_ATTN_AVAILABLE and qkv.is_cuda:
++    cos_half = cos[0, :, 0, 0, :cos.shape[-1] // 2]
++    sin_half = sin[0, :, 0, 0, :sin.shape[-1] // 2]
++    return flash_attn.layers.rotary.apply_rotary_emb_qkv_(
++      qkv, cos_half, sin_half)
++  return qkv * cos + rotate_half(qkv) * sin
++
++
++def scaled_dot_product_attention_qkv(qkv):
++  """PyTorch SDPA equivalent of non-causal packed self-attention.
++
++  Args:
++    qkv: (batch, sequence, 3, heads, head_dim)
++  Returns:
++    (batch, sequence, heads, head_dim)
++  """
++  if qkv.ndim != 5 or qkv.shape[2] != 3:
++    raise ValueError(
++      'qkv must have shape (batch, sequence, 3, heads, head_dim)')
++  q, k, v = qkv.unbind(dim=2)
++  q = q.transpose(1, 2)
++  k = k.transpose(1, 2)
++  v = v.transpose(1, 2)
++  output = F.scaled_dot_product_attention(
++    q, k, v, dropout_p=0.0, is_causal=False)
++  return output.transpose(1, 2).contiguous()
+ 
+ 
+ # function overload
+@@ -262,17 +294,25 @@ class DDiTBlock(nn.Module):
+       cos, sin = rotary_cos_sin
+       qkv = apply_rotary_pos_emb(
+         qkv, cos.to(qkv.dtype), sin.to(qkv.dtype))
+-    qkv = rearrange(qkv, 'b s ... -> (b s) ...')
+-    if seqlens is None:
+-      cu_seqlens = torch.arange(
+-        0, (batch_size + 1) * seq_len, step=seq_len,
+-        dtype=torch.int32, device=qkv.device)
++
++    if FLASH_ATTN_AVAILABLE and qkv.is_cuda:
++      qkv = rearrange(qkv, 'b s ... -> (b s) ...')
++      if seqlens is None:
++        cu_seqlens = torch.arange(
++          0, (batch_size + 1) * seq_len, step=seq_len,
++          dtype=torch.int32, device=qkv.device)
++      else:
++        cu_seqlens = seqlens.cumsum(-1)
++      x = flash_attn.flash_attn_interface.\
++        flash_attn_varlen_qkvpacked_func(
++          qkv, cu_seqlens, seq_len, 0., causal=False)
++      x = rearrange(x, '(b s) h d -> b s (h d)', b=batch_size)
+     else:
+-      cu_seqlens = seqlens.cumsum(-1)
+-    x = flash_attn.flash_attn_interface.flash_attn_varlen_qkvpacked_func(
+-      qkv, cu_seqlens, seq_len, 0., causal=False)
+-    
+-    x = rearrange(x, '(b s) h d -> b s (h d)', b=batch_size)
++      if seqlens is not None:
++        raise RuntimeError(
++          'PyTorch SDPA fallback currently requires seqlens=None')
++      x = scaled_dot_product_attention_qkv(qkv)
++      x = x.reshape(batch_size, seq_len, -1)
+ 
+     x = bias_dropout_scale_fn(self.attn_out(x),
+                               None,
+@@ -356,7 +396,8 @@ class DIT(nn.Module, huggingface_hub.PyTorchModelHubMixin):
+     else:
+       return  bias_dropout_add_scale_fused_inference
+ 
+-  def forward(self, indices, sigma):
++  def encode(self, indices, sigma):
++    """Return final hidden states and timestep conditioning."""
+     x = self.vocab_embed(indices)
+     c = F.silu(self.sigma_map(sigma))
+ 
+@@ -365,6 +406,13 @@ class DIT(nn.Module, huggingface_hub.PyTorchModelHubMixin):
+     with torch.cuda.amp.autocast(dtype=torch.bfloat16):
+       for i in range(len(self.blocks)):
+         x = self.blocks[i](x, rotary_cos_sin, c, seqlens=None)
+-      x = self.output_layer(x, c)
++    return x, c
+ 
+-    return x
+\ No newline at end of file
++  def decode(self, hidden_states, conditioning):
++    """Map encoded states to the ordinary factorized unary logits."""
++    with torch.cuda.amp.autocast(dtype=torch.bfloat16):
++      return self.output_layer(hidden_states, conditioning)
++
++  def forward(self, indices, sigma):
++    hidden_states, conditioning = self.encode(indices, sigma)
++    return self.decode(hidden_states, conditioning)
+diff --git a/models/structured_decoder.py b/models/structured_decoder.py
+new file mode 100644
+index 0000000..73e0d2c
+--- /dev/null
++++ b/models/structured_decoder.py
+@@ -0,0 +1,980 @@
++"""Lightweight contextual coupling-forest output head.
++
++This module intentionally does not own a language-model backbone.  It consumes
++the hidden states and unary logits already produced by a DIT (or another masked
++diffusion model), then constructs the small structured object needed by exact
++tree inference:
++
++* target-independent top-K token states and one residual state per position;
++* local and learned/contextual sparse edge proposals;
++* a hard, stop-gradient, bounded-component maximum-spanning forest; and
++* positive rank-R token factors on the selected edges.
++
++The hot path never runs candidate-conditioned attention over the vocabulary.
++It performs one ordinary top-K on the existing unary logits, token-embedding
++lookups for retained candidates, and O(|E| K R) factor gathers.  Dense K-by-K
++pair factors can be materialized for debugging, but exact inference should
++consume the endpoint factors directly.
++"""
++
++import copy
++import dataclasses
++import math
++from typing import Dict, Optional, Tuple
++
++import torch
++import torch.nn as nn
++import torch.nn.functional as F
++
++
++_VALID_MODES = frozenset({'fixed', 'dynamic'})
++
++
++def _check_mode(name: str, value: str) -> str:
++  if value not in _VALID_MODES:
++    raise ValueError(
++      f'{name} must be one of {sorted(_VALID_MODES)}, got {value!r}')
++  return value
++
++
++@dataclasses.dataclass
++class StructuredDecoderOutput:
++  """Tensor bundle returned by :class:`ContextualCouplingForestHead`.
++
++  Shapes use ``B`` for batch, ``L`` for sequence length, ``K`` for retained
++  token candidates, ``P`` for proposals, ``E=L-1`` for padded selected edges,
++  and ``R`` for pair-factor rank.
++
++  ``unary_log_potentials`` has K explicit states followed by a residual state.
++  ``pair_left_factors`` and ``pair_right_factors`` describe only the explicit
++  K-by-K block.  A pair factor is their matrix product; every row or column
++  involving the residual state is exactly one.
++  """
++
++  candidate_ids: torch.Tensor              # [B, L, K]
++  unary_log_potentials: torch.Tensor        # [B, L, K + 1]
++  candidate_state_mask: torch.Tensor        # [B, L, K + 1]
++  retained_mass: torch.Tensor               # [B, L]
++  residual_log_mass: torch.Tensor           # [B, L]
++
++  proposal_edge_index: torch.Tensor         # [B, P, 2]
++  proposal_edge_mask: torch.Tensor          # [B, P]
++  proposal_scores: torch.Tensor             # [B, P]
++  anchor_logits: torch.Tensor               # [B, L, A]
++  anchor_indices: torch.Tensor              # [B, A]
++  slot_logits: torch.Tensor                 # [B, L, A]
++
++  edge_index: torch.Tensor                  # [B, E, 2]
++  edge_mask: torch.Tensor                   # [B, E]
++  edge_scores: torch.Tensor                 # [B, E]
++  pair_left_factors: torch.Tensor           # [B, E, K, R]
++  pair_right_factors: torch.Tensor          # [B, E, K, R]
++
++  topology_mode: str
++  factor_mode: str
++  independent_mode: bool
++
++  @property
++  def num_candidate_states(self) -> int:
++    """Number of states per node, including the residual state."""
++    return self.unary_log_potentials.shape[-1]
++
++  def materialize_pair_factors(self) -> torch.Tensor:
++    """Return dense positive factors of shape ``[B,E,K+1,K+1]``.
++
++    This is intended for exhaustive tests and small-K reference inference.
++    Production sum-product should use the endpoint factors to retain
++    O(|E| K R) message complexity.
++    """
++    explicit = torch.einsum(
++      'beir,bejr->beij',
++      self.pair_left_factors,
++      self.pair_right_factors)
++    dense = F.pad(explicit, (0, 1, 0, 1), value=1.0)
++    return torch.where(
++      self.edge_mask[:, :, None, None], dense, torch.ones_like(dense))
++
++  def residual_log_probs(self, unary_logits: torch.Tensor) -> torch.Tensor:
++    """Normalize logits over each residual state's omitted vocabulary.
++
++    This deliberately materializes a vocabulary-sized tensor and should only
++    be called if a sampled node actually lands in its residual state.  The
++    main structured forward pass never pays this allocation.
++    """
++    if unary_logits.shape[:-1] != self.candidate_ids.shape[:-1]:
++      raise ValueError(
++        'unary_logits leading dimensions must match candidate_ids')
++    tail_logits = unary_logits.float().clone()
++    tail_logits.scatter_(-1, self.candidate_ids, -torch.inf)
++    tail_normalizer = torch.logsumexp(tail_logits, dim=-1, keepdim=True)
++    return tail_logits - tail_normalizer
++
++
++class ScalarTimestepEmbedding(nn.Module):
++  """Small sinusoidal MLP for one scalar diffusion time per example."""
++
++  def __init__(self, dim: int, max_period: int = 10_000):
++    super().__init__()
++    if dim < 2:
++      raise ValueError('timestep embedding dimension must be at least 2')
++    self.dim = dim
++    half = dim // 2
++    denominator = max(half - 1, 1)
++    frequencies = torch.exp(
++      -math.log(max_period)
++      * torch.arange(half, dtype=torch.float32) / denominator)
++    self.register_buffer('frequencies', frequencies, persistent=False)
++    self.mlp = nn.Sequential(
++      nn.Linear(dim, dim),
++      nn.SiLU(),
++      nn.Linear(dim, dim))
++
++  def forward(self, timestep: torch.Tensor, batch_size: int) -> torch.Tensor:
++    if timestep.ndim == 0:
++      timestep = timestep.expand(batch_size)
++    if timestep.ndim == 2 and timestep.shape[-1] == 1:
++      timestep = timestep[:, 0]
++    if timestep.ndim != 1 or timestep.shape[0] != batch_size:
++      raise ValueError(
++        'timestep must be scalar, [B], or [B,1]; '
++        f'got {tuple(timestep.shape)} for B={batch_size}')
++
++    compute_dtype = self.mlp[0].weight.dtype
++    arguments = (
++      timestep.to(dtype=compute_dtype)[:, None]
++      * self.frequencies.to(dtype=compute_dtype)[None])
++    embedding = torch.cat((arguments.cos(), arguments.sin()), dim=-1)
++    if embedding.shape[-1] < self.dim:
++      embedding = F.pad(embedding, (0, self.dim - embedding.shape[-1]))
++    return self.mlp(embedding)
++
++
++class SparseEdgeProposer(nn.Module):
++  """Build local plus learned-anchor edge proposals in O(B L A).
++
++  ``A`` learned anchor slots each select one active position from the context.
++  Every position then chooses a small number of those slots.  This supplies
++  context-dependent nonlocal proposals without computing an L-by-L attention
++  matrix.  Duplicate undirected proposals are harmless: Kruskal selection
++  below can accept at most one of them.
++  """
++
++  def __init__(self, topology_dim: int, local_window: int,
++               num_anchor_slots: int, contextual_neighbors: int):
++    super().__init__()
++    if local_window < 0:
++      raise ValueError('local_window must be nonnegative')
++    if num_anchor_slots < 1:
++      raise ValueError('num_anchor_slots must be positive')
++    if not 0 <= contextual_neighbors <= num_anchor_slots:
++      raise ValueError(
++        'contextual_neighbors must lie in [0, num_anchor_slots]')
++    self.local_window = local_window
++    self.num_anchor_slots = num_anchor_slots
++    self.contextual_neighbors = contextual_neighbors
++
++    self.anchor_projection = nn.Linear(
++      topology_dim, num_anchor_slots, bias=True)
++    self.slot_projection = nn.Linear(
++      topology_dim, num_anchor_slots, bias=True)
++    self.edge_scorer = nn.Sequential(
++      nn.Linear(2 * topology_dim, topology_dim),
++      nn.SiLU(),
++      nn.Linear(topology_dim, 1))
++
++  @staticmethod
++  def _gather_nodes(node_context: torch.Tensor,
++                    node_indices: torch.Tensor) -> torch.Tensor:
++    gather_index = node_indices[:, :, None].expand(
++      -1, -1, node_context.shape[-1])
++    return torch.gather(node_context, 1, gather_index)
++
++  def score_edges(self, node_context: torch.Tensor,
++                  edge_index: torch.Tensor,
++                  edge_mask: torch.Tensor) -> torch.Tensor:
++    """Score padded undirected edges with a symmetric contextual MLP."""
++    if edge_index.shape[1] == 0:
++      return node_context.new_zeros(edge_mask.shape)
++    left = self._gather_nodes(node_context, edge_index[:, :, 0])
++    right = self._gather_nodes(node_context, edge_index[:, :, 1])
++    features = torch.cat(((left - right).abs(), left * right), dim=-1)
++    scores = self.edge_scorer(features).squeeze(-1)
++    return scores.masked_fill(~edge_mask, -torch.inf)
++
++  def forward(self, node_context: torch.Tensor,
++              active_mask: torch.Tensor
++              ) -> Tuple[torch.Tensor, ...]:
++    """Return proposals, scores, and learned-anchor diagnostics.
++
++    Returns:
++      edge_index: ``[B,P,2]`` canonical undirected node indices.
++      edge_mask: ``[B,P]`` validity mask.
++      scores: ``[B,P]`` differentiable contextual edge scores.
++      anchor_logits: ``[B,L,A]`` logits for which node fills each slot.
++      anchor_indices: ``[B,A]`` detached hard slot occupants.
++      slot_logits: ``[B,L,A]`` per-node logits for choosing anchor slots.
++    """
++    batch_size, sequence_length, _ = node_context.shape
++    device = node_context.device
++
++    anchor_logits = self.anchor_projection(node_context)
++    masked_anchor_logits = anchor_logits.masked_fill(
++      ~active_mask[:, :, None], -torch.inf)
++    anchor_indices = masked_anchor_logits.argmax(dim=1).detach()
++    any_active = active_mask.any(dim=1)
++    anchor_valid = any_active[:, None].expand(
++      batch_size, self.num_anchor_slots)
++    slot_logits = self.slot_projection(node_context)
++
++    local_edges = []
++    maximum_offset = min(self.local_window, sequence_length - 1)
++    for offset in range(1, maximum_offset + 1):
++      left = torch.arange(
++        sequence_length - offset, device=device, dtype=torch.long)
++      local_edges.append(torch.stack((left, left + offset), dim=-1))
++    if local_edges:
++      local_index = torch.cat(local_edges, dim=0)
++      local_index = local_index[None].expand(batch_size, -1, -1)
++      local_mask = (
++        torch.gather(active_mask, 1, local_index[:, :, 0])
++        & torch.gather(active_mask, 1, local_index[:, :, 1]))
++    else:
++      local_index = torch.zeros(
++        batch_size, 0, 2, dtype=torch.long, device=device)
++      local_mask = torch.zeros(
++        batch_size, 0, dtype=torch.bool, device=device)
++
++    if self.contextual_neighbors:
++      chosen_slots = slot_logits.topk(
++        self.contextual_neighbors, dim=-1).indices
++      flat_slots = chosen_slots.reshape(batch_size, -1)
++      contextual_right = torch.gather(
++        anchor_indices, 1, flat_slots).reshape(
++          batch_size, sequence_length, self.contextual_neighbors)
++      contextual_left = torch.arange(
++        sequence_length, device=device, dtype=torch.long)
++      contextual_left = contextual_left[None, :, None].expand_as(
++        contextual_right)
++      contextual_slot_valid = torch.gather(
++        anchor_valid, 1, flat_slots).reshape_as(contextual_right)
++      contextual_mask = (
++        active_mask[:, :, None]
++        & torch.gather(active_mask, 1, contextual_right.reshape(
++          batch_size, -1)).reshape_as(contextual_right)
++        & contextual_slot_valid
++        & (contextual_left != contextual_right))
++      contextual_index = torch.stack((
++        torch.minimum(contextual_left, contextual_right),
++        torch.maximum(contextual_left, contextual_right)), dim=-1)
++      contextual_index = contextual_index.reshape(batch_size, -1, 2)
++      contextual_mask = contextual_mask.reshape(batch_size, -1)
++    else:
++      contextual_index = torch.zeros(
++        batch_size, 0, 2, dtype=torch.long, device=device)
++      contextual_mask = torch.zeros(
++        batch_size, 0, dtype=torch.bool, device=device)
++
++    edge_index = torch.cat((local_index, contextual_index), dim=1)
++    edge_mask = torch.cat((local_mask, contextual_mask), dim=1)
++    scores = self.score_edges(node_context, edge_index, edge_mask)
++    return (
++      edge_index, edge_mask, scores,
++      anchor_logits, anchor_indices, slot_logits)
++
++
++def _bounded_kruskal_indices(
++    proposal_edge_index: torch.Tensor,
++    proposal_scores: torch.Tensor,
++    proposal_edge_mask: torch.Tensor,
++    active_mask: torch.Tensor,
++    component_size_cap: int,
++    min_edge_score: Optional[float]) -> Tuple[torch.Tensor, torch.Tensor]:
++  """Select a stop-gradient maximum-spanning forest with capped components.
++
++  The hard selection is a deterministic Kruskal pass over detached scores.
++  The component-size condition makes this a greedy bounded Kruskal forest;
++  without the cap it is the exact maximum-spanning forest of the proposal
++  graph.  Returned proposal slots are padded to ``L-1``.
++  """
++  batch_size, sequence_length = active_mask.shape
++  max_edges = max(sequence_length - 1, 0)
++  device = proposal_edge_index.device
++  selected_slots = torch.zeros(
++    batch_size, max_edges, dtype=torch.long, device=device)
++  selected_mask = torch.zeros(
++    batch_size, max_edges, dtype=torch.bool, device=device)
++  if max_edges == 0 or proposal_edge_index.shape[1] == 0:
++    return selected_slots, selected_mask
++
++  edges_cpu = proposal_edge_index.detach().cpu()
++  scores_cpu = proposal_scores.detach().float().cpu()
++  masks_cpu = proposal_edge_mask.detach().cpu()
++  active_cpu = active_mask.detach().cpu()
++  chosen_per_batch = []
++
++  for batch_index in range(batch_size):
++    parent = list(range(sequence_length))
++    component_size = [1 if bool(active_cpu[batch_index, i]) else 0
++                      for i in range(sequence_length)]
++
++    def find(node):
++      while parent[node] != node:
++        parent[node] = parent[parent[node]]
++        node = parent[node]
++      return node
++
++    valid_slots = masks_cpu[batch_index].nonzero(
++      as_tuple=False).flatten()
++    if valid_slots.numel():
++      ordering = valid_slots[torch.argsort(
++        scores_cpu[batch_index, valid_slots], descending=True,
++        stable=True)]
++    else:
++      ordering = valid_slots
++
++    chosen = []
++    for proposal_slot in ordering.tolist():
++      score = float(scores_cpu[batch_index, proposal_slot])
++      if min_edge_score is not None and score < min_edge_score:
++        break
++      left, right = edges_cpu[batch_index, proposal_slot].tolist()
++      left_root, right_root = find(left), find(right)
++      if left_root == right_root:
++        continue
++      merged_size = (
++        component_size[left_root] + component_size[right_root])
++      if (component_size_cap > 0
++          and merged_size > component_size_cap):
++        continue
++      if (component_size[left_root] < component_size[right_root]
++          or (component_size[left_root] == component_size[right_root]
++              and left_root > right_root)):
++        left_root, right_root = right_root, left_root
++      parent[right_root] = left_root
++      component_size[left_root] = merged_size
++      chosen.append(proposal_slot)
++      if len(chosen) == max_edges:
++        break
++    chosen_per_batch.append(chosen)
++
++  for batch_index, chosen in enumerate(chosen_per_batch):
++    if not chosen:
++      continue
++    count = len(chosen)
++    selected_slots[batch_index, :count] = torch.tensor(
++      chosen, dtype=torch.long, device=device)
++    selected_mask[batch_index, :count] = True
++  return selected_slots.detach(), selected_mask.detach()
++
++
++def _fixed_chain_edges(active_mask: torch.Tensor,
++                       component_size_cap: int
++                       ) -> Tuple[torch.Tensor, torch.Tensor]:
++  """Create a target-independent natural-order chain over active positions."""
++  batch_size, sequence_length = active_mask.shape
++  max_edges = max(sequence_length - 1, 0)
++  device = active_mask.device
++  edge_index = torch.zeros(
++    batch_size, max_edges, 2, dtype=torch.long, device=device)
++  edge_mask = torch.zeros(
++    batch_size, max_edges, dtype=torch.bool, device=device)
++  active_cpu = active_mask.detach().cpu()
++  for batch_index in range(batch_size):
++    nodes = active_cpu[batch_index].nonzero(
++      as_tuple=False).flatten().tolist()
++    if component_size_cap > 0:
++      chunks = [nodes[start:start + component_size_cap]
++                for start in range(0, len(nodes), component_size_cap)]
++    else:
++      chunks = [nodes]
++    edges = []
++    for chunk in chunks:
++      edges.extend(zip(chunk[:-1], chunk[1:]))
++    if edges:
++      count = len(edges)
++      edge_index[batch_index, :count] = torch.tensor(
++        edges, dtype=torch.long, device=device)
++      edge_mask[batch_index, :count] = True
++  return edge_index.detach(), edge_mask.detach()
++
++
++def _validated_fixed_edges(
++    fixed_edge_index: torch.Tensor,
++    fixed_edge_mask: Optional[torch.Tensor],
++    active_mask: torch.Tensor,
++    component_size_cap: int,
++    ) -> Tuple[torch.Tensor, torch.Tensor]:
++  """Canonicalize and validate a shared or batched static forest.
++
++  Valid input edges must form a simple undirected forest independently in
++  every batch item.  Masked input slots are ignored (and may contain padding
++  sentinels).  The returned topology is detached and padded to ``L-1``.
++  """
++  batch_size, sequence_length = active_mask.shape
++  device = active_mask.device
++  if not torch.is_tensor(fixed_edge_index):
++    fixed_edge_index = torch.as_tensor(fixed_edge_index, device=device)
++  elif fixed_edge_index.device != device:
++    fixed_edge_index = fixed_edge_index.to(device=device)
++  if (fixed_edge_index.dtype == torch.bool
++      or fixed_edge_index.is_floating_point()
++      or fixed_edge_index.is_complex()):
++    raise TypeError('fixed_edge_index must contain integer node indices')
++  if fixed_edge_index.ndim == 2:
++    if fixed_edge_index.shape[-1] != 2:
++      raise ValueError('shared fixed_edge_index must have shape [E,2]')
++    fixed_edge_index = fixed_edge_index[None].expand(
++      batch_size, -1, -1)
++  elif fixed_edge_index.ndim == 3:
++    if (fixed_edge_index.shape[0] != batch_size
++        or fixed_edge_index.shape[-1] != 2):
++      raise ValueError('batched fixed_edge_index must have shape [B,E,2]')
++  else:
++    raise ValueError(
++      'fixed_edge_index must have shared [E,2] or batched [B,E,2] shape')
++  fixed_edge_index = fixed_edge_index.to(dtype=torch.long)
++  input_edges = fixed_edge_index.shape[1]
++
++  if fixed_edge_mask is None:
++    fixed_edge_mask = torch.ones(
++      batch_size, input_edges, dtype=torch.bool, device=device)
++  else:
++    if not torch.is_tensor(fixed_edge_mask):
++      fixed_edge_mask = torch.as_tensor(fixed_edge_mask, device=device)
++    elif fixed_edge_mask.device != device:
++      fixed_edge_mask = fixed_edge_mask.to(device=device)
++    if fixed_edge_mask.dtype != torch.bool:
++      raise TypeError('fixed_edge_mask must be boolean')
++    if fixed_edge_mask.ndim == 1:
++      if fixed_edge_mask.shape[0] != input_edges:
++        raise ValueError('shared fixed_edge_mask must have shape [E]')
++      fixed_edge_mask = fixed_edge_mask[None].expand(batch_size, -1)
++    elif fixed_edge_mask.ndim == 2:
++      if fixed_edge_mask.shape != (batch_size, input_edges):
++        raise ValueError('batched fixed_edge_mask must have shape [B,E]')
++    else:
++      raise ValueError(
++        'fixed_edge_mask must have shared [E] or batched [B,E] shape')
++
++  canonical_edges = torch.stack((
++    fixed_edge_index.min(dim=-1).values,
++    fixed_edge_index.max(dim=-1).values), dim=-1).detach()
++  input_mask_cpu = fixed_edge_mask.detach().cpu()
++  edges_cpu = canonical_edges.cpu()
++  active_cpu = active_mask.detach().cpu()
++  valid_edges_per_batch = []
++
++  for batch_index in range(batch_size):
++    parent = list(range(sequence_length))
++    component_size = [1 if bool(active_cpu[batch_index, node]) else 0
++                      for node in range(sequence_length)]
++
++    def find(node):
++      while parent[node] != node:
++        parent[node] = parent[parent[node]]
++        node = parent[node]
++      return node
++
++    seen = set()
++    valid_edges = []
++    for edge_slot in input_mask_cpu[batch_index].nonzero(
++        as_tuple=False).flatten().tolist():
++      left, right = edges_cpu[batch_index, edge_slot].tolist()
++      if (left < 0 or right < 0
++          or left >= sequence_length or right >= sequence_length):
++        raise ValueError(
++          f'fixed edge ({left},{right}) is out of range for L='
++          f'{sequence_length} in batch item {batch_index}')
++      if left == right:
++        raise ValueError(
++          f'fixed topology contains self edge ({left},{right}) '
++          f'in batch item {batch_index}')
++      edge = (left, right)
++      if edge in seen:
++        raise ValueError(
++          f'fixed topology contains duplicate edge {edge} '
++          f'in batch item {batch_index}')
++      seen.add(edge)
++      if (not bool(active_cpu[batch_index, left])
++          or not bool(active_cpu[batch_index, right])):
++        raise ValueError(
++          f'fixed edge {edge} has an endpoint outside active_mask '
++          f'in batch item {batch_index}')
++
++      left_root, right_root = find(left), find(right)
++      if left_root == right_root:
++        raise ValueError(
++          f'fixed topology contains a cycle at edge {edge} '
++          f'in batch item {batch_index}')
++      merged_size = (
++        component_size[left_root] + component_size[right_root])
++      if (component_size_cap > 0
++          and merged_size > component_size_cap):
++        raise ValueError(
++          f'fixed topology component would contain {merged_size} nodes, '
++          f'exceeding component_size_cap={component_size_cap} '
++          f'in batch item {batch_index}')
++      if component_size[left_root] < component_size[right_root]:
++        left_root, right_root = right_root, left_root
++      parent[right_root] = left_root
++      component_size[left_root] = merged_size
++      valid_edges.append(edge)
++    valid_edges_per_batch.append(valid_edges)
++
++  max_edges = max(sequence_length - 1, 0)
++  edge_index = torch.zeros(
++    batch_size, max_edges, 2, dtype=torch.long, device=device)
++  edge_mask = torch.zeros(
++    batch_size, max_edges, dtype=torch.bool, device=device)
++  for batch_index, valid_edges in enumerate(valid_edges_per_batch):
++    if not valid_edges:
++      continue
++    if len(valid_edges) > max_edges:
++      # A simple acyclic graph cannot reach this branch, but retain an explicit
++      # guard in case validation changes.
++      raise ValueError('fixed topology has more than L-1 valid edges')
++    count = len(valid_edges)
++    edge_index[batch_index, :count] = torch.tensor(
++      valid_edges, dtype=torch.long, device=device)
++    edge_mask[batch_index, :count] = True
++  return edge_index.detach(), edge_mask.detach()
++
++
++class ContextualCouplingForestHead(nn.Module):
++  """Construct a compact globally-normalizable denoising forest.
++
++  Args:
++    hidden_size: Width of the backbone hidden states.
++    vocab_size: Size of the unary vocabulary.
++    top_k: Number of explicit token states retained at each position.
++    rank: Nonnegative rank of each explicit token-pair factor.
++    time_embed_dim: Width of the small scalar-time embedding.
++    topology_dim: Width used for sparse proposals and edge scoring.
++    local_window: Propose all edges within this positional radius.
++    num_anchor_slots: Number of learned contextual anchor slots.
++    contextual_neighbors: Anchor slots selected by each active node.
++    component_size_cap: Maximum nodes in a selected tree; nonpositive disables.
++    topology_mode: ``dynamic`` for learned forests or ``fixed`` for chains.
++    factor_mode: ``dynamic`` for context/time FiLM or ``fixed`` token factors.
++    factor_embedding_mode: ``shared`` (default) or ``separate`` token tables
++      and FiLM projections for the two endpoints. Left/right refer to lower/
++      higher position on canonical edges, not the inference traversal order.
++    factor_conditioner_hidden_dim: Zero preserves the original additive
++      hidden/time FiLM projections. A positive width uses a joint conditioner
++      ``[normalized_hidden, time_features] -> Linear -> SiLU -> Linear(2R)``.
++    independent_mode: Replace every pair factor by one while retaining all
++      architecture parameters. Pair-factor parameters are inactive in this
++      mode, so this is an architecture-count/no-edge control rather than an
++      active-capacity-matched unary adapter.
++    min_edge_score: Optional threshold below which dynamic edges are omitted.
++
++  The structured part has O(VR + H(D+R) + DA) parameters.  Given existing
++  unary logits, its principal work is O(BLV) for top-K, O(BLA) for contextual
++  proposals, O(BLKR) for candidate features, O(P log P) for hard forest
++  construction, and O(B|E|KR) per low-rank tree-message pass.
++  """
++
++  def __init__(
++      self,
++      hidden_size: int,
++      vocab_size: int,
++      top_k: int = 64,
++      rank: int = 16,
++      time_embed_dim: int = 64,
++      topology_dim: int = 128,
++      local_window: int = 2,
++      num_anchor_slots: int = 16,
++      contextual_neighbors: int = 4,
++      component_size_cap: int = 32,
++      topology_mode: str = 'dynamic',
++      factor_mode: str = 'dynamic',
++      independent_mode: bool = False,
++      min_edge_score: Optional[float] = None,
++      factor_embedding_mode: str = 'shared',
++      factor_conditioner_hidden_dim: int = 0):
++    super().__init__()
++    if hidden_size < 1 or vocab_size < 2:
++      raise ValueError('hidden_size must be positive and vocab_size >= 2')
++    if not 1 <= top_k <= vocab_size:
++      raise ValueError('top_k must lie in [1, vocab_size]')
++    if rank < 1 or topology_dim < 1:
++      raise ValueError('rank and topology_dim must be positive')
++
++    self.hidden_size = hidden_size
++    self.vocab_size = vocab_size
++    self.top_k = top_k
++    self.rank = rank
++    self.component_size_cap = component_size_cap
++    self.topology_mode = _check_mode('topology_mode', topology_mode)
++    self.factor_mode = _check_mode('factor_mode', factor_mode)
++    if factor_embedding_mode not in {'shared', 'separate'}:
++      raise ValueError('factor_embedding_mode must be shared or separate')
++    self.factor_embedding_mode = factor_embedding_mode
++    if (not isinstance(factor_conditioner_hidden_dim, int)
++        or isinstance(factor_conditioner_hidden_dim, bool)
++        or factor_conditioner_hidden_dim < 0):
++      raise ValueError('factor_conditioner_hidden_dim must be a non-negative integer')
++    self.factor_conditioner_hidden_dim = factor_conditioner_hidden_dim
++    self.independent_mode = bool(independent_mode)
++    self.min_edge_score = min_edge_score
++
++    self.hidden_norm = nn.LayerNorm(hidden_size)
++    self.time_embedding = ScalarTimestepEmbedding(time_embed_dim)
++    self.topology_hidden_projection = nn.Linear(
++      hidden_size, topology_dim)
++    self.topology_time_projection = nn.Linear(
++      time_embed_dim, topology_dim, bias=False)
++    self.edge_proposer = SparseEdgeProposer(
++      topology_dim=topology_dim,
++      local_window=local_window,
++      num_anchor_slots=num_anchor_slots,
++      contextual_neighbors=contextual_neighbors)
++
++    self.token_factor_embedding = nn.Embedding(vocab_size, rank)
++    if factor_conditioner_hidden_dim:
++      self.factor_conditioner = nn.Sequential(
++        nn.Linear(hidden_size + time_embed_dim, factor_conditioner_hidden_dim),
++        nn.SiLU(),
++        nn.Linear(factor_conditioner_hidden_dim, 2 * rank))
++    else:
++      self.factor_hidden_projection = nn.Linear(hidden_size, 2 * rank)
++      self.factor_time_projection = nn.Linear(
++        time_embed_dim, 2 * rank, bias=False)
++    inverse_softplus_one = math.log(math.exp(1.0) - 1.0)
++    nn.init.normal_(
++      self.token_factor_embedding.weight,
++      mean=inverse_softplus_one, std=0.01)
++    # Start close to the neutral factor without making the dynamic mode
++    # context-blind on its first forward pass.
++    if factor_conditioner_hidden_dim:
++      nn.init.normal_(self.factor_conditioner[-1].weight, std=1e-3)
++      nn.init.zeros_(self.factor_conditioner[-1].bias)
++    else:
++      nn.init.normal_(self.factor_hidden_projection.weight, std=1e-3)
++      nn.init.zeros_(self.factor_hidden_projection.bias)
++      nn.init.normal_(self.factor_time_projection.weight, std=2e-3)
++    if self.factor_embedding_mode == 'separate':
++      # Keep the existing keys as the left endpoint and add only right keys.
++      # Shared mode instantiates nothing extra and preserves legacy RNG/state.
++      self.right_token_factor_embedding = nn.Embedding(vocab_size, rank)
++      nn.init.normal_(self.right_token_factor_embedding.weight,
++                      mean=inverse_softplus_one, std=0.01)
++      if factor_conditioner_hidden_dim:
++        self.right_factor_conditioner = copy.deepcopy(self.factor_conditioner)
++      else:
++        self.right_factor_hidden_projection = copy.deepcopy(
++          self.factor_hidden_projection)
++        self.right_factor_time_projection = copy.deepcopy(
++          self.factor_time_projection)
++
++  @property
++  def parameter_count(self) -> int:
++    """Number of trainable parameters, unchanged in independent mode."""
++    return sum(parameter.numel() for parameter in self.parameters()
++               if parameter.requires_grad)
++
++  def complexity_summary(self, batch_size: int, sequence_length: int,
++                         selected_edges: int) -> Dict[str, int]:
++    """Return leading tensor-operation sizes for experiment logging."""
++    return {
++      'unary_values_scanned': (
++        batch_size * sequence_length * self.vocab_size),
++      'candidate_factor_values': (
++        batch_size * sequence_length * self.top_k * self.rank
++        * (2 if self.factor_embedding_mode == 'separate' else 1)),
++      'message_factor_products': (
++        batch_size * selected_edges * self.top_k * self.rank),
++    }
++
++  def _candidate_lattice(
++      self, unary_logits: torch.Tensor
++      ) -> Tuple[torch.Tensor, ...]:
++    # Accumulate half/bfloat16 unaries in FP32 but preserve FP64 in exactness
++    # tests.  log(-expm1(delta)) is stable when the retained mass is near one.
++    if unary_logits.dtype in (torch.float16, torch.bfloat16):
++      work_logits = unary_logits.float()
++    else:
++      work_logits = unary_logits
++    candidate_logits, candidate_ids = work_logits.topk(
++      self.top_k, dim=-1)
++    total_log_mass = torch.logsumexp(work_logits, dim=-1)
++    kept_log_mass = torch.logsumexp(candidate_logits, dim=-1)
++
++    if self.top_k < self.vocab_size:
++      log_kept_fraction = kept_log_mass - total_log_mass
++      kept_fraction = torch.exp(log_kept_fraction)
++      retained_mass = kept_fraction.clamp(0.0, 1.0)
++      residual_log_mass = (
++        total_log_mass + torch.log(-torch.expm1(log_kept_fraction)))
++
++      # If total and retained log-mass round to the same value, logdiffexp
++      # becomes -inf despite a nonempty tail.  Recompute only those rare rows
++      # by explicitly masking K candidates; this preserves support without a
++      # vocabulary-sized allocation on the ordinary path.
++      collapsed = ~torch.isfinite(residual_log_mass)
++      if bool(collapsed.any().item()):
++        collapsed_logits = work_logits[collapsed].clone()
++        collapsed_ids = candidate_ids[collapsed]
++        collapsed_logits.scatter_(-1, collapsed_ids, -torch.inf)
++        exact_tail = torch.logsumexp(collapsed_logits, dim=-1)
++        residual_log_mass = residual_log_mass.masked_scatter(
++          collapsed, exact_tail)
++      residual_valid = torch.ones_like(
++        residual_log_mass, dtype=torch.bool)
++    else:
++      retained_mass = torch.ones_like(total_log_mass)
++      residual_log_mass = torch.full_like(total_log_mass, -torch.inf)
++      residual_valid = torch.zeros_like(
++        residual_log_mass, dtype=torch.bool)
++
++    unary_log_potentials = torch.cat(
++      (candidate_logits, residual_log_mass[:, :, None]), dim=-1)
++    explicit_valid = torch.ones_like(candidate_ids, dtype=torch.bool)
++    candidate_state_mask = torch.cat(
++      (explicit_valid, residual_valid[:, :, None]), dim=-1)
++    return (
++      candidate_ids, unary_log_potentials, candidate_state_mask,
++      retained_mass, residual_log_mass)
++
++  def _selected_edges(
++      self,
++      topology_context: torch.Tensor,
++      active_mask: torch.Tensor,
++      proposal_edge_index: torch.Tensor,
++      proposal_edge_mask: torch.Tensor,
++      proposal_scores: torch.Tensor,
++      topology_mode: str,
++      fixed_edge_index: Optional[torch.Tensor] = None,
++      fixed_edge_mask: Optional[torch.Tensor] = None,
++      ) -> Tuple[torch.Tensor, ...]:
++    batch_size, sequence_length = active_mask.shape
++    max_edges = max(sequence_length - 1, 0)
++    if topology_mode == 'fixed':
++      if fixed_edge_index is None:
++        edge_index, edge_mask = _fixed_chain_edges(
++          active_mask, self.component_size_cap)
++      else:
++        edge_index, edge_mask = _validated_fixed_edges(
++          fixed_edge_index=fixed_edge_index,
++          fixed_edge_mask=fixed_edge_mask,
++          active_mask=active_mask,
++          component_size_cap=self.component_size_cap)
++      edge_scores = self.edge_proposer.score_edges(
++        topology_context, edge_index, edge_mask)
++      edge_scores = edge_scores.masked_fill(~edge_mask, 0.0)
++      return edge_index, edge_mask, edge_scores
++
++    selected_slots, edge_mask = _bounded_kruskal_indices(
++      proposal_edge_index=proposal_edge_index,
++      proposal_scores=proposal_scores,
++      proposal_edge_mask=proposal_edge_mask,
++      active_mask=active_mask,
++      component_size_cap=self.component_size_cap,
++      min_edge_score=self.min_edge_score)
++    if max_edges == 0 or proposal_edge_index.shape[1] == 0:
++      edge_index = torch.zeros(
++        batch_size, max_edges, 2, dtype=torch.long,
++        device=active_mask.device)
++      edge_scores = topology_context.new_zeros(batch_size, max_edges)
++      return edge_index, edge_mask, edge_scores
++
++    gather_edges = selected_slots[:, :, None].expand(-1, -1, 2)
++    edge_index = torch.gather(
++      proposal_edge_index, 1, gather_edges).detach()
++    edge_scores = torch.gather(proposal_scores, 1, selected_slots)
++    edge_scores = edge_scores.masked_fill(~edge_mask, 0.0)
++    return edge_index, edge_mask, edge_scores
++
++  def _node_candidate_factors(
++      self,
++      normalized_hidden: torch.Tensor,
++      time_features: torch.Tensor,
++      candidate_ids: torch.Tensor,
++      factor_mode: str,
++      *,
++      right_endpoint: bool = False) -> torch.Tensor:
++    prefix = ('right_' if right_endpoint
++              and self.factor_embedding_mode == 'separate' else '')
++    embedding = getattr(self, prefix + 'token_factor_embedding')
++    raw_token_factors = embedding(candidate_ids)
++    if factor_mode == 'dynamic':
++      if self.factor_conditioner_hidden_dim:
++        time_per_node = time_features[:, None, :].expand(
++          -1, normalized_hidden.shape[1], -1)
++        conditioner = getattr(self, prefix + 'factor_conditioner')
++        film = conditioner(torch.cat((normalized_hidden, time_per_node), dim=-1))
++      else:
++        hidden_projection = getattr(self, prefix + 'factor_hidden_projection')
++        time_projection = getattr(self, prefix + 'factor_time_projection')
++        film = hidden_projection(normalized_hidden)
++        film = film + time_projection(time_features)[:, None, :]
++      shift, scale = film.chunk(2, dim=-1)
++      raw_token_factors = (
++        raw_token_factors * (1.0 + scale.tanh()[:, :, None, :])
++        + shift[:, :, None, :])
++    return F.softplus(raw_token_factors) + 1e-6
++
++  @staticmethod
++  def _gather_candidate_factors(
++      node_factors: torch.Tensor,
++      edge_nodes: torch.Tensor) -> torch.Tensor:
++    gather_index = edge_nodes[:, :, None, None].expand(
++      -1, -1, node_factors.shape[2], node_factors.shape[3])
++    return torch.gather(node_factors, 1, gather_index)
++
++  def forward(
++      self,
++      hidden_states: torch.Tensor,
++      unary_logits: torch.Tensor,
++      timestep: torch.Tensor,
++      active_mask: Optional[torch.Tensor] = None,
++      *,
++      topology_mode: Optional[str] = None,
++      factor_mode: Optional[str] = None,
++      independent_mode: Optional[bool] = None,
++      fixed_edge_index: Optional[torch.Tensor] = None,
++      fixed_edge_mask: Optional[torch.Tensor] = None,
++      ) -> StructuredDecoderOutput:
++    """Build candidate states, a hard forest, and positive pair factors.
++
++    Args:
++      hidden_states: Backbone states ``[B,L,H]``.
++      unary_logits: Backbone token logits ``[B,L,V]``.  No clean targets are
++        accepted, so candidate construction is target-independent by design.
++      timestep: Scalar diffusion time as a scalar, ``[B]``, or ``[B,1]``.
++      active_mask: Boolean ``[B,L]`` mask for currently unknown positions.
++        All positions are active when omitted.
++      topology_mode: Optional per-call ``fixed``/``dynamic`` ablation.
++      factor_mode: Optional per-call ``fixed``/``dynamic`` ablation.
++      independent_mode: Optional per-call neutral-factor ablation.  It changes
++        no architecture parameters, but makes pair-factor parameters inactive;
++        it is an architecture-count/no-edge control.
++      fixed_edge_index: Optional static forest, shared as ``[E,2]`` or batched
++        as ``[B,E,2]``.  Supplying it is an explicit static-topology override;
++        edges are validated, canonicalized, detached, and padded to ``L-1``.
++      fixed_edge_mask: Optional shared ``[E]`` or batched ``[B,E]`` validity
++        mask.  It is only valid together with ``fixed_edge_index``.
++    """
++    if hidden_states.ndim != 3 or unary_logits.ndim != 3:
++      raise ValueError('hidden_states and unary_logits must both be rank 3')
++    if hidden_states.shape[:2] != unary_logits.shape[:2]:
++      raise ValueError('hidden_states and unary_logits must agree on [B,L]')
++    if hidden_states.shape[-1] != self.hidden_size:
++      raise ValueError(
++        f'expected hidden width {self.hidden_size}, '
++        f'got {hidden_states.shape[-1]}')
++    if unary_logits.shape[-1] != self.vocab_size:
++      raise ValueError(
++        f'expected vocabulary {self.vocab_size}, '
++        f'got {unary_logits.shape[-1]}')
++    batch_size, sequence_length, _ = hidden_states.shape
++    if active_mask is None:
++      active_mask = torch.ones(
++        batch_size, sequence_length, dtype=torch.bool,
++        device=hidden_states.device)
++    elif (active_mask.shape != (batch_size, sequence_length)
++          or active_mask.dtype != torch.bool):
++      raise ValueError('active_mask must be boolean with shape [B,L]')
++
++    requested_topology_mode = topology_mode
++    if fixed_edge_mask is not None and fixed_edge_index is None:
++      raise ValueError('fixed_edge_mask requires fixed_edge_index')
++    if fixed_edge_index is not None:
++      if (requested_topology_mode is not None
++          and requested_topology_mode != 'fixed'):
++        raise ValueError(
++          'fixed_edge_index is incompatible with explicit '
++          'topology_mode="dynamic"')
++      topology_mode = 'fixed'
++    else:
++      topology_mode = topology_mode or self.topology_mode
++    topology_mode = _check_mode('topology_mode', topology_mode)
++    factor_mode = _check_mode(
++      'factor_mode', factor_mode or self.factor_mode)
++    if independent_mode is None:
++      independent_mode = self.independent_mode
++
++    (
++      candidate_ids,
++      unary_log_potentials,
++      candidate_state_mask,
++      retained_mass,
++      residual_log_mass,
++    ) = self._candidate_lattice(unary_logits)
++
++    normalized_hidden = self.hidden_norm(hidden_states)
++    time_features = self.time_embedding(timestep, batch_size)
++    topology_context = self.topology_hidden_projection(normalized_hidden)
++    topology_context = F.silu(
++      topology_context
++      + self.topology_time_projection(time_features)[:, None, :])
++    (
++      proposal_edge_index,
++      proposal_edge_mask,
++      proposal_scores,
++      anchor_logits,
++      anchor_indices,
++      slot_logits,
++    ) = self.edge_proposer(topology_context, active_mask)
++    edge_index, edge_mask, edge_scores = self._selected_edges(
++      topology_context=topology_context,
++      active_mask=active_mask,
++      proposal_edge_index=proposal_edge_index,
++      proposal_edge_mask=proposal_edge_mask,
++      proposal_scores=proposal_scores,
++      topology_mode=topology_mode,
++      fixed_edge_index=fixed_edge_index,
++      fixed_edge_mask=fixed_edge_mask)
++
++    node_factors = self._node_candidate_factors(
++      normalized_hidden=normalized_hidden,
++      time_features=time_features,
++      candidate_ids=candidate_ids,
++      factor_mode=factor_mode)
++    pair_left = self._gather_candidate_factors(
++      node_factors, edge_index[:, :, 0])
++    right_node_factors = node_factors
++    if self.factor_embedding_mode == 'separate' and not independent_mode:
++      right_node_factors = self._node_candidate_factors(
++        normalized_hidden=normalized_hidden,
++        time_features=time_features,
++        candidate_ids=candidate_ids,
++        factor_mode=factor_mode,
++        right_endpoint=True)
++    pair_right = self._gather_candidate_factors(
++      right_node_factors, edge_index[:, :, 1])
++    neutral = pair_left.new_full(
++      (), 1.0 / math.sqrt(self.rank))
++    if independent_mode:
++      pair_left = torch.ones_like(pair_left) * neutral
++      pair_right = torch.ones_like(pair_right) * neutral
++    else:
++      pair_left = pair_left / math.sqrt(self.rank)
++      pair_right = pair_right / math.sqrt(self.rank)
++      pair_left = torch.where(
++        edge_mask[:, :, None, None], pair_left,
++        torch.ones_like(pair_left) * neutral)
++      pair_right = torch.where(
++        edge_mask[:, :, None, None], pair_right,
++        torch.ones_like(pair_right) * neutral)
++
++    return StructuredDecoderOutput(
++      candidate_ids=candidate_ids,
++      unary_log_potentials=unary_log_potentials,
++      candidate_state_mask=candidate_state_mask,
++      retained_mass=retained_mass,
++      residual_log_mass=residual_log_mass,
++      proposal_edge_index=proposal_edge_index,
++      proposal_edge_mask=proposal_edge_mask,
++      proposal_scores=proposal_scores,
++      anchor_logits=anchor_logits,
++      anchor_indices=anchor_indices,
++      slot_logits=slot_logits,
++      edge_index=edge_index,
++      edge_mask=edge_mask,
++      edge_scores=edge_scores,
++      pair_left_factors=pair_left,
++      pair_right_factors=pair_right,
++      topology_mode=topology_mode,
++      factor_mode=factor_mode,
++      independent_mode=bool(independent_mode))
