@@ -4,7 +4,7 @@ from pathlib import Path
 from campaign_common import *
 from topology_variants import VARIANTS as TOPOLOGY_VARIANTS,INFERENCE_VARIANTS,TRAIN_VARIANTS
 EXPERIMENT=Path(os.environ['CCF_TOPOLOGY_ROOT']);helpers=Path(__file__).parent
-folder=EXPERIMENT/'gate';folder.mkdir(parents=True,exist_ok=False)
+folder=EXPERIMENT/'gate_retry2';folder.mkdir(parents=True,exist_ok=False)
 with (folder/'tests.log').open('w') as log:subprocess.run([sys.executable,'-m','unittest','discover','-s',str(helpers),'-p','test_topology_variants.py','-v'],check=True,stdout=log,stderr=subprocess.STDOUT)
 v=VARIANTS[3];exp=ROOT/'gate/generation'/v['name']
 def run(name,variant):

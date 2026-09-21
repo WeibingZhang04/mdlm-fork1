@@ -13,7 +13,7 @@ ids=','.join(data['receipt']['jobs'].values())
 for tool,args in [('squeue',['-h','-j',ids,'-o','%i|%T|%M|%R']),('sacct',['-X','-n','-P','-j',ids,'--format=JobID,State,Elapsed,ExitCode,NodeList'])]:data['jobs'][tool]=subprocess.check_output([tool,*args],text=True)
 # rglob is confined to this user's unique experiment directory.
 for p in sorted(root.rglob('generation/summary.json')):
- if 'gate' in p.relative_to(root).parts:continue
+ if any(part.startswith('gate') for part in p.relative_to(root).parts):continue
  folder=p.parent.parent
  item={'path':str(folder.relative_to(root)),'summary':read(p),'records':[],'completed':(folder/'completed.json').exists()}
  for r in rows(p.parent/'samples.jsonl'):
@@ -36,7 +36,9 @@ for p in sorted(root.rglob('generation/summary.json')):
 for p in root.glob('train_*/*/*.json*'):
  if p.name in ('loss-components.jsonl','gradient-norms.jsonl','fixed-probe.jsonl','teacher-probe.jsonl','completed.json','initial-state.json','input-identity.jsonl','topology-variant.json','request.json'):
   data['training'][str(p.relative_to(root))]=rows(p) if p.suffix=='.jsonl' else read(p)
-data['gate_passed']=read(root/'gate/passed.json') if (root/'gate/passed.json').exists() else None
+gate=root/data['receipt'].get('gate_results','gate')/'passed.json'
+if not gate.exists() and (root/'gate_retry2/passed.json').exists():gate=root/'gate_retry2/passed.json'
+data['gate_passed']=read(gate) if gate.exists() else None
 print(base64.b64encode(gzip.compress(json.dumps(data).encode())).decode())
 '''.replace('ROOT_VALUE',repr(receipt['root']))
 r=subprocess.run(['ssh','-o','BatchMode=yes','n23zhangWatGPU','python3','-'],input=script,text=True,capture_output=True,timeout=55)

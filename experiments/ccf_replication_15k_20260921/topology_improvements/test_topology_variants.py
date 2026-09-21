@@ -73,6 +73,18 @@ class TopologyVariantsTest(unittest.TestCase):
             self.assertTrue(torch.equal(before,out2.edge_index));self.assertTrue(torch.equal(dense.proposal_scores,dense2.proposal_scores))
         with use_variant('active_chain'):chain=self.forward()
         self.assertTrue(torch.equal(out.edge_index,chain.edge_index));self.assertTrue(torch.equal(out.edge_mask,chain.edge_mask))
+    def test_generation_optimization_composes_with_every_variant(self):
+        from scripts.audit_ccf_sampling_v4 import experiment
+        original=d._bounded_kruskal_indices
+        with experiment('level_draws'):baseline=self.forward()
+        for name in VARIANTS:
+            with generation_variant(name):
+                output=self.forward()
+                if name=='chain_coverage':self.assertIs(d._bounded_kruskal_indices,coverage_kruskal)
+                if name=='native':
+                    self.assertTrue(torch.equal(baseline.edge_index,output.edge_index))
+                    self.assertTrue(torch.equal(baseline.edge_mask,output.edge_mask))
+            self.assertIs(d._bounded_kruskal_indices,original)
     def test_restores_on_exception(self):
         fn=d.SparseEdgeProposer.forward
         with self.assertRaises(RuntimeError):

@@ -169,3 +169,16 @@ def use_variant(name):
         decoder._bounded_kruskal_indices=original_select
         training.gold_reveal_influence_topology_loss=original_loss
         pending.clear()
+
+
+@contextmanager
+def generation_variant(name):
+    """Install audited sampling optimizations before the graph-rule override.
+
+    The optimization constructs a faster native Kruskal implementation by source
+    inspection. It must see the native function; coverage-first selection then
+    explicitly replaces it for this variant and restores it on exit.
+    """
+    from scripts.audit_ccf_sampling_v4 import experiment
+    with experiment('level_draws'), use_variant(name) as variant:
+        yield variant

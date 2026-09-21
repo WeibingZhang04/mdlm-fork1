@@ -1,6 +1,6 @@
 # DD topology study — current results
 
-Collected: 2026-09-21T06:34:47.054114+00:00
+Collected: 2026-09-21T06:49:51.816263+00:00
 
 PPL is token-weighted GPT2-large perplexity; lower is better. Steps are denoising updates. Each row retains its actual NFE.
 

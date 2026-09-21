@@ -4,11 +4,12 @@ test_active_chain_covers_gaps_without_appended_duplicates (test_topology_variant
 test_all_graphs_forest_active_cap_and_vocabulary_unchanged (test_topology_variants.TopologyVariantsTest.test_all_graphs_forest_active_cap_and_vocabulary_unchanged) ... ok
 test_coverage_matching_beats_hub_under_cap (test_topology_variants.TopologyVariantsTest.test_coverage_matching_beats_hub_under_cap) ... ok
 test_dense_teacher_student_has_no_target_dependency_and_gradients (test_topology_variants.TopologyVariantsTest.test_dense_teacher_student_has_no_target_dependency_and_gradients) ... ok
+test_generation_optimization_composes_with_every_variant (test_topology_variants.TopologyVariantsTest.test_generation_optimization_composes_with_every_variant) ... ok
 test_native_bitwise_and_rng_and_restore (test_topology_variants.TopologyVariantsTest.test_native_bitwise_and_rng_and_restore) ... ok
 test_restores_on_exception (test_topology_variants.TopologyVariantsTest.test_restores_on_exception) ... ok
 test_unique_anchors_and_empty_rows (test_topology_variants.TopologyVariantsTest.test_unique_anchors_and_empty_rows) ... ok
 
 ----------------------------------------------------------------------
-Ran 9 tests in 0.907s
+Ran 10 tests in 0.153s
 
 OK

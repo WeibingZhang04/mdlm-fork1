@@ -97,3 +97,14 @@ tests, native generation parity and a real 3-update/export smoke for each traini
 variant. A failed gate prevents downstream jobs from starting. See the deployment
 receipt for job IDs. Helpers import the existing audited campaign helpers and
 frozen `code`; environment and Slurm scripts are saved in the remote experiment.
+
+## GPU gate retry
+
+Gate 1557038 failed while entering the coverage-first generation variant: the
+sampling optimizer inspected the already-replaced Kruskal function. No long
+study arm started. The runner now installs the native sampling optimization
+first, then the explicit topology override. A regression test checks composition
+and restoration for every variant, including that coverage-first remains active.
+Ten local tests pass. Replacement gate **1557045** is submitted; the existing dev
+and training arrays now depend on it. Failed logs and original helpers remain
+under `gate/` and `helpers_before_retry2/`; the retry uses `gate_retry2/`.

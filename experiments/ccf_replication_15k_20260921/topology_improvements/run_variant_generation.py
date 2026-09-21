@@ -4,18 +4,17 @@ from pathlib import Path
 code=Path(sys.argv[1]);sys.path.insert(0,str(code))
 from campaign_common import save,sha
 from campaign_observer import forest_stats
-from topology_variants import use_variant,VARIANTS
+from topology_variants import generation_variant,VARIANTS
 from dataclasses import asdict
 from models import structured_decoder as decoder
 from scripts import run_generation_pilot as pilot
-from scripts.audit_ccf_sampling_v4 import experiment
 import torch
 args_file=Path(sys.argv[2]);variant=sys.argv[3];trace=Path(sys.argv[4]);args=json.loads(args_file.read_text())
 assert variant in VARIANTS
 trace.parent.mkdir(parents=True,exist_ok=True)
 if trace.exists():raise RuntimeError('Refusing to overwrite trace')
 save(trace.parent/'variant.json',{'variant':variant,'settings':asdict(VARIANTS[variant]),'architecture_change':'Graph construction rules only; no new parameters. Dense-teacher variant also changes training supervision, never inference inputs.','weights_modified_by_this_process':False,'uses_clean_targets_in_generation':False,'base_model_code':str(code),'variant_module_sha256':sha(Path(__file__).with_name('topology_variants.py')),'runner_sha256':sha(Path(__file__)),'arguments_sha256':sha(args_file),'trace_affects_timing':True,'baseline_precision_policy':'Unchanged campaign policy; CCF fp32-normalized logits versus native MDLM path remains disclosed.'})
-with use_variant(variant),experiment('level_draws'):
+with generation_variant(variant):
     original=decoder.ContextualCouplingForestHead.forward;counter=[0]
     def traced(self,hidden_states,unary_logits,timestep,active_mask=None,**kwargs):
         output=original(self,hidden_states,unary_logits,timestep,active_mask,**kwargs)
