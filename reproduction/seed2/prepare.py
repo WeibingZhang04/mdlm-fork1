@@ -21,12 +21,15 @@ def prepare(output):
     for name in ['train_arm.py', 'train_phase.py', 'evaluate.py', 'run_generation.py',
                  'export.py', 'common.py', 'passive_observer.py']:
         shutil.copy2(package / 'submitted' / name, output / name)
+    # Jobs must survive the user switching branches after submission.
+    shutil.copytree(package / 'training_source', output / 'training_code')
+    shutil.copytree(package / 'evaluation_source', output / 'evaluation_code')
     shutil.copytree(package / 'submitted/configs', output / 'configs')
     shutil.copy2(package / 'helpers/campaign_common.py', output / 'campaign_common.py')
     state = json.loads((package / 'submitted/study.json').read_text())
     original = dict(state)
-    state.update(root=str(output), train_code=str(package / 'training_source'),
-                 eval_code=str(package / 'evaluation_source'))
+    state.update(root=str(output), train_code=str(output / 'training_code'),
+                 eval_code=str(output / 'evaluation_code'))
     (output / 'study.json').write_text(json.dumps(state, indent=2) + '\n')
     cache = manifest['cache']
     (output / 'campaign.json').write_text(json.dumps({'cache': cache}) + '\n')

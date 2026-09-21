@@ -15,12 +15,13 @@ def prepare(output):
     output.mkdir(parents=True, exist_ok=False)
     shutil.copytree(SEED2 / 'training_source', output / 'training_code')
     shutil.copytree(PACKAGE / 'original_additions', output / 'training_code', dirs_exist_ok=True)
+    shutil.copytree(SEED2 / 'evaluation_source', output / 'evaluation_code')
     source_hashes = json.loads((PACKAGE / '12a4579-source-sha256.json').read_text())
     for name, expected in source_hashes.items():
         assert hashlib.sha256((output / 'training_code' / name).read_bytes()).hexdigest() == expected, name
     state = json.loads((SEED2 / 'submitted/study.json').read_text())
     state.update(root=str(output), train_code=str(output / 'training_code'),
-                 eval_code=str(SEED2 / 'evaluation_source'), training_seed=1,
+                 eval_code=str(output / 'evaluation_code'), training_seed=1,
                  final_step=6000, checkpoints=[2000, 6000], restart_boundaries=[1000, 3000])
     (output / 'study.json').write_text(json.dumps(state, indent=2) + '\n')
     cache = json.loads((SEED2 / 'manifest.json').read_text())['cache']

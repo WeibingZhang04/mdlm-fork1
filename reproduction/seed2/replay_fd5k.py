@@ -2,6 +2,7 @@
 import argparse
 import json
 import os
+import shutil
 import subprocess
 import sys
 from pathlib import Path
@@ -12,10 +13,11 @@ parser.add_argument('output', type=Path, help='A new directory; run inside a Slu
 options = parser.parse_args()
 package = Path(__file__).resolve().parent
 output = prepare(options.output)
+shutil.copytree(package / 'fd5k', output / 'preserved-fd5k')
 args = json.loads((package / 'fd5k/args.json').read_text())
 for flag, value in {
-    '--adapter': str(package / 'fd5k/adapter.safetensors'),
-    '--adapter-manifest': str(package / 'fd5k/adapter.manifest.json'),
+    '--adapter': str(output / 'preserved-fd5k/adapter.safetensors'),
+    '--adapter-manifest': str(output / 'preserved-fd5k/adapter.manifest.json'),
     '--output-dir': str(output / 'generation')
 }.items(): args[args.index(flag) + 1] = value
 args = [x if not x.startswith('checkpointing.save_dir=')
