@@ -1,0 +1,9 @@
+{
+  "job": "1557817",
+  "state": "FAILED",
+  "before_training": true,
+  "root": "/u401/n23zhang/mdlm_data/tree_mdlm_cache/runs/original_table_repro_checks/fd_seed1_5t2oxxzp/study",
+  "error": "python: can't open file '/var/spool/slurm/d/job1557817/run_check.py': [Errno 2] No such file or directory\n",
+  "repair": "Use the explicit prepared study path because Slurm executes a spool copy of run.sh; do not derive it from $0.",
+  "scientific_changes": false
+}

@@ -3,6 +3,7 @@ import argparse
 import hashlib
 import json
 import shutil
+import shlex
 import subprocess
 from pathlib import Path
 
@@ -77,7 +78,7 @@ def prepare(output):
 set -euo pipefail
 source /opt/anaconda3/etc/profile.d/conda.sh
 conda activate mdlm
-export CCF_LEGACY_STUDY="$(cd "$(dirname "$0")" && pwd)"
+export CCF_LEGACY_STUDY=STUDY_PATH
 export CCF_CAMPAIGN_ROOT="$CCF_LEGACY_STUDY"
 export CCF_CACHE_ROOT="CACHE_PATH"
 export HF_HUB_CACHE="$CCF_CACHE_ROOT/huggingface"
@@ -87,7 +88,7 @@ export PYTHONPATH="$CCF_LEGACY_STUDY"
 export SLURM_ARRAY_TASK_ID=1
 cd "$CCF_LEGACY_STUDY"
 python -u run_check.py
-'''.replace('CACHE_PATH', cache)
+'''.replace('CACHE_PATH', cache).replace('STUDY_PATH', shlex.quote(str(output)))
     (output / 'run.sh').write_text(shell)
     subprocess.run(['bash', '-n', str(output / 'run.sh')], check=True)
     return output
