@@ -1,0 +1,2434 @@
+{
+  "collected_utc": "2026-09-21T05:42:33.157509+00:00",
+  "completed": {
+    "status": "completed",
+    "variants": 6,
+    "samples_per_length_mask_cell": 16,
+    "lengths": [
+      128,
+      512,
+      1024
+    ],
+    "mask_rates": [
+      0.25,
+      0.5,
+      0.75,
+      0.9
+    ],
+    "scope": "Paired conditional held-out diagnostics on unchanged WikiText validation source. Topology interventions are diagnostics, not retrained models or generation PPL results."
+  },
+  "summary": [
+    {
+      "variant": "basic_dynamic_dynamic",
+      "length": 128,
+      "intervention": "cap128",
+      "examples": 16,
+      "mask_rates": 4,
+      "joint_nll": 4.136670714150458,
+      "dependence_gain": 0.00042596571572674577,
+      "backbone_gain": -0.05305378885527367,
+      "edges": 75.34375,
+      "edge_fraction_of_tree": 1.0,
+      "isolated_fraction": 0.0,
+      "mean_edge_span": 15.95502029375424,
+      "nll_delta_vs_native": 0.026092570314443387,
+      "delta_bootstrap95_by_text": [
+        0.0051605108313601995,
+        0.049203422066166
+      ],
+      "teacher": {}
+    },
+    {
+      "variant": "basic_dynamic_dynamic",
+      "length": 128,
+      "intervention": "cap8",
+      "examples": 16,
+      "mask_rates": 4,
+      "joint_nll": 4.094454389986684,
+      "dependence_gain": 0.0028295334266130673,
+      "backbone_gain": -0.010837464691499668,
+      "edges": 62.1875,
+      "edge_fraction_of_tree": 0.8143720204188536,
+      "isolated_fraction": 0.04959224083586243,
+      "mean_edge_span": 11.473475436503845,
+      "nll_delta_vs_native": -0.0161237538493306,
+      "delta_bootstrap95_by_text": [
+        -0.0255502517734426,
+        -0.007650175839273899
+      ],
+      "teacher": {}
+    },
+    {
+      "variant": "basic_dynamic_dynamic",
+      "length": 128,
+      "intervention": "fixed_graph",
+      "examples": 16,
+      "mask_rates": 4,
+      "joint_nll": 4.0886786576522764,
+      "dependence_gain": 0.0030798847654453414,
+      "backbone_gain": -0.005061732357091959,
+      "edges": 73.515625,
+      "edge_fraction_of_tree": 0.9780615510247308,
+      "isolated_fraction": 0.002158655348088338,
+      "mean_edge_span": 2.1220408643913484,
+      "nll_delta_vs_native": -0.021899486183738312,
+      "delta_bootstrap95_by_text": [
+        -0.03429528311178173,
+        -0.011061781272543685
+      ],
+      "teacher": {}
+    },
+    {
+      "variant": "basic_dynamic_dynamic",
+      "length": 128,
+      "intervention": "half_edges",
+      "examples": 16,
+      "mask_rates": 4,
+      "joint_nll": 4.091043562646613,
+      "dependence_gain": 0.0010786285819594052,
+      "backbone_gain": -0.0074266373514284,
+      "edges": 35.953125,
+      "edge_fraction_of_tree": 0.47777729509355465,
+      "isolated_fraction": 0.3388567332282531,
+      "mean_edge_span": 14.488226680270683,
+      "nll_delta_vs_native": -0.01953458118940188,
+      "delta_bootstrap95_by_text": [
+        -0.027203447917283623,
+        -0.012489684184078115
+      ],
+      "teacher": {}
+    },
+    {
+      "variant": "basic_dynamic_dynamic",
+      "length": 128,
+      "intervention": "native",
+      "examples": 16,
+      "mask_rates": 4,
+      "joint_nll": 4.1105781438360145,
+      "dependence_gain": 0.0009971999649234988,
+      "backbone_gain": -0.02696121854083027,
+      "edges": 72.3125,
+      "edge_fraction_of_tree": 0.9623846855952908,
+      "isolated_fraction": 0.012545870420879018,
+      "mean_edge_span": 14.445354054060617,
+      "nll_delta_vs_native": 0.0,
+      "delta_bootstrap95_by_text": [
+        0.0,
+        0.0
+      ],
+      "teacher": {
+        "edge": {
+          "valid_fraction": 1.0,
+          "cross_entropy": 2.047374203801155,
+          "teacher_entropy": 1.1233716233139814,
+          "kl_to_teacher": 0.9240025850012898,
+          "uniform_cross_entropy": 2.1275355094508175,
+          "improvement_over_uniform": 0.08016130421310663,
+          "choices": 12.6875
+        },
+        "anchor": {
+          "valid_fraction": 1.0,
+          "cross_entropy": 4.240417421795428,
+          "teacher_entropy": 1.952970307321567,
+          "kl_to_teacher": 2.287447115406394,
+          "uniform_cross_entropy": 4.204485826741042,
+          "improvement_over_uniform": -0.03593157231807709,
+          "choices": 75.34375
+        },
+        "slot": {
+          "valid_fraction": 1.0,
+          "cross_entropy": 2.7519756220281124,
+          "teacher_entropy": 2.0061564630136672,
+          "kl_to_teacher": 0.7458191588521004,
+          "uniform_cross_entropy": 2.745354261993879,
+          "improvement_over_uniform": -0.006621349602937698,
+          "choices": 15.59375
+        }
+      }
+    },
+    {
+      "variant": "basic_dynamic_dynamic",
+      "length": 128,
+      "intervention": "permuted_edges",
+      "examples": 16,
+      "mask_rates": 4,
+      "joint_nll": 4.095146219980228,
+      "dependence_gain": 0.0007464055721089775,
+      "backbone_gain": -0.011529294685043918,
+      "edges": 72.3125,
+      "edge_fraction_of_tree": 0.9623846855952908,
+      "isolated_fraction": 0.012545870420879018,
+      "mean_edge_span": 43.77934842032056,
+      "nll_delta_vs_native": -0.01543192385578634,
+      "delta_bootstrap95_by_text": [
+        -0.025685662472859198,
+        -0.0048423285985361286
+      ],
+      "teacher": {}
+    },
+    {
+      "variant": "basic_dynamic_dynamic",
+      "length": 512,
+      "intervention": "cap128",
+      "examples": 16,
+      "mask_rates": 4,
+      "joint_nll": 3.790111214248426,
+      "dependence_gain": 0.003675412313401301,
+      "backbone_gain": -0.019469477899724204,
+      "edges": 299.03125,
+      "edge_fraction_of_tree": 0.9718222368331902,
+      "isolated_fraction": 0.014323894534346392,
+      "mean_edge_span": 44.327930782267345,
+      "nll_delta_vs_native": 0.010438299188503421,
+      "delta_bootstrap95_by_text": [
+        0.004680751297827978,
+        0.01623035043637601
+      ],
+      "teacher": {}
+    },
+    {
+      "variant": "basic_dynamic_dynamic",
+      "length": 512,
+      "intervention": "cap8",
+      "examples": 16,
+      "mask_rates": 4,
+      "joint_nll": 3.774539964974672,
+      "dependence_gain": 0.0028085336915985807,
+      "backbone_gain": -0.0038982286259703126,
+      "edges": 244,
+      "edge_fraction_of_tree": 0.7526669547930335,
+      "isolated_fraction": 0.08284871142363337,
+      "mean_edge_span": 19.231146427401363,
+      "nll_delta_vs_native": -0.005132950085250481,
+      "delta_bootstrap95_by_text": [
+        -0.007669853278248023,
+        -0.002813925937245821
+      ],
+      "teacher": {}
+    },
+    {
+      "variant": "basic_dynamic_dynamic",
+      "length": 512,
+      "intervention": "fixed_graph",
+      "examples": 16,
+      "mask_rates": 4,
+      "joint_nll": 3.774251580600594,
+      "dependence_gain": 0.0026245790882435177,
+      "backbone_gain": -0.0036098442518916847,
+      "edges": 298.859375,
+      "edge_fraction_of_tree": 0.9709421278174352,
+      "isolated_fraction": 0.00015859405498856727,
+      "mean_edge_span": 2.1218632765993166,
+      "nll_delta_vs_native": -0.005421334459329102,
+      "delta_bootstrap95_by_text": [
+        -0.00832738699254629,
+        -0.0026252415133661625
+      ],
+      "teacher": {}
+    },
+    {
+      "variant": "basic_dynamic_dynamic",
+      "length": 512,
+      "intervention": "half_edges",
+      "examples": 16,
+      "mask_rates": 4,
+      "joint_nll": 3.7731765711447847,
+      "dependence_gain": 0.0013126187074713634,
+      "backbone_gain": -0.002534834796082654,
+      "edges": 139.328125,
+      "edge_fraction_of_tree": 0.44035390223245513,
+      "isolated_fraction": 0.3671001453157667,
+      "mean_edge_span": 32.523662135713636,
+      "nll_delta_vs_native": -0.006496343915138123,
+      "delta_bootstrap95_by_text": [
+        -0.009482697700421823,
+        -0.003383835134141141
+      ],
+      "teacher": {}
+    },
+    {
+      "variant": "basic_dynamic_dynamic",
+      "length": 512,
+      "intervention": "native",
+      "examples": 16,
+      "mask_rates": 4,
+      "joint_nll": 3.7796729150599226,
+      "dependence_gain": 0.0032858694761460916,
+      "backbone_gain": -0.009031178711220802,
+      "edges": 279.140625,
+      "edge_fraction_of_tree": 0.8827167733149532,
+      "isolated_fraction": 0.053244322285966664,
+      "mean_edge_span": 32.845604404552184,
+      "nll_delta_vs_native": 0.0,
+      "delta_bootstrap95_by_text": [
+        0.0,
+        0.0
+      ],
+      "teacher": {
+        "edge": {
+          "valid_fraction": 1.0,
+          "cross_entropy": 1.6254415661096573,
+          "teacher_entropy": 0.7977236809697272,
+          "kl_to_teacher": 0.827717887237668,
+          "uniform_cross_entropy": 1.9734731422388845,
+          "improvement_over_uniform": 0.34803157579153776,
+          "choices": 10.109375
+        },
+        "anchor": {
+          "valid_fraction": 1.0,
+          "cross_entropy": 5.5876088589429855,
+          "teacher_entropy": 2.8131675878151237,
+          "kl_to_teacher": 2.7744412757456303,
+          "uniform_cross_entropy": 5.616355118760472,
+          "improvement_over_uniform": 0.02874627709388733,
+          "choices": 307.984375
+        },
+        "slot": {
+          "valid_fraction": 1.0,
+          "cross_entropy": 2.8003315553069115,
+          "teacher_entropy": 2.422362819218506,
+          "kl_to_teacher": 0.3779687322676182,
+          "uniform_cross_entropy": 2.770571893454232,
+          "improvement_over_uniform": -0.02975965291261673,
+          "choices": 15.96875
+        }
+      }
+    },
+    {
+      "variant": "basic_dynamic_dynamic",
+      "length": 512,
+      "intervention": "permuted_edges",
+      "examples": 16,
+      "mask_rates": 4,
+      "joint_nll": 3.7796051799763846,
+      "dependence_gain": 0.00021899912978043634,
+      "backbone_gain": -0.008963443627682428,
+      "edges": 279.140625,
+      "edge_fraction_of_tree": 0.8827167733149532,
+      "isolated_fraction": 0.053244322285966664,
+      "mean_edge_span": 168.93245763782025,
+      "nll_delta_vs_native": -6.773508353836825e-05,
+      "delta_bootstrap95_by_text": [
+        -0.0033599887294262967,
+        0.0031515767981386417
+      ],
+      "teacher": {}
+    },
+    {
+      "variant": "basic_dynamic_dynamic",
+      "length": 1024,
+      "intervention": "cap128",
+      "examples": 16,
+      "mask_rates": 4,
+      "joint_nll": 3.7784377465042702,
+      "dependence_gain": 0.003537943161537344,
+      "backbone_gain": -0.009744946549545606,
+      "edges": 574.96875,
+      "edge_fraction_of_tree": 0.9079843073999445,
+      "isolated_fraction": 0.051050387056046906,
+      "mean_edge_span": 71.62589647163527,
+      "nll_delta_vs_native": 0.007324938874745838,
+      "delta_bootstrap95_by_text": [
+        0.004794503039087419,
+        0.01032098052386957
+      ],
+      "teacher": {}
+    },
+    {
+      "variant": "basic_dynamic_dynamic",
+      "length": 1024,
+      "intervention": "cap8",
+      "examples": 16,
+      "mask_rates": 4,
+      "joint_nll": 3.769667767256066,
+      "dependence_gain": 0.0026506772720850005,
+      "backbone_gain": -0.0009749673013415762,
+      "edges": 482.046875,
+      "edge_fraction_of_tree": 0.7288884303066387,
+      "isolated_fraction": 0.09530551634517079,
+      "mean_edge_span": 25.678231274238286,
+      "nll_delta_vs_native": -0.0014450403734582139,
+      "delta_bootstrap95_by_text": [
+        -0.0025772908579038342,
+        -0.0003855846454342213
+      ],
+      "teacher": {}
+    },
+    {
+      "variant": "basic_dynamic_dynamic",
+      "length": 1024,
+      "intervention": "fixed_graph",
+      "examples": 16,
+      "mask_rates": 4,
+      "joint_nll": 3.7677459560961646,
+      "dependence_gain": 0.002898422674019101,
+      "backbone_gain": 0.0009468438585600482,
+      "edges": 598.9375,
+      "edge_fraction_of_tree": 0.9696511579414379,
+      "isolated_fraction": 0.00013026948787222333,
+      "mean_edge_span": 2.110671803617048,
+      "nll_delta_vs_native": -0.0033668515333598256,
+      "delta_bootstrap95_by_text": [
+        -0.006326779723802276,
+        -0.0008952490899666529
+      ],
+      "teacher": {}
+    },
+    {
+      "variant": "basic_dynamic_dynamic",
+      "length": 1024,
+      "intervention": "half_edges",
+      "examples": 16,
+      "mask_rates": 4,
+      "joint_nll": 3.7682352130636207,
+      "dependence_gain": 0.0012417893220867363,
+      "backbone_gain": 0.00045758689110391647,
+      "edges": 273.3125,
+      "edge_fraction_of_tree": 0.42168133512746064,
+      "isolated_fraction": 0.3765593287260487,
+      "mean_edge_span": 48.878103471873594,
+      "nll_delta_vs_native": -0.00287759456590371,
+      "delta_bootstrap95_by_text": [
+        -0.004173578772279526,
+        -0.0016208673612811177
+      ],
+      "teacher": {}
+    },
+    {
+      "variant": "basic_dynamic_dynamic",
+      "length": 1024,
+      "intervention": "native",
+      "examples": 16,
+      "mask_rates": 4,
+      "joint_nll": 3.771112807629524,
+      "dependence_gain": 0.0031806623298548204,
+      "backbone_gain": -0.0024200076747998025,
+      "edges": 547.078125,
+      "edge_fraction_of_tree": 0.8442939763165156,
+      "isolated_fraction": 0.07233423722574414,
+      "mean_edge_span": 50.133682554340254,
+      "nll_delta_vs_native": 0.0,
+      "delta_bootstrap95_by_text": [
+        0.0,
+        0.0
+      ],
+      "teacher": {
+        "edge": {
+          "valid_fraction": 1.0,
+          "cross_entropy": 1.4899492906406522,
+          "teacher_entropy": 0.7136594085822753,
+          "kl_to_teacher": 0.7762898802757263,
+          "uniform_cross_entropy": 1.8571843076811396,
+          "improvement_over_uniform": 0.3672350151464343,
+          "choices": 6.546875
+        },
+        "anchor": {
+          "valid_fraction": 1.0,
+          "cross_entropy": 6.308191776275635,
+          "teacher_entropy": 2.8867672372284723,
+          "kl_to_teacher": 3.42142453789711,
+          "uniform_cross_entropy": 6.315526898479942,
+          "improvement_over_uniform": 0.0073351263999938965,
+          "choices": 617.796875
+        },
+        "slot": {
+          "valid_fraction": 1.0,
+          "cross_entropy": 2.8200049437582493,
+          "teacher_entropy": 2.549812298734404,
+          "kl_to_teacher": 0.2701926454901695,
+          "uniform_cross_entropy": 2.772588722239781,
+          "improvement_over_uniform": -0.047416213899850845,
+          "choices": 16
+        }
+      }
+    },
+    {
+      "variant": "basic_dynamic_dynamic",
+      "length": 1024,
+      "intervention": "permuted_edges",
+      "examples": 16,
+      "mask_rates": 4,
+      "joint_nll": 3.7724719810114444,
+      "dependence_gain": -0.00025125912374050427,
+      "backbone_gain": -0.003779181056719649,
+      "edges": 547.078125,
+      "edge_fraction_of_tree": 0.8442939763165156,
+      "isolated_fraction": 0.07233423722574414,
+      "mean_edge_span": 340.9692885524047,
+      "nll_delta_vs_native": 0.0013591733819199071,
+      "delta_bootstrap95_by_text": [
+        -0.0011894105176321786,
+        0.003564777249405151
+      ],
+      "teacher": {}
+    },
+    {
+      "variant": "basic_fixed_dynamic",
+      "length": 128,
+      "intervention": "cap128",
+      "examples": 16,
+      "mask_rates": 4,
+      "joint_nll": 4.1006708427891105,
+      "dependence_gain": 0.004278407982813197,
+      "backbone_gain": -0.017053917493925916,
+      "edges": 75.34375,
+      "edge_fraction_of_tree": 1.0,
+      "isolated_fraction": 0.0,
+      "mean_edge_span": 2.123855618821554,
+      "nll_delta_vs_native": 0.0003890022406658339,
+      "delta_bootstrap95_by_text": [
+        -1.276490797628288e-05,
+        0.0008000891599802655
+      ],
+      "teacher": {}
+    },
+    {
+      "variant": "basic_fixed_dynamic",
+      "length": 128,
+      "intervention": "cap8",
+      "examples": 16,
+      "mask_rates": 4,
+      "joint_nll": 4.0981974886224055,
+      "dependence_gain": 0.003365777021974944,
+      "backbone_gain": -0.014580563327221598,
+      "edges": 66.34375,
+      "edge_fraction_of_tree": 0.8817998160055294,
+      "isolated_fraction": 0.0032357658184075187,
+      "mean_edge_span": 2.1138267902014802,
+      "nll_delta_vs_native": -0.002084351926038496,
+      "delta_bootstrap95_by_text": [
+        -0.0031572456410172284,
+        -0.0009187477651987509
+      ],
+      "teacher": {}
+    },
+    {
+      "variant": "basic_fixed_dynamic",
+      "length": 128,
+      "intervention": "fixed_graph",
+      "examples": 16,
+      "mask_rates": 4,
+      "joint_nll": 4.100281840548444,
+      "dependence_gain": 0.004039305869669203,
+      "backbone_gain": -0.01666491525326009,
+      "edges": 73.515625,
+      "edge_fraction_of_tree": 0.9780615510247308,
+      "isolated_fraction": 0.002158655348088338,
+      "mean_edge_span": 2.1220408643913484,
+      "nll_delta_vs_native": 0.0,
+      "delta_bootstrap95_by_text": [
+        0.0,
+        0.0
+      ],
+      "teacher": {}
+    },
+    {
+      "variant": "basic_fixed_dynamic",
+      "length": 128,
+      "intervention": "half_edges",
+      "examples": 16,
+      "mask_rates": 4,
+      "joint_nll": 4.092627279043793,
+      "dependence_gain": 0.0016918944485436647,
+      "backbone_gain": -0.009010353748608802,
+      "edges": 36.53125,
+      "edge_fraction_of_tree": 0.4849904913002266,
+      "isolated_fraction": 0.2631129208255063,
+      "mean_edge_span": 2.120644109979159,
+      "nll_delta_vs_native": -0.00765456150465128,
+      "delta_bootstrap95_by_text": [
+        -0.012460631224236546,
+        -0.00269802852015966
+      ],
+      "teacher": {}
+    },
+    {
+      "variant": "basic_fixed_dynamic",
+      "length": 128,
+      "intervention": "native",
+      "examples": 16,
+      "mask_rates": 4,
+      "joint_nll": 4.100281840548444,
+      "dependence_gain": 0.004039305869669203,
+      "backbone_gain": -0.01666491525326009,
+      "edges": 73.515625,
+      "edge_fraction_of_tree": 0.9780615510247308,
+      "isolated_fraction": 0.002158655348088338,
+      "mean_edge_span": 2.1220408643913484,
+      "nll_delta_vs_native": 0.0,
+      "delta_bootstrap95_by_text": [
+        0.0,
+        0.0
+      ],
+      "teacher": {}
+    },
+    {
+      "variant": "basic_fixed_dynamic",
+      "length": 128,
+      "intervention": "permuted_edges",
+      "examples": 16,
+      "mask_rates": 4,
+      "joint_nll": 4.104552020947334,
+      "dependence_gain": 0.0003873587339122143,
+      "backbone_gain": -0.020935095652149543,
+      "edges": 73.515625,
+      "edge_fraction_of_tree": 0.9780615510247308,
+      "isolated_fraction": 0.002158655348088338,
+      "mean_edge_span": 43.303239229675235,
+      "nll_delta_vs_native": 0.0042701803988894615,
+      "delta_bootstrap95_by_text": [
+        -0.0017279951011326955,
+        0.010511455939915267
+      ],
+      "teacher": {}
+    },
+    {
+      "variant": "basic_fixed_dynamic",
+      "length": 512,
+      "intervention": "cap128",
+      "examples": 16,
+      "mask_rates": 4,
+      "joint_nll": 3.7821315576387353,
+      "dependence_gain": 0.00337041214233242,
+      "backbone_gain": -0.011489821290033272,
+      "edges": 306.125,
+      "edge_fraction_of_tree": 0.9946447416461848,
+      "isolated_fraction": 0.00012112403100775194,
+      "mean_edge_span": 2.1189621635710454,
+      "nll_delta_vs_native": 0.00014818794274801608,
+      "delta_bootstrap95_by_text": [
+        -0.00018538556423813857,
+        0.0004604011180678984
+      ],
+      "teacher": {}
+    },
+    {
+      "variant": "basic_fixed_dynamic",
+      "length": 512,
+      "intervention": "cap8",
+      "examples": 16,
+      "mask_rates": 4,
+      "joint_nll": 3.7806980952087987,
+      "dependence_gain": 0.0028461283037302066,
+      "backbone_gain": -0.010056358860096757,
+      "edges": 269.953125,
+      "edge_fraction_of_tree": 0.8769068859107304,
+      "isolated_fraction": 0.0007421787770748688,
+      "mean_edge_span": 2.1078735052458577,
+      "nll_delta_vs_native": -0.0012852744871884782,
+      "delta_bootstrap95_by_text": [
+        -0.0019559166305370777,
+        -0.0005742659237852783
+      ],
+      "teacher": {}
+    },
+    {
+      "variant": "basic_fixed_dynamic",
+      "length": 512,
+      "intervention": "fixed_graph",
+      "examples": 16,
+      "mask_rates": 4,
+      "joint_nll": 3.781983369695987,
+      "dependence_gain": 0.0032248126103505722,
+      "backbone_gain": -0.011341633347285237,
+      "edges": 298.859375,
+      "edge_fraction_of_tree": 0.9709421278174352,
+      "isolated_fraction": 0.00015859405498856727,
+      "mean_edge_span": 2.1218632765993166,
+      "nll_delta_vs_native": 0.0,
+      "delta_bootstrap95_by_text": [
+        0.0,
+        0.0
+      ],
+      "teacher": {}
+    },
+    {
+      "variant": "basic_fixed_dynamic",
+      "length": 512,
+      "intervention": "half_edges",
+      "examples": 16,
+      "mask_rates": 4,
+      "joint_nll": 3.7750824207359774,
+      "dependence_gain": 0.0013339016845439517,
+      "backbone_gain": -0.004440684387275659,
+      "edges": 149.125,
+      "edge_fraction_of_tree": 0.4842242416243037,
+      "isolated_fraction": 0.26822256259582833,
+      "mean_edge_span": 2.1453312112609555,
+      "nll_delta_vs_native": -0.00690094896000959,
+      "delta_bootstrap95_by_text": [
+        -0.009621281044384328,
+        -0.004162981638750458
+      ],
+      "teacher": {}
+    },
+    {
+      "variant": "basic_fixed_dynamic",
+      "length": 512,
+      "intervention": "native",
+      "examples": 16,
+      "mask_rates": 4,
+      "joint_nll": 3.781983369695987,
+      "dependence_gain": 0.0032248126103505722,
+      "backbone_gain": -0.011341633347285237,
+      "edges": 298.859375,
+      "edge_fraction_of_tree": 0.9709421278174352,
+      "isolated_fraction": 0.00015859405498856727,
+      "mean_edge_span": 2.1218632765993166,
+      "nll_delta_vs_native": 0.0,
+      "delta_bootstrap95_by_text": [
+        0.0,
+        0.0
+      ],
+      "teacher": {}
+    },
+    {
+      "variant": "basic_fixed_dynamic",
+      "length": 512,
+      "intervention": "permuted_edges",
+      "examples": 16,
+      "mask_rates": 4,
+      "joint_nll": 3.7841606398777197,
+      "dependence_gain": 0.0003650508655807302,
+      "backbone_gain": -0.013518903529017834,
+      "edges": 298.859375,
+      "edge_fraction_of_tree": 0.9709421278174352,
+      "isolated_fraction": 0.00015859405498856727,
+      "mean_edge_span": 169.48261552149353,
+      "nll_delta_vs_native": 0.0021772701817326344,
+      "delta_bootstrap95_by_text": [
+        0.00019767978395824823,
+        0.004297260556481112
+      ],
+      "teacher": {}
+    },
+    {
+      "variant": "basic_fixed_dynamic",
+      "length": 1024,
+      "intervention": "cap128",
+      "examples": 16,
+      "mask_rates": 4,
+      "joint_nll": 3.775322511486011,
+      "dependence_gain": 0.0038447779900659487,
+      "backbone_gain": -0.006629711531286255,
+      "edges": 613.359375,
+      "edge_fraction_of_tree": 0.9930831411901769,
+      "isolated_fraction": 9.125575503826579e-05,
+      "mean_edge_span": 2.109531759000089,
+      "nll_delta_vs_native": 0.00013015023856961794,
+      "delta_bootstrap95_by_text": [
+        -0.00015677851479760363,
+        0.0004251107057848223
+      ],
+      "teacher": {}
+    },
+    {
+      "variant": "basic_fixed_dynamic",
+      "length": 1024,
+      "intervention": "cap8",
+      "examples": 16,
+      "mask_rates": 4,
+      "joint_nll": 3.774373486794635,
+      "dependence_gain": 0.0032352828803451587,
+      "backbone_gain": -0.005680686839910323,
+      "edges": 541.0625,
+      "edge_fraction_of_tree": 0.8760578982422764,
+      "isolated_fraction": 0.00017028334158034457,
+      "mean_edge_span": 2.101586471232461,
+      "nll_delta_vs_native": -0.0008188744528063521,
+      "delta_bootstrap95_by_text": [
+        -0.0012486458645164199,
+        -0.0003610408646899377
+      ],
+      "teacher": {}
+    },
+    {
+      "variant": "basic_fixed_dynamic",
+      "length": 1024,
+      "intervention": "fixed_graph",
+      "examples": 16,
+      "mask_rates": 4,
+      "joint_nll": 3.775192361247441,
+      "dependence_gain": 0.003691269867780927,
+      "backbone_gain": -0.006499561292716624,
+      "edges": 598.9375,
+      "edge_fraction_of_tree": 0.9696511579414379,
+      "isolated_fraction": 0.00013026948787222333,
+      "mean_edge_span": 2.110671803617048,
+      "nll_delta_vs_native": 0.0,
+      "delta_bootstrap95_by_text": [
+        0.0,
+        0.0
+      ],
+      "teacher": {}
+    },
+    {
+      "variant": "basic_fixed_dynamic",
+      "length": 1024,
+      "intervention": "half_edges",
+      "examples": 16,
+      "mask_rates": 4,
+      "joint_nll": 3.7711113486382293,
+      "dependence_gain": 0.0017082340414131393,
+      "backbone_gain": -0.002418548683504899,
+      "edges": 299.234375,
+      "edge_fraction_of_tree": 0.48430516474683355,
+      "isolated_fraction": 0.26512334432726753,
+      "mean_edge_span": 2.129084658473201,
+      "nll_delta_vs_native": -0.004081012609211707,
+      "delta_bootstrap95_by_text": [
+        -0.006321765475896128,
+        -0.0017520290855626876
+      ],
+      "teacher": {}
+    },
+    {
+      "variant": "basic_fixed_dynamic",
+      "length": 1024,
+      "intervention": "native",
+      "examples": 16,
+      "mask_rates": 4,
+      "joint_nll": 3.775192361247441,
+      "dependence_gain": 0.003691269867780927,
+      "backbone_gain": -0.006499561292716624,
+      "edges": 598.9375,
+      "edge_fraction_of_tree": 0.9696511579414379,
+      "isolated_fraction": 0.00013026948787222333,
+      "mean_edge_span": 2.110671803617048,
+      "nll_delta_vs_native": 0.0,
+      "delta_bootstrap95_by_text": [
+        0.0,
+        0.0
+      ],
+      "teacher": {}
+    },
+    {
+      "variant": "basic_fixed_dynamic",
+      "length": 1024,
+      "intervention": "permuted_edges",
+      "examples": 16,
+      "mask_rates": 4,
+      "joint_nll": 3.778540515816709,
+      "dependence_gain": -0.00011145154162089508,
+      "backbone_gain": -0.009847715861984251,
+      "edges": 598.9375,
+      "edge_fraction_of_tree": 0.9696511579414379,
+      "isolated_fraction": 0.00013026948787222333,
+      "mean_edge_span": 340.5025494067838,
+      "nll_delta_vs_native": 0.0033481545692675904,
+      "delta_bootstrap95_by_text": [
+        0.0014482972288387096,
+        0.0052800852116357405
+      ],
+      "teacher": {}
+    },
+    {
+      "variant": "separate_r16_dynamic_dynamic",
+      "length": 128,
+      "intervention": "cap128",
+      "examples": 16,
+      "mask_rates": 4,
+      "joint_nll": 4.113509851179775,
+      "dependence_gain": 0.012557089496928377,
+      "backbone_gain": -0.029892925884591186,
+      "edges": 75.34375,
+      "edge_fraction_of_tree": 1.0,
+      "isolated_fraction": 0.0,
+      "mean_edge_span": 17.693941018928435,
+      "nll_delta_vs_native": 0.01798841789245121,
+      "delta_bootstrap95_by_text": [
+        0.0064089496449935834,
+        0.031853465958579935
+      ],
+      "teacher": {}
+    },
+    {
+      "variant": "separate_r16_dynamic_dynamic",
+      "length": 128,
+      "intervention": "cap8",
+      "examples": 16,
+      "mask_rates": 4,
+      "joint_nll": 4.087063740762921,
+      "dependence_gain": 0.012845057515521155,
+      "backbone_gain": -0.0034468154677367033,
+      "edges": 62.265625,
+      "edge_fraction_of_tree": 0.8166267230567819,
+      "isolated_fraction": 0.0421176492012361,
+      "mean_edge_span": 11.228007317456736,
+      "nll_delta_vs_native": -0.008457692524403258,
+      "delta_bootstrap95_by_text": [
+        -0.01617517662362987,
+        -0.0024120172810722287
+      ],
+      "teacher": {}
+    },
+    {
+      "variant": "separate_r16_dynamic_dynamic",
+      "length": 128,
+      "intervention": "fixed_graph",
+      "examples": 16,
+      "mask_rates": 4,
+      "joint_nll": 4.081127180858571,
+      "dependence_gain": 0.013464085242053218,
+      "backbone_gain": 0.0024897444366129068,
+      "edges": 73.515625,
+      "edge_fraction_of_tree": 0.9780615510247308,
+      "isolated_fraction": 0.002158655348088338,
+      "mean_edge_span": 2.1220408643913484,
+      "nll_delta_vs_native": -0.014394252428752922,
+      "delta_bootstrap95_by_text": [
+        -0.022505557220582055,
+        -0.008237405067348786
+      ],
+      "teacher": {}
+    },
+    {
+      "variant": "separate_r16_dynamic_dynamic",
+      "length": 128,
+      "intervention": "half_edges",
+      "examples": 16,
+      "mask_rates": 4,
+      "joint_nll": 4.0869143774933585,
+      "dependence_gain": 0.006761956992346718,
+      "backbone_gain": -0.0032974521981742936,
+      "edges": 35.671875,
+      "edge_fraction_of_tree": 0.4727348752368711,
+      "isolated_fraction": 0.3378385839311987,
+      "mean_edge_span": 16.064682642266064,
+      "nll_delta_vs_native": -0.008607055793965694,
+      "delta_bootstrap95_by_text": [
+        -0.013934572426132753,
+        -0.003981849704003622
+      ],
+      "teacher": {}
+    },
+    {
+      "variant": "separate_r16_dynamic_dynamic",
+      "length": 128,
+      "intervention": "native",
+      "examples": 16,
+      "mask_rates": 4,
+      "joint_nll": 4.095521433287324,
+      "dependence_gain": 0.013127644731359479,
+      "backbone_gain": -0.011904507992139973,
+      "edges": 71.859375,
+      "edge_fraction_of_tree": 0.9543097612655617,
+      "isolated_fraction": 0.01631850778281374,
+      "mean_edge_span": 15.517149930972499,
+      "nll_delta_vs_native": 0.0,
+      "delta_bootstrap95_by_text": [
+        0.0,
+        0.0
+      ],
+      "teacher": {
+        "edge": {
+          "valid_fraction": 1.0,
+          "cross_entropy": 1.9589903205633163,
+          "teacher_entropy": 1.08576242218263,
+          "kl_to_teacher": 0.8732278952375054,
+          "uniform_cross_entropy": 2.089116704111799,
+          "improvement_over_uniform": 0.13012638501822948,
+          "choices": 12.234375
+        },
+        "anchor": {
+          "valid_fraction": 1.0,
+          "cross_entropy": 4.246666674502194,
+          "teacher_entropy": 1.952970307321567,
+          "kl_to_teacher": 2.29369636811316,
+          "uniform_cross_entropy": 4.204485826741042,
+          "improvement_over_uniform": -0.042180825024843216,
+          "choices": 75.34375
+        },
+        "slot": {
+          "valid_fraction": 1.0,
+          "cross_entropy": 2.7646579071879387,
+          "teacher_entropy": 2.0273386110893625,
+          "kl_to_teacher": 0.7373192925006151,
+          "uniform_cross_entropy": 2.7525395543971403,
+          "improvement_over_uniform": -0.012118339538574219,
+          "choices": 15.703125
+        }
+      }
+    },
+    {
+      "variant": "separate_r16_dynamic_dynamic",
+      "length": 128,
+      "intervention": "permuted_edges",
+      "examples": 16,
+      "mask_rates": 4,
+      "joint_nll": 4.118066018753397,
+      "dependence_gain": 0.0006619376081579981,
+      "backbone_gain": -0.03444909345821212,
+      "edges": 71.859375,
+      "edge_fraction_of_tree": 0.9543097612655617,
+      "isolated_fraction": 0.01631850778281374,
+      "mean_edge_span": 43.12720587319776,
+      "nll_delta_vs_native": 0.022544585466072173,
+      "delta_bootstrap95_by_text": [
+        0.013717635732636202,
+        0.031121860966804943
+      ],
+      "teacher": {}
+    },
+    {
+      "variant": "separate_r16_dynamic_dynamic",
+      "length": 512,
+      "intervention": "cap128",
+      "examples": 16,
+      "mask_rates": 4,
+      "joint_nll": 3.779215911177986,
+      "dependence_gain": 0.013320228871924966,
+      "backbone_gain": -0.008574174829284088,
+      "edges": 298.359375,
+      "edge_fraction_of_tree": 0.9689251364705486,
+      "isolated_fraction": 0.016323329448446475,
+      "mean_edge_span": 44.84642993149897,
+      "nll_delta_vs_native": 0.006921528393602938,
+      "delta_bootstrap95_by_text": [
+        0.0038239862137984075,
+        0.010817216405384182
+      ],
+      "teacher": {}
+    },
+    {
+      "variant": "separate_r16_dynamic_dynamic",
+      "length": 512,
+      "intervention": "cap8",
+      "examples": 16,
+      "mask_rates": 4,
+      "joint_nll": 3.7696842374995394,
+      "dependence_gain": 0.01052327508092221,
+      "backbone_gain": 0.0009574988491623525,
+      "edges": 244.03125,
+      "edge_fraction_of_tree": 0.7508144323784941,
+      "isolated_fraction": 0.08273233410679112,
+      "mean_edge_span": 19.291211802003236,
+      "nll_delta_vs_native": -0.0026101452848434938,
+      "delta_bootstrap95_by_text": [
+        -0.0043570160639014935,
+        -0.0008874649365647296
+      ],
+      "teacher": {}
+    },
+    {
+      "variant": "separate_r16_dynamic_dynamic",
+      "length": 512,
+      "intervention": "fixed_graph",
+      "examples": 16,
+      "mask_rates": 4,
+      "joint_nll": 3.766986437261902,
+      "dependence_gain": 0.011648771827186757,
+      "backbone_gain": 0.0036552990868001112,
+      "edges": 298.859375,
+      "edge_fraction_of_tree": 0.9709421278174352,
+      "isolated_fraction": 0.00015859405498856727,
+      "mean_edge_span": 2.1218632765993166,
+      "nll_delta_vs_native": -0.00530794552248127,
+      "delta_bootstrap95_by_text": [
+        -0.007364537940733058,
+        -0.0029045963930334102
+      ],
+      "teacher": {}
+    },
+    {
+      "variant": "separate_r16_dynamic_dynamic",
+      "length": 512,
+      "intervention": "half_edges",
+      "examples": 16,
+      "mask_rates": 4,
+      "joint_nll": 3.770473412964415,
+      "dependence_gain": 0.005930933727080506,
+      "backbone_gain": 0.000168323384286902,
+      "edges": 139.453125,
+      "edge_fraction_of_tree": 0.43886889117981326,
+      "isolated_fraction": 0.36443516850512264,
+      "mean_edge_span": 32.40021795081756,
+      "nll_delta_vs_native": -0.0018209698199680609,
+      "delta_bootstrap95_by_text": [
+        -0.0057842080716846815,
+        0.0019045897765666703
+      ],
+      "teacher": {}
+    },
+    {
+      "variant": "separate_r16_dynamic_dynamic",
+      "length": 512,
+      "intervention": "native",
+      "examples": 16,
+      "mask_rates": 4,
+      "joint_nll": 3.772294382784383,
+      "dependence_gain": 0.011998624223722455,
+      "backbone_gain": -0.0016526464356811336,
+      "edges": 279.25,
+      "edge_fraction_of_tree": 0.8791359708612032,
+      "isolated_fraction": 0.0566391063436332,
+      "mean_edge_span": 33.468591770182016,
+      "nll_delta_vs_native": 0.0,
+      "delta_bootstrap95_by_text": [
+        0.0,
+        0.0
+      ],
+      "teacher": {
+        "edge": {
+          "valid_fraction": 1.0,
+          "cross_entropy": 1.5292672631330788,
+          "teacher_entropy": 0.7670709498176399,
+          "kl_to_teacher": 0.7621963154524565,
+          "uniform_cross_entropy": 1.9126634500809059,
+          "improvement_over_uniform": 0.38339618127793074,
+          "choices": 7.09375
+        },
+        "anchor": {
+          "valid_fraction": 1.0,
+          "cross_entropy": 5.6050069257617,
+          "teacher_entropy": 2.8131675878151237,
+          "kl_to_teacher": 2.791839350014925,
+          "uniform_cross_entropy": 5.616355118760472,
+          "improvement_over_uniform": 0.011348210275173187,
+          "choices": 307.984375
+        },
+        "slot": {
+          "valid_fraction": 1.0,
+          "cross_entropy": 2.7906375005841255,
+          "teacher_entropy": 2.4084070784854816,
+          "kl_to_teacher": 0.382230419665575,
+          "uniform_cross_entropy": 2.770502294230023,
+          "improvement_over_uniform": -0.020135197788476944,
+          "choices": 15.96875
+        }
+      }
+    },
+    {
+      "variant": "separate_r16_dynamic_dynamic",
+      "length": 512,
+      "intervention": "permuted_edges",
+      "examples": 16,
+      "mask_rates": 4,
+      "joint_nll": 3.7931621195325818,
+      "dependence_gain": -0.0006070203658514782,
+      "backbone_gain": -0.022520383183879666,
+      "edges": 279.25,
+      "edge_fraction_of_tree": 0.8791359708612032,
+      "isolated_fraction": 0.0566391063436332,
+      "mean_edge_span": 171.13847714200764,
+      "nll_delta_vs_native": 0.020867736748198494,
+      "delta_bootstrap95_by_text": [
+        0.0166200257006285,
+        0.024966928694085885
+      ],
+      "teacher": {}
+    },
+    {
+      "variant": "separate_r16_dynamic_dynamic",
+      "length": 1024,
+      "intervention": "cap128",
+      "examples": 16,
+      "mask_rates": 4,
+      "joint_nll": 3.7738872917982973,
+      "dependence_gain": 0.012393012258616795,
+      "backbone_gain": -0.005194491843572744,
+      "edges": 572.296875,
+      "edge_fraction_of_tree": 0.8970580879348248,
+      "isolated_fraction": 0.06285532178496012,
+      "mean_edge_span": 69.66090507089868,
+      "nll_delta_vs_native": 0.007439630219320585,
+      "delta_bootstrap95_by_text": [
+        0.004204844507422773,
+        0.011013268440691129
+      ],
+      "teacher": {}
+    },
+    {
+      "variant": "separate_r16_dynamic_dynamic",
+      "length": 1024,
+      "intervention": "cap8",
+      "examples": 16,
+      "mask_rates": 4,
+      "joint_nll": 3.764705506652168,
+      "dependence_gain": 0.010572987365684095,
+      "backbone_gain": 0.003987293302556558,
+      "edges": 482.3125,
+      "edge_fraction_of_tree": 0.72964806963146,
+      "isolated_fraction": 0.094779029769148,
+      "mean_edge_span": 28.238843767672417,
+      "nll_delta_vs_native": -0.001742154926808754,
+      "delta_bootstrap95_by_text": [
+        -0.0033016463845947468,
+        -0.0003314340576034726
+      ],
+      "teacher": {}
+    },
+    {
+      "variant": "separate_r16_dynamic_dynamic",
+      "length": 1024,
+      "intervention": "fixed_graph",
+      "examples": 16,
+      "mask_rates": 4,
+      "joint_nll": 3.7599473399843224,
+      "dependence_gain": 0.011697997286414812,
+      "backbone_gain": 0.008745459970402257,
+      "edges": 598.9375,
+      "edge_fraction_of_tree": 0.9696511579414379,
+      "isolated_fraction": 0.00013026948787222333,
+      "mean_edge_span": 2.110671803617048,
+      "nll_delta_vs_native": -0.0065003215946544575,
+      "delta_bootstrap95_by_text": [
+        -0.008091871057043294,
+        -0.004764758443386679
+      ],
+      "teacher": {}
+    },
+    {
+      "variant": "separate_r16_dynamic_dynamic",
+      "length": 1024,
+      "intervention": "half_edges",
+      "examples": 16,
+      "mask_rates": 4,
+      "joint_nll": 3.7677432899839265,
+      "dependence_gain": 0.0059687271824789175,
+      "backbone_gain": 0.0009495099707978413,
+      "edges": 273.171875,
+      "edge_fraction_of_tree": 0.42046537546078067,
+      "isolated_fraction": 0.3772353577588175,
+      "mean_edge_span": 48.486126756664554,
+      "nll_delta_vs_native": 0.001295628404949952,
+      "delta_bootstrap95_by_text": [
+        -0.0012482362843166533,
+        0.0036724828014352458
+      ],
+      "teacher": {}
+    },
+    {
+      "variant": "separate_r16_dynamic_dynamic",
+      "length": 1024,
+      "intervention": "native",
+      "examples": 16,
+      "mask_rates": 4,
+      "joint_nll": 3.766447661578977,
+      "dependence_gain": 0.011974300311040147,
+      "backbone_gain": 0.002245138375747791,
+      "edges": 546.828125,
+      "edge_fraction_of_tree": 0.8418487027628735,
+      "isolated_fraction": 0.07602353427223305,
+      "mean_edge_span": 49.37780113696518,
+      "nll_delta_vs_native": 0.0,
+      "delta_bootstrap95_by_text": [
+        0.0,
+        0.0
+      ],
+      "teacher": {
+        "edge": {
+          "valid_fraction": 1.0,
+          "cross_entropy": 1.5614112270995975,
+          "teacher_entropy": 0.731577912615576,
+          "kl_to_teacher": 0.829833316616714,
+          "uniform_cross_entropy": 2.0010382016543615,
+          "improvement_over_uniform": 0.4396269768476486,
+          "choices": 11.25
+        },
+        "anchor": {
+          "valid_fraction": 1.0,
+          "cross_entropy": 6.324748411774635,
+          "teacher_entropy": 2.8867672372284723,
+          "kl_to_teacher": 3.4379811584949493,
+          "uniform_cross_entropy": 6.315526898479942,
+          "improvement_over_uniform": -0.009221509099006653,
+          "choices": 617.796875
+        },
+        "slot": {
+          "valid_fraction": 1.0,
+          "cross_entropy": 2.7930836603045464,
+          "teacher_entropy": 2.6666377363726497,
+          "kl_to_teacher": 0.1264459230005741,
+          "uniform_cross_entropy": 2.766468636658925,
+          "improvement_over_uniform": -0.02661501243710518,
+          "choices": 15.90625
+        }
+      }
+    },
+    {
+      "variant": "separate_r16_dynamic_dynamic",
+      "length": 1024,
+      "intervention": "permuted_edges",
+      "examples": 16,
+      "mask_rates": 4,
+      "joint_nll": 3.7887410690261674,
+      "dependence_gain": -0.0020351999585667834,
+      "backbone_gain": -0.02004826907144266,
+      "edges": 546.828125,
+      "edge_fraction_of_tree": 0.8418487027628735,
+      "isolated_fraction": 0.07602353427223305,
+      "mean_edge_span": 340.5128674095104,
+      "nll_delta_vs_native": 0.022293407447190508,
+      "delta_bootstrap95_by_text": [
+        0.019451802232109187,
+        0.025207867590943473
+      ],
+      "teacher": {}
+    },
+    {
+      "variant": "separate_r16_fixed_dynamic",
+      "length": 128,
+      "intervention": "cap128",
+      "examples": 16,
+      "mask_rates": 4,
+      "joint_nll": 4.089907696244387,
+      "dependence_gain": 0.014833960837099001,
+      "backbone_gain": -0.006290770949202622,
+      "edges": 75.34375,
+      "edge_fraction_of_tree": 1.0,
+      "isolated_fraction": 0.0,
+      "mean_edge_span": 2.123855618821554,
+      "nll_delta_vs_native": 0.00034926756608237575,
+      "delta_bootstrap95_by_text": [
+        -0.0005008284746309613,
+        0.0011314350154086605
+      ],
+      "teacher": {}
+    },
+    {
+      "variant": "separate_r16_fixed_dynamic",
+      "length": 128,
+      "intervention": "cap8",
+      "examples": 16,
+      "mask_rates": 4,
+      "joint_nll": 4.08962422320951,
+      "dependence_gain": 0.012977902802678269,
+      "backbone_gain": -0.006007297914325667,
+      "edges": 66.34375,
+      "edge_fraction_of_tree": 0.8817998160055294,
+      "isolated_fraction": 0.0032357658184075187,
+      "mean_edge_span": 2.1138267902014802,
+      "nll_delta_vs_native": 6.57945312054313e-05,
+      "delta_bootstrap95_by_text": [
+        -0.0019362974780060514,
+        0.0023846771868643625
+      ],
+      "teacher": {}
+    },
+    {
+      "variant": "separate_r16_fixed_dynamic",
+      "length": 128,
+      "intervention": "fixed_graph",
+      "examples": 16,
+      "mask_rates": 4,
+      "joint_nll": 4.089558428678305,
+      "dependence_gain": 0.014452057330819154,
+      "backbone_gain": -0.005941503383120244,
+      "edges": 73.515625,
+      "edge_fraction_of_tree": 0.9780615510247308,
+      "isolated_fraction": 0.002158655348088338,
+      "mean_edge_span": 2.1220408643913484,
+      "nll_delta_vs_native": 0.0,
+      "delta_bootstrap95_by_text": [
+        0.0,
+        0.0
+      ],
+      "teacher": {}
+    },
+    {
+      "variant": "separate_r16_fixed_dynamic",
+      "length": 128,
+      "intervention": "half_edges",
+      "examples": 16,
+      "mask_rates": 4,
+      "joint_nll": 4.091211513804637,
+      "dependence_gain": 0.006820540931820657,
+      "backbone_gain": -0.007594588509453008,
+      "edges": 36.53125,
+      "edge_fraction_of_tree": 0.4849904913002266,
+      "isolated_fraction": 0.2631129208255063,
+      "mean_edge_span": 2.120644109979159,
+      "nll_delta_vs_native": 0.0016530851263327363,
+      "delta_bootstrap95_by_text": [
+        -0.00516943951074221,
+        0.007857232969424068
+      ],
+      "teacher": {}
+    },
+    {
+      "variant": "separate_r16_fixed_dynamic",
+      "length": 128,
+      "intervention": "native",
+      "examples": 16,
+      "mask_rates": 4,
+      "joint_nll": 4.089558428678305,
+      "dependence_gain": 0.014452057330819154,
+      "backbone_gain": -0.005941503383120244,
+      "edges": 73.515625,
+      "edge_fraction_of_tree": 0.9780615510247308,
+      "isolated_fraction": 0.002158655348088338,
+      "mean_edge_span": 2.1220408643913484,
+      "nll_delta_vs_native": 0.0,
+      "delta_bootstrap95_by_text": [
+        0.0,
+        0.0
+      ],
+      "teacher": {}
+    },
+    {
+      "variant": "separate_r16_fixed_dynamic",
+      "length": 128,
+      "intervention": "permuted_edges",
+      "examples": 16,
+      "mask_rates": 4,
+      "joint_nll": 4.14113678231211,
+      "dependence_gain": 0.0011454084462164725,
+      "backbone_gain": -0.05751985701692527,
+      "edges": 73.515625,
+      "edge_fraction_of_tree": 0.9780615510247308,
+      "isolated_fraction": 0.002158655348088338,
+      "mean_edge_span": 43.303239229675235,
+      "nll_delta_vs_native": 0.051578353633804995,
+      "delta_bootstrap95_by_text": [
+        0.04260215049460833,
+        0.060330871258622965
+      ],
+      "teacher": {}
+    },
+    {
+      "variant": "separate_r16_fixed_dynamic",
+      "length": 512,
+      "intervention": "cap128",
+      "examples": 16,
+      "mask_rates": 4,
+      "joint_nll": 3.771594509077707,
+      "dependence_gain": 0.012625152137472445,
+      "backbone_gain": -0.0009527727290051362,
+      "edges": 306.125,
+      "edge_fraction_of_tree": 0.9946447416461848,
+      "isolated_fraction": 0.00012112403100775194,
+      "mean_edge_span": 2.1189621635710454,
+      "nll_delta_vs_native": 1.3265232157309154e-05,
+      "delta_bootstrap95_by_text": [
+        -0.0004928818829043162,
+        0.0005064787329446818
+      ],
+      "teacher": {}
+    },
+    {
+      "variant": "separate_r16_fixed_dynamic",
+      "length": 512,
+      "intervention": "cap8",
+      "examples": 16,
+      "mask_rates": 4,
+      "joint_nll": 3.7726773388651105,
+      "dependence_gain": 0.011409987767770732,
+      "backbone_gain": -0.0020356025164085835,
+      "edges": 269.953125,
+      "edge_fraction_of_tree": 0.8769068859107304,
+      "isolated_fraction": 0.0007421787770748688,
+      "mean_edge_span": 2.1078735052458577,
+      "nll_delta_vs_native": 0.0010960950195608044,
+      "delta_bootstrap95_by_text": [
+        0.00011213239922617732,
+        0.0020105026373317403
+      ],
+      "teacher": {}
+    },
+    {
+      "variant": "separate_r16_fixed_dynamic",
+      "length": 512,
+      "intervention": "fixed_graph",
+      "examples": 16,
+      "mask_rates": 4,
+      "joint_nll": 3.77158124384555,
+      "dependence_gain": 0.012365598126830905,
+      "backbone_gain": -0.0009395074968477582,
+      "edges": 298.859375,
+      "edge_fraction_of_tree": 0.9709421278174352,
+      "isolated_fraction": 0.00015859405498856727,
+      "mean_edge_span": 2.1218632765993166,
+      "nll_delta_vs_native": 0.0,
+      "delta_bootstrap95_by_text": [
+        0.0,
+        0.0
+      ],
+      "teacher": {}
+    },
+    {
+      "variant": "separate_r16_fixed_dynamic",
+      "length": 512,
+      "intervention": "half_edges",
+      "examples": 16,
+      "mask_rates": 4,
+      "joint_nll": 3.7741964888439297,
+      "dependence_gain": 0.006130249407515895,
+      "backbone_gain": -0.0035547524952275118,
+      "edges": 149.125,
+      "edge_fraction_of_tree": 0.4842242416243037,
+      "isolated_fraction": 0.26822256259582833,
+      "mean_edge_span": 2.1453312112609555,
+      "nll_delta_vs_native": 0.002615244998379741,
+      "delta_bootstrap95_by_text": [
+        -0.0014015839762222242,
+        0.006443968103639959
+      ],
+      "teacher": {}
+    },
+    {
+      "variant": "separate_r16_fixed_dynamic",
+      "length": 512,
+      "intervention": "native",
+      "examples": 16,
+      "mask_rates": 4,
+      "joint_nll": 3.77158124384555,
+      "dependence_gain": 0.012365598126830905,
+      "backbone_gain": -0.0009395074968477582,
+      "edges": 298.859375,
+      "edge_fraction_of_tree": 0.9709421278174352,
+      "isolated_fraction": 0.00015859405498856727,
+      "mean_edge_span": 2.1218632765993166,
+      "nll_delta_vs_native": 0.0,
+      "delta_bootstrap95_by_text": [
+        0.0,
+        0.0
+      ],
+      "teacher": {}
+    },
+    {
+      "variant": "separate_r16_fixed_dynamic",
+      "length": 512,
+      "intervention": "permuted_edges",
+      "examples": 16,
+      "mask_rates": 4,
+      "joint_nll": 3.8093473973646748,
+      "dependence_gain": 0.0005843627759184432,
+      "backbone_gain": -0.03870566101597301,
+      "edges": 298.859375,
+      "edge_fraction_of_tree": 0.9709421278174352,
+      "isolated_fraction": 0.00015859405498856727,
+      "mean_edge_span": 169.48261552149353,
+      "nll_delta_vs_native": 0.03776615351912526,
+      "delta_bootstrap95_by_text": [
+        0.03364775648941584,
+        0.04197314786565928
+      ],
+      "teacher": {}
+    },
+    {
+      "variant": "separate_r16_fixed_dynamic",
+      "length": 1024,
+      "intervention": "cap128",
+      "examples": 16,
+      "mask_rates": 4,
+      "joint_nll": 3.763046323471637,
+      "dependence_gain": 0.012613979168105294,
+      "backbone_gain": 0.005646476483087568,
+      "edges": 613.359375,
+      "edge_fraction_of_tree": 0.9930831411901769,
+      "isolated_fraction": 9.125575503826579e-05,
+      "mean_edge_span": 2.109531759000089,
+      "nll_delta_vs_native": -0.00012898474599703363,
+      "delta_bootstrap95_by_text": [
+        -0.00048606959897055935,
+        0.00019949214085332803
+      ],
+      "teacher": {}
+    },
+    {
+      "variant": "separate_r16_fixed_dynamic",
+      "length": 1024,
+      "intervention": "cap8",
+      "examples": 16,
+      "mask_rates": 4,
+      "joint_nll": 3.7651445373947685,
+      "dependence_gain": 0.011257155059255997,
+      "backbone_gain": 0.003548262559955993,
+      "edges": 541.0625,
+      "edge_fraction_of_tree": 0.8760578982422764,
+      "isolated_fraction": 0.00017028334158034457,
+      "mean_edge_span": 2.101586471232461,
+      "nll_delta_vs_native": 0.0019692291771345426,
+      "delta_bootstrap95_by_text": [
+        0.001310964352265534,
+        0.002601738342168664
+      ],
+      "teacher": {}
+    },
+    {
+      "variant": "separate_r16_fixed_dynamic",
+      "length": 1024,
+      "intervention": "fixed_graph",
+      "examples": 16,
+      "mask_rates": 4,
+      "joint_nll": 3.763175308217634,
+      "dependence_gain": 0.012320540121231023,
+      "backbone_gain": 0.0055174917370905225,
+      "edges": 598.9375,
+      "edge_fraction_of_tree": 0.9696511579414379,
+      "isolated_fraction": 0.00013026948787222333,
+      "mean_edge_span": 2.110671803617048,
+      "nll_delta_vs_native": 0.0,
+      "delta_bootstrap95_by_text": [
+        0.0,
+        0.0
+      ],
+      "teacher": {}
+    },
+    {
+      "variant": "separate_r16_fixed_dynamic",
+      "length": 1024,
+      "intervention": "half_edges",
+      "examples": 16,
+      "mask_rates": 4,
+      "joint_nll": 3.768699273475526,
+      "dependence_gain": 0.006331359971583955,
+      "backbone_gain": -6.473520801550759e-06,
+      "edges": 299.234375,
+      "edge_fraction_of_tree": 0.48430516474683355,
+      "isolated_fraction": 0.26512334432726753,
+      "mean_edge_span": 2.129084658473201,
+      "nll_delta_vs_native": 0.005523965257892088,
+      "delta_bootstrap95_by_text": [
+        0.0029204466499591596,
+        0.008208118945332209
+      ],
+      "teacher": {}
+    },
+    {
+      "variant": "separate_r16_fixed_dynamic",
+      "length": 1024,
+      "intervention": "native",
+      "examples": 16,
+      "mask_rates": 4,
+      "joint_nll": 3.763175308217634,
+      "dependence_gain": 0.012320540121231023,
+      "backbone_gain": 0.0055174917370905225,
+      "edges": 598.9375,
+      "edge_fraction_of_tree": 0.9696511579414379,
+      "isolated_fraction": 0.00013026948787222333,
+      "mean_edge_span": 2.110671803617048,
+      "nll_delta_vs_native": 0.0,
+      "delta_bootstrap95_by_text": [
+        0.0,
+        0.0
+      ],
+      "teacher": {}
+    },
+    {
+      "variant": "separate_r16_fixed_dynamic",
+      "length": 1024,
+      "intervention": "permuted_edges",
+      "examples": 16,
+      "mask_rates": 4,
+      "joint_nll": 3.804245353850302,
+      "dependence_gain": -0.001501053785002885,
+      "backbone_gain": -0.03555255389557738,
+      "edges": 598.9375,
+      "edge_fraction_of_tree": 0.9696511579414379,
+      "isolated_fraction": 0.00013026948787222333,
+      "mean_edge_span": 340.5025494067838,
+      "nll_delta_vs_native": 0.041070045632667904,
+      "delta_bootstrap95_by_text": [
+        0.037544505323105756,
+        0.04448511250001226
+      ],
+      "teacher": {}
+    },
+    {
+      "variant": "separate_r8_dynamic_dynamic",
+      "length": 128,
+      "intervention": "cap128",
+      "examples": 16,
+      "mask_rates": 4,
+      "joint_nll": 4.123917052593816,
+      "dependence_gain": 0.009925980448316017,
+      "backbone_gain": -0.040300127298632075,
+      "edges": 75.34375,
+      "edge_fraction_of_tree": 1.0,
+      "isolated_fraction": 0.0,
+      "mean_edge_span": 17.20711916610156,
+      "nll_delta_vs_native": 0.021833999684378033,
+      "delta_bootstrap95_by_text": [
+        0.005733045151661103,
+        0.0423624580548492
+      ],
+      "teacher": {}
+    },
+    {
+      "variant": "separate_r8_dynamic_dynamic",
+      "length": 128,
+      "intervention": "cap8",
+      "examples": 16,
+      "mask_rates": 4,
+      "joint_nll": 4.087873929469231,
+      "dependence_gain": 0.012960993898652141,
+      "backbone_gain": -0.004257004174046099,
+      "edges": 62.671875,
+      "edge_fraction_of_tree": 0.8255287194191594,
+      "isolated_fraction": 0.03500357710743346,
+      "mean_edge_span": 11.282926562916215,
+      "nll_delta_vs_native": -0.014209123440207872,
+      "delta_bootstrap95_by_text": [
+        -0.02387094116978766,
+        -0.005595477442838519
+      ],
+      "teacher": {}
+    },
+    {
+      "variant": "separate_r8_dynamic_dynamic",
+      "length": 128,
+      "intervention": "fixed_graph",
+      "examples": 16,
+      "mask_rates": 4,
+      "joint_nll": 4.080887647214845,
+      "dependence_gain": 0.014872754171844605,
+      "backbone_gain": 0.002729278080339647,
+      "edges": 73.515625,
+      "edge_fraction_of_tree": 0.9780615510247308,
+      "isolated_fraction": 0.002158655348088338,
+      "mean_edge_span": 2.1220408643913484,
+      "nll_delta_vs_native": -0.021195405694593654,
+      "delta_bootstrap95_by_text": [
+        -0.03043206860638951,
+        -0.012526991922679165
+      ],
+      "teacher": {}
+    },
+    {
+      "variant": "separate_r8_dynamic_dynamic",
+      "length": 128,
+      "intervention": "half_edges",
+      "examples": 16,
+      "mask_rates": 4,
+      "joint_nll": 4.089746862208249,
+      "dependence_gain": 0.006700265967660196,
+      "backbone_gain": -0.006129936913064363,
+      "edges": 35.75,
+      "edge_fraction_of_tree": 0.4737071721535449,
+      "isolated_fraction": 0.3333085666311328,
+      "mean_edge_span": 16.00040627503405,
+      "nll_delta_vs_native": -0.012336190701189666,
+      "delta_bootstrap95_by_text": [
+        -0.019397307536541564,
+        -0.006097522572741959
+      ],
+      "teacher": {}
+    },
+    {
+      "variant": "separate_r8_dynamic_dynamic",
+      "length": 128,
+      "intervention": "native",
+      "examples": 16,
+      "mask_rates": 4,
+      "joint_nll": 4.102083052909438,
+      "dependence_gain": 0.011775133573156798,
+      "backbone_gain": -0.018466127614253973,
+      "edges": 71.984375,
+      "edge_fraction_of_tree": 0.9560501798352984,
+      "isolated_fraction": 0.01682783073221059,
+      "mean_edge_span": 15.18604815785644,
+      "nll_delta_vs_native": 0.0,
+      "delta_bootstrap95_by_text": [
+        0.0,
+        0.0
+      ],
+      "teacher": {
+        "edge": {
+          "valid_fraction": 1.0,
+          "cross_entropy": 1.9777731513604522,
+          "teacher_entropy": 1.1181456739015347,
+          "kl_to_teacher": 0.8596274731680751,
+          "uniform_cross_entropy": 2.130546192355537,
+          "improvement_over_uniform": 0.1527730468660593,
+          "choices": 12.765625
+        },
+        "anchor": {
+          "valid_fraction": 1.0,
+          "cross_entropy": 4.237706591375172,
+          "teacher_entropy": 1.952970307321567,
+          "kl_to_teacher": 2.284736283123493,
+          "uniform_cross_entropy": 4.204485826741042,
+          "improvement_over_uniform": -0.033220741897821426,
+          "choices": 75.34375
+        },
+        "slot": {
+          "valid_fraction": 1.0,
+          "cross_entropy": 2.746206011623144,
+          "teacher_entropy": 2.018601492862217,
+          "kl_to_teacher": 0.7276045214384794,
+          "uniform_cross_entropy": 2.745507599829009,
+          "improvement_over_uniform": -0.0006983987987041473,
+          "choices": 15.609375
+        }
+      }
+    },
+    {
+      "variant": "separate_r8_dynamic_dynamic",
+      "length": 128,
+      "intervention": "permuted_edges",
+      "examples": 16,
+      "mask_rates": 4,
+      "joint_nll": 4.112881127994493,
+      "dependence_gain": 0.0003535520551034942,
+      "backbone_gain": -0.02926420269930894,
+      "edges": 71.984375,
+      "edge_fraction_of_tree": 0.9560501798352984,
+      "isolated_fraction": 0.01682783073221059,
+      "mean_edge_span": 43.21607079836299,
+      "nll_delta_vs_native": 0.010798075085054964,
+      "delta_bootstrap95_by_text": [
+        0.003075888817664345,
+        0.018306953060348553
+      ],
+      "teacher": {}
+    },
+    {
+      "variant": "separate_r8_dynamic_dynamic",
+      "length": 512,
+      "intervention": "cap128",
+      "examples": 16,
+      "mask_rates": 4,
+      "joint_nll": 3.7812746642827997,
+      "dependence_gain": 0.01452195667419847,
+      "backbone_gain": -0.010632927934097921,
+      "edges": 299.53125,
+      "edge_fraction_of_tree": 0.9730191186181358,
+      "isolated_fraction": 0.013326716098212402,
+      "mean_edge_span": 43.25389840758402,
+      "nll_delta_vs_native": 0.009442812325908188,
+      "delta_bootstrap95_by_text": [
+        0.006712327863146503,
+        0.012297637071498328
+      ],
+      "teacher": {}
+    },
+    {
+      "variant": "separate_r8_dynamic_dynamic",
+      "length": 512,
+      "intervention": "cap8",
+      "examples": 16,
+      "mask_rates": 4,
+      "joint_nll": 3.7685016454340396,
+      "dependence_gain": 0.011745577049480972,
+      "backbone_gain": 0.002140090914662173,
+      "edges": 243.796875,
+      "edge_fraction_of_tree": 0.7500829560596162,
+      "isolated_fraction": 0.08183434735262364,
+      "mean_edge_span": 19.232906817692882,
+      "nll_delta_vs_native": -0.003330206522851955,
+      "delta_bootstrap95_by_text": [
+        -0.004659602182707043,
+        -0.002113754746453044
+      ],
+      "teacher": {}
+    },
+    {
+      "variant": "separate_r8_dynamic_dynamic",
+      "length": 512,
+      "intervention": "fixed_graph",
+      "examples": 16,
+      "mask_rates": 4,
+      "joint_nll": 3.7657247750865337,
+      "dependence_gain": 0.01283874297221821,
+      "backbone_gain": 0.004916961262168428,
+      "edges": 298.859375,
+      "edge_fraction_of_tree": 0.9709421278174352,
+      "isolated_fraction": 0.00015859405498856727,
+      "mean_edge_span": 2.1218632765993166,
+      "nll_delta_vs_native": -0.006107076870358153,
+      "delta_bootstrap95_by_text": [
+        -0.00805275280071148,
+        -0.004325644885106714
+      ],
+      "teacher": {}
+    },
+    {
+      "variant": "separate_r8_dynamic_dynamic",
+      "length": 512,
+      "intervention": "half_edges",
+      "examples": 16,
+      "mask_rates": 4,
+      "joint_nll": 3.7715091740721167,
+      "dependence_gain": 0.006428480629301748,
+      "backbone_gain": -0.0008674377234146817,
+      "edges": 138.625,
+      "edge_fraction_of_tree": 0.43412347899838016,
+      "isolated_fraction": 0.36748914881760836,
+      "mean_edge_span": 31.412794536504464,
+      "nll_delta_vs_native": -0.00032267788477507997,
+      "delta_bootstrap95_by_text": [
+        -0.00342004608233348,
+        0.002869999423137981
+      ],
+      "teacher": {}
+    },
+    {
+      "variant": "separate_r8_dynamic_dynamic",
+      "length": 512,
+      "intervention": "native",
+      "examples": 16,
+      "mask_rates": 4,
+      "joint_nll": 3.771831851956892,
+      "dependence_gain": 0.013383471114809056,
+      "backbone_gain": -0.001190115608189758,
+      "edges": 277.734375,
+      "edge_fraction_of_tree": 0.8700323729236266,
+      "isolated_fraction": 0.060808323069294824,
+      "mean_edge_span": 31.384296160593433,
+      "nll_delta_vs_native": 0.0,
+      "delta_bootstrap95_by_text": [
+        0.0,
+        0.0
+      ],
+      "teacher": {
+        "edge": {
+          "valid_fraction": 1.0,
+          "cross_entropy": 1.4982434194535017,
+          "teacher_entropy": 0.7712833460023145,
+          "kl_to_teacher": 0.7269600769504905,
+          "uniform_cross_entropy": 1.8985313207961065,
+          "improvement_over_uniform": 0.40028789546340704,
+          "choices": 6.859375
+        },
+        "anchor": {
+          "valid_fraction": 1.0,
+          "cross_entropy": 5.604620411992073,
+          "teacher_entropy": 2.8131675878151237,
+          "kl_to_teacher": 2.7914528362452984,
+          "uniform_cross_entropy": 5.616355118760472,
+          "improvement_over_uniform": 0.011734724044799805,
+          "choices": 307.984375
+        },
+        "slot": {
+          "valid_fraction": 1.0,
+          "cross_entropy": 2.7867420464754105,
+          "teacher_entropy": 2.307146059173647,
+          "kl_to_teacher": 0.4795959834009409,
+          "uniform_cross_entropy": 2.7715803078470067,
+          "improvement_over_uniform": -0.015161730349063873,
+          "choices": 15.984375
+        }
+      }
+    },
+    {
+      "variant": "separate_r8_dynamic_dynamic",
+      "length": 512,
+      "intervention": "permuted_edges",
+      "examples": 16,
+      "mask_rates": 4,
+      "joint_nll": 3.791006811645657,
+      "dependence_gain": -0.0002955711158678888,
+      "backbone_gain": -0.0203650752969549,
+      "edges": 277.734375,
+      "edge_fraction_of_tree": 0.8700323729236266,
+      "isolated_fraction": 0.060808323069294824,
+      "mean_edge_span": 167.7659893220378,
+      "nll_delta_vs_native": 0.01917495968876517,
+      "delta_bootstrap95_by_text": [
+        0.014834808891080822,
+        0.02360316894102256
+      ],
+      "teacher": {}
+    },
+    {
+      "variant": "separate_r8_dynamic_dynamic",
+      "length": 1024,
+      "intervention": "cap128",
+      "examples": 16,
+      "mask_rates": 4,
+      "joint_nll": 3.773441301384075,
+      "dependence_gain": 0.013529608462102263,
+      "backbone_gain": -0.004748501429350338,
+      "edges": 568.046875,
+      "edge_fraction_of_tree": 0.8876595243235987,
+      "isolated_fraction": 0.06434807847098778,
+      "mean_edge_span": 65.22831140284755,
+      "nll_delta_vs_native": 0.007972472291893823,
+      "delta_bootstrap95_by_text": [
+        0.005146189669909099,
+        0.011132157048441279
+      ],
+      "teacher": {}
+    },
+    {
+      "variant": "separate_r8_dynamic_dynamic",
+      "length": 1024,
+      "intervention": "cap8",
+      "examples": 16,
+      "mask_rates": 4,
+      "joint_nll": 3.7628581093442066,
+      "dependence_gain": 0.01157258929304781,
+      "backbone_gain": 0.00583469061051786,
+      "edges": 481.546875,
+      "edge_fraction_of_tree": 0.7275764082806656,
+      "isolated_fraction": 0.09496887323713966,
+      "mean_edge_span": 24.18053594885071,
+      "nll_delta_vs_native": -0.0026107197479744125,
+      "delta_bootstrap95_by_text": [
+        -0.004342859153247777,
+        -0.0009766814524556633
+      ],
+      "teacher": {}
+    },
+    {
+      "variant": "separate_r8_dynamic_dynamic",
+      "length": 1024,
+      "intervention": "fixed_graph",
+      "examples": 16,
+      "mask_rates": 4,
+      "joint_nll": 3.758713741340301,
+      "dependence_gain": 0.01268063419311813,
+      "backbone_gain": 0.009979058614423759,
+      "edges": 598.9375,
+      "edge_fraction_of_tree": 0.9696511579414379,
+      "isolated_fraction": 0.00013026948787222333,
+      "mean_edge_span": 2.110671803617048,
+      "nll_delta_vs_native": -0.00675508775188028,
+      "delta_bootstrap95_by_text": [
+        -0.008508220354880403,
+        -0.0052745110701151
+      ],
+      "teacher": {}
+    },
+    {
+      "variant": "separate_r8_dynamic_dynamic",
+      "length": 1024,
+      "intervention": "half_edges",
+      "examples": 16,
+      "mask_rates": 4,
+      "joint_nll": 3.7656319395678546,
+      "dependence_gain": 0.006517239019716532,
+      "backbone_gain": 0.0030608603868699314,
+      "edges": 271.0625,
+      "edge_fraction_of_tree": 0.4147116927414344,
+      "isolated_fraction": 0.3844419809282302,
+      "mean_edge_span": 44.49848476703564,
+      "nll_delta_vs_native": 0.0001631104756735259,
+      "delta_bootstrap95_by_text": [
+        -0.002431781080812684,
+        0.0026961186917034904
+      ],
+      "teacher": {}
+    },
+    {
+      "variant": "separate_r8_dynamic_dynamic",
+      "length": 1024,
+      "intervention": "native",
+      "examples": 16,
+      "mask_rates": 4,
+      "joint_nll": 3.765468829092181,
+      "dependence_gain": 0.01310089598582642,
+      "backbone_gain": 0.0032239708625434625,
+      "edges": 542.75,
+      "edge_fraction_of_tree": 0.8307054815090329,
+      "isolated_fraction": 0.08079597470992125,
+      "mean_edge_span": 47.089262208715,
+      "nll_delta_vs_native": 0.0,
+      "delta_bootstrap95_by_text": [
+        0.0,
+        0.0
+      ],
+      "teacher": {
+        "edge": {
+          "valid_fraction": 1.0,
+          "cross_entropy": 1.5193337481468916,
+          "teacher_entropy": 0.7512287472242992,
+          "kl_to_teacher": 0.7681049988605082,
+          "uniform_cross_entropy": 1.9261748128142284,
+          "improvement_over_uniform": 0.4068410601466894,
+          "choices": 12.515625
+        },
+        "anchor": {
+          "valid_fraction": 1.0,
+          "cross_entropy": 6.317449934780598,
+          "teacher_entropy": 2.8867672372284723,
+          "kl_to_teacher": 3.430682696402073,
+          "uniform_cross_entropy": 6.315526898479942,
+          "improvement_over_uniform": -0.0019230321049690247,
+          "choices": 617.796875
+        },
+        "slot": {
+          "valid_fraction": 1.0,
+          "cross_entropy": 2.794380284845829,
+          "teacher_entropy": 2.705326408147812,
+          "kl_to_teacher": 0.08905387669801712,
+          "uniform_cross_entropy": 2.770571893454232,
+          "improvement_over_uniform": -0.02380838245153427,
+          "choices": 15.96875
+        }
+      }
+    },
+    {
+      "variant": "separate_r8_dynamic_dynamic",
+      "length": 1024,
+      "intervention": "permuted_edges",
+      "examples": 16,
+      "mask_rates": 4,
+      "joint_nll": 3.7866952635197206,
+      "dependence_gain": -0.0013710612549223972,
+      "backbone_gain": -0.01800246356499586,
+      "edges": 542.75,
+      "edge_fraction_of_tree": 0.8307054815090329,
+      "isolated_fraction": 0.08079597470992125,
+      "mean_edge_span": 341.4423713928063,
+      "nll_delta_vs_native": 0.021226434427539374,
+      "delta_bootstrap95_by_text": [
+        0.018572391820552342,
+        0.024074741672914613
+      ],
+      "teacher": {}
+    },
+    {
+      "variant": "separate_r8_fixed_dynamic",
+      "length": 128,
+      "intervention": "cap128",
+      "examples": 16,
+      "mask_rates": 4,
+      "joint_nll": 4.087187116310682,
+      "dependence_gain": 0.015120306049566918,
+      "backbone_gain": -0.003570191015498171,
+      "edges": 75.34375,
+      "edge_fraction_of_tree": 1.0,
+      "isolated_fraction": 0.0,
+      "mean_edge_span": 2.123855618821554,
+      "nll_delta_vs_native": 0.0003829345426314239,
+      "delta_bootstrap95_by_text": [
+        -0.00039798453103692677,
+        0.0011088801179047793
+      ],
+      "teacher": {}
+    },
+    {
+      "variant": "separate_r8_fixed_dynamic",
+      "length": 128,
+      "intervention": "cap8",
+      "examples": 16,
+      "mask_rates": 4,
+      "joint_nll": 4.086986580405192,
+      "dependence_gain": 0.013231736166471083,
+      "backbone_gain": -0.003369655110007971,
+      "edges": 66.34375,
+      "edge_fraction_of_tree": 0.8817998160055294,
+      "isolated_fraction": 0.0032357658184075187,
+      "mean_edge_span": 2.1138267902014802,
+      "nll_delta_vs_native": 0.00018239863714115782,
+      "delta_bootstrap95_by_text": [
+        -0.001910710247385797,
+        0.002517549045019312
+      ],
+      "teacher": {}
+    },
+    {
+      "variant": "separate_r8_fixed_dynamic",
+      "length": 128,
+      "intervention": "fixed_graph",
+      "examples": 16,
+      "mask_rates": 4,
+      "joint_nll": 4.086804181768051,
+      "dependence_gain": 0.014737555744090558,
+      "backbone_gain": -0.003187256472866766,
+      "edges": 73.515625,
+      "edge_fraction_of_tree": 0.9780615510247308,
+      "isolated_fraction": 0.002158655348088338,
+      "mean_edge_span": 2.1220408643913484,
+      "nll_delta_vs_native": 0.0,
+      "delta_bootstrap95_by_text": [
+        0.0,
+        0.0
+      ],
+      "teacher": {}
+    },
+    {
+      "variant": "separate_r8_fixed_dynamic",
+      "length": 128,
+      "intervention": "half_edges",
+      "examples": 16,
+      "mask_rates": 4,
+      "joint_nll": 4.0887950744596075,
+      "dependence_gain": 0.006922430313785897,
+      "backbone_gain": -0.005178149164423106,
+      "edges": 36.53125,
+      "edge_fraction_of_tree": 0.4849904913002266,
+      "isolated_fraction": 0.2631129208255063,
+      "mean_edge_span": 2.120644109979159,
+      "nll_delta_vs_native": 0.001990892691556355,
+      "delta_bootstrap95_by_text": [
+        -0.004073435958868731,
+        0.007581975512004176
+      ],
+      "teacher": {}
+    },
+    {
+      "variant": "separate_r8_fixed_dynamic",
+      "length": 128,
+      "intervention": "native",
+      "examples": 16,
+      "mask_rates": 4,
+      "joint_nll": 4.086804181768051,
+      "dependence_gain": 0.014737555744090558,
+      "backbone_gain": -0.003187256472866766,
+      "edges": 73.515625,
+      "edge_fraction_of_tree": 0.9780615510247308,
+      "isolated_fraction": 0.002158655348088338,
+      "mean_edge_span": 2.1220408643913484,
+      "nll_delta_vs_native": 0.0,
+      "delta_bootstrap95_by_text": [
+        0.0,
+        0.0
+      ],
+      "teacher": {}
+    },
+    {
+      "variant": "separate_r8_fixed_dynamic",
+      "length": 128,
+      "intervention": "permuted_edges",
+      "examples": 16,
+      "mask_rates": 4,
+      "joint_nll": 4.134897128862303,
+      "dependence_gain": 0.0005255041548770777,
+      "backbone_gain": -0.05128020356711805,
+      "edges": 73.515625,
+      "edge_fraction_of_tree": 0.9780615510247308,
+      "isolated_fraction": 0.002158655348088338,
+      "mean_edge_span": 43.303239229675235,
+      "nll_delta_vs_native": 0.04809294709425125,
+      "delta_bootstrap95_by_text": [
+        0.03865642384494514,
+        0.05706457258808163
+      ],
+      "teacher": {}
+    },
+    {
+      "variant": "separate_r8_fixed_dynamic",
+      "length": 512,
+      "intervention": "cap128",
+      "examples": 16,
+      "mask_rates": 4,
+      "joint_nll": 3.7704724130336835,
+      "dependence_gain": 0.01277585765358345,
+      "backbone_gain": 0.0001693233150185076,
+      "edges": 306.125,
+      "edge_fraction_of_tree": 0.9946447416461848,
+      "isolated_fraction": 0.00012112403100775194,
+      "mean_edge_span": 2.1189621635710454,
+      "nll_delta_vs_native": -6.907727225979876e-05,
+      "delta_bootstrap95_by_text": [
+        -0.00054299549626333,
+        0.00040741530929495895
+      ],
+      "teacher": {}
+    },
+    {
+      "variant": "separate_r8_fixed_dynamic",
+      "length": 512,
+      "intervention": "cap8",
+      "examples": 16,
+      "mask_rates": 4,
+      "joint_nll": 3.7715057458775334,
+      "dependence_gain": 0.011523160037820092,
+      "backbone_gain": -0.0008640095288316842,
+      "edges": 269.953125,
+      "edge_fraction_of_tree": 0.8769068859107304,
+      "isolated_fraction": 0.0007421787770748688,
+      "mean_edge_span": 2.1078735052458577,
+      "nll_delta_vs_native": 0.0009642555715903937,
+      "delta_bootstrap95_by_text": [
+        9.241185542355895e-05,
+        0.001745166563207879
+      ],
+      "teacher": {}
+    },
+    {
+      "variant": "separate_r8_fixed_dynamic",
+      "length": 512,
+      "intervention": "fixed_graph",
+      "examples": 16,
+      "mask_rates": 4,
+      "joint_nll": 3.770541490305943,
+      "dependence_gain": 0.012499711679716521,
+      "backbone_gain": 0.00010024604275870146,
+      "edges": 298.859375,
+      "edge_fraction_of_tree": 0.9709421278174352,
+      "isolated_fraction": 0.00015859405498856727,
+      "mean_edge_span": 2.1218632765993166,
+      "nll_delta_vs_native": 0.0,
+      "delta_bootstrap95_by_text": [
+        0.0,
+        0.0
+      ],
+      "teacher": {}
+    },
+    {
+      "variant": "separate_r8_fixed_dynamic",
+      "length": 512,
+      "intervention": "half_edges",
+      "examples": 16,
+      "mask_rates": 4,
+      "joint_nll": 3.773175208861215,
+      "dependence_gain": 0.006123160036738754,
+      "backbone_gain": -0.002533472512513424,
+      "edges": 149.125,
+      "edge_fraction_of_tree": 0.4842242416243037,
+      "isolated_fraction": 0.26822256259582833,
+      "mean_edge_span": 2.1453312112609555,
+      "nll_delta_vs_native": 0.002633718555272127,
+      "delta_bootstrap95_by_text": [
+        -0.0009918385770879383,
+        0.0061487697667728
+      ],
+      "teacher": {}
+    },
+    {
+      "variant": "separate_r8_fixed_dynamic",
+      "length": 512,
+      "intervention": "native",
+      "examples": 16,
+      "mask_rates": 4,
+      "joint_nll": 3.770541490305943,
+      "dependence_gain": 0.012499711679716521,
+      "backbone_gain": 0.00010024604275870146,
+      "edges": 298.859375,
+      "edge_fraction_of_tree": 0.9709421278174352,
+      "isolated_fraction": 0.00015859405498856727,
+      "mean_edge_span": 2.1218632765993166,
+      "nll_delta_vs_native": 0.0,
+      "delta_bootstrap95_by_text": [
+        0.0,
+        0.0
+      ],
+      "teacher": {}
+    },
+    {
+      "variant": "separate_r8_fixed_dynamic",
+      "length": 512,
+      "intervention": "permuted_edges",
+      "examples": 16,
+      "mask_rates": 4,
+      "joint_nll": 3.804415261982962,
+      "dependence_gain": 0.0002642203751720506,
+      "backbone_gain": -0.03377352563426035,
+      "edges": 298.859375,
+      "edge_fraction_of_tree": 0.9709421278174352,
+      "isolated_fraction": 0.00015859405498856727,
+      "mean_edge_span": 169.48261552149353,
+      "nll_delta_vs_native": 0.03387377167701905,
+      "delta_bootstrap95_by_text": [
+        0.029553258845905185,
+        0.03841237579770583
+      ],
+      "teacher": {}
+    },
+    {
+      "variant": "separate_r8_fixed_dynamic",
+      "length": 1024,
+      "intervention": "cap128",
+      "examples": 16,
+      "mask_rates": 4,
+      "joint_nll": 3.7616990820530236,
+      "dependence_gain": 0.012636125424754539,
+      "backbone_gain": 0.006993717901701146,
+      "edges": 613.359375,
+      "edge_fraction_of_tree": 0.9930831411901769,
+      "isolated_fraction": 9.125575503826579e-05,
+      "mean_edge_span": 2.109531759000089,
+      "nll_delta_vs_native": -0.0001380068593436895,
+      "delta_bootstrap95_by_text": [
+        -0.0004565473537239649,
+        0.00015863039235345516
+      ],
+      "teacher": {}
+    },
+    {
+      "variant": "separate_r8_fixed_dynamic",
+      "length": 1024,
+      "intervention": "cap8",
+      "examples": 16,
+      "mask_rates": 4,
+      "joint_nll": 3.7636173411602107,
+      "dependence_gain": 0.011288733707590108,
+      "backbone_gain": 0.005075458794514023,
+      "edges": 541.0625,
+      "edge_fraction_of_tree": 0.8760578982422764,
+      "isolated_fraction": 0.00017028334158034457,
+      "mean_edge_span": 2.101586471232461,
+      "nll_delta_vs_native": 0.0017802522478434502,
+      "delta_bootstrap95_by_text": [
+        0.0011677237108838924,
+        0.002366031782874419
+      ],
+      "teacher": {}
+    },
+    {
+      "variant": "separate_r8_fixed_dynamic",
+      "length": 1024,
+      "intervention": "fixed_graph",
+      "examples": 16,
+      "mask_rates": 4,
+      "joint_nll": 3.761837088912367,
+      "dependence_gain": 0.01234099489514086,
+      "backbone_gain": 0.006855711042357451,
+      "edges": 598.9375,
+      "edge_fraction_of_tree": 0.9696511579414379,
+      "isolated_fraction": 0.00013026948787222333,
+      "mean_edge_span": 2.110671803617048,
+      "nll_delta_vs_native": 0.0,
+      "delta_bootstrap95_by_text": [
+        0.0,
+        0.0
+      ],
+      "teacher": {}
+    },
+    {
+      "variant": "separate_r8_fixed_dynamic",
+      "length": 1024,
+      "intervention": "half_edges",
+      "examples": 16,
+      "mask_rates": 4,
+      "joint_nll": 3.767232255495153,
+      "dependence_gain": 0.006391493988243495,
+      "backbone_gain": 0.00146054445957168,
+      "edges": 299.234375,
+      "edge_fraction_of_tree": 0.48430516474683355,
+      "isolated_fraction": 0.26512334432726753,
+      "mean_edge_span": 2.129084658473201,
+      "nll_delta_vs_native": 0.005395166582785743,
+      "delta_bootstrap95_by_text": [
+        0.002948574308653678,
+        0.00789441407513768
+      ],
+      "teacher": {}
+    },
+    {
+      "variant": "separate_r8_fixed_dynamic",
+      "length": 1024,
+      "intervention": "native",
+      "examples": 16,
+      "mask_rates": 4,
+      "joint_nll": 3.761837088912367,
+      "dependence_gain": 0.01234099489514086,
+      "backbone_gain": 0.006855711042357451,
+      "edges": 598.9375,
+      "edge_fraction_of_tree": 0.9696511579414379,
+      "isolated_fraction": 0.00013026948787222333,
+      "mean_edge_span": 2.110671803617048,
+      "nll_delta_vs_native": 0.0,
+      "delta_bootstrap95_by_text": [
+        0.0,
+        0.0
+      ],
+      "teacher": {}
+    },
+    {
+      "variant": "separate_r8_fixed_dynamic",
+      "length": 1024,
+      "intervention": "permuted_edges",
+      "examples": 16,
+      "mask_rates": 4,
+      "joint_nll": 3.7974979701934513,
+      "dependence_gain": -0.0014046654444338108,
+      "backbone_gain": -0.028805170238726512,
+      "edges": 598.9375,
+      "edge_fraction_of_tree": 0.9696511579414379,
+      "isolated_fraction": 0.00013026948787222333,
+      "mean_edge_span": 340.5025494067838,
+      "nll_delta_vs_native": 0.03566088128108396,
+      "delta_bootstrap95_by_text": [
+        0.032103634681841714,
+        0.039110012970255
+      ],
+      "teacher": {}
+    }
+  ]
+}

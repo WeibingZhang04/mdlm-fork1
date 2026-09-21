@@ -1,0 +1,86 @@
+[
+  {
+    "model": "Basic",
+    "mask_rate": 0.25,
+    "isolated_masked_tokens_pct": 20.386186517560503,
+    "fixed_graph_minus_native_nll": -0.004310122365196789,
+    "samples": 16
+  },
+  {
+    "model": "Basic",
+    "mask_rate": 0.5,
+    "isolated_masked_tokens_pct": 7.131937708249375,
+    "fixed_graph_minus_native_nll": -0.005902097166254672,
+    "samples": 16
+  },
+  {
+    "model": "Basic",
+    "mask_rate": 0.75,
+    "isolated_masked_tokens_pct": 1.1652972685235177,
+    "fixed_graph_minus_native_nll": -0.0023388369472016335,
+    "samples": 16
+  },
+  {
+    "model": "Basic",
+    "mask_rate": 0.9,
+    "isolated_masked_tokens_pct": 0.2502733959642592,
+    "fixed_graph_minus_native_nll": -0.0009163496547862082,
+    "samples": 16
+  },
+  {
+    "model": "Separate R8",
+    "mask_rate": 0.25,
+    "isolated_masked_tokens_pct": 23.094200558837887,
+    "fixed_graph_minus_native_nll": -0.013530702384338483,
+    "samples": 16
+  },
+  {
+    "model": "Separate R8",
+    "mask_rate": 0.5,
+    "isolated_masked_tokens_pct": 7.855576504327419,
+    "fixed_graph_minus_native_nll": -0.005769354179123193,
+    "samples": 16
+  },
+  {
+    "model": "Separate R8",
+    "mask_rate": 0.75,
+    "isolated_masked_tokens_pct": 1.125345583404004,
+    "fixed_graph_minus_native_nll": -0.004224175824111526,
+    "samples": 16
+  },
+  {
+    "model": "Separate R8",
+    "mask_rate": 0.9,
+    "isolated_masked_tokens_pct": 0.2432672373991922,
+    "fixed_graph_minus_native_nll": -0.003496118619947919,
+    "samples": 16
+  },
+  {
+    "model": "Separate R16",
+    "mask_rate": 0.25,
+    "isolated_masked_tokens_pct": 21.587198119756295,
+    "fixed_graph_minus_native_nll": -0.009216576576114618,
+    "samples": 16
+  },
+  {
+    "model": "Separate R16",
+    "mask_rate": 0.5,
+    "isolated_masked_tokens_pct": 7.401820448896808,
+    "fixed_graph_minus_native_nll": -0.006973980558916709,
+    "samples": 16
+  },
+  {
+    "model": "Separate R16",
+    "mask_rate": 0.75,
+    "isolated_masked_tokens_pct": 1.1977168416418496,
+    "fixed_graph_minus_native_nll": -0.004955377923748505,
+    "samples": 16
+  },
+  {
+    "model": "Separate R16",
+    "mask_rate": 0.9,
+    "isolated_masked_tokens_pct": 0.22267829859826987,
+    "fixed_graph_minus_native_nll": -0.004855351319837997,
+    "samples": 16
+  }
+]

@@ -1,0 +1,6 @@
+{
+  "status": "passed",
+  "old_new_tokens_and_scores_match": true,
+  "matched_pairs": 120,
+  "scope": "20 samples \u00d7 3 denoising budgets \u00d7 MDLM/Basic FD 6k; same GPU, same seeds, no checkpoint selection"
+}

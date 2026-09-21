@@ -1,0 +1,122 @@
+{
+  "status": "passed",
+  "completed_utc": "2026-09-21T05:23:21.450204+00:00",
+  "source_head": "2051502329429a252d3b806e0ed195ff379c42b6",
+  "variants": 8,
+  "loss_gradient_checks": [
+    {
+      "variant": "basic_static_static",
+      "comparison": "new",
+      "loss_abs_error": 0.0,
+      "max_gradient_abs_error": 0.0,
+      "tokens_identical": true
+    },
+    {
+      "variant": "basic_fixed_dynamic",
+      "comparison": "new",
+      "loss_abs_error": 0.0,
+      "max_gradient_abs_error": 0.0,
+      "tokens_identical": true
+    },
+    {
+      "variant": "basic_dynamic_fixed",
+      "comparison": "new",
+      "loss_abs_error": 0.0,
+      "max_gradient_abs_error": 9.313225746154785e-10,
+      "tokens_identical": true
+    },
+    {
+      "variant": "basic_dynamic_dynamic",
+      "comparison": "new",
+      "loss_abs_error": 0.0,
+      "max_gradient_abs_error": 1.862645149230957e-09,
+      "tokens_identical": true
+    },
+    {
+      "variant": "separate_r8_fixed_dynamic",
+      "comparison": "new",
+      "loss_abs_error": 0.0,
+      "max_gradient_abs_error": 0.0,
+      "tokens_identical": true
+    },
+    {
+      "variant": "separate_r8_dynamic_dynamic",
+      "comparison": "new",
+      "loss_abs_error": 0.0,
+      "max_gradient_abs_error": 3.725290298461914e-09,
+      "tokens_identical": true
+    },
+    {
+      "variant": "separate_r16_fixed_dynamic",
+      "comparison": "new",
+      "loss_abs_error": 0.0,
+      "max_gradient_abs_error": 0.0,
+      "tokens_identical": true
+    },
+    {
+      "variant": "separate_r16_dynamic_dynamic",
+      "comparison": "new",
+      "loss_abs_error": 0.0,
+      "max_gradient_abs_error": 1.1641532182693481e-09,
+      "tokens_identical": true
+    },
+    {
+      "variant": "basic_static_static",
+      "comparison": "new_debug",
+      "loss_abs_error": 0.0,
+      "max_gradient_abs_error": 0.0,
+      "tokens_identical": true
+    },
+    {
+      "variant": "basic_fixed_dynamic",
+      "comparison": "new_debug",
+      "loss_abs_error": 0.0,
+      "max_gradient_abs_error": 0.0,
+      "tokens_identical": true
+    },
+    {
+      "variant": "basic_dynamic_fixed",
+      "comparison": "new_debug",
+      "loss_abs_error": 0.0,
+      "max_gradient_abs_error": 9.313225746154785e-10,
+      "tokens_identical": true
+    },
+    {
+      "variant": "basic_dynamic_dynamic",
+      "comparison": "new_debug",
+      "loss_abs_error": 0.0,
+      "max_gradient_abs_error": 1.862645149230957e-09,
+      "tokens_identical": true
+    },
+    {
+      "variant": "separate_r8_fixed_dynamic",
+      "comparison": "new_debug",
+      "loss_abs_error": 0.0,
+      "max_gradient_abs_error": 0.0,
+      "tokens_identical": true
+    },
+    {
+      "variant": "separate_r8_dynamic_dynamic",
+      "comparison": "new_debug",
+      "loss_abs_error": 0.0,
+      "max_gradient_abs_error": 3.725290298461914e-09,
+      "tokens_identical": true
+    },
+    {
+      "variant": "separate_r16_fixed_dynamic",
+      "comparison": "new_debug",
+      "loss_abs_error": 0.0,
+      "max_gradient_abs_error": 0.0,
+      "tokens_identical": true
+    },
+    {
+      "variant": "separate_r16_dynamic_dynamic",
+      "comparison": "new_debug",
+      "loss_abs_error": 0.0,
+      "max_gradient_abs_error": 1.1641532182693481e-09,
+      "tokens_identical": true
+    }
+  ],
+  "generation_tokens_nfe_identical": true,
+  "scope": "Same-GPU real-data forward/backward and 8/16/32-step trajectories at eight 6k checkpoints; not a proof over all possible inputs"
+}

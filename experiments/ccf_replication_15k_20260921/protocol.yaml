@@ -1,0 +1,95 @@
+# Human-readable view of the actual launch protocol.
+# Runtime source: helpers/campaign_common.py, train_arm.py and evaluate_arm.py.
+# Exact arguments: configs/overrides/*.json; observed jobs: configs/observed/*.yaml.
+model_code_commit: 2051502329429a252d3b806e0ed195ff379c42b6
+source_branch: g-experiments
+training:
+  seed: 1
+  trainer:
+    max_steps: 15000
+    val_check_interval: 500
+    limit_val_batches: 32
+    precision: bf16
+    devices: 1
+  loader:
+    batch_size: 4
+    global_batch_size: 4
+    num_workers: 0
+  model:
+    length: 1024
+    top_k: 128
+    backbone_mode: frozen
+    head_lr: 0.0003
+    structured_nll_weight: 1.0
+    factorized_aux_weight: 0.0
+    dynamic_topology_weight: 0.1
+  warmup_steps: 50
+  full_resume_checkpoint_interval: 500
+  portable_adapter_interval: 1000
+  loss_component_log_interval: 50
+  gradient_norm_log_interval: 100
+  fixed_probe_mask_rates: [0.25, 0.5, 0.75, 0.9]
+  fixed_probe_examples: 4
+arms:
+  - {index: 0, name: basic_static_static, label: Basic FF, factor_embedding_mode: shared, rank: 16}
+  - {index: 1, name: basic_fixed_dynamic, label: Basic FD, factor_embedding_mode: shared, rank: 16}
+  - {index: 2, name: basic_dynamic_fixed, label: Basic DF, factor_embedding_mode: shared, rank: 16}
+  - {index: 3, name: basic_dynamic_dynamic, label: Basic DD, factor_embedding_mode: shared, rank: 16}
+  - {index: 4, name: separate_r8_fixed_dynamic, label: Separate R8 FD, factor_embedding_mode: separate, rank: 8}
+  - {index: 5, name: separate_r8_dynamic_dynamic, label: Separate R8 DD, factor_embedding_mode: separate, rank: 8}
+  - {index: 6, name: separate_r16_fixed_dynamic, label: Separate R16 FD, factor_embedding_mode: separate, rank: 16}
+  - {index: 7, name: separate_r16_dynamic_dynamic, label: Separate R16 DD, factor_embedding_mode: separate, rank: 16}
+generation:
+  denoising_steps: [4, 8, 16, 32]
+  requested_nfe_budgets: [5, 9, 17, 33]
+  sequence_length: 1024
+  batch_size: 1
+  curve:
+    checkpoint_steps: [1000, 2000, 3000, 4000, 5000, 6000, 7000, 10000, 12000, 15000]
+    samples_per_checkpoint_and_budget: 20
+    base_seed: 91001
+  confirmation:
+    checkpoint_steps: [7000, 10000, 15000]
+    samples_per_checkpoint_and_budget: 100
+    base_seed: 100001
+    same_gpu_mdlm_baseline_per_arm: true
+  scorer:
+    model: gpt2-large
+    revision: 32b71b12589c2f8d625668d2335a01cac3249519
+    dtype: float32
+    max_length: 1024
+    sequence_policy: retokenize_decoded_text_score_through_first_nonleading_eos_v1
+  quality_metrics: [PPL, repetition_1, repetition_2, repetition_4, distinct_2, distinct_4, output_length, EOS_position]
+diagnostics:
+  graph_conditional:
+    checkpoint_step: 6000
+    examples_per_length_and_mask_rate: 16
+    sequence_lengths: [128, 512, 1024]
+    mask_rates: [0.25, 0.5, 0.75, 0.9]
+    interventions: [native, fixed_graph, half_edges, cap8, cap128, permuted_edges]
+  topology_weight:
+    weights: [0.03, 0.1, 0.3]
+    arm: basic_dynamic_dynamic
+    source_checkpoint_step: 6000
+    trainer_max_steps: 8000
+    additional_updates: 2000
+    samples_per_generation_cell: 100
+    denoising_steps: [8, 32]
+    after_training_modes: [factorized, structured_marginal, structured_joint]
+  graph_generation:
+    arms: [basic_dynamic_dynamic, separate_r16_dynamic_dynamic]
+    sequence_lengths: [128, 1024]
+    denoising_steps: [8, 32]
+    samples_per_cell: 100
+    interventions: [native, fixed_graph, active_chain_proposals]
+slurm:
+  partition: ALL
+  gres: gpu:1
+  gpu_model_constraint: null
+  cpus_per_task: 4
+  memory: 36G
+  primary_training_array: 0-7%2
+  primary_training_time: '24:00:00'
+  primary_evaluation_array: 0-7%2
+  primary_evaluation_time: '12:00:00'
+  excluded_unhealthy_nodes: [watgpu1008, watgpu1109, watgpu608, watgpu908]

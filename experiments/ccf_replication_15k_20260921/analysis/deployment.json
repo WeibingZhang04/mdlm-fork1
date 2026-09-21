@@ -1,0 +1,61 @@
+{
+  "root": "/u401/n23zhang/mdlm_data/tree_mdlm_cache/runs/ccf_replication15k_20260921.wmjngfco",
+  "code": "/u401/n23zhang/mdlm_data/tree_mdlm_cache/runs/ccf_replication15k_20260921.wmjngfco/code",
+  "cache": "/u401/n23zhang/mdlm_data/tree_mdlm_cache",
+  "head": "2051502329429a252d3b806e0ed195ff379c42b6",
+  "source_repo": "/u401/n23zhang/clean_tree_mdlm/mdlm-fork1",
+  "old_code": "/u401/n23zhang/mdlm_data/tree_mdlm_cache/code/ccf_confirmation_100.daiam2ji",
+  "old_checkpoints": {
+    "basic_static_static": "/u401/n23zhang/mdlm_data/tree_mdlm_cache/runs/four_arm_continue_s001_k128_3k_to6k_job1542808/static_static/checkpoints/0-6000.ckpt",
+    "basic_fixed_dynamic": "/u401/n23zhang/mdlm_data/tree_mdlm_cache/runs/four_arm_continue_s001_k128_3k_to6k_job1542808/fixed_dynamic/checkpoints/0-6000.ckpt",
+    "basic_dynamic_fixed": "/u401/n23zhang/mdlm_data/tree_mdlm_cache/runs/four_arm_continue_s001_k128_3k_to6k_job1542808/dynamic_fixed/checkpoints/0-6000.ckpt",
+    "basic_dynamic_dynamic": "/u401/n23zhang/mdlm_data/tree_mdlm_cache/runs/four_arm_continue_s001_k128_3k_to6k_job1542808/dynamic_dynamic/checkpoints/0-6000.ckpt",
+    "separate_r8_fixed_dynamic": "/u401/n23zhang/mdlm_data/tree_mdlm_cache/runs/ccf_separate_r8_fixed_dynamic_s001_step7000_job1543497/training/checkpoints/0-6000.ckpt",
+    "separate_r8_dynamic_dynamic": "/u401/n23zhang/mdlm_data/tree_mdlm_cache/runs/ccf_separate_r8_dynamic_dynamic_s001_step7000_job1543562/training/checkpoints/0-6000.ckpt",
+    "separate_r16_fixed_dynamic": "/u401/n23zhang/mdlm_data/tree_mdlm_cache/runs/ccf_separate_r16_fixed_dynamic_s001_step7000_job1543948/training/checkpoints/0-6000.ckpt",
+    "separate_r16_dynamic_dynamic": "/u401/n23zhang/mdlm_data/tree_mdlm_cache/runs/ccf_separate_r16_dynamic_dynamic_s001_step7000_job1543861/training/checkpoints/0-6000.ckpt"
+  },
+  "created_utc": "2026-09-21T05:11:25.867865+00:00",
+  "status": "audit_passed_training_queued",
+  "jobs": {
+    "audit": "1556923",
+    "smoke": "1556958",
+    "legacy_replay": "1556946",
+    "topology6k": "1556947",
+    "training": "1556948",
+    "evaluation": "1556949",
+    "weights": "1556977",
+    "graph_generation": "1556994"
+  },
+  "helper_sha256": {
+    "campaign_common.py": "3f51a94bad3f3629581eb7f3757c635b6705811bb8a043fcd796fdbb9bf92773",
+    "runtime_probe.py": "cc25475176eb5f2e3a6ac288e10e8bdca4142a8a0fe1735459bed1eaaed31188",
+    "run_pilot.py": "9e1bf0d5a58204d68254d22aab7ce6a45a5ecb4b102afb10f50e1488b133ec81",
+    "gate.py": "71bbd0b1016cb24be87cf405911f67e320224da8edd30e9537d954bda6c99a11",
+    "campaign_observer.py": "49ecba6a60c8b54a3fa0510ebc0111b8a19b61f4101f56eb9f0f6092658c68d3",
+    "train_arm.py": "75afb7f5698db1ee64564e17bf8de4b0f5d1730162b6f2195b5d389e66dafccb",
+    "smoke.py": "ba6fba335d9a80e17ca83ef5a50d328a6eccd6711aedbefbed23b758975c786a",
+    "evaluate_arm.py": "3ccc9a9f142d53db29dd9cac765024eceab73cfc4f08b0a442a41dbd3427da51",
+    "topology_diagnosis.py": "807bad2e59b05b6f1d78f2ce0b31bc1ec612ea8a52884d324d8a4e29e3c8f77f",
+    "legacy_replay.py": "476f310e2539b2685d7ae471f5a22467a4aa7ecf7ee32c5015b396d274c748b8",
+    "weight_trial.py": "41113bca337ea702998726f139611c2ec1dfa60f09c418712d0c89407ae1237c",
+    "weight_observer.py": "52eed2aee21c9d887266ad2f8b8cd13b1887859c40c638e75abbfbd4e4a01c4d",
+    "weight_eval.py": "fc5de95ad3d2032b853025bdb326416ab61a3e9a2b23e4e1e8524a434540c729",
+    "teacher_probe.py": "f34363cc1ca96a655f5dd92c09d3439b8d5800e45c1837e41be8051cef0b0c67",
+    "run_graph_intervention.py": "5c68d9162c58244a7b139b580b28ac0be527e475a921dd6171e636288d2b9535",
+    "graph_generation.py": "90f81605e5d2b3ebb3162b0344e9ff1ef3fccda5475dae3cecf5d66ada1e760e"
+  },
+  "audit_attempts": [
+    {
+      "job": "1556921",
+      "failure": "Audit launcher forced HF offline; pinned streaming loader requires dataset metadata lookup."
+    }
+  ],
+  "smoke_attempts": [
+    {
+      "job": "1556942",
+      "failure": "Hydra entry point imported as a module; fixed launcher to execute main.py as __main__."
+    }
+  ],
+  "same_gpu_baseline": "100 MDLM samples per denoising budget inside every arm evaluation job, using confirmation seeds."
+}

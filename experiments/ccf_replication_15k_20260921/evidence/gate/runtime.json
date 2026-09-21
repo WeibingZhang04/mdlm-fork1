@@ -1,0 +1,10 @@
+{
+  "gpu": "NVIDIA RTX 6000 Ada Generation",
+  "torch": "2.2.2+cu121",
+  "cuda": "12.1",
+  "device_capability": [
+    8,
+    9
+  ],
+  "backbone_sha256": "7508daae475e7c0aa39dd7014e786fa9788fe1fc37f040c076e2df021e45f605"
+}

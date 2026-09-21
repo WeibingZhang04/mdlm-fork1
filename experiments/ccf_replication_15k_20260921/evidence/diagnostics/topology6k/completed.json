@@ -1,0 +1,17 @@
+{
+  "status": "completed",
+  "variants": 6,
+  "samples_per_length_mask_cell": 16,
+  "lengths": [
+    128,
+    512,
+    1024
+  ],
+  "mask_rates": [
+    0.25,
+    0.5,
+    0.75,
+    0.9
+  ],
+  "scope": "Paired conditional held-out diagnostics on unchanged WikiText validation source. Topology interventions are diagnostics, not retrained models or generation PPL results."
+}

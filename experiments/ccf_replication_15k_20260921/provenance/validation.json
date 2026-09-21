@@ -1,0 +1,22 @@
+{
+  "verified_utc": "2026-09-21T06:12:55.332144+00:00",
+  "runtime_helpers_hash_matched": 16,
+  "primary_resolved_configs": 8,
+  "observed_configs_equal_to_reconstructed": [
+    "basic_static_static",
+    "basic_fixed_dynamic"
+  ],
+  "all_primary_max_steps": 15000,
+  "checks": [
+    "Python AST parsing for every packaged Python file",
+    "bash -n for every Slurm wrapper",
+    "Hydra 1.3.2 / OmegaConf 2.3.0 configuration resolution",
+    "prepare_campaign.py --help",
+    "Fresh-directory preparation executed successfully on the cluster",
+    "Prepared snapshot HEAD equals 2051502329429a252d3b806e0ed195ff379c42b6",
+    "Prepared wrappers reference the fresh directory",
+    "Preparation submitted zero Slurm jobs"
+  ],
+  "reproduction_check_directory": "/u401/n23zhang/mdlm_data/tree_mdlm_cache/runs/ccf_replication15k_20260921.wmjngfco/reproduction-checks/ccf_replication15k_jemd2xk9",
+  "scope": "Packaging and preparation checks; the original scientific audit is recorded separately under evidence/. No new training was launched for packaging."
+}
