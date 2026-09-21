@@ -1,0 +1,240 @@
+{
+  "adapter_origin_evidence": null,
+  "artifacts": {
+    "backbone_checkpoint": {
+      "path": "/u401/n23zhang/mdlm_data/tree_mdlm_cache/checkpoints/mdlm-owt-backbone.pt",
+      "sha256": "7508daae475e7c0aa39dd7014e786fa9788fe1fc37f040c076e2df021e45f605",
+      "size_bytes": 678552142
+    },
+    "structured_adapter": {
+      "identity_sha256": "eff190439c5554eaef87d7579987ee752d0384f400f760a5756100a519066b1f",
+      "manifest_path": "/u401/n23zhang/mdlm_data/tree_mdlm_cache/runs/ccf_replication15k_20260921.wmjngfco/legacy_bf16_seed2/study_qv4ipesi/gate/exports/fixed_dynamic/step000003/adapter.manifest.json",
+      "manifest_sha256": "94a2841f01b62b58b76cfbd853513a2c12d49b4165e55807965ff0afcac1c0aa",
+      "path": "/u401/n23zhang/mdlm_data/tree_mdlm_cache/runs/ccf_replication15k_20260921.wmjngfco/legacy_bf16_seed2/study_qv4ipesi/gate/exports/fixed_dynamic/step000003/adapter.safetensors",
+      "semantic_identity": {
+        "candidate_top_k": 128,
+        "control_identity": "fixed_dynamic",
+        "factor_mode": "dynamic",
+        "head_semantics": {
+          "component_size_cap": 32,
+          "contextual_neighbors": 4,
+          "fixed_edge_path": null,
+          "fixed_edges": null,
+          "local_window": 2,
+          "min_edge_score": null,
+          "num_anchor_slots": 16,
+          "rank": 16,
+          "time_embed_dim": 64,
+          "topology_dim": 128
+        },
+        "independent_mode": false,
+        "topology_mode": "fixed",
+        "topology_weight": 0.0,
+        "training_semantics": {
+          "factorized_aux_weight": 0.0,
+          "objective_name": "conditional_denoising_nll_not_diffusion_elbo",
+          "topology_anchor_weight": 0.25,
+          "topology_edge_weight": 1.0,
+          "topology_minimum_choices": 2,
+          "topology_on_validation": false,
+          "topology_slot_weight": 0.25,
+          "topology_strategy": "gold_reveal_influence",
+          "topology_temperature": 0.25
+        }
+      },
+      "sha256": "0204ed5b03bc554f01a6a9e29a64036abc5e37f3be8e71aebf976f5ec26d5892",
+      "size_bytes": 3940324
+    }
+  },
+  "command": [
+    "/u401/n23zhang/mdlm_data/tree_mdlm_cache/runs/ccf_replication15k_20260921.wmjngfco/legacy_bf16_seed2/study_qv4ipesi/run_generation.py",
+    "--backbone-checkpoint",
+    "/u401/n23zhang/mdlm_data/tree_mdlm_cache/checkpoints/mdlm-owt-backbone.pt",
+    "--backbone-sha256",
+    "7508daae475e7c0aa39dd7014e786fa9788fe1fc37f040c076e2df021e45f605",
+    "--adapter",
+    "/u401/n23zhang/mdlm_data/tree_mdlm_cache/runs/ccf_replication15k_20260921.wmjngfco/legacy_bf16_seed2/study_qv4ipesi/gate/exports/fixed_dynamic/step000003/adapter.safetensors",
+    "--adapter-sha256",
+    "0204ed5b03bc554f01a6a9e29a64036abc5e37f3be8e71aebf976f5ec26d5892",
+    "--adapter-manifest",
+    "/u401/n23zhang/mdlm_data/tree_mdlm_cache/runs/ccf_replication15k_20260921.wmjngfco/legacy_bf16_seed2/study_qv4ipesi/gate/exports/fixed_dynamic/step000003/adapter.manifest.json",
+    "--adapter-manifest-sha256",
+    "94a2841f01b62b58b76cfbd853513a2c12d49b4165e55807965ff0afcac1c0aa",
+    "--output-dir",
+    "/u401/n23zhang/mdlm_data/tree_mdlm_cache/runs/ccf_replication15k_20260921.wmjngfco/legacy_bf16_seed2/study_qv4ipesi/gate/evaluation/fixed_dynamic/step000003/generation",
+    "--num-samples",
+    "1",
+    "--sequence-length",
+    "1024",
+    "--batch-size",
+    "1",
+    "--base-seed",
+    "100001",
+    "--modes",
+    "factorized",
+    "structured_joint",
+    "--nfe-budgets",
+    "9",
+    "--device",
+    "cuda",
+    "--model-config",
+    "contextual-forest-small",
+    "--data-config",
+    "train_openwebtext_pinned",
+    "--allow-dirty",
+    "--reference-lm",
+    "gpt2-large",
+    "--reference-lm-revision",
+    "32b71b12589c2f8d625668d2335a01cac3249519",
+    "--reference-lm-device",
+    "cuda",
+    "--reference-lm-batch-size",
+    "1",
+    "--reference-lm-max-length",
+    "1024",
+    "--reference-lm-dtype",
+    "float32",
+    "--override",
+    "data.cache_dir=/u401/n23zhang/mdlm_data/tree_mdlm_cache/huggingface",
+    "--override",
+    "model.structured_decoder.top_k=128",
+    "--override",
+    "model.structured_decoder.rank=16",
+    "--override",
+    "++model.structured_decoder.factor_embedding_mode=shared",
+    "--override",
+    "++model.structured_decoder.factor_conditioner_hidden_dim=0",
+    "--override",
+    "model.structured_decoder.topology_mode=fixed",
+    "--override",
+    "model.structured_decoder.factor_mode=dynamic",
+    "--override",
+    "model.structured_decoder.independent_mode=false",
+    "--override",
+    "model.structured_decoder.training.topology_weight=0.0",
+    "--override",
+    "checkpointing.save_dir=/u401/n23zhang/mdlm_data/tree_mdlm_cache/runs/ccf_replication15k_20260921.wmjngfco/legacy_bf16_seed2/study_qv4ipesi/gate/evaluation/fixed_dynamic/step000003/generation"
+  ],
+  "duration_seconds": 5.565656,
+  "end_time_utc": "2026-09-21T15:20:04.383440+00:00",
+  "experiment": "paired_contextual_forest_generation_pilot",
+  "host": {
+    "cuda_runtime": "12.1",
+    "device": "cuda",
+    "gpu": "NVIDIA RTX 6000 Ada Generation",
+    "hostname": "watgpu208",
+    "packages": {
+      "numpy": "1.26.4",
+      "safetensors": "0.7.0",
+      "tokenizers": "0.15.2",
+      "transformers": "4.38.2"
+    },
+    "parameter_dtypes": [
+      "torch.float32"
+    ],
+    "platform": "Linux-6.17.0-35-generic-x86_64-with-glibc2.35",
+    "precision_policy": "checkpoint dtype; DIT-managed bf16 autocast on CUDA",
+    "python": "3.9.25",
+    "torch": "2.2.2+cu121"
+  },
+  "matrix": {
+    "nfe_budgets": [
+      9
+    ],
+    "num_output_records": 2,
+    "sampling_modes": [
+      "factorized",
+      "structured_joint"
+    ]
+  },
+  "outputs": {
+    "resolved_config": {
+      "path": "resolved_config.yaml",
+      "sha256": "e6b2abd78cbde68f1ca35e7a8e83e6f1394e80ae068ab3d43d81d8a2f24be747"
+    },
+    "samples_jsonl": {
+      "num_records": 2,
+      "path": "samples.jsonl",
+      "sha256": "c1e477bc3ac352cac28fe724ca5906c1fc7530ed4c2b770d1b4ca520a28ece5c"
+    },
+    "summary_json": {
+      "path": "summary.json",
+      "sha256": "103d3b84bb77c682ae7ca229c23a23abbdabf330db42c24092ab25dbb9d72e1f"
+    }
+  },
+  "pairing": {
+    "base_seed": 100001,
+    "batch_size": 1,
+    "digest_algorithm": "sha256-canonical-json-v2-prompt-metadata",
+    "global_num_samples": 1,
+    "global_pairing_digest": "6428052721e449b0647946c6de3edb3a2a615f9bd53126848743cf1288163b92",
+    "num_shards": 1,
+    "sequence_length": 1024,
+    "shard_index": 0,
+    "shard_num_samples": 1,
+    "shard_pairing_digest": "6428052721e449b0647946c6de3edb3a2a615f9bd53126848743cf1288163b92"
+  },
+  "prompts": {
+    "num_prompt_records": 1,
+    "path": null,
+    "sha256": null,
+    "source": "generated_unconditional_prompt"
+  },
+  "reference_lm": {
+    "mean_nll_nats": 6.726159288803976,
+    "model_name_or_path": "gpt2-large",
+    "num_scored_sequences": 2,
+    "num_scored_tokens": 993,
+    "perplexity": 833.9381915857704,
+    "revision": "32b71b12589c2f8d625668d2335a01cac3249519",
+    "runtime_identity": {
+      "add_special_tokens": true,
+      "batch_size": 1,
+      "cuda_runtime": "12.1",
+      "device": "cuda",
+      "max_length": 1024,
+      "model_class": "transformers.models.gpt2.modeling_gpt2.GPT2LMHeadModel",
+      "model_config_class": "transformers.models.gpt2.configuration_gpt2.GPT2Config",
+      "model_name_or_path": "gpt2-large",
+      "model_revision": "32b71b12589c2f8d625668d2335a01cac3249519",
+      "parameter_dtypes": [
+        "torch.float32"
+      ],
+      "precision_policy": "explicit_checkpoint_dtype_no_autocast_float32_cross_entropy_v1",
+      "python": "3.9.25",
+      "requested_dtype": "float32",
+      "schema_version": 1,
+      "sequence_policy": "retokenize_decoded_text_score_through_first_nonleading_eos_v1",
+      "tokenization_policy": "fast_tokenizer_right_padding_right_truncation_add_special_tokens_v1",
+      "tokenizer_bos_token_id": 50256,
+      "tokenizer_class": "transformers.models.gpt2.tokenization_gpt2_fast.GPT2TokenizerFast",
+      "tokenizer_eos_token_id": 50256,
+      "tokenizer_name_or_path": "gpt2-large",
+      "tokenizer_pad_token_id": 50256,
+      "tokenizer_padding_side": "right",
+      "tokenizer_revision": "32b71b12589c2f8d625668d2335a01cac3249519",
+      "tokenizer_truncation_side": "right",
+      "tokenizer_vocab_size": 50257,
+      "tokenizers": "0.15.2",
+      "torch": "2.2.2+cu121",
+      "transformers": "4.38.2"
+    },
+    "sequence_policy": "retokenize_decoded_text_score_through_first_nonleading_eos_v1"
+  },
+  "repository": {
+    "dirty": null,
+    "dirty_content_sha256": null,
+    "git_sha": null,
+    "status_porcelain": null,
+    "tracked_diff_sha256": null,
+    "untracked_files": null
+  },
+  "schema_version": 1,
+  "scientific_scope": "end-to-end sampling pilot; quality metrics are descriptive and do not estimate the diffusion ELBO or likelihood",
+  "spot_interruption_policy": {
+    "partial_output_append_supported": false,
+    "policy": "Outputs are committed atomically only after all matrix cells in this shard finish. Run small independent shards with --num-shards and --shard-index; rerun an interrupted shard in a fresh output dir.",
+    "resume_supported": false
+  },
+  "start_time_utc": "2026-09-21T15:19:58.817784+00:00"
+}

@@ -1,0 +1,162 @@
+diff --git a/docs/ccf-low-steps-checkpoint-sweep.md b/docs/ccf-low-steps-checkpoint-sweep.md
+new file mode 100644
+index 0000000..727840d
+--- /dev/null
++++ b/docs/ccf-low-steps-checkpoint-sweep.md
+@@ -0,0 +1,49 @@
++# 1k–7k CCF checkpoint sweep at 16/32 sampling steps
++
++The user requested every 1,000-training-update checkpoint from 1,000 through
++7,000, the four basic shared-rank-16 arms, and the separate-rank-8/rank-16
++runs. Carry forward both 16/32 sampling settings and 20 samples per configuration.
++
++| Family | Arms | Checkpoints | New evaluations |
++|---|---|---|---:|
++| Basic shared rank 16 | SS, FD, DF, DD | 1k–6k; reuse 7k | 48 |
++| Separate rank 8 | FD, DD | 1k–7k | 28 |
++| Separate rank 16 | FD, DD | 1k–7k | 28 |
++| MDLM | Released baseline | Reuse both completed budgets | 0 |
++
++104 new evaluations × 20 = 2,080 new scored samples. Reuse the 200 scored
++samples from array 1545882 (MDLM and basic 7k at each budget), for 2,280 scored
++samples across 114 configurations. MDLM is a single released baseline; it
++does not have different CCF training checkpoints.
++
++All 52 new checkpoint paths were found on WatGPU. Basic 1k comes from
++`stale/four_arm_s001_k128_job1541029`; 2k/3k from continuation job 1542157;
++4k–6k from continuation job 1542808. Separate models use their completed
++fresh-training runs already identified in `SEPARATE_RUNS`. No retraining.
++
++Unchanged settings: length 1,024, batch 1, K=128, original factor architecture,
++seeds 91001–91020 with paired replicate keys, checkpoint precision and internal
++bf16 autocast, existing reveal logic and optional cleanup call, pinned GPT-2-large
++float32 scoring through the first nonleading EOS. Budgets 17/33 represent 16/32
++reverse transitions plus optional cleanup; actual NFE is recorded.
++
++Every new CCF cell must pass the existing first-sample same-GPU token/NFE/
++CPU+CUDA RNG gate before accepting its 20 samples. Separate R8 DD retains the
++pinned v1 reference; others use v2. The candidate remains `level_draws`.
++Historical 1,000-step output replay is skipped for 16/32-step schedules because
++it is not a comparable trajectory. Same-schedule correctness checks still run.
++104 additional reference samples are excluded from quality aggregates.
++
++Array 0–103 evaluates adjacent 16/32 pairs for each model/checkpoint. Checkpoint
++order is ascending 1k–7k; within each, basic SS/FD/DF/DD (through 6k), then
++R8 FD/DD and R16 FD/DD. Reuse basic 7k from the original completed array.
++All jobs request watgpu508/H200, 1 GPU, 4 CPUs, 30 GB, and 30 minutes;
++at most 2 run concurrently. All email/time-limit/array notifications are enabled.
++Compute is obtained through Slurm only.
++
++Use a new immutable snapshot copied from successful low-step array 1545882,
++with only evaluation orchestration/tests/docs overlaid. Per-step, per-cell,
++per-attempt output directories do not overlap. Save source hashes and exact
++reused-output identities in the launch manifest. Keep a local Git record and
++patch; do not push. No sampling algorithm edits or new external implementation;
++established attribution remains in `docs/ccf-fast-generation.md`.
+diff --git a/scripts/evaluate_ccf_low_steps_sweep.sh b/scripts/evaluate_ccf_low_steps_sweep.sh
+new file mode 100644
+index 0000000..5db3ed5
+--- /dev/null
++++ b/scripts/evaluate_ccf_low_steps_sweep.sh
+@@ -0,0 +1,25 @@
++#!/bin/bash
++# Each adjacent task pair evaluates one checkpoint at 16 then 32 transitions.
++#SBATCH --job-name=ccf-lowsteps-sweep
++#SBATCH --array=0-103%2
++#SBATCH --time=00:30:00
++#SBATCH --mem=30G
++#SBATCH --cpus-per-task=4
++#SBATCH --gres=gpu:1
++#SBATCH --constraint=H200
++#SBATCH --nodelist=watgpu508
++#SBATCH --mail-user=n23zhang@uwaterloo.ca
++#SBATCH --mail-type=ALL,TIME_LIMIT,TIME_LIMIT_90,TIME_LIMIT_80,TIME_LIMIT_50,ARRAY_TASKS
++set -euo pipefail
++source /opt/anaconda3/etc/profile.d/conda.sh
++conda activate mdlm
++cd "${CCF_CODE_ROOT:?}"
++export HF_HUB_CACHE=/u401/n23zhang/mdlm_data/tree_mdlm_cache/huggingface
++export TOKENIZERS_PARALLELISM=false
++TASK_INDEX=${SLURM_ARRAY_TASK_ID:?}
++CELL_INDEX=$((TASK_INDEX / 2))
++SAMPLE_STEPS=$((16 * (1 + TASK_INDEX % 2)))
++srun --ntasks=1 python -u scripts/evaluate_ccf_selected_five.py \
++  --suite low_steps_sweep --index "$CELL_INDEX" --num-samples 20 \
++  --sampling-steps "$SAMPLE_STEPS" \
++  --output-root "${CCF_OUTPUT_ROOT:?}/steps_${SAMPLE_STEPS}"
+diff --git a/scripts/evaluate_ccf_selected_five.py b/scripts/evaluate_ccf_selected_five.py
+index 65d0c14..c95f58c 100644
+--- a/scripts/evaluate_ccf_selected_five.py
++++ b/scripts/evaluate_ccf_selected_five.py
+@@ -2 +2 @@
+-"""Approved A+B7k+C/D five-sample matrix, with a same-GPU first-sample gate.
++"""CCF checkpoint evaluation matrices, with a same-GPU first-sample gate.
+@@ -39,0 +40,17 @@ def matrix(suite='selected'):
++  if suite == 'low_steps_sweep':
++    # Basic 7k and both MDLM budgets are reused from completed array 1545882.
++    cells = []
++    for step in range(1000, 7001, 1000):
++      if step < 7000:
++        run = ('stale/four_arm_s001_k128_job1541029' if step == 1000 else
++               'four_arm_continue_s001_k128_to3k_job1542157' if step <= 3000 else
++               'four_arm_continue_s001_k128_3k_to6k_job1542808')
++        for arm in ARMS:
++          cells.append(dict(family='B', arm=arm, step=step, rank=16,
++                            embedding='shared', mode='structured_joint',
++                            checkpoint=str(CACHE / 'runs' / run / arm / 'checkpoints' / f'0-{step}.ckpt')))
++      for (rank, arm), run in SEPARATE_RUNS.items():
++        cells.append(dict(family='C' if rank == 8 else 'D', arm=arm, step=step,
++                          rank=rank, embedding='separate', mode='structured_joint',
++                          checkpoint=str(CACHE / 'runs' / run / 'training/checkpoints' / f'0-{step}.ckpt')))
++    return cells
+@@ -148 +165,2 @@ def gated_pilot(pilot, cell, out, args):
+-      if reference == 'v1' and cell['step'] in HISTORICAL_R8:
++      if (reference == 'v1' and cell['step'] in HISTORICAL_R8
++          and cell.get('sampling_steps', 1000) == 1000):
+@@ -172 +190 @@ def main():
+-  parser.add_argument('--suite', choices=('selected', 'original_5k6k', 'all_1k', 'basic_7k'), default='selected')
++  parser.add_argument('--suite', choices=('selected', 'original_5k6k', 'all_1k', 'basic_7k', 'low_steps_sweep'), default='selected')
+diff --git a/tests/test_ccf_selected_five.py b/tests/test_ccf_selected_five.py
+index d3a246a..0ec6aa3 100644
+--- a/tests/test_ccf_selected_five.py
++++ b/tests/test_ccf_selected_five.py
+@@ -12,0 +13,26 @@ class SelectedFiveTest(unittest.TestCase):
++  def test_low_steps_sweep_covers_requested_grid_without_reused_cells(self):
++    cells = matrix('low_steps_sweep')
++    actual = {(c['family'], c['arm'], c['step']) for c in cells}
++    expected = {(family, arm, step)
++                for family, arms, steps in (
++                  ('B', ('static_static', 'fixed_dynamic', 'dynamic_fixed', 'dynamic_dynamic'), range(1000, 6001, 1000)),
++                  ('C', ('fixed_dynamic', 'dynamic_dynamic'), range(1000, 7001, 1000)),
++                  ('D', ('fixed_dynamic', 'dynamic_dynamic'), range(1000, 7001, 1000)))
++                for arm in arms for step in steps}
++    self.assertEqual(actual, expected)
++    self.assertEqual(len(cells), 52)
++    self.assertEqual(len({c['checkpoint'] for c in cells}), 52)
++    for cell in cells:
++      self.assertTrue(cell['checkpoint'].endswith(f"0-{cell['step']}.ckpt"))
++      if cell['family'] == 'B':
++        source = 'job1541029' if cell['step'] == 1000 else 'job1542157' if cell['step'] <= 3000 else 'job1542808'
++        self.assertIn(source, cell['checkpoint'])
++        self.assertEqual((cell['embedding'], cell['rank']), ('shared', 16))
++      else:
++        self.assertEqual((cell['embedding'], cell['rank']),
++                         ('separate', 8 if cell['family'] == 'C' else 16))
++      for steps in (16, 32):
++        args = generation_args(dict(cell, num_samples=20, sampling_steps=steps), Path('/tmp/test'), 'a', 'm')
++        self.assertEqual(args[args.index('--num-samples') + 1], '20')
++        self.assertEqual(args[args.index('--nfe-budgets') + 1], str(steps + 1))
++
+@@ -72 +98 @@ class SelectedFiveTest(unittest.TestCase):
+-  def exercise_gate(self, mismatch):
++  def exercise_gate(self, mismatch, samples=5):
+@@ -81 +107 @@ class SelectedFiveTest(unittest.TestCase):
+-      for _ in range(5):
++      for _ in range(samples):
+@@ -94 +120 @@ class SelectedFiveTest(unittest.TestCase):
+-        self.assertEqual(calls, [False] + [True] * 5)
++        self.assertEqual(calls, [False] + [True] * samples)
+@@ -100,0 +127,3 @@ class SelectedFiveTest(unittest.TestCase):
++  def test_twenty_samples_reuse_verified_first_sample(self):
++    self.exercise_gate(False, samples=20)
++

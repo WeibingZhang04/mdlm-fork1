@@ -1,0 +1,9 @@
+{
+  "all_archived_files_verified_locally": true,
+  "archive": "/private/tmp/centered-recovery-c.Mx5fss/staged-centered-old32-recovered-c-20260908.tar.gz",
+  "archive_sha256": "3acf86b880fbb69aa28cb4ee881b3606b0b37730c33a24a86e3403f7ae69a09e",
+  "bytes": 22333156,
+  "files_verified": 18,
+  "manifest_sha256": "dc30b3ebaf39ceaf74871170dfd23363743efe5dfa5c3a6438d22179ac6c1f4d",
+  "original_run_ledgers_verified": 3
+}

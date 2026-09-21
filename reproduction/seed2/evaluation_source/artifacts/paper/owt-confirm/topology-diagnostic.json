@@ -1,0 +1,20 @@
+{
+  "artifact": "topology_target_coverage_diagnostic",
+  "schema_version": 1,
+  "evaluation_seed": 201,
+  "num_batches": 32,
+  "num_examples": 128,
+  "sequence_length": 1024,
+  "candidate_recall": 0.5759540117416829,
+  "retained_unary_mass": 0.5777102207251025,
+  "topology_edge_coverage": 1.0,
+  "topology_edge_coverage_denominator": 128,
+  "topology_anchor_coverage": 1.0,
+  "topology_anchor_coverage_denominator": 128,
+  "topology_slot_coverage": 1.0,
+  "topology_slot_coverage_denominator": 128,
+  "topology_teacher_influence": 0.19571836292743683,
+  "conditional_nll_per_masked_token": 5.952974084305437,
+  "nll_comparison_allowed": false,
+  "scope_note": "Coverage-only diagnostic. Enabling teacher-derived topology targets changes the random stream, so its NLL is not compared with the cryptographically paired arms."
+}

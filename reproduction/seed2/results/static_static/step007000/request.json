@@ -1,0 +1,13 @@
+{
+  "checkpoint": 7000,
+  "train_seed": 2,
+  "sample_seed": 100001,
+  "samples_per_cell": 100,
+  "denoising_steps": [
+    8,
+    16,
+    32
+  ],
+  "generation_source": "/u401/n23zhang/mdlm_data/tree_mdlm_cache/code/ccf_confirmation_100.daiam2ji",
+  "gate": false
+}

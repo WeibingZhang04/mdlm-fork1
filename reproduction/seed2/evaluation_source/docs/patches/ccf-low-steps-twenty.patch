@@ -1,0 +1,184 @@
+diff --git a/docs/ccf-low-steps-twenty.md b/docs/ccf-low-steps-twenty.md
+new file mode 100644
+index 0000000..0762f89
+--- /dev/null
++++ b/docs/ccf-low-steps-twenty.md
+@@ -0,0 +1,34 @@
++# Basic CCF and MDLM at 16/32 sampling steps
++
++User requested both sampling budgets, all four basic CCF arms, the MDLM
++baseline, and 20 samples per configuration. Use shared-rank16 constant-LR
++training-update7000 checkpoints to match the completed five-sample comparison.
++No retraining. The matrix has 5 models x 2 budgets x 20 samples = 200 scored
++samples, plus 8 duplicate first-sample reference runs for CCF verification.
++
++The existing pilot receives budgets17/33: 16/32 reverse transitions plus its
++existing optional cleanup call. Actual measured NFE is retained. All models
++use length1024, batch1, K128, seeds91001-91020 and identical pair keys/batch
++seeds. Existing reveal logic, checkpoint precision, bf16 backbone autocast,
++GPT2-large pinned revision and first-nonleading-EOS scoring are retained.
++Multi-sample PPL is exp(token-weighted mean NLL), not mean per-sample PPL.
++
++MDLM uses the factorized mode, bypassing the structured head; the authenticated
++SS adapter is loaded only to satisfy the existing pilot's loading interface.
++Each CCF cell first compares reference v2 with level_draws on the same GPU and
++model for the requested full trajectory, checking final token IDs, NFE and
++CPU/CUDA RNG states. Failure aborts that cell. The accepted fast first sample
++is reused as sample1; it is not replaced or cherry-picked.
++
++Entry scripts/evaluate_ccf_low_steps_twenty.sh wraps the existing evaluator.
++Array0-4 evaluates16 steps; array5-9 evaluates32 steps. Model order is MDLM,
++SS, FD, DF, DD. All use watgpu508/H200 for hardware consistency. The two
++budgets and every attempt have distinct output directories. Source is copied
++to a fresh immutable snapshot based on the successful selected-five snapshot;
++existing jobs, source snapshots, checkpoints and results are not modified.
++All email/time-limit/array notifications remain enabled as requested earlier.
++
++Only orchestration and its metadata are generalized; no sampling algorithm
++changes. Existing algorithm/code attribution: docs/ccf-fast-generation.md.
++No new external implementation was consulted. Local Git record and review
++patch only; no Git push.
+diff --git a/scripts/evaluate_ccf_low_steps_twenty.sh b/scripts/evaluate_ccf_low_steps_twenty.sh
+new file mode 100644
+index 0000000..371c780
+--- /dev/null
++++ b/scripts/evaluate_ccf_low_steps_twenty.sh
+@@ -0,0 +1,29 @@
++#!/bin/bash
++# Array 0-4: 16 transitions; 5-9: 32. Within each: MDLM, SS, FD, DF, DD.
++#SBATCH --job-name=ccf-lowsteps20
++#SBATCH --array=0-9%2
++#SBATCH --time=00:30:00
++#SBATCH --mem=30G
++#SBATCH --cpus-per-task=4
++#SBATCH --gres=gpu:1
++#SBATCH --constraint=H200
++#SBATCH --nodelist=watgpu508
++#SBATCH --mail-user=n23zhang@uwaterloo.ca
++#SBATCH --mail-type=ALL,TIME_LIMIT,TIME_LIMIT_90,TIME_LIMIT_80,TIME_LIMIT_50,ARRAY_TASKS
++set -euo pipefail
++source /opt/anaconda3/etc/profile.d/conda.sh
++conda activate mdlm
++cd "${CCF_CODE_ROOT:?}"
++export HF_HUB_CACHE=/u401/n23zhang/mdlm_data/tree_mdlm_cache/huggingface
++export TOKENIZERS_PARALLELISM=false
++TASK_INDEX=${SLURM_ARRAY_TASK_ID:?}
++CELL_INDEX=$((TASK_INDEX % 5))
++if (( TASK_INDEX < 5 )); then
++  SAMPLE_STEPS=16
++else
++  SAMPLE_STEPS=32
++fi
++srun --ntasks=1 python -u scripts/evaluate_ccf_selected_five.py \
++  --suite basic_7k --index "$CELL_INDEX" --num-samples 20 \
++  --sampling-steps "$SAMPLE_STEPS" \
++  --output-root "${CCF_OUTPUT_ROOT:?}/steps_${SAMPLE_STEPS}"
+diff --git a/scripts/evaluate_ccf_selected_five.py b/scripts/evaluate_ccf_selected_five.py
+index e45bcd3..65d0c14 100644
+--- a/scripts/evaluate_ccf_selected_five.py
++++ b/scripts/evaluate_ccf_selected_five.py
+@@ -58,6 +58,8 @@ def matrix(suite='selected'):
+     cells.append(dict(family='B', arm=arm, step=7000, rank=16, embedding='shared',
+                       checkpoint=str(checkpoint), mode='structured_joint'))
+   cells.insert(0, dict(cells[0], family='A', mode='factorized'))
++  if suite == 'basic_7k':
++    return cells
+   for rank, steps, family in ((8, (2000, 6000), 'C'), (16, (2000, 4000), 'D')):
+     for arm in ('fixed_dynamic', 'dynamic_dynamic'):
+       for step in steps:
+@@ -82,12 +84,14 @@ def save(path, value):
+ 
+ def generation_args(cell, out, adapter_sha, manifest_sha):
+   topology, factor, weight = ARMS[cell['arm']]
++  samples = cell.get('num_samples', 5)
++  sampling_steps = cell.get('sampling_steps', 1000)
+   args = ['--backbone-checkpoint', str(CACHE / 'checkpoints/mdlm-owt-backbone.pt'),
+     '--backbone-sha256', BACKBONE_SHA, '--adapter', str(out / 'adapter.safetensors'),
+     '--adapter-sha256', adapter_sha, '--adapter-manifest', str(out / 'adapter.manifest.json'),
+     '--adapter-manifest-sha256', manifest_sha, '--output-dir', str(out / 'generation'),
+-    '--num-samples', '5', '--sequence-length', '1024', '--batch-size', '1',
+-    '--base-seed', '91001', '--modes', cell['mode'], '--nfe-budgets', '1001',
++    '--num-samples', str(samples), '--sequence-length', '1024', '--batch-size', '1',
++    '--base-seed', '91001', '--modes', cell['mode'], '--nfe-budgets', str(sampling_steps + 1),
+     '--device', 'cuda', '--model-config', 'contextual-forest-small',
+     '--data-config', 'train_openwebtext_pinned', '--allow-dirty',
+     '--reference-lm', 'gpt2-large', '--reference-lm-revision', '32b71b12589c2f8d625668d2335a01cac3249519',
+@@ -140,7 +144,7 @@ def gated_pilot(pilot, cell, out, args):
+       report = dict(status='passed' if all(checks.values()) else 'failed', checks=checks,
+         reference=reference, candidate='level_draws', reference_timing=old_timing, candidate_timing=timing,
+         torch=torch.__version__, gpu=torch.cuda.get_device_name(),
+-        scope='One full 1000-transition first sample on the same loaded model/GPU; final tokens/NFE/RNG, not every intermediate state.')
++        scope=f'One full {cell.get("sampling_steps", 1000)}-transition first sample on the same loaded model/GPU; final tokens/NFE/RNG, not every intermediate state.')
+       if reference == 'v1' and cell['step'] in HISTORICAL_R8:
+         old_dir = CACHE / 'runs' / HISTORICAL_R8[cell['step']]
+         historical = json.loads((old_dir / 'samples.jsonl').read_text().splitlines()[0])
+@@ -165,13 +169,19 @@ def main():
+   parser = argparse.ArgumentParser(description=__doc__)
+   parser.add_argument('--index', type=int)
+   parser.add_argument('--inventory', action='store_true')
+-  parser.add_argument('--suite', choices=('selected', 'original_5k6k', 'all_1k'), default='selected')
++  parser.add_argument('--suite', choices=('selected', 'original_5k6k', 'all_1k', 'basic_7k'), default='selected')
++  parser.add_argument('--num-samples', type=int, default=5)
++  parser.add_argument('--sampling-steps', type=int, default=1000)
+   parser.add_argument('--output-root', type=Path)
+   options = parser.parse_args()
++  if options.num_samples < 1 or options.sampling_steps < 1:
++    parser.error('num-samples and sampling-steps must be positive')
+   cells = matrix(options.suite)
++  for cell in cells:
++    cell.update(num_samples=options.num_samples, sampling_steps=options.sampling_steps)
+   if options.inventory:
+     missing = [c['checkpoint'] for c in cells if not Path(c['checkpoint']).is_file()]
+-    print(json.dumps(dict(cells=cells, samples=5 * len(cells), missing=missing), indent=2))
++    print(json.dumps(dict(cells=cells, samples=options.num_samples * len(cells), missing=missing), indent=2))
+     assert not missing
+     return
+   cell = cells[options.index]
+@@ -190,8 +200,9 @@ def main():
+       '--independent-mode', 'false', '--topology-weight', str(weight)], check=True, stdout=log)
+   args = generation_args(cell, out, sha(out / 'adapter.safetensors'), sha(out / 'adapter.manifest.json'))
+   save(out / 'request.json', dict(cell=cell, checkpoint_sha256=checkpoint_sha, pilot_arguments=args,
+-    suite=options.suite, samples=5, sampling_steps=1000, base_seed=91001, snapshot=str(ROOT),
+-    pairing='Standard five-sample pilot: replicate-0000 through replicate-0004; identical across cells.',
++    suite=options.suite, samples=options.num_samples, sampling_steps=options.sampling_steps,
++    base_seed=91001, snapshot=str(ROOT),
++    pairing=f'Standard pilot: replicate-0000 through replicate-{options.num_samples - 1:04d}; identical across cells.',
+     source_sha256={name: sha(ROOT / name) for name in (
+       'scripts/evaluate_ccf_selected_five.py', 'scripts/run_generation_pilot.py',
+       'scripts/audit_ccf_sampling_v3.py', 'scripts/audit_ccf_sampling_v4.py', 'structured_utils.py',
+@@ -201,7 +212,7 @@ def main():
+   from scripts import run_generation_pilot as pilot
+   result = pilot.main(args) if cell['mode'] == 'factorized' else gated_pilot(pilot, cell, out, args)
+   assert result == 0
+-  save(out / 'completed.json', dict(status='completed', samples=5, cell=cell))
++  save(out / 'completed.json', dict(status='completed', samples=options.num_samples, cell=cell))
+   print(json.dumps(dict(status='completed', output=str(out))), flush=True)
+ 
+ 
+diff --git a/tests/test_ccf_selected_five.py b/tests/test_ccf_selected_five.py
+index b852130..d3a246a 100644
+--- a/tests/test_ccf_selected_five.py
++++ b/tests/test_ccf_selected_five.py
+@@ -10,6 +10,22 @@ import structured_utils as utils
+ 
+ 
+ class SelectedFiveTest(unittest.TestCase):
++  def test_basic_low_steps_preserves_cleanup_and_twenty_samples(self):
++    cells = matrix('basic_7k')
++    self.assertEqual(len(cells), 5)
++    self.assertEqual([c['mode'] for c in cells], ['factorized'] + ['structured_joint'] * 4)
++    self.assertEqual([c['arm'] for c in cells[1:]],
++                     ['static_static', 'fixed_dynamic', 'dynamic_fixed', 'dynamic_dynamic'])
++    self.assertEqual({c['step'] for c in cells}, {7000})
++    for steps in (16, 32):
++      for cell in cells:
++        args = generation_args(dict(cell, num_samples=20, sampling_steps=steps),
++                               Path('/tmp/test'), 'a', 'm')
++        for flag, value in (('--num-samples', '20'), ('--nfe-budgets', str(steps + 1)),
++                            ('--batch-size', '1'), ('--sequence-length', '1024'),
++                            ('--base-seed', '91001')):
++          self.assertEqual(args[args.index(flag) + 1], value)
++
+   def test_all_1k_matrix(self):
+     cells = matrix('all_1k')
+     self.assertEqual(len(cells), 8)

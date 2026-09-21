@@ -1,0 +1,64 @@
+{
+  "alignment": {
+    "checkpoint_training_history_paired": false,
+    "evaluator_batch_size": 8,
+    "evaluator_revision": "32b71b12589c2f8d625668d2335a01cac3249519",
+    "evaluator_sequence_policy": "retokenize_decoded_text_score_through_first_nonleading_eos_v1",
+    "generation_batch_size": 1,
+    "generation_seed": 260703,
+    "hardware_model": "NVIDIA L4",
+    "model_native_position_schedule_paired": false,
+    "nfe_budgets": [
+      8,
+      16,
+      32
+    ],
+    "num_samples": 256,
+    "sequence_length": 1024
+  },
+  "artifact": "contextual_forest_tensor_train_matched_comparison",
+  "claim_scope": "Descriptive alignment on sample count, sequence length, NFE budgets, generation seed, evaluator model/revision/policy, batch size, and GPU model. Model-native reverse schedules and checkpoint training histories are not paired; differences are not causal estimates.",
+  "protocol_id": "contextual-forest-tensor-train-matched-v1",
+  "rows": [
+    {
+      "ccf_mean_nll_nats": 6.813958999842104,
+      "ccf_minus_released_marginal_nll_nats": 0.07725668096947658,
+      "ccf_minus_tensor_train_rank4_nll_nats": 0.3467005482371315,
+      "ccf_samples_per_second": 0.10500936593958068,
+      "nfe": 8,
+      "released_marginal_mean_nll_nats": 6.736702318872627,
+      "released_marginal_samples_per_second": 1.3632996802522537,
+      "tensor_train_rank4_mean_nll_nats": 6.467258451604972,
+      "tensor_train_rank4_samples_per_second": 0.6751295102142013
+    },
+    {
+      "ccf_mean_nll_nats": 5.8527611641001585,
+      "ccf_minus_released_marginal_nll_nats": -0.031449130661970415,
+      "ccf_minus_tensor_train_rank4_nll_nats": 0.11015408767455881,
+      "ccf_samples_per_second": 0.0509869717475597,
+      "nfe": 16,
+      "released_marginal_mean_nll_nats": 5.884210294762129,
+      "released_marginal_samples_per_second": 0.9996614517826176,
+      "tensor_train_rank4_mean_nll_nats": 5.7426070764256,
+      "tensor_train_rank4_samples_per_second": 0.5871945963032297
+    },
+    {
+      "ccf_mean_nll_nats": 5.125054831114762,
+      "ccf_minus_released_marginal_nll_nats": -0.13897608692818064,
+      "ccf_minus_tensor_train_rank4_nll_nats": -0.08782620678408559,
+      "ccf_samples_per_second": 0.025123751829777736,
+      "nfe": 32,
+      "released_marginal_mean_nll_nats": 5.264030918042943,
+      "released_marginal_samples_per_second": 0.63818556453813,
+      "tensor_train_rank4_mean_nll_nats": 5.212881037898848,
+      "tensor_train_rank4_samples_per_second": 0.45983980845962824
+    }
+  ],
+  "schema_version": 1,
+  "source": {
+    "ccf_union_path": "/private/tmp/contextual-forest-ttmatch-ccf-union.json",
+    "ccf_union_sha256": "6717d8ec0847ec914debce1f8ed6d112d0908668431a0018bcae50f9f9f5a9d2",
+    "tensor_train_analysis_path": "/Users/yuntiandeng/Documents/ChatGPT/diffusion lm/mdlm_crf_recovery/artifacts/paper/tensor-train-feasibility/analysis.json",
+    "tensor_train_analysis_sha256": "8708305b7c2abfe98fd3c8f9f62878ce19d4831586c192f1a85ad7392b63410c"
+  }
+}

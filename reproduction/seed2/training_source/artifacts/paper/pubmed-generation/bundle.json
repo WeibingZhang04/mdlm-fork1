@@ -1,0 +1,57 @@
+{
+  "artifact": "verified_cross_domain_generation_analysis_bundle",
+  "artifacts": {
+    "dynamic_union": {
+      "path": "/mnt/contextual-forest/experiments/contextual-forest-generation-paper-v1/pubmed/verified-analysis-v1/verified-dynamic-union.json",
+      "sha256": "875f51ccd89b8a9852b3a28f3830dc5ec949e9cbd886156bda15d6b272d8771e"
+    },
+    "paired_comparison": {
+      "path": "/mnt/contextual-forest/experiments/contextual-forest-generation-paper-v1/pubmed/verified-analysis-v1/paired-adapter-comparison.json",
+      "sha256": "cbcb070a2281ad6fb95bc3f3cb1dbf82192890a43f8796b09a46dd27b6306a28"
+    },
+    "static_union": {
+      "path": "/mnt/contextual-forest/experiments/contextual-forest-generation-paper-v1/pubmed/verified-analysis-v1/verified-static-union.json",
+      "sha256": "097e795dd3ee69ebfe22839e9f784a37e54f9db453e552c7a38767d9b14f12b9"
+    }
+  },
+  "created_utc": "2026-09-01T13:16:24.718469+00:00",
+  "dataset_slug": "pubmed",
+  "immutable_runner_git_sha": "09f89c00bbf8c65f679cd40b92609754608817b8",
+  "launch_plan_sha256": "9acc56ab7a36ced0ebc3dd3363224567d74c02ad14c9a6212c682d66767f8bd2",
+  "logical_dataset": "scientific-papers-pubmed-pinned",
+  "queue_completion_evidence": {
+    "path": "/mnt/contextual-forest/experiments/contextual-forest-generation-paper-v1/pubmed/queue-complete.json",
+    "sha256": "ff7f415d0f397d4c73a23676ece5cba5e2f898678f6792099e1334654da4a2c2"
+  },
+  "reviewed_wikitext_gate": {
+    "controller_repository": {
+      "clean": true,
+      "git_sha": "446cb8abe1a19db74f16efa658d17882812a0e76",
+      "root": "/mnt/contextual-forest/mdlm-controller-446cb8a-v2",
+      "source_sha256": {
+        "evaluation/generation_adapter_comparison.py": "f5133b399744d69d5a8f6b1ce9dd8d2e069b5438b0e98338e136d7e7d289004c",
+        "evaluation/generation_analysis_artifacts.py": "b0b69c3e799dd136d17171d45e780f73c17f2336f0617a4c7493adb8017ea1cf",
+        "evaluation/generation_protocol.py": "ce1927b543cec3b04fcebca3ada4b8aa8a2d9d2c1cbb0019c3b0289403852ced",
+        "evaluation/generation_queue_artifacts.py": "ad6d08bd52cfe5f728795e8db028b4f212e64f3d7592131cf8e845311d0bb11b",
+        "evaluation/generation_shard_aggregation.py": "ba7cc0ade743d169a064417d13feeb0d57ae71d70048a1f77b619a0496166fbe",
+        "scripts/compile_wikitext_cross_domain_gate.py": "b1f765ed9495b8eab3d9062e5bbb491c206293e4e9618300bda740882c746945",
+        "scripts/run_cross_domain_generation_post.py": "4044c5b2652cfb00e19ea45771fe5f20ba79570ead8fb3fdee070bb1aea8b319",
+        "scripts/run_cross_domain_generation_queue.py": "92c92c48427a1e85ee52e6c895fff27a90309d4ac913cdd4243be7e1ae09e34e",
+        "scripts/run_wikitext_generation_queue.py": "1c8a2aa7dc5bfb45cbb8385502c7b55b195c8d447c047d573d060e796591557d"
+      }
+    },
+    "decision": "proceed",
+    "path": "/mnt/contextual-forest/experiments/contextual-forest-generation-paper-v1/wikitext/reviewed-cross-domain-gate-446cb8a-v2.json",
+    "sha256": "a33ae2b0ea1834ced45047fe50ecffaef69b9571e9cd67199054edbe02b7ee86"
+  },
+  "schema_version": 1,
+  "validated_analysis": {
+    "dataset_slug": "pubmed",
+    "dynamic_records": 12288,
+    "global_num_samples": 1024,
+    "logical_dataset": "scientific-papers-pubmed-pinned",
+    "num_paired_comparisons": 16,
+    "num_prompts": 256,
+    "static_records": 4096
+  }
+}

@@ -1,0 +1,39 @@
+{
+  "status": "passed",
+  "arms": [
+    {
+      "arm": "static_static",
+      "training_cache": "torch.bfloat16",
+      "cold_start": true,
+      "original_training_callbacks_only": true,
+      "export_and_generation_smoke": true
+    },
+    {
+      "arm": "fixed_dynamic",
+      "training_cache": "torch.bfloat16",
+      "cold_start": true,
+      "original_training_callbacks_only": true,
+      "export_and_generation_smoke": true
+    },
+    {
+      "arm": "dynamic_fixed",
+      "training_cache": "torch.bfloat16",
+      "cold_start": true,
+      "original_training_callbacks_only": true,
+      "export_and_generation_smoke": true
+    },
+    {
+      "arm": "dynamic_dynamic",
+      "training_cache": "torch.bfloat16",
+      "cold_start": true,
+      "original_training_callbacks_only": true,
+      "export_and_generation_smoke": true
+    }
+  ],
+  "original_resume_smoke": true,
+  "added_production_training_callbacks": false,
+  "training_cache": "BF16",
+  "generation_cache": "FP32",
+  "scope": "Original-path runtime smoke, not proof of bitwise determinism or replication efficacy",
+  "prior_failed_gate_preserved": "/u401/n23zhang/mdlm_data/tree_mdlm_cache/runs/ccf_replication15k_20260921.wmjngfco/legacy_bf16_seed2/study_zw0v21df"
+}

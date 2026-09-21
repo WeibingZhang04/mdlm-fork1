@@ -1,0 +1,99 @@
+name: contextual-forest-g1
+description: >-
+  Frozen-protocol synthetic kill gate for the contextual coupling forest paper.
+
+# Protocol development used seeds 1--8.  These five seeds were held out until
+# the protocol below was frozen and are the only seeds in the reported result.
+development_seeds: [1, 2, 3, 4, 5, 6, 7, 8]
+seeds: [9, 10, 11, 12, 13]
+protocol_status: frozen_heldout
+tasks:
+  ambiguous_pairs:
+    length: 2
+    vocab_size: 2
+  markov_language:
+    length: 8
+    vocab_size: 4
+    coupling: [0.25, 0.5, 0.75, 0.9]
+  context_switching_matching:
+    length: 6
+    vocab_size: 4
+    matchings:
+      - [[0, 1], [2, 3], [4, 5]]
+      - [[0, 2], [1, 4], [3, 5]]
+      - [[0, 3], [1, 5], [2, 4]]
+  cyclic_xor:
+    length: 3
+    vocab_size: 2
+
+models:
+  - factorized
+  - parameter_matched_independent
+  - natural_chain
+  - static_forest
+  - fixed_topology_dynamic_factors
+  - dynamic_topology_fixed_factors
+  - contextual_forest
+
+learned_adapter:
+  backbone: frozen_context_features
+  target_access: none
+  topology_target: exact_conditional_influence
+  interpretation: favorable_supervision_diagnostic
+  steps: 900
+  batch_size: 64
+  learning_rate: 0.01
+  dependency_weight: 1.0
+  factor_init_std: 0.25
+  factor_init_seed: 1729
+  factor_warmup_steps: 300
+  eval_samples: 20000
+  inference_backend: low_rank
+  topology_proposals: all_pairs
+  min_edge_score: 0.0
+
+samplers:
+  - independent_marginals
+  - enumerated_joint
+
+gates:
+  joint_invalid_absolute_max: 0.05
+  joint_invalid_relative_reduction_min: 0.80
+  contextual_kl_or_tv_relative_reduction_min: 0.25
+  contextual_edge_f1_min: 0.80
+  require_all_seeds_same_direction: true
+  require_paired_ci_excludes_zero: true
+  structured_step_target_ratio: 2.5
+  structured_step_hard_max_ratio: 4.0
+
+profile:
+  # The reported optimized L4 artifact used exactly this timing protocol.
+  warmup_repetitions: 3
+  measured_repetitions: 10
+  cuda_synchronization: before_and_after_each_backend_timing_block
+  shapes:
+    - {length: 256, k: 32, batch_size: 1}
+    - {length: 256, k: 64, batch_size: 1}
+    - {length: 512, k: 64, batch_size: 1}
+    - {length: 1024, k: 64, batch_size: 1}
+    - {length: 1024, k: 128, batch_size: 1}
+
+checkpointing:
+  every_n_train_steps: 500
+  save_top_k: 0
+  save_last: true
+
+output:
+  root: /mnt/contextual-forest/runs/g1
+  manifest_fields:
+    - git_sha
+    - resolved_config
+    - seed
+    - dataset_checksum
+    - hostname
+    - gpu
+    - driver
+    - cuda
+    - torch
+    - start_time
+    - end_time

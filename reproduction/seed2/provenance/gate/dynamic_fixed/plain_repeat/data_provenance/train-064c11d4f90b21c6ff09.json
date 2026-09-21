@@ -1,0 +1,42 @@
+{
+  "artifact": "pinned_text_dataset_provenance",
+  "manifest_sha256": "60801b7fb0a79154740628dfd5a2c8a22ba26ff9d040c8b5423c917ddd894ac6",
+  "observed": {
+    "document_num_rows_after_boundary_recovery": null,
+    "processed_fingerprint": null,
+    "processed_num_sequences": null,
+    "raw_fingerprint": null,
+    "source_num_rows": null,
+    "window_fingerprint": null,
+    "window_num_rows": null
+  },
+  "schema_version": 1,
+  "specification": {
+    "block_size": 1024,
+    "dataset_config_name": "plain_text",
+    "dataset_name_or_path": "Skylion007/openwebtext",
+    "datasets_version": "2.18.0",
+    "detokenizer": null,
+    "disjoint_window_proof": null,
+    "document_boundary_mode": "concatenate",
+    "document_remainder_policy": null,
+    "logical_dataset_name": "openwebtext-train-pinned",
+    "processed_cache_schema_version": 2,
+    "source_num_rows": 8013769,
+    "source_revision": "79d93d786212f7344586290adb811d4ae6a1762c",
+    "source_split": "train",
+    "source_window": [
+      0,
+      7913769
+    ],
+    "text_field": "text",
+    "tokenizer_class": "GPT2TokenizerFast",
+    "tokenizer_name_or_path": "openai-community/gpt2",
+    "tokenizer_revision": "607a30d783dfa663caf39e06633721c8d4cfcd7e",
+    "tokenizer_vocab_size": 50257,
+    "transformers_version": "4.38.2",
+    "trust_remote_code": false,
+    "wrap": true
+  },
+  "specification_sha256": "064c11d4f90b21c6ff0998603e8adcccc2d31d391a064073d683dcc8549e06d5"
+}

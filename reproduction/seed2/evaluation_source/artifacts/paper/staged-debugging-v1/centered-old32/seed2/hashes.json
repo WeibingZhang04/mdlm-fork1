@@ -1,0 +1,7 @@
+{
+  "curve.jsonl": "99f5c5a4e61a5d7648db89fba5ce9537bcaa8d7d974b771727d98beca7e621c4",
+  "final-checkpoint.pt": "8b2a7197332b54c019dc5eb7a2802371d9162d51462414c7350b547582f83687",
+  "protocol.json": "ccc46fc18096440d9f503e6680efd937eb66c3ae909b98e43262193d7b59924a",
+  "results.json": "256273d63b37f77917c1ccfef8df4a0d7df9dcfc6090e787605d5e0caf545ff5",
+  "training-steps.jsonl": "9dfcc4bce5a9739081ac638f42f7e1cec2f43de0d6c9bb81a4090c1395f5beff"
+}

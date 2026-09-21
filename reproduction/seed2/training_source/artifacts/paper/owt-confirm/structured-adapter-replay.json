@@ -1,0 +1,20 @@
+{
+  "artifact": "structured_adapter_seed_201_replay",
+  "schema_version": 1,
+  "structured_adapter_sha256": "3e1cdc200dba3a46290578e7b62404c0a7d39a63f580693e26ef35855cf64573",
+  "released_backbone_wrapper_sha256": "1b7c724d0228b1a2c825185c96642ffd706bd828b237f84512f0e1c7b5765573",
+  "evaluation_seed": 201,
+  "arm": "structured",
+  "num_batches": 32,
+  "batch_size": 4,
+  "sequence_length": 1024,
+  "conditional_nll_per_masked_token": 6.033883870619285,
+  "candidate_recall": 0.5665225133553803,
+  "retained_unary_mass": 0.5701100346586382,
+  "active_fraction": 0.5098495483398438,
+  "metrics_csv_sha256": "73fbb4ae14e7b1fb1f702451c1445d5500ef288a9433ef5c21d9aeedcc481fc8",
+  "pairing_digest_file_sha256": "2044696bc387c154c813dd9a9fab351303367fd446f1aebb25451a70f7eac302",
+  "pairing_digest_sha256": "b1de8e71d5d578422f2fac0962ab175eeffcf0725e3c9b70f7dd3ea9cf6a295c",
+  "metrics_csv_byte_identical_to_full_checkpoint_run": true,
+  "pairing_digest_byte_identical_to_full_checkpoint_run": true
+}

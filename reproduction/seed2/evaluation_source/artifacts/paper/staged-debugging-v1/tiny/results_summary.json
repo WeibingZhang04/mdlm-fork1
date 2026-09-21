@@ -1,0 +1,1978 @@
+{
+  "protocol": "two_token_full_vocabulary_staged_debugging_v1",
+  "source_sha256": {
+    "synthetic/tiny_joint_debug.py": "71b7283b77e7239fdf4218b2f648ca35634b488a6ec8e715eac415fcea7c596f",
+    "models/directional_forest.py": "5c81101e1c44e2cb30c3567eb2e27dce2129014157be63d1dc5686c663cb94e1",
+    "models/structured_decoder.py": "b90fd02618d5162f8908f266fef1bdb2418a4bc172ede0863cd60ddeaa0f257a",
+    "structured_objective.py": "57f54eef2c1bbc6d1efb313a4ec3b936c7175c5a93294a1f850ddfd567a787c9",
+    "structured_utils.py": "9c26e3ecd764945fcdf171d205e22f5f331f2822baa1e7418358908a1dda9226",
+    "scripts/run_tiny_joint_debug.py": "c554494e09c1963488c4916d663a91dac8b4bd2c12d0cff55bbc7aaca40e7a26"
+  },
+  "run_count": 81,
+  "groups": [
+    {
+      "task": "opposite",
+      "variant": "unrestricted_table",
+      "seeds": [
+        1,
+        2,
+        3
+      ],
+      "target_reached_count": 3,
+      "parameter_count": 4,
+      "gradient_active_parameter_count": 4,
+      "kl_target_to_model": {
+        "mean": 0.009223437847098448,
+        "min": 0.009223437847098448,
+        "max": 0.009223437847098448,
+        "sample_std": 0.0
+      },
+      "invalid_mass": {
+        "mean": 0.009181032418995863,
+        "min": 0.009181032418995863,
+        "max": 0.009181032418995863,
+        "sample_std": 0.0
+      },
+      "total_variation": {
+        "mean": 0.00918103241899584,
+        "min": 0.00918103241899584,
+        "max": 0.00918103241899584,
+        "sample_std": 0.0
+      },
+      "max_marginal_error": {
+        "mean": 0.0,
+        "min": 0.0,
+        "max": 0.0,
+        "sample_std": 0.0
+      },
+      "mutual_information": {
+        "mean": 0.6409437293524853,
+        "min": 0.6409437293524853,
+        "max": 0.6409437293524853,
+        "sample_std": 0.0
+      },
+      "steps_run": {
+        "mean": 275.0,
+        "min": 275,
+        "max": 275,
+        "sample_std": 0.0
+      },
+      "joint_sample_invalid_rate": {
+        "mean": 0.0089,
+        "min": 0.00855,
+        "max": 0.00935,
+        "sample_std": 0.0004092676385936229
+      },
+      "marginal_sample_invalid_rate": {
+        "mean": 0.50115,
+        "min": 0.4959,
+        "max": 0.5094,
+        "sample_std": 0.007232738070744697
+      },
+      "mean_probabilities": {
+        "AA": 0.004590516209497931,
+        "AB": 0.4954094837905021,
+        "BA": 0.4954094837905021,
+        "BB": 0.004590516209497931
+      }
+    },
+    {
+      "task": "opposite",
+      "variant": "shared_static_wide",
+      "seeds": [
+        1,
+        2,
+        3
+      ],
+      "target_reached_count": 0,
+      "parameter_count": 549,
+      "gradient_active_parameter_count": 8,
+      "kl_target_to_model": {
+        "mean": 0.693151054877127,
+        "min": 0.6931480299265828,
+        "max": 0.6931566130393262,
+        "sample_std": 4.819784959779959e-06
+      },
+      "invalid_mass": {
+        "mean": 0.5000019371509665,
+        "min": 0.5000004246831383,
+        "max": 0.5000047162174476,
+        "sample_std": 2.4098798294570314e-06
+      },
+      "total_variation": {
+        "mean": 0.5000019371509665,
+        "min": 0.5000004246831383,
+        "max": 0.5000047162174476,
+        "sample_std": 2.4098798294570314e-06
+      },
+      "max_marginal_error": {
+        "mean": 0.0003603398918714529,
+        "min": 8.2664200345417e-05,
+        "max": 0.0005966648370524519,
+        "sample_std": 0.00025948328809632037
+      },
+      "mutual_information": {
+        "mean": 1.0882372531212667e-11,
+        "min": 2.419124465761067e-13,
+        "max": 3.206740607136825e-11,
+        "sample_std": 1.8346839867796e-11
+      },
+      "steps_run": {
+        "mean": 66.66666666666667,
+        "min": 50,
+        "max": 75,
+        "sample_std": 14.433756729740644
+      },
+      "joint_sample_invalid_rate": {
+        "mean": 0.50415,
+        "min": 0.502,
+        "max": 0.50785,
+        "sample_std": 0.003218307008350848
+      },
+      "marginal_sample_invalid_rate": {
+        "mean": 0.5011166666666667,
+        "min": 0.49595,
+        "max": 0.50935,
+        "sample_std": 0.0072071723535193115
+      },
+      "mean_probabilities": {
+        "AA": 0.2496406286836118,
+        "AB": 0.24999903142451674,
+        "BA": 0.24999903142451674,
+        "BB": 0.2503613084673547
+      }
+    },
+    {
+      "task": "opposite",
+      "variant": "shared_contextual_production",
+      "seeds": [
+        1,
+        2,
+        3
+      ],
+      "target_reached_count": 0,
+      "parameter_count": 549,
+      "gradient_active_parameter_count": 274,
+      "kl_target_to_model": {
+        "mean": 0.6931471805599453,
+        "min": 0.6931471805599453,
+        "max": 0.6931471805599453,
+        "sample_std": 0.0
+      },
+      "invalid_mass": {
+        "mean": 0.5,
+        "min": 0.5,
+        "max": 0.5,
+        "sample_std": 0.0
+      },
+      "total_variation": {
+        "mean": 0.5,
+        "min": 0.5,
+        "max": 0.5,
+        "sample_std": 0.0
+      },
+      "max_marginal_error": {
+        "mean": 0.0,
+        "min": 0.0,
+        "max": 0.0,
+        "sample_std": 0.0
+      },
+      "mutual_information": {
+        "mean": 0.0,
+        "min": 0.0,
+        "max": 0.0,
+        "sample_std": 0.0
+      },
+      "steps_run": {
+        "mean": 50.0,
+        "min": 50,
+        "max": 50,
+        "sample_std": 0.0
+      },
+      "joint_sample_invalid_rate": {
+        "mean": 0.5040166666666667,
+        "min": 0.50185,
+        "max": 0.50775,
+        "sample_std": 0.003247049943153527
+      },
+      "marginal_sample_invalid_rate": {
+        "mean": 0.50115,
+        "min": 0.4959,
+        "max": 0.5094,
+        "sample_std": 0.007232738070744697
+      },
+      "mean_probabilities": {
+        "AA": 0.25,
+        "AB": 0.25,
+        "BA": 0.25,
+        "BB": 0.25
+      }
+    },
+    {
+      "task": "opposite",
+      "variant": "shared_contextual_wide",
+      "seeds": [
+        1,
+        2,
+        3
+      ],
+      "target_reached_count": 0,
+      "parameter_count": 549,
+      "gradient_active_parameter_count": 274,
+      "kl_target_to_model": {
+        "mean": 0.6931472004487453,
+        "min": 0.6931471209800115,
+        "max": 0.6931472401919159,
+        "sample_std": 6.88219428220138e-08
+      },
+      "invalid_mass": {
+        "mean": 0.5000000099341033,
+        "min": 0.4999999701976652,
+        "max": 0.5000000298023277,
+        "sample_std": 3.4412764885084906e-08
+      },
+      "total_variation": {
+        "mean": 0.5000000099341033,
+        "min": 0.4999999701976652,
+        "max": 0.5000000298023277,
+        "sample_std": 3.4412764885084906e-08
+      },
+      "max_marginal_error": {
+        "mean": 4.3998174220997534e-05,
+        "min": 4.380940607617845e-06,
+        "max": 6.565452796003513e-05,
+        "sample_std": 3.4359249572043744e-05
+      },
+      "mutual_information": {
+        "mean": 1.8358870649103713e-15,
+        "min": 1.0061211219624127e-15,
+        "max": 2.7319992131964166e-15,
+        "sample_std": 8.648497908148299e-16
+      },
+      "steps_run": {
+        "mean": 50.0,
+        "min": 50,
+        "max": 50,
+        "sample_std": 0.0
+      },
+      "joint_sample_invalid_rate": {
+        "mean": 0.5040166666666667,
+        "min": 0.5018,
+        "max": 0.5078,
+        "sample_std": 0.0032925420776860684
+      },
+      "marginal_sample_invalid_rate": {
+        "mean": 0.5011666666666666,
+        "min": 0.49595,
+        "max": 0.5094,
+        "sample_std": 0.007214626347450925
+      },
+      "mean_probabilities": {
+        "AA": 0.24995976188534966,
+        "AB": 0.2500008294983956,
+        "BA": 0.24999916056750107,
+        "BB": 0.25004024804875363
+      }
+    },
+    {
+      "task": "opposite",
+      "variant": "shared_contextual_warmup",
+      "seeds": [
+        1,
+        2,
+        3
+      ],
+      "target_reached_count": 0,
+      "parameter_count": 549,
+      "gradient_active_parameter_count": 274,
+      "kl_target_to_model": {
+        "mean": 0.6931472103635832,
+        "min": 0.6931471805638693,
+        "max": 0.6931472401646025,
+        "sample_std": 2.980036664025627e-08
+      },
+      "invalid_mass": {
+        "mean": 0.5000000149011607,
+        "min": 0.5,
+        "max": 0.5000000298023242,
+        "sample_std": 1.4901162082026255e-08
+      },
+      "total_variation": {
+        "mean": 0.5000000149011607,
+        "min": 0.5,
+        "max": 0.5000000298023242,
+        "sample_std": 1.4901162082026255e-08
+      },
+      "max_marginal_error": {
+        "mean": 6.90420489816527e-07,
+        "min": 2.235173712783478e-07,
+        "max": 1.579523180694764e-06,
+        "sample_std": 7.703098713867447e-07
+      },
+      "mutual_information": {
+        "mean": 7.401317865407919e-16,
+        "min": 0.0,
+        "max": 1.7763172406099663e-15,
+        "sample_std": 9.244249917461156e-16
+      },
+      "steps_run": {
+        "mean": 150.0,
+        "min": 150,
+        "max": 150,
+        "sample_std": 0.0
+      },
+      "joint_sample_invalid_rate": {
+        "mean": 0.5040166666666667,
+        "min": 0.50185,
+        "max": 0.50775,
+        "sample_std": 0.003247049943153527
+      },
+      "marginal_sample_invalid_rate": {
+        "mean": 0.50115,
+        "min": 0.4959,
+        "max": 0.5094,
+        "sample_std": 0.007232738070744697
+      },
+      "mean_probabilities": {
+        "AA": 0.2500003203750001,
+        "AB": 0.24999976406493038,
+        "BA": 0.2500002210339089,
+        "BB": 0.24999969452616067
+      }
+    },
+    {
+      "task": "opposite",
+      "variant": "directional_contextual_production",
+      "seeds": [
+        1,
+        2,
+        3
+      ],
+      "target_reached_count": 3,
+      "parameter_count": 669,
+      "gradient_active_parameter_count": 394,
+      "kl_target_to_model": {
+        "mean": 0.008471769321762171,
+        "min": 0.007142203242068157,
+        "max": 0.009834267365911087,
+        "sample_std": 0.0013463341700457189
+      },
+      "invalid_mass": {
+        "mean": 0.008384437739124175,
+        "min": 0.007088835503677379,
+        "max": 0.009775754612200219,
+        "sample_std": 0.0013460143174679332
+      },
+      "total_variation": {
+        "mean": 0.009575332187781968,
+        "min": 0.007267621234109088,
+        "max": 0.011682620717036605,
+        "sample_std": 0.0022143129791697977
+      },
+      "max_marginal_error": {
+        "mean": 0.004594429041553698,
+        "min": 0.002261497478102781,
+        "max": 0.007705274876442625,
+        "sample_std": 0.0028040222985827212
+      },
+      "mutual_information": {
+        "mean": 0.6447342605723012,
+        "min": 0.6381685271118807,
+        "max": 0.6509741185326485,
+        "sample_std": 0.006409012329530339
+      },
+      "steps_run": {
+        "mean": 116.66666666666667,
+        "min": 100,
+        "max": 125,
+        "sample_std": 14.433756729740644
+      },
+      "joint_sample_invalid_rate": {
+        "mean": 0.007866666666666666,
+        "min": 0.00655,
+        "max": 0.00895,
+        "sample_std": 0.0012168949557514537
+      },
+      "marginal_sample_invalid_rate": {
+        "mean": 0.50115,
+        "min": 0.4959,
+        "max": 0.5096499999999999,
+        "sample_std": 0.007428828979051772
+      },
+      "mean_probabilities": {
+        "AA": 0.004167092167807825,
+        "AB": 0.4913006863158687,
+        "BA": 0.5003148759450071,
+        "BB": 0.00421734557131635
+      }
+    },
+    {
+      "task": "opposite",
+      "variant": "directional_contextual_wide",
+      "seeds": [
+        1,
+        2,
+        3
+      ],
+      "target_reached_count": 3,
+      "parameter_count": 669,
+      "gradient_active_parameter_count": 394,
+      "kl_target_to_model": {
+        "mean": 0.00863158903913395,
+        "min": 0.007705512706820683,
+        "max": 0.009604176192001046,
+        "sample_std": 0.0009501858764529987
+      },
+      "invalid_mass": {
+        "mean": 0.008587030857216295,
+        "min": 0.0076753538205516,
+        "max": 0.009538204603640663,
+        "sample_std": 0.0009320532455687626
+      },
+      "total_variation": {
+        "mean": 0.008587030857216285,
+        "min": 0.0076753538205515835,
+        "max": 0.009538204603640646,
+        "sample_std": 0.0009320532455687617
+      },
+      "max_marginal_error": {
+        "mean": 0.001852903204271043,
+        "min": 0.000656958635110283,
+        "max": 0.0037530440165034484,
+        "sample_std": 0.001663837562319796
+      },
+      "mutual_information": {
+        "mean": 0.6438189287231837,
+        "min": 0.6393347142352283,
+        "max": 0.6481285633328315,
+        "sample_std": 0.004399523166013215
+      },
+      "steps_run": {
+        "mean": 108.33333333333333,
+        "min": 100,
+        "max": 125,
+        "sample_std": 14.433756729740644
+      },
+      "joint_sample_invalid_rate": {
+        "mean": 0.008216666666666666,
+        "min": 0.007549999999999999,
+        "max": 0.0092,
+        "sample_std": 0.000869386757049665
+      },
+      "marginal_sample_invalid_rate": {
+        "mean": 0.5011,
+        "min": 0.49605,
+        "max": 0.50915,
+        "sample_std": 0.007046453008429135
+      },
+      "mean_probabilities": {
+        "AA": 0.004310077909200716,
+        "AB": 0.49504079595073475,
+        "BA": 0.496372173192049,
+        "BB": 0.004276952948015579
+      }
+    },
+    {
+      "task": "opposite",
+      "variant": "directional_static_wide",
+      "seeds": [
+        1,
+        2,
+        3
+      ],
+      "target_reached_count": 3,
+      "parameter_count": 669,
+      "gradient_active_parameter_count": 16,
+      "kl_target_to_model": {
+        "mean": 0.00955074068239333,
+        "min": 0.009217320685304176,
+        "max": 0.009785254096868756,
+        "sample_std": 0.00029660406952044713
+      },
+      "invalid_mass": {
+        "mean": 0.00950083575523475,
+        "min": 0.009170614457005365,
+        "max": 0.009730988297808035,
+        "sample_std": 0.0002932831861152363
+      },
+      "total_variation": {
+        "mean": 0.009500835755234749,
+        "min": 0.009170614457005354,
+        "max": 0.009730988297808043,
+        "sample_std": 0.00029328318611524553
+      },
+      "max_marginal_error": {
+        "mean": 0.0017679069686726463,
+        "min": 0.0014067161448348964,
+        "max": 0.0023463766917829476,
+        "sample_std": 0.0005061107348441607
+      },
+      "mutual_information": {
+        "mean": 0.6394789361514448,
+        "min": 0.6384392786726436,
+        "max": 0.6409896491564553,
+        "sample_std": 0.0013388492755921958
+      },
+      "steps_run": {
+        "mean": 333.3333333333333,
+        "min": 300,
+        "max": 350,
+        "sample_std": 28.867513459481287
+      },
+      "joint_sample_invalid_rate": {
+        "mean": 0.009166666666666665,
+        "min": 0.00855,
+        "max": 0.00955,
+        "sample_std": 0.0005392896562454472
+      },
+      "marginal_sample_invalid_rate": {
+        "mean": 0.5013333333333333,
+        "min": 0.4959,
+        "max": 0.5096,
+        "sample_std": 0.007276216965795748
+      },
+      "mean_probabilities": {
+        "AA": 0.004651769879182456,
+        "AB": 0.4945181339153682,
+        "BA": 0.49598103032939705,
+        "BB": 0.004849065876052294
+      }
+    },
+    {
+      "task": "opposite",
+      "variant": "directional_contextual_warmup",
+      "seeds": [
+        1,
+        2,
+        3
+      ],
+      "target_reached_count": 3,
+      "parameter_count": 669,
+      "gradient_active_parameter_count": 394,
+      "kl_target_to_model": {
+        "mean": 0.0001729719464375242,
+        "min": 9.970411869153484e-05,
+        "max": 0.00021773672304137293,
+        "sample_std": 6.39706328381232e-05
+      },
+      "invalid_mass": {
+        "mean": 0.00016048900230833764,
+        "min": 9.439769435070014e-05,
+        "max": 0.00019493681619928057,
+        "sample_std": 5.725392382258728e-05
+      },
+      "total_variation": {
+        "mean": 0.0024672614259126525,
+        "min": 0.0016752251910390145,
+        "max": 0.0034717464511637283,
+        "sample_std": 0.0009169094971258886
+      },
+      "max_marginal_error": {
+        "mean": 0.0023952356892344984,
+        "min": 0.001639223207561935,
+        "max": 0.0033820554075875142,
+        "sample_std": 0.000894046981282052
+      },
+      "mutual_information": {
+        "mean": 0.6915806793434719,
+        "min": 0.6912648034404553,
+        "max": 0.6921752908108904,
+        "sample_std": 0.0005152833677475793
+      },
+      "steps_run": {
+        "mean": 150.0,
+        "min": 150,
+        "max": 150,
+        "sample_std": 0.0
+      },
+      "joint_sample_invalid_rate": {
+        "mean": 0.00013333333333333334,
+        "min": 0.0,
+        "max": 0.00025,
+        "sample_std": 0.00012583057392117917
+      },
+      "marginal_sample_invalid_rate": {
+        "mean": 0.5013166666666667,
+        "min": 0.4962,
+        "max": 0.5097,
+        "sample_std": 0.007318868309604555
+      },
+      "mean_probabilities": {
+        "AA": 8.099868983134824e-05,
+        "AB": 0.49753273857408736,
+        "BA": 0.5023067724236043,
+        "BB": 7.94903124769894e-05
+      }
+    },
+    {
+      "task": "independent",
+      "variant": "unrestricted_table",
+      "seeds": [
+        1,
+        2,
+        3
+      ],
+      "target_reached_count": 3,
+      "parameter_count": 4,
+      "gradient_active_parameter_count": 4,
+      "kl_target_to_model": {
+        "mean": 0.0,
+        "min": 0.0,
+        "max": 0.0,
+        "sample_std": 0.0
+      },
+      "invalid_mass": {
+        "mean": 0.0,
+        "min": 0.0,
+        "max": 0.0,
+        "sample_std": 0.0
+      },
+      "total_variation": {
+        "mean": 0.0,
+        "min": 0.0,
+        "max": 0.0,
+        "sample_std": 0.0
+      },
+      "max_marginal_error": {
+        "mean": 0.0,
+        "min": 0.0,
+        "max": 0.0,
+        "sample_std": 0.0
+      },
+      "mutual_information": {
+        "mean": 0.0,
+        "min": 0.0,
+        "max": 0.0,
+        "sample_std": 0.0
+      },
+      "steps_run": {
+        "mean": 50.0,
+        "min": 50,
+        "max": 50,
+        "sample_std": 0.0
+      },
+      "joint_sample_invalid_rate": {
+        "mean": 0.0,
+        "min": 0.0,
+        "max": 0.0,
+        "sample_std": 0.0
+      },
+      "marginal_sample_invalid_rate": {
+        "mean": 0.0,
+        "min": 0.0,
+        "max": 0.0,
+        "sample_std": 0.0
+      },
+      "mean_probabilities": {
+        "AA": 0.25,
+        "AB": 0.25,
+        "BA": 0.25,
+        "BB": 0.25
+      }
+    },
+    {
+      "task": "independent",
+      "variant": "shared_static_wide",
+      "seeds": [
+        1,
+        2,
+        3
+      ],
+      "target_reached_count": 3,
+      "parameter_count": 549,
+      "gradient_active_parameter_count": 8,
+      "kl_target_to_model": {
+        "mean": 7.435789704561084e-06,
+        "min": 3.5392909717990584e-06,
+        "max": 1.2007118235790593e-05,
+        "sample_std": 4.2740579179363416e-06
+      },
+      "invalid_mass": {
+        "mean": 0.0,
+        "min": 0.0,
+        "max": 0.0,
+        "sample_std": 0.0
+      },
+      "total_variation": {
+        "mean": 0.0016186745208563492,
+        "min": 0.001120597057306938,
+        "max": 0.0019115542861688067,
+        "sample_std": 0.0004335699551324096
+      },
+      "max_marginal_error": {
+        "mean": 0.0007944280174158047,
+        "min": 0.0001648366353013131,
+        "max": 0.001710407257484614,
+        "sample_std": 0.0008116099068682971
+      },
+      "mutual_information": {
+        "mean": 3.158716859063966e-06,
+        "min": 3.1434160350704825e-07,
+        "max": 6.652639490964201e-06,
+        "sample_std": 3.218685892273711e-06
+      },
+      "steps_run": {
+        "mean": 50.0,
+        "min": 50,
+        "max": 50,
+        "sample_std": 0.0
+      },
+      "joint_sample_invalid_rate": {
+        "mean": 0.0,
+        "min": 0.0,
+        "max": 0.0,
+        "sample_std": 0.0
+      },
+      "marginal_sample_invalid_rate": {
+        "mean": 0.0,
+        "min": 0.0,
+        "max": 0.0,
+        "sample_std": 0.0
+      },
+      "mean_probabilities": {
+        "AA": 0.25135222190637724,
+        "AB": 0.24944220611103854,
+        "BA": 0.24944220611103854,
+        "BB": 0.2497633658715456
+      }
+    },
+    {
+      "task": "independent",
+      "variant": "shared_contextual_production",
+      "seeds": [
+        1,
+        2,
+        3
+      ],
+      "target_reached_count": 3,
+      "parameter_count": 549,
+      "gradient_active_parameter_count": 274,
+      "kl_target_to_model": {
+        "mean": 3.1391796569598305e-11,
+        "min": 0.0,
+        "max": 9.396933231542448e-11,
+        "sample_std": 5.419383359689047e-11
+      },
+      "invalid_mass": {
+        "mean": 0.0,
+        "min": 0.0,
+        "max": 0.0,
+        "sample_std": 0.0
+      },
+      "total_variation": {
+        "mean": 1.9272170537950237e-06,
+        "min": 0.0,
+        "max": 5.483627973035254e-06,
+        "sample_std": 3.0835447824001043e-06
+      },
+      "max_marginal_error": {
+        "mean": 1.9272170537950237e-06,
+        "min": 0.0,
+        "max": 5.483627973035254e-06,
+        "sample_std": 3.0835447824001043e-06
+      },
+      "mutual_information": {
+        "mean": 5.580712943082516e-21,
+        "min": 0.0,
+        "max": 1.6742138829247548e-20,
+        "sample_std": 9.666078359876158e-21
+      },
+      "steps_run": {
+        "mean": 50.0,
+        "min": 50,
+        "max": 50,
+        "sample_std": 0.0
+      },
+      "joint_sample_invalid_rate": {
+        "mean": 0.0,
+        "min": 0.0,
+        "max": 0.0,
+        "sample_std": 0.0
+      },
+      "marginal_sample_invalid_rate": {
+        "mean": 0.0,
+        "min": 0.0,
+        "max": 0.0,
+        "sample_std": 0.0
+      },
+      "mean_probabilities": {
+        "AA": 0.2499983310697639,
+        "AB": 0.2500002582868177,
+        "BA": 0.2499997417131823,
+        "BB": 0.25000166893023607
+      }
+    },
+    {
+      "task": "independent",
+      "variant": "shared_contextual_wide",
+      "seeds": [
+        1,
+        2,
+        3
+      ],
+      "target_reached_count": 3,
+      "parameter_count": 549,
+      "gradient_active_parameter_count": 274,
+      "kl_target_to_model": {
+        "mean": 2.6549876314119203e-07,
+        "min": 1.6555645743210334e-12,
+        "max": 5.409733240813175e-07,
+        "sample_std": 2.7062381402264473e-07
+      },
+      "invalid_mass": {
+        "mean": 0.0,
+        "min": 0.0,
+        "max": 0.0,
+        "sample_std": 0.0
+      },
+      "total_variation": {
+        "mean": 0.00026102366201160204,
+        "min": 7.748602897095225e-07,
+        "max": 0.000490866652668509,
+        "sample_std": 0.0002464566417225468
+      },
+      "max_marginal_error": {
+        "mean": 0.00014057259646397627,
+        "min": 7.748602897095225e-07,
+        "max": 0.0002914294730765876,
+        "sample_std": 0.00014564255704978125
+      },
+      "mutual_information": {
+        "mean": 1.6121974187053816e-07,
+        "min": 0.0,
+        "max": 4.818426916276711e-07,
+        "sample_std": 2.7766910501918e-07
+      },
+      "steps_run": {
+        "mean": 50.0,
+        "min": 50,
+        "max": 50,
+        "sample_std": 0.0
+      },
+      "joint_sample_invalid_rate": {
+        "mean": 0.0,
+        "min": 0.0,
+        "max": 0.0,
+        "sample_std": 0.0
+      },
+      "marginal_sample_invalid_rate": {
+        "mean": 0.0,
+        "min": 0.0,
+        "max": 0.0,
+        "sample_std": 0.0
+      },
+      "mean_probabilities": {
+        "AA": 0.25004482021860136,
+        "AB": 0.24993025510720798,
+        "BA": 0.24989603707218364,
+        "BB": 0.250128887602007
+      }
+    },
+    {
+      "task": "independent",
+      "variant": "shared_contextual_warmup",
+      "seeds": [
+        1,
+        2,
+        3
+      ],
+      "target_reached_count": 3,
+      "parameter_count": 549,
+      "gradient_active_parameter_count": 274,
+      "kl_target_to_model": {
+        "mean": 1.772176511834663e-07,
+        "min": 1.038941860320719e-07,
+        "max": 3.172807624962637e-07,
+        "sample_std": 1.213428738372759e-07
+      },
+      "invalid_mass": {
+        "mean": 0.0,
+        "min": 0.0,
+        "max": 0.0,
+        "sample_std": 0.0
+      },
+      "total_variation": {
+        "mean": 0.0002313492221420188,
+        "min": 0.00017386302092875505,
+        "max": 0.0003339871913486947,
+        "sample_std": 8.91007805962813e-05
+      },
+      "max_marginal_error": {
+        "mean": 0.00016410648822044274,
+        "min": 0.00015722214707070137,
+        "max": 0.00017308443526797834,
+        "sample_std": 8.13575048503991e-06
+      },
+      "mutual_information": {
+        "mean": 7.711278987501685e-08,
+        "min": 5.401125148207618e-10,
+        "max": 2.230323591214463e-07,
+        "sample_std": 1.2642168924170636e-07
+      },
+      "steps_run": {
+        "mean": 150.0,
+        "min": 150,
+        "max": 150,
+        "sample_std": 0.0
+      },
+      "joint_sample_invalid_rate": {
+        "mean": 0.0,
+        "min": 0.0,
+        "max": 0.0,
+        "sample_std": 0.0
+      },
+      "marginal_sample_invalid_rate": {
+        "mean": 0.0,
+        "min": 0.0,
+        "max": 0.0,
+        "sample_std": 0.0
+      },
+      "mean_probabilities": {
+        "AA": 0.2500141710034313,
+        "AB": 0.24993732074689803,
+        "BA": 0.24992506702520137,
+        "BB": 0.2501234412244692
+      }
+    },
+    {
+      "task": "independent",
+      "variant": "directional_contextual_production",
+      "seeds": [
+        1,
+        2,
+        3
+      ],
+      "target_reached_count": 3,
+      "parameter_count": 669,
+      "gradient_active_parameter_count": 394,
+      "kl_target_to_model": {
+        "mean": 6.809367884367627e-14,
+        "min": 0.0,
+        "max": 1.1368683772161603e-13,
+        "sample_std": 6.009059258179806e-14
+      },
+      "invalid_mass": {
+        "mean": 0.0,
+        "min": 0.0,
+        "max": 0.0,
+        "sample_std": 0.0
+      },
+      "total_variation": {
+        "mean": 1.4901160779364395e-07,
+        "min": 0.0,
+        "max": 2.384185791015625e-07,
+        "sample_std": 1.2990530871811438e-07
+      },
+      "max_marginal_error": {
+        "mean": 1.4901160779364395e-07,
+        "min": 0.0,
+        "max": 2.384185791015625e-07,
+        "sample_std": 1.2990530871811438e-07
+      },
+      "mutual_information": {
+        "mean": 5.9212028760225e-16,
+        "min": 0.0,
+        "max": 1.77636086280675e-15,
+        "sample_std": 1.025582422319393e-15
+      },
+      "steps_run": {
+        "mean": 50.0,
+        "min": 50,
+        "max": 50,
+        "sample_std": 0.0
+      },
+      "joint_sample_invalid_rate": {
+        "mean": 0.0,
+        "min": 0.0,
+        "max": 0.0,
+        "sample_std": 0.0
+      },
+      "marginal_sample_invalid_rate": {
+        "mean": 0.0,
+        "min": 0.0,
+        "max": 0.0,
+        "sample_std": 0.0
+      },
+      "mean_probabilities": {
+        "AA": 0.2499999950329442,
+        "AB": 0.24999993542830298,
+        "BA": 0.2500000745058039,
+        "BB": 0.24999999503294892
+      }
+    },
+    {
+      "task": "independent",
+      "variant": "directional_contextual_wide",
+      "seeds": [
+        1,
+        2,
+        3
+      ],
+      "target_reached_count": 3,
+      "parameter_count": 669,
+      "gradient_active_parameter_count": 394,
+      "kl_target_to_model": {
+        "mean": 6.300693563369523e-07,
+        "min": 4.279920590155584e-08,
+        "max": 1.1608489284276047e-06,
+        "sample_std": 5.611614603582791e-07
+      },
+      "invalid_mass": {
+        "mean": 0.0,
+        "min": 0.0,
+        "max": 0.0,
+        "sample_std": 0.0
+      },
+      "total_variation": {
+        "mean": 0.00045514598031089665,
+        "min": 0.00014628468636113112,
+        "max": 0.0006822197612792458,
+        "sample_std": 0.00027717052348984607
+      },
+      "max_marginal_error": {
+        "mean": 0.00045514598031089665,
+        "min": 0.00014628468636113112,
+        "max": 0.0006822197612792458,
+        "sample_std": 0.00027717052348984607
+      },
+      "mutual_information": {
+        "mean": 3.1743280812446274e-08,
+        "min": 1.7666647062603238e-15,
+        "max": 9.457535289748929e-08,
+        "sample_std": 5.441515459739331e-08
+      },
+      "steps_run": {
+        "mean": 50.0,
+        "min": 50,
+        "max": 50,
+        "sample_std": 0.0
+      },
+      "joint_sample_invalid_rate": {
+        "mean": 0.0,
+        "min": 0.0,
+        "max": 0.0,
+        "sample_std": 0.0
+      },
+      "marginal_sample_invalid_rate": {
+        "mean": 0.0,
+        "min": 0.0,
+        "max": 0.0,
+        "sample_std": 0.0
+      },
+      "mean_probabilities": {
+        "AA": 0.25014650074995043,
+        "AB": 0.24976998322280722,
+        "BA": 0.25030864523036045,
+        "BB": 0.24977487079688188
+      }
+    },
+    {
+      "task": "independent",
+      "variant": "directional_static_wide",
+      "seeds": [
+        1,
+        2,
+        3
+      ],
+      "target_reached_count": 3,
+      "parameter_count": 669,
+      "gradient_active_parameter_count": 16,
+      "kl_target_to_model": {
+        "mean": 1.0694692933466143e-06,
+        "min": 4.670632800518604e-07,
+        "max": 1.9525950707421913e-06,
+        "sample_std": 7.815394198346758e-07
+      },
+      "invalid_mass": {
+        "mean": 0.0,
+        "min": 0.0,
+        "max": 0.0,
+        "sample_std": 0.0
+      },
+      "total_variation": {
+        "mean": 0.000646390054406365,
+        "min": 0.00041773177079929,
+        "max": 0.0009076520665339816,
+        "sample_std": 0.00024658208851875837
+      },
+      "max_marginal_error": {
+        "mean": 0.000480897745857356,
+        "min": 0.00011730940023879644,
+        "max": 0.0009076520665339816,
+        "sample_std": 0.0003989396418575406
+      },
+      "mutual_information": {
+        "mean": 3.053354362793435e-07,
+        "min": 5.987067244740912e-08,
+        "max": 7.535032617818956e-07,
+        "sample_std": 3.8871318559408017e-07
+      },
+      "steps_run": {
+        "mean": 50.0,
+        "min": 50,
+        "max": 50,
+        "sample_std": 0.0
+      },
+      "joint_sample_invalid_rate": {
+        "mean": 0.0,
+        "min": 0.0,
+        "max": 0.0,
+        "sample_std": 0.0
+      },
+      "marginal_sample_invalid_rate": {
+        "mean": 0.0,
+        "min": 0.0,
+        "max": 0.0,
+        "sample_std": 0.0
+      },
+      "mean_probabilities": {
+        "AA": 0.2501022356093053,
+        "AB": 0.25016416982176454,
+        "BA": 0.24961354210145056,
+        "BB": 0.25012005246747965
+      }
+    },
+    {
+      "task": "independent",
+      "variant": "directional_contextual_warmup",
+      "seeds": [
+        1,
+        2,
+        3
+      ],
+      "target_reached_count": 3,
+      "parameter_count": 669,
+      "gradient_active_parameter_count": 394,
+      "kl_target_to_model": {
+        "mean": 6.793485215113767e-07,
+        "min": 4.502265726902266e-09,
+        "max": 1.433855940591311e-06,
+        "sample_std": 7.179988911309592e-07
+      },
+      "invalid_mass": {
+        "mean": 0.0,
+        "min": 0.0,
+        "max": 0.0,
+        "sample_std": 0.0
+      },
+      "total_variation": {
+        "mean": 0.0004119488054030544,
+        "min": 4.003941774133324e-05,
+        "max": 0.0007442087156834809,
+        "sample_std": 0.0003537550859472435
+      },
+      "max_marginal_error": {
+        "mean": 0.00040037681279799414,
+        "min": 3.263354106941563e-05,
+        "max": 0.0007442087156834809,
+        "sample_std": 0.00035638970587226866
+      },
+      "mutual_information": {
+        "mean": 1.2811824085892845e-07,
+        "min": 6.630122516864447e-10,
+        "max": 3.115676360779165e-07,
+        "sample_std": 1.6284020173176027e-07
+      },
+      "steps_run": {
+        "mean": 150.0,
+        "min": 150,
+        "max": 150,
+        "sample_std": 0.0
+      },
+      "joint_sample_invalid_rate": {
+        "mean": 0.0,
+        "min": 0.0,
+        "max": 0.0,
+        "sample_std": 0.0
+      },
+      "marginal_sample_invalid_rate": {
+        "mean": 0.0,
+        "min": 0.0,
+        "max": 0.0,
+        "sample_std": 0.0
+      },
+      "mean_probabilities": {
+        "AA": 0.25015725815869555,
+        "AB": 0.25000270331407975,
+        "BA": 0.2501981072165431,
+        "BB": 0.24964193131068146
+      }
+    },
+    {
+      "task": "equal",
+      "variant": "unrestricted_table",
+      "seeds": [
+        1,
+        2,
+        3
+      ],
+      "target_reached_count": 3,
+      "parameter_count": 4,
+      "gradient_active_parameter_count": 4,
+      "kl_target_to_model": {
+        "mean": 0.009223437847098448,
+        "min": 0.009223437847098448,
+        "max": 0.009223437847098448,
+        "sample_std": 0.0
+      },
+      "invalid_mass": {
+        "mean": 0.009181032418995863,
+        "min": 0.009181032418995863,
+        "max": 0.009181032418995863,
+        "sample_std": 0.0
+      },
+      "total_variation": {
+        "mean": 0.00918103241899584,
+        "min": 0.00918103241899584,
+        "max": 0.00918103241899584,
+        "sample_std": 0.0
+      },
+      "max_marginal_error": {
+        "mean": 0.0,
+        "min": 0.0,
+        "max": 0.0,
+        "sample_std": 0.0
+      },
+      "mutual_information": {
+        "mean": 0.6409437293524853,
+        "min": 0.6409437293524853,
+        "max": 0.6409437293524853,
+        "sample_std": 0.0
+      },
+      "steps_run": {
+        "mean": 275.0,
+        "min": 275,
+        "max": 275,
+        "sample_std": 0.0
+      },
+      "joint_sample_invalid_rate": {
+        "mean": 0.0088,
+        "min": 0.0081,
+        "max": 0.0095,
+        "sample_std": 0.0007000000000000001
+      },
+      "marginal_sample_invalid_rate": {
+        "mean": 0.49885,
+        "min": 0.49060000000000004,
+        "max": 0.5041,
+        "sample_std": 0.007232738070744697
+      },
+      "mean_probabilities": {
+        "AA": 0.4954094837905021,
+        "AB": 0.004590516209497931,
+        "BA": 0.004590516209497931,
+        "BB": 0.4954094837905021
+      }
+    },
+    {
+      "task": "equal",
+      "variant": "shared_static_wide",
+      "seeds": [
+        1,
+        2,
+        3
+      ],
+      "target_reached_count": 3,
+      "parameter_count": 549,
+      "gradient_active_parameter_count": 8,
+      "kl_target_to_model": {
+        "mean": 0.009550618741804276,
+        "min": 0.009140766804186518,
+        "max": 0.009915616754778034,
+        "sample_std": 0.0003893674580648673
+      },
+      "invalid_mass": {
+        "mean": 0.009502676658930552,
+        "min": 0.00909822891449825,
+        "max": 0.009866109129680565,
+        "sample_std": 0.000385579687903207
+      },
+      "total_variation": {
+        "mean": 0.009502676658930549,
+        "min": 0.009098228914498244,
+        "max": 0.00986610912968056,
+        "sample_std": 0.00038557968790320715
+      },
+      "max_marginal_error": {
+        "mean": 0.0009579461007793721,
+        "min": 0.00050246725092018,
+        "max": 0.0017080457990967801,
+        "sample_std": 0.000654565498797163
+      },
+      "mutual_information": {
+        "mean": 0.6394465024336219,
+        "min": 0.6377613003049489,
+        "max": 0.6413308710986707,
+        "sample_std": 0.0017931004976734764
+      },
+      "steps_run": {
+        "mean": 333.3333333333333,
+        "min": 300,
+        "max": 350,
+        "sample_std": 28.867513459481287
+      },
+      "joint_sample_invalid_rate": {
+        "mean": 0.009099999999999999,
+        "min": 0.00875,
+        "max": 0.00975,
+        "sample_std": 0.0005634713834792323
+      },
+      "marginal_sample_invalid_rate": {
+        "mean": 0.49861666666666665,
+        "min": 0.49065000000000003,
+        "max": 0.50335,
+        "sample_std": 0.006939980787677512
+      },
+      "mean_probabilities": {
+        "AA": 0.49587162960403397,
+        "AB": 0.004751338329465276,
+        "BA": 0.004751338329465276,
+        "BB": 0.49462569373703547
+      }
+    },
+    {
+      "task": "equal",
+      "variant": "shared_contextual_production",
+      "seeds": [
+        1,
+        2,
+        3
+      ],
+      "target_reached_count": 3,
+      "parameter_count": 549,
+      "gradient_active_parameter_count": 274,
+      "kl_target_to_model": {
+        "mean": 0.008292246797291606,
+        "min": 0.007894726804351548,
+        "max": 0.00883029046674233,
+        "sample_std": 0.00048335289317595766
+      },
+      "invalid_mass": {
+        "mean": 0.007881064580842197,
+        "min": 0.007480588729900971,
+        "max": 0.008501393147959554,
+        "sample_std": 0.0005447585039166412
+      },
+      "total_variation": {
+        "mean": 0.017553458568266508,
+        "min": 0.016240632655798865,
+        "max": 0.01889326518173351,
+        "sample_std": 0.0013265220684486995
+      },
+      "max_marginal_error": {
+        "mean": 0.013618106061344356,
+        "min": 0.011990035500502705,
+        "max": 0.01507076012559283,
+        "sample_std": 0.0015478353479511124
+      },
+      "mutual_information": {
+        "mean": 0.6467685757830419,
+        "min": 0.6438663420564218,
+        "max": 0.6486965542032319,
+        "sample_std": 0.0025582449838470046
+      },
+      "steps_run": {
+        "mean": 125.0,
+        "min": 100,
+        "max": 150,
+        "sample_std": 25.0
+      },
+      "joint_sample_invalid_rate": {
+        "mean": 0.007783333333333333,
+        "min": 0.00685,
+        "max": 0.00885,
+        "sample_std": 0.0010066445913694334
+      },
+      "marginal_sample_invalid_rate": {
+        "mean": 0.49833333333333335,
+        "min": 0.4907,
+        "max": 0.5034,
+        "sample_std": 0.006727803009403067
+      },
+      "mean_probabilities": {
+        "AA": 0.5004816049858799,
+        "AB": 0.003940819370172794,
+        "BA": 0.003940245210669403,
+        "BB": 0.49163733043327795
+      }
+    },
+    {
+      "task": "equal",
+      "variant": "shared_contextual_wide",
+      "seeds": [
+        1,
+        2,
+        3
+      ],
+      "target_reached_count": 3,
+      "parameter_count": 549,
+      "gradient_active_parameter_count": 274,
+      "kl_target_to_model": {
+        "mean": 0.008819999186735464,
+        "min": 0.007764921600080743,
+        "max": 0.009516240152285693,
+        "sample_std": 0.0009291673467726779
+      },
+      "invalid_mass": {
+        "mean": 0.008772317745490246,
+        "min": 0.0077345350432747265,
+        "max": 0.009464235198527984,
+        "sample_std": 0.0009152500940794227
+      },
+      "total_variation": {
+        "mean": 0.00877231774549024,
+        "min": 0.007734535043274743,
+        "max": 0.009464235198527972,
+        "sample_std": 0.0009152500940794052
+      },
+      "max_marginal_error": {
+        "mean": 0.001761458432092892,
+        "min": 0.0003977827049875815,
+        "max": 0.003040239430212921,
+        "sample_std": 0.001323272353836983
+      },
+      "mutual_information": {
+        "mean": 0.6428906585860202,
+        "min": 0.6396155721968231,
+        "max": 0.6478365494138154,
+        "sample_std": 0.004357729592873592
+      },
+      "steps_run": {
+        "mean": 108.33333333333333,
+        "min": 100,
+        "max": 125,
+        "sample_std": 14.433756729740644
+      },
+      "joint_sample_invalid_rate": {
+        "mean": 0.008483333333333334,
+        "min": 0.00775,
+        "max": 0.00975,
+        "sample_std": 0.0011015141094572202
+      },
+      "marginal_sample_invalid_rate": {
+        "mean": 0.49846666666666667,
+        "min": 0.4901,
+        "max": 0.5035000000000001,
+        "sample_std": 0.007295432360959415
+      },
+      "mean_probabilities": {
+        "AA": 0.49534753220893313,
+        "AB": 0.004387127410400593,
+        "BA": 0.004385190335089654,
+        "BB": 0.4958801500455767
+      }
+    },
+    {
+      "task": "equal",
+      "variant": "shared_contextual_warmup",
+      "seeds": [
+        1,
+        2,
+        3
+      ],
+      "target_reached_count": 3,
+      "parameter_count": 549,
+      "gradient_active_parameter_count": 274,
+      "kl_target_to_model": {
+        "mean": 0.00023111314811313788,
+        "min": 0.0001678927997580959,
+        "max": 0.000305883217774916,
+        "sample_std": 6.971646801733177e-05
+      },
+      "invalid_mass": {
+        "mean": 0.00020592458051596658,
+        "min": 0.00014421221717026745,
+        "max": 0.0002784272118012088,
+        "sample_std": 6.775498954026378e-05
+      },
+      "total_variation": {
+        "mean": 0.0036476156052474714,
+        "min": 0.00351178605969502,
+        "max": 0.0038406472041095075,
+        "sample_std": 0.0001717308046144491
+      },
+      "max_marginal_error": {
+        "mean": 0.003544914599464618,
+        "min": 0.003439885660634079,
+        "max": 0.003701720503774153,
+        "sample_std": 0.0001383835679775843
+      },
+      "mutual_information": {
+        "mean": 0.6911756126028216,
+        "min": 0.6905620951748708,
+        "max": 0.69170387451803,
+        "sample_std": 0.000575644329387487
+      },
+      "steps_run": {
+        "mean": 150.0,
+        "min": 150,
+        "max": 150,
+        "sample_std": 0.0
+      },
+      "joint_sample_invalid_rate": {
+        "mean": 0.00015000000000000001,
+        "min": 5e-05,
+        "max": 0.00025,
+        "sample_std": 0.0001
+      },
+      "marginal_sample_invalid_rate": {
+        "mean": 0.49875,
+        "min": 0.49085,
+        "max": 0.5036,
+        "sample_std": 0.006900543456859049
+      },
+      "mean_probabilities": {
+        "AA": 0.5034416910247316,
+        "AB": 0.0001032235747330785,
+        "BA": 0.00010270100578288809,
+        "BB": 0.49635238439475254
+      }
+    },
+    {
+      "task": "equal",
+      "variant": "directional_contextual_production",
+      "seeds": [
+        1,
+        2,
+        3
+      ],
+      "target_reached_count": 2,
+      "parameter_count": 669,
+      "gradient_active_parameter_count": 394,
+      "kl_target_to_model": {
+        "mean": 0.23592195167289745,
+        "min": 0.0067678832768232056,
+        "max": 0.6931471805599453,
+        "sample_std": 0.39596903366360947
+      },
+      "invalid_mass": {
+        "mean": 0.1713595471169681,
+        "min": 0.006570664110898657,
+        "max": 0.5,
+        "sample_std": 0.2846113667658914
+      },
+      "total_variation": {
+        "mean": 0.1762630055037863,
+        "min": 0.01259145109175848,
+        "max": 0.5,
+        "sample_std": 0.28037025915602654
+      },
+      "max_marginal_error": {
+        "mean": 0.0072892238293252865,
+        "min": 0.0,
+        "max": 0.012448494068161176,
+        "sample_std": 0.006491823924328971
+      },
+      "mutual_information": {
+        "mean": 0.4340146864343732,
+        "min": 0.0,
+        "max": 0.6534114096425199,
+        "sample_std": 0.3758753385994972
+      },
+      "steps_run": {
+        "mean": 291.6666666666667,
+        "min": 125,
+        "max": 600,
+        "sample_std": 267.3169155390907
+      },
+      "joint_sample_invalid_rate": {
+        "mean": 0.17046666666666668,
+        "min": 0.0066,
+        "max": 0.49815000000000004,
+        "sample_std": 0.28378209216462785
+      },
+      "marginal_sample_invalid_rate": {
+        "mean": 0.4990833333333333,
+        "min": 0.49055000000000004,
+        "max": 0.5041,
+        "sample_std": 0.007428043708361759
+      },
+      "mean_probabilities": {
+        "AA": 0.4215701250534849,
+        "AB": 0.08564372652017005,
+        "BA": 0.08571582059679804,
+        "BB": 0.40707032782954705
+      }
+    },
+    {
+      "task": "equal",
+      "variant": "directional_contextual_wide",
+      "seeds": [
+        1,
+        2,
+        3
+      ],
+      "target_reached_count": 3,
+      "parameter_count": 669,
+      "gradient_active_parameter_count": 394,
+      "kl_target_to_model": {
+        "mean": 0.008434735916438877,
+        "min": 0.007641597029257763,
+        "max": 0.009072887979698907,
+        "sample_std": 0.0007281237071374187
+      },
+      "invalid_mass": {
+        "mean": 0.008338025980686843,
+        "min": 0.007456414101725801,
+        "max": 0.009006430336498861,
+        "sample_std": 0.0007966998606504959
+      },
+      "total_variation": {
+        "mean": 0.010028664606933664,
+        "min": 0.008551233503835888,
+        "max": 0.01252832998046626,
+        "sample_std": 0.0021767053713915856
+      },
+      "max_marginal_error": {
+        "mean": 0.0049858070256471225,
+        "min": 0.0012518824159756248,
+        "max": 0.009213295402762112,
+        "sample_std": 0.004003589399644136
+      },
+      "mutual_information": {
+        "mean": 0.6449849909317912,
+        "min": 0.6419332237066601,
+        "max": 0.6490835150012859,
+        "sample_std": 0.0036882843325748843
+      },
+      "steps_run": {
+        "mean": 116.66666666666667,
+        "min": 100,
+        "max": 125,
+        "sample_std": 14.433756729740644
+      },
+      "joint_sample_invalid_rate": {
+        "mean": 0.008216666666666667,
+        "min": 0.00775,
+        "max": 0.0085,
+        "sample_std": 0.0004072263907623544
+      },
+      "marginal_sample_invalid_rate": {
+        "mean": 0.4987333333333333,
+        "min": 0.49050000000000005,
+        "max": 0.5036,
+        "sample_std": 0.007169611797952044
+      },
+      "mean_probabilities": {
+        "AA": 0.49727502018854003,
+        "AB": 0.004234605052517272,
+        "BA": 0.004103420928169572,
+        "BB": 0.4943869538307731
+      }
+    },
+    {
+      "task": "equal",
+      "variant": "directional_static_wide",
+      "seeds": [
+        1,
+        2,
+        3
+      ],
+      "target_reached_count": 3,
+      "parameter_count": 669,
+      "gradient_active_parameter_count": 16,
+      "kl_target_to_model": {
+        "mean": 0.009561296502927289,
+        "min": 0.009056556901788637,
+        "max": 0.009944318228723992,
+        "sample_std": 0.0004562252451189261
+      },
+      "invalid_mass": {
+        "mean": 0.009514190956543643,
+        "min": 0.009015582720874653,
+        "max": 0.00989205622458876,
+        "sample_std": 0.00045053923120099765
+      },
+      "total_variation": {
+        "mean": 0.00951419095654365,
+        "min": 0.009015582720874656,
+        "max": 0.009892056224588767,
+        "sample_std": 0.0004505392312009996
+      },
+      "max_marginal_error": {
+        "mean": 0.0009815629846180267,
+        "min": 0.0005162838573855577,
+        "max": 0.0016093386737724424,
+        "sample_std": 0.0005643545493605783
+      },
+      "mutual_information": {
+        "mean": 0.6394131078798769,
+        "min": 0.6376702188971549,
+        "max": 0.6417404473192418,
+        "sample_std": 0.0020971114906446057
+      },
+      "steps_run": {
+        "mean": 341.6666666666667,
+        "min": 325,
+        "max": 350,
+        "sample_std": 14.433756729740644
+      },
+      "joint_sample_invalid_rate": {
+        "mean": 0.00915,
+        "min": 0.00795,
+        "max": 0.01025,
+        "sample_std": 0.0011532562594670794
+      },
+      "marginal_sample_invalid_rate": {
+        "mean": 0.4986833333333333,
+        "min": 0.49065000000000003,
+        "max": 0.5036499999999999,
+        "sample_std": 0.007021633238309506
+      },
+      "mean_probabilities": {
+        "AA": 0.4958512196014575,
+        "AB": 0.004728036811640204,
+        "BA": 0.00478615414490344,
+        "BB": 0.4946345894419988
+      }
+    },
+    {
+      "task": "equal",
+      "variant": "directional_contextual_warmup",
+      "seeds": [
+        1,
+        2,
+        3
+      ],
+      "target_reached_count": 3,
+      "parameter_count": 669,
+      "gradient_active_parameter_count": 394,
+      "kl_target_to_model": {
+        "mean": 0.0001970465128777188,
+        "min": 0.0001811921472735789,
+        "max": 0.00022032718664233286,
+        "sample_std": 2.0597338815226217e-05
+      },
+      "invalid_mass": {
+        "mean": 0.00018458485224777995,
+        "min": 0.00017679512919760627,
+        "max": 0.0001961481516065885,
+        "sample_std": 1.0213460613742024e-05
+      },
+      "total_variation": {
+        "mean": 0.0022363012374703273,
+        "min": 0.0005172493237777429,
+        "max": 0.003572965091711521,
+        "sample_std": 0.001563334636156965
+      },
+      "max_marginal_error": {
+        "mean": 0.0021530778260997843,
+        "min": 0.00043711396371026723,
+        "max": 0.0034859588164641853,
+        "sample_std": 0.0015601051564462806
+      },
+      "mutual_information": {
+        "mean": 0.6913643487946556,
+        "min": 0.6912537114295154,
+        "max": 0.6914303866578468,
+        "sample_std": 9.641250311587158e-05
+      },
+      "steps_run": {
+        "mean": 150.0,
+        "min": 150,
+        "max": 150,
+        "sample_std": 0.0
+      },
+      "joint_sample_invalid_rate": {
+        "mean": 0.00015,
+        "min": 0.0001,
+        "max": 0.00019999999999999998,
+        "sample_std": 4.9999999999999996e-05
+      },
+      "marginal_sample_invalid_rate": {
+        "mean": 0.49865000000000004,
+        "min": 0.49065000000000003,
+        "max": 0.504,
+        "sample_std": 0.0070585055075419465
+      },
+      "mean_probabilities": {
+        "AA": 0.49945055991741166,
+        "AB": 9.007026330526002e-05,
+        "BA": 9.451458894251994e-05,
+        "BB": 0.5003648552303406
+      }
+    }
+  ],
+  "oracles": [
+    {
+      "task": "opposite",
+      "variant": "oracle_positive_floor",
+      "target": {
+        "AA": 0.0,
+        "AB": 0.5,
+        "BA": 0.5,
+        "BB": 0.0
+      },
+      "factor_epsilon": 1e-12,
+      "probabilities": {
+        "AA": 1.4999999999929981e-12,
+        "AB": 0.4999999999985,
+        "BA": 0.4999999999985,
+        "BB": 1.4999999999929981e-12
+      },
+      "normalization_error": 0.0,
+      "kl_target_to_model": 3.000044657142098e-12,
+      "total_variation": 3.000022328564047e-12,
+      "invalid_mass": 2.9999999999859962e-12,
+      "marginals": [
+        [
+          0.5,
+          0.5
+        ],
+        [
+          0.5,
+          0.5
+        ]
+      ],
+      "max_marginal_error": 0.0,
+      "independent_marginal_probabilities": {
+        "AA": 0.25,
+        "AB": 0.25,
+        "BA": 0.25,
+        "BB": 0.25
+      },
+      "independent_marginal_invalid_mass": 0.5,
+      "mutual_information": 0.693147180477348,
+      "max_dense_low_rank_probability_error": 0.0,
+      "max_enumerated_inference_marginal_error": 0.0,
+      "joint_sample_frequencies": {
+        "AA": 0.0,
+        "AB": 0.5075,
+        "BA": 0.4925,
+        "BB": 0.0
+      },
+      "joint_sample_invalid_rate": 0.0,
+      "marginal_sample_frequencies": {
+        "AA": 0.24655,
+        "AB": 0.2503,
+        "BA": 0.2519,
+        "BB": 0.25125
+      },
+      "marginal_sample_invalid_rate": 0.49779999999999996,
+      "samples_per_sampler": 20000
+    },
+    {
+      "task": "independent",
+      "variant": "oracle_positive_floor",
+      "target": {
+        "AA": 0.25,
+        "AB": 0.25,
+        "BA": 0.25,
+        "BB": 0.25
+      },
+      "factor_epsilon": 1e-12,
+      "probabilities": {
+        "AA": 0.25,
+        "AB": 0.25,
+        "BA": 0.25,
+        "BB": 0.25
+      },
+      "normalization_error": 0.0,
+      "kl_target_to_model": 0.0,
+      "total_variation": 0.0,
+      "invalid_mass": 0.0,
+      "marginals": [
+        [
+          0.5,
+          0.5
+        ],
+        [
+          0.5,
+          0.5
+        ]
+      ],
+      "max_marginal_error": 0.0,
+      "independent_marginal_probabilities": {
+        "AA": 0.25,
+        "AB": 0.25,
+        "BA": 0.25,
+        "BB": 0.25
+      },
+      "independent_marginal_invalid_mass": 0.0,
+      "mutual_information": 0.0,
+      "max_dense_low_rank_probability_error": 0.0,
+      "max_enumerated_inference_marginal_error": 0.0,
+      "joint_sample_frequencies": {
+        "AA": 0.25155,
+        "AB": 0.25595,
+        "BA": 0.24745,
+        "BB": 0.24505
+      },
+      "joint_sample_invalid_rate": 0.0,
+      "marginal_sample_frequencies": {
+        "AA": 0.24655,
+        "AB": 0.2503,
+        "BA": 0.2519,
+        "BB": 0.25125
+      },
+      "marginal_sample_invalid_rate": 0.0,
+      "samples_per_sampler": 20000
+    },
+    {
+      "task": "equal",
+      "variant": "oracle_positive_floor",
+      "target": {
+        "AA": 0.5,
+        "AB": 0.0,
+        "BA": 0.0,
+        "BB": 0.5
+      },
+      "factor_epsilon": 1e-12,
+      "probabilities": {
+        "AA": 0.4999999999985,
+        "AB": 1.4999999999929981e-12,
+        "BA": 1.4999999999929981e-12,
+        "BB": 0.4999999999985
+      },
+      "normalization_error": 0.0,
+      "kl_target_to_model": 3.000044657142098e-12,
+      "total_variation": 3.000022328564047e-12,
+      "invalid_mass": 2.9999999999859962e-12,
+      "marginals": [
+        [
+          0.5,
+          0.5
+        ],
+        [
+          0.5,
+          0.5
+        ]
+      ],
+      "max_marginal_error": 0.0,
+      "independent_marginal_probabilities": {
+        "AA": 0.25,
+        "AB": 0.25,
+        "BA": 0.25,
+        "BB": 0.25
+      },
+      "independent_marginal_invalid_mass": 0.5,
+      "mutual_information": 0.693147180477348,
+      "max_dense_low_rank_probability_error": 0.0,
+      "max_enumerated_inference_marginal_error": 0.0,
+      "joint_sample_frequencies": {
+        "AA": 0.5075,
+        "AB": 0.0,
+        "BA": 0.0,
+        "BB": 0.4925
+      },
+      "joint_sample_invalid_rate": 0.0,
+      "marginal_sample_frequencies": {
+        "AA": 0.24655,
+        "AB": 0.2503,
+        "BA": 0.2519,
+        "BB": 0.25125
+      },
+      "marginal_sample_invalid_rate": 0.5022,
+      "samples_per_sampler": 20000
+    }
+  ],
+  "max_backend_probability_error": 7.152557373046875e-07,
+  "max_raw_normalization_error": 1.443084329366684e-06,
+  "shared_head_bound": {
+    "premises": "two tokens, uniform unaries, full vocabulary, one edge",
+    "formula": "F_AA+F_BB-F_AB-F_BA=sum_r (u_A-u_B)(v_A-v_B)>=0",
+    "reason": "shared token factors and positive contextual scale preserve order",
+    "opposite_invalid_mass_lower_bound": 0.5,
+    "opposite_kl_lower_bound": 0.6931471805599453
+  }
+}

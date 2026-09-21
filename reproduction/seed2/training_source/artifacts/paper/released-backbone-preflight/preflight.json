@@ -1,0 +1,20 @@
+{
+  "backbone_frozen": true,
+  "benchmark": "released_backbone_structured_preflight",
+  "checkpoint": "/mnt/contextual-forest/checkpoints/mdlm-owt-backbone.pt",
+  "device": "cuda",
+  "elapsed_seconds": 0.7809190689995376,
+  "ema_used": false,
+  "git_sha": "71f71ba7722b03e458839b7a533057ca248a82c5",
+  "gpu": "NVIDIA L4",
+  "max_node_normalization_error": 2.384185791015625e-07,
+  "peak_memory_bytes": 1270115328,
+  "rank": 16,
+  "retained_mass_mean": 0.40760481357574463,
+  "selected_edges": 992,
+  "sequence_length": 1024,
+  "timestamp_utc": "2026-08-30T10:30:47.686098+00:00",
+  "top_k": 64,
+  "torch": "2.5.1+cu121",
+  "vocab_size": 50258
+}

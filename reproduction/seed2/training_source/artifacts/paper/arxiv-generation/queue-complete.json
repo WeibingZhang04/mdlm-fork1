@@ -1,0 +1,290 @@
+{
+  "artifact": "frozen_generation_queue_completion",
+  "completed_utc": "2026-09-01T08:42:08.658218+00:00",
+  "dataset_slug": "arxiv",
+  "immutable_runner_git_sha": "09f89c00bbf8c65f679cd40b92609754608817b8",
+  "launch_authorization": {
+    "artifact": "reviewed_wikitext_cross_domain_generation_gate",
+    "controller_repository": {
+      "clean": true,
+      "git_sha": "446cb8abe1a19db74f16efa658d17882812a0e76",
+      "root": "/mnt/contextual-forest/mdlm-controller-446cb8a-v2",
+      "source_sha256": {
+        "evaluation/generation_adapter_comparison.py": "f5133b399744d69d5a8f6b1ce9dd8d2e069b5438b0e98338e136d7e7d289004c",
+        "evaluation/generation_analysis_artifacts.py": "b0b69c3e799dd136d17171d45e780f73c17f2336f0617a4c7493adb8017ea1cf",
+        "evaluation/generation_protocol.py": "ce1927b543cec3b04fcebca3ada4b8aa8a2d9d2c1cbb0019c3b0289403852ced",
+        "evaluation/generation_queue_artifacts.py": "ad6d08bd52cfe5f728795e8db028b4f212e64f3d7592131cf8e845311d0bb11b",
+        "evaluation/generation_shard_aggregation.py": "ba7cc0ade743d169a064417d13feeb0d57ae71d70048a1f77b619a0496166fbe",
+        "scripts/compile_wikitext_cross_domain_gate.py": "b1f765ed9495b8eab3d9062e5bbb491c206293e4e9618300bda740882c746945",
+        "scripts/run_cross_domain_generation_post.py": "4044c5b2652cfb00e19ea45771fe5f20ba79570ead8fb3fdee070bb1aea8b319",
+        "scripts/run_cross_domain_generation_queue.py": "92c92c48427a1e85ee52e6c895fff27a90309d4ac913cdd4243be7e1ae09e34e",
+        "scripts/run_wikitext_generation_queue.py": "1c8a2aa7dc5bfb45cbb8385502c7b55b195c8d447c047d573d060e796591557d"
+      }
+    },
+    "decision": "proceed",
+    "path": "/mnt/contextual-forest/experiments/contextual-forest-generation-paper-v1/wikitext/reviewed-cross-domain-gate-446cb8a-v2.json",
+    "sha256": "a33ae2b0ea1834ced45047fe50ecffaef69b9571e9cd67199054edbe02b7ee86"
+  },
+  "launch_plan_sha256": "18d40e9883a82906fccafcc068f1e7fec5e1bcd8f037fc06ca610d4f5ceb1601",
+  "logical_dataset": "scientific-papers-arxiv-pinned",
+  "num_tasks": 32,
+  "schema_version": 1,
+  "tasks": [
+    {
+      "arm": "dynamic_dynamic",
+      "dataset_slug": "arxiv",
+      "manifest_sha256": "1c8c07fe9fb791e0de91b6a5c6a383df2dfc7e9e8f1247b9492dfc9ad0caf727",
+      "output_dir": "/mnt/contextual-forest/experiments/contextual-forest-generation-paper-v1/arxiv/dynamic_dynamic/shard-00",
+      "shard_index": 0,
+      "task_id": "arxiv-dynamic_dynamic-shard-00"
+    },
+    {
+      "arm": "dynamic_dynamic",
+      "dataset_slug": "arxiv",
+      "manifest_sha256": "493490e18fc3486f65eb112caa259d204ddc491d9366feae7cf0da3522c21cf0",
+      "output_dir": "/mnt/contextual-forest/experiments/contextual-forest-generation-paper-v1/arxiv/dynamic_dynamic/shard-01",
+      "shard_index": 1,
+      "task_id": "arxiv-dynamic_dynamic-shard-01"
+    },
+    {
+      "arm": "dynamic_dynamic",
+      "dataset_slug": "arxiv",
+      "manifest_sha256": "8b1765b9a4ab85a523f2575587ce2144b9253198817c71ed765fbfe020574bb6",
+      "output_dir": "/mnt/contextual-forest/experiments/contextual-forest-generation-paper-v1/arxiv/dynamic_dynamic/shard-02",
+      "shard_index": 2,
+      "task_id": "arxiv-dynamic_dynamic-shard-02"
+    },
+    {
+      "arm": "dynamic_dynamic",
+      "dataset_slug": "arxiv",
+      "manifest_sha256": "8a98728f7769018bae81e8ea195ec5884cd0615db46f7a142c57f325d91d46db",
+      "output_dir": "/mnt/contextual-forest/experiments/contextual-forest-generation-paper-v1/arxiv/dynamic_dynamic/shard-03",
+      "shard_index": 3,
+      "task_id": "arxiv-dynamic_dynamic-shard-03"
+    },
+    {
+      "arm": "dynamic_dynamic",
+      "dataset_slug": "arxiv",
+      "manifest_sha256": "ca697b5a667ab4e655c4e3bddd0459c45824d142df962636045905f32b7a9cbb",
+      "output_dir": "/mnt/contextual-forest/experiments/contextual-forest-generation-paper-v1/arxiv/dynamic_dynamic/shard-04",
+      "shard_index": 4,
+      "task_id": "arxiv-dynamic_dynamic-shard-04"
+    },
+    {
+      "arm": "dynamic_dynamic",
+      "dataset_slug": "arxiv",
+      "manifest_sha256": "79cc02156d880f35042f47bd2df254951f42c70985420e17e5ccc20608f13204",
+      "output_dir": "/mnt/contextual-forest/experiments/contextual-forest-generation-paper-v1/arxiv/dynamic_dynamic/shard-05",
+      "shard_index": 5,
+      "task_id": "arxiv-dynamic_dynamic-shard-05"
+    },
+    {
+      "arm": "dynamic_dynamic",
+      "dataset_slug": "arxiv",
+      "manifest_sha256": "dc552e54e72b002469befd777cda1f1df1bb643a4ec4c3f109450b72a1da0fc3",
+      "output_dir": "/mnt/contextual-forest/experiments/contextual-forest-generation-paper-v1/arxiv/dynamic_dynamic/shard-06",
+      "shard_index": 6,
+      "task_id": "arxiv-dynamic_dynamic-shard-06"
+    },
+    {
+      "arm": "dynamic_dynamic",
+      "dataset_slug": "arxiv",
+      "manifest_sha256": "98dbe766ec2d8f226f8dda1c67d0327eb1109fa5462ff0c9e5875d555a7bf352",
+      "output_dir": "/mnt/contextual-forest/experiments/contextual-forest-generation-paper-v1/arxiv/dynamic_dynamic/shard-07",
+      "shard_index": 7,
+      "task_id": "arxiv-dynamic_dynamic-shard-07"
+    },
+    {
+      "arm": "dynamic_dynamic",
+      "dataset_slug": "arxiv",
+      "manifest_sha256": "80259b18da90ac816dfbcc39a303955502b4f1b1ec40dcba0fc66e2b276bbf14",
+      "output_dir": "/mnt/contextual-forest/experiments/contextual-forest-generation-paper-v1/arxiv/dynamic_dynamic/shard-08",
+      "shard_index": 8,
+      "task_id": "arxiv-dynamic_dynamic-shard-08"
+    },
+    {
+      "arm": "dynamic_dynamic",
+      "dataset_slug": "arxiv",
+      "manifest_sha256": "9920814d67ebcc62704f456d2f95fd511905a3048b1da930e72f3b65c3a2b5b4",
+      "output_dir": "/mnt/contextual-forest/experiments/contextual-forest-generation-paper-v1/arxiv/dynamic_dynamic/shard-09",
+      "shard_index": 9,
+      "task_id": "arxiv-dynamic_dynamic-shard-09"
+    },
+    {
+      "arm": "dynamic_dynamic",
+      "dataset_slug": "arxiv",
+      "manifest_sha256": "9d3a8a30dcce18c92a4eb8d72aacdadce3bceade60001db507f9cc31b28e9efd",
+      "output_dir": "/mnt/contextual-forest/experiments/contextual-forest-generation-paper-v1/arxiv/dynamic_dynamic/shard-10",
+      "shard_index": 10,
+      "task_id": "arxiv-dynamic_dynamic-shard-10"
+    },
+    {
+      "arm": "dynamic_dynamic",
+      "dataset_slug": "arxiv",
+      "manifest_sha256": "0a7d71c0c53a712dd1bb18e669585b9185edf25e96f5221dbf74589f29d31c06",
+      "output_dir": "/mnt/contextual-forest/experiments/contextual-forest-generation-paper-v1/arxiv/dynamic_dynamic/shard-11",
+      "shard_index": 11,
+      "task_id": "arxiv-dynamic_dynamic-shard-11"
+    },
+    {
+      "arm": "dynamic_dynamic",
+      "dataset_slug": "arxiv",
+      "manifest_sha256": "df1fe351b4007ef8457a8d3f01ea13538b05d8a2fc6b34ea46eec5f69cc84e45",
+      "output_dir": "/mnt/contextual-forest/experiments/contextual-forest-generation-paper-v1/arxiv/dynamic_dynamic/shard-12",
+      "shard_index": 12,
+      "task_id": "arxiv-dynamic_dynamic-shard-12"
+    },
+    {
+      "arm": "dynamic_dynamic",
+      "dataset_slug": "arxiv",
+      "manifest_sha256": "d113f4b325cb2bfcfef701be5652240e92e45fae46941d69dbb8785c6486115f",
+      "output_dir": "/mnt/contextual-forest/experiments/contextual-forest-generation-paper-v1/arxiv/dynamic_dynamic/shard-13",
+      "shard_index": 13,
+      "task_id": "arxiv-dynamic_dynamic-shard-13"
+    },
+    {
+      "arm": "dynamic_dynamic",
+      "dataset_slug": "arxiv",
+      "manifest_sha256": "2fc8bc77d2f5dc2823b8438ec07b100cc55c1cf372ea5692240ad2cb6e067959",
+      "output_dir": "/mnt/contextual-forest/experiments/contextual-forest-generation-paper-v1/arxiv/dynamic_dynamic/shard-14",
+      "shard_index": 14,
+      "task_id": "arxiv-dynamic_dynamic-shard-14"
+    },
+    {
+      "arm": "dynamic_dynamic",
+      "dataset_slug": "arxiv",
+      "manifest_sha256": "0d2984a9bfdb2bbf07c0d4ad1c45a31fa8567de0d23c15e74e280fee76334b52",
+      "output_dir": "/mnt/contextual-forest/experiments/contextual-forest-generation-paper-v1/arxiv/dynamic_dynamic/shard-15",
+      "shard_index": 15,
+      "task_id": "arxiv-dynamic_dynamic-shard-15"
+    },
+    {
+      "arm": "static_static",
+      "dataset_slug": "arxiv",
+      "manifest_sha256": "5743c586e951d315996f7041ba8312fc80de60e27a072741f988629b2c5dc182",
+      "output_dir": "/mnt/contextual-forest/experiments/contextual-forest-generation-paper-v1/arxiv/static_static/shard-00",
+      "shard_index": 0,
+      "task_id": "arxiv-static_static-shard-00"
+    },
+    {
+      "arm": "static_static",
+      "dataset_slug": "arxiv",
+      "manifest_sha256": "a1def279feaa98187c5892ba7a4786f422cf0c1c01130a8364b44dd9bd1ba92e",
+      "output_dir": "/mnt/contextual-forest/experiments/contextual-forest-generation-paper-v1/arxiv/static_static/shard-01",
+      "shard_index": 1,
+      "task_id": "arxiv-static_static-shard-01"
+    },
+    {
+      "arm": "static_static",
+      "dataset_slug": "arxiv",
+      "manifest_sha256": "dd9d410f076a2886ae47e4edf907a070b06ba2ec86887ca5b66f3f62628cffd8",
+      "output_dir": "/mnt/contextual-forest/experiments/contextual-forest-generation-paper-v1/arxiv/static_static/shard-02",
+      "shard_index": 2,
+      "task_id": "arxiv-static_static-shard-02"
+    },
+    {
+      "arm": "static_static",
+      "dataset_slug": "arxiv",
+      "manifest_sha256": "4e23918486dac6b751ae543ec5b5a1748e996d1d32a1efb76a544d3c58775d15",
+      "output_dir": "/mnt/contextual-forest/experiments/contextual-forest-generation-paper-v1/arxiv/static_static/shard-03",
+      "shard_index": 3,
+      "task_id": "arxiv-static_static-shard-03"
+    },
+    {
+      "arm": "static_static",
+      "dataset_slug": "arxiv",
+      "manifest_sha256": "e781bd24fb5ebad8e0dd23e833f4aa0db84a482a9be61c636c883906e3b22ab3",
+      "output_dir": "/mnt/contextual-forest/experiments/contextual-forest-generation-paper-v1/arxiv/static_static/shard-04",
+      "shard_index": 4,
+      "task_id": "arxiv-static_static-shard-04"
+    },
+    {
+      "arm": "static_static",
+      "dataset_slug": "arxiv",
+      "manifest_sha256": "ed479d1301e7fbb6dbbabf3dccd922173a568c8652bad5a50ccf467f117cb940",
+      "output_dir": "/mnt/contextual-forest/experiments/contextual-forest-generation-paper-v1/arxiv/static_static/shard-05",
+      "shard_index": 5,
+      "task_id": "arxiv-static_static-shard-05"
+    },
+    {
+      "arm": "static_static",
+      "dataset_slug": "arxiv",
+      "manifest_sha256": "2e16014add96877534e568e9f226befee4fd6a58c65527da1ac3ac5932b362b8",
+      "output_dir": "/mnt/contextual-forest/experiments/contextual-forest-generation-paper-v1/arxiv/static_static/shard-06",
+      "shard_index": 6,
+      "task_id": "arxiv-static_static-shard-06"
+    },
+    {
+      "arm": "static_static",
+      "dataset_slug": "arxiv",
+      "manifest_sha256": "b64eaffee2a6ed1a8bc64bf74f7756fbb53ec903dc35b7695e5733e0b9ff58e9",
+      "output_dir": "/mnt/contextual-forest/experiments/contextual-forest-generation-paper-v1/arxiv/static_static/shard-07",
+      "shard_index": 7,
+      "task_id": "arxiv-static_static-shard-07"
+    },
+    {
+      "arm": "static_static",
+      "dataset_slug": "arxiv",
+      "manifest_sha256": "dbdae0f20fa399de29ddbd5b6d830376459738625cee89c3b5cde7587dfbe841",
+      "output_dir": "/mnt/contextual-forest/experiments/contextual-forest-generation-paper-v1/arxiv/static_static/shard-08",
+      "shard_index": 8,
+      "task_id": "arxiv-static_static-shard-08"
+    },
+    {
+      "arm": "static_static",
+      "dataset_slug": "arxiv",
+      "manifest_sha256": "e068d9dc8d1b86d66c71da76eddf99dbb9fe04081c6d7f40f385f14f46249c9e",
+      "output_dir": "/mnt/contextual-forest/experiments/contextual-forest-generation-paper-v1/arxiv/static_static/shard-09",
+      "shard_index": 9,
+      "task_id": "arxiv-static_static-shard-09"
+    },
+    {
+      "arm": "static_static",
+      "dataset_slug": "arxiv",
+      "manifest_sha256": "bc998bcdaf4497ca136a74126a316738363f874ad418ee1c5a3989bb4f71267d",
+      "output_dir": "/mnt/contextual-forest/experiments/contextual-forest-generation-paper-v1/arxiv/static_static/shard-10",
+      "shard_index": 10,
+      "task_id": "arxiv-static_static-shard-10"
+    },
+    {
+      "arm": "static_static",
+      "dataset_slug": "arxiv",
+      "manifest_sha256": "a1393ee351e8f1fec5429e3863ca48075e46cdd0de46113f8ad8fd142dea0735",
+      "output_dir": "/mnt/contextual-forest/experiments/contextual-forest-generation-paper-v1/arxiv/static_static/shard-11",
+      "shard_index": 11,
+      "task_id": "arxiv-static_static-shard-11"
+    },
+    {
+      "arm": "static_static",
+      "dataset_slug": "arxiv",
+      "manifest_sha256": "e0b787a310d98c3575c6ce56ac69b0face3f306c582c581e2fb9a8d1ac7e6291",
+      "output_dir": "/mnt/contextual-forest/experiments/contextual-forest-generation-paper-v1/arxiv/static_static/shard-12",
+      "shard_index": 12,
+      "task_id": "arxiv-static_static-shard-12"
+    },
+    {
+      "arm": "static_static",
+      "dataset_slug": "arxiv",
+      "manifest_sha256": "663262ba4f0fc98ed90dfaa68096d930108203b213c3ff3c23fa7b699a384c7f",
+      "output_dir": "/mnt/contextual-forest/experiments/contextual-forest-generation-paper-v1/arxiv/static_static/shard-13",
+      "shard_index": 13,
+      "task_id": "arxiv-static_static-shard-13"
+    },
+    {
+      "arm": "static_static",
+      "dataset_slug": "arxiv",
+      "manifest_sha256": "acdb6218914460a011cf9aed86f9679bd38daad048b9343a9c3defa8625a03cf",
+      "output_dir": "/mnt/contextual-forest/experiments/contextual-forest-generation-paper-v1/arxiv/static_static/shard-14",
+      "shard_index": 14,
+      "task_id": "arxiv-static_static-shard-14"
+    },
+    {
+      "arm": "static_static",
+      "dataset_slug": "arxiv",
+      "manifest_sha256": "d70166e007e063acf1c17a82dedb1113c2c2b56df48bc2820e650a1126a75f1f",
+      "output_dir": "/mnt/contextual-forest/experiments/contextual-forest-generation-paper-v1/arxiv/static_static/shard-15",
+      "shard_index": 15,
+      "task_id": "arxiv-static_static-shard-15"
+    }
+  ]
+}

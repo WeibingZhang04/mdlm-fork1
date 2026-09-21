@@ -1,0 +1,30 @@
+[
+  {
+    "arm": "static_static",
+    "training_cache": "torch.bfloat16",
+    "cold_start": true,
+    "original_training_callbacks_only": true,
+    "export_and_generation_smoke": true
+  },
+  {
+    "arm": "fixed_dynamic",
+    "training_cache": "torch.bfloat16",
+    "cold_start": true,
+    "original_training_callbacks_only": true,
+    "export_and_generation_smoke": true
+  },
+  {
+    "arm": "dynamic_fixed",
+    "training_cache": "torch.bfloat16",
+    "cold_start": true,
+    "original_training_callbacks_only": true,
+    "export_and_generation_smoke": true
+  },
+  {
+    "arm": "dynamic_dynamic",
+    "training_cache": "torch.bfloat16",
+    "cold_start": true,
+    "original_training_callbacks_only": true,
+    "export_and_generation_smoke": true
+  }
+]

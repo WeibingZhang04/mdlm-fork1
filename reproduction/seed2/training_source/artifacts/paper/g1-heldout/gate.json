@@ -1,0 +1,33 @@
+{
+  "checks": {
+    "all_seeds_same_direction": true,
+    "contextual_edge_f1": true,
+    "contextual_tv_relative_reduction": true,
+    "joint_invalid_absolute": true,
+    "joint_invalid_relative_reduction": true,
+    "paired_95pct_ci_excludes_zero": true
+  },
+  "gate_name": "g1_learned_frozen_adapter",
+  "metrics": {
+    "best_static_tv": 0.6813396828935223,
+    "contextual_edge_f1": 1.0,
+    "contextual_invalid_rate": 0.00509144701686381,
+    "contextual_tv": 0.0565999470238408,
+    "contextual_tv_relative_reduction": 0.9169284448786671,
+    "invalid_relative_reduction": 0.9948277363638208,
+    "paired_tv_improvement_95pct_ci": [
+      0.6208944645777452,
+      0.628214732850563
+    ],
+    "paired_tv_improvements_by_seed": [
+      0.6187771538935328,
+      0.6261540557871171,
+      0.6213076654349092,
+      0.6306266084596303,
+      0.6268331957732186
+    ]
+  },
+  "passed": true,
+  "scientific_scope": "frozen target-independent features with exact synthetic conditional-influence supervision for topology; this is a favorable-supervision diagnostic, not unsupervised graph discovery",
+  "screen_passed": true
+}

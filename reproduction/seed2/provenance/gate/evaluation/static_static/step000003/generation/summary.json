@@ -1,0 +1,125 @@
+{
+  "experiment": "paired_contextual_forest_generation_pilot",
+  "global_num_paired_samples": 1,
+  "global_pairing_digest": "6428052721e449b0647946c6de3edb3a2a615f9bd53126848743cf1288163b92",
+  "groups": [
+    {
+      "active_tokens_per_second": 1596.680665645318,
+      "distinct_n": {
+        "1": 0.62109375,
+        "2": 0.9511241446725318,
+        "4": 1.0
+      },
+      "input_pairing_digest": "6428052721e449b0647946c6de3edb3a2a615f9bd53126848743cf1288163b92",
+      "mean_repetition_rate": {
+        "1": 0.37890625,
+        "2": 0.04887585532746819,
+        "4": 0.0
+      },
+      "measured_nfe_values": [
+        9
+      ],
+      "num_batches": 1,
+      "num_sequences": 1,
+      "num_tokens": 1024,
+      "pairing_digest": "6428052721e449b0647946c6de3edb3a2a615f9bd53126848743cf1288163b92",
+      "peak_memory_bytes": 1517660160,
+      "reference": null,
+      "reference_lm": {
+        "mean_nll_nats": 5.885072708129883,
+        "model_name_or_path": "gpt2-large",
+        "num_scored_sequences": 1,
+        "num_scored_tokens": 353,
+        "perplexity": 359.6289149919045,
+        "revision": "32b71b12589c2f8d625668d2335a01cac3249519",
+        "sequence_policy": "retokenize_decoded_text_score_through_first_nonleading_eos_v1"
+      },
+      "requested_nfe_budget": 9,
+      "sampling_mode": "factorized",
+      "unresolved_mask_tokens": 0,
+      "wall_clock_seconds": 0.6413304939633235
+    },
+    {
+      "active_tokens_per_second": 1607.4197870228768,
+      "distinct_n": {
+        "1": 0.640625,
+        "2": 0.9423264907135875,
+        "4": 1.0
+      },
+      "input_pairing_digest": "6428052721e449b0647946c6de3edb3a2a615f9bd53126848743cf1288163b92",
+      "mean_repetition_rate": {
+        "1": 0.359375,
+        "2": 0.05767350928641246,
+        "4": 0.0
+      },
+      "measured_nfe_values": [
+        8
+      ],
+      "num_batches": 1,
+      "num_sequences": 1,
+      "num_tokens": 1024,
+      "pairing_digest": "6428052721e449b0647946c6de3edb3a2a615f9bd53126848743cf1288163b92",
+      "peak_memory_bytes": 1330598400,
+      "reference": null,
+      "reference_lm": {
+        "mean_nll_nats": 6.730488300323486,
+        "model_name_or_path": "gpt2-large",
+        "num_scored_sequences": 1,
+        "num_scored_tokens": 302,
+        "perplexity": 837.5561450546883,
+        "revision": "32b71b12589c2f8d625668d2335a01cac3249519",
+        "sequence_policy": "retokenize_decoded_text_score_through_first_nonleading_eos_v1"
+      },
+      "requested_nfe_budget": 9,
+      "sampling_mode": "structured_joint",
+      "unresolved_mask_tokens": 0,
+      "wall_clock_seconds": 0.6370457849698141
+    }
+  ],
+  "input_pairing_digest": "6428052721e449b0647946c6de3edb3a2a615f9bd53126848743cf1288163b92",
+  "num_paired_samples": 1,
+  "num_shards": 1,
+  "reference_lm": {
+    "mean_nll_nats": 6.274867378118384,
+    "model_name_or_path": "gpt2-large",
+    "num_scored_sequences": 2,
+    "num_scored_tokens": 655,
+    "perplexity": 531.0559474485649,
+    "revision": "32b71b12589c2f8d625668d2335a01cac3249519",
+    "runtime_identity": {
+      "add_special_tokens": true,
+      "batch_size": 1,
+      "cuda_runtime": "12.1",
+      "device": "cuda",
+      "max_length": 1024,
+      "model_class": "transformers.models.gpt2.modeling_gpt2.GPT2LMHeadModel",
+      "model_config_class": "transformers.models.gpt2.configuration_gpt2.GPT2Config",
+      "model_name_or_path": "gpt2-large",
+      "model_revision": "32b71b12589c2f8d625668d2335a01cac3249519",
+      "parameter_dtypes": [
+        "torch.float32"
+      ],
+      "precision_policy": "explicit_checkpoint_dtype_no_autocast_float32_cross_entropy_v1",
+      "python": "3.9.25",
+      "requested_dtype": "float32",
+      "schema_version": 1,
+      "sequence_policy": "retokenize_decoded_text_score_through_first_nonleading_eos_v1",
+      "tokenization_policy": "fast_tokenizer_right_padding_right_truncation_add_special_tokens_v1",
+      "tokenizer_bos_token_id": 50256,
+      "tokenizer_class": "transformers.models.gpt2.tokenization_gpt2_fast.GPT2TokenizerFast",
+      "tokenizer_eos_token_id": 50256,
+      "tokenizer_name_or_path": "gpt2-large",
+      "tokenizer_pad_token_id": 50256,
+      "tokenizer_padding_side": "right",
+      "tokenizer_revision": "32b71b12589c2f8d625668d2335a01cac3249519",
+      "tokenizer_truncation_side": "right",
+      "tokenizer_vocab_size": 50257,
+      "tokenizers": "0.15.2",
+      "torch": "2.2.2+cu121",
+      "transformers": "4.38.2"
+    },
+    "sequence_policy": "retokenize_decoded_text_score_through_first_nonleading_eos_v1"
+  },
+  "schema_version": 1,
+  "shard_index": 0
+}

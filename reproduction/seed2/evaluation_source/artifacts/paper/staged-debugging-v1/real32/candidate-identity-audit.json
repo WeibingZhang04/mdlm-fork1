@@ -1,0 +1,1448 @@
+{
+  "artifact": "original_pair_unary_candidate_identity_audit",
+  "schema_version": 1,
+  "created_utc": "2026-09-08T00:34:33.177642+00:00",
+  "original_run_git_head": "bdb505b478419249a5f40a25877f761e41b0ae22",
+  "original_run_source_sha256": {
+    "scripts/run_staged_real_overfit.py": "dd976f808089fb8cecf89353080454c248ccfdc84ed390af1a05aeb3975a010a",
+    "models/contextual_unary.py": "da5bca59595adc25516cfd6e75e7e33587f333bd73008417c4a5cd78eccb0d37",
+    "models/directional_forest.py": "5c81101e1c44e2cb30c3567eb2e27dce2129014157be63d1dc5686c663cb94e1",
+    "models/structured_decoder.py": "b90fd02618d5162f8908f266fef1bdb2418a4bc172ede0863cd60ddeaa0f257a",
+    "evaluation/dependence_diagnostics.py": "41289287f1b418cbac65fe5d8b43d20271048904523c3c3c7a1844cf1ee0f9a4",
+    "structured_objective.py": "57f54eef2c1bbc6d1efb313a4ec3b936c7175c5a93294a1f850ddfd567a787c9",
+    "structured_utils.py": "9c26e3ecd764945fcdf171d205e22f5f331f2822baa1e7418358908a1dda9226",
+    "structured_training.py": "0a242f3a437f9193cb69fdb336bbd4414451d6d621135cbd9a97a1a9f998bbdf",
+    "diffusion.py": "204aa815b73799de7eeacc760ec494adda5d546983fd750884d74ac704f7e825"
+  },
+  "original_results_sha256": "26ff20d7e5e4fce89e4a2f98eeaffbf979ec304cf31be34afecf0a379b8ff784",
+  "script_sha256": "12bd0b15fbf3d02038c6a6a61b94bcffa5ce4d5aa0810eea18e3b6c2bb82d8d1",
+  "audit_git_head": "a7d141df7cc81f854ad255b20e41968a6c24d7f1",
+  "torch_version": "2.5.1+cu121",
+  "device": "cuda",
+  "batch_size": 4,
+  "top_k": 64,
+  "position_chunk_size": 32,
+  "candidate_policy_changed": false,
+  "model_training_performed": false,
+  "cache_order": "sorted example files, matching the original evaluation order",
+  "splits": {
+    "train": {
+      "active_tokens": 2048,
+      "ordered_id_differing_rows": 0,
+      "ordered_id_differing_slots": 0,
+      "candidate_set_differing_rows": 0,
+      "candidate_symmetric_difference_tokens": 0,
+      "gold_membership_differing_rows": 0,
+      "pair_gold_hits": 1744,
+      "unary_gold_hits": 1744,
+      "cutoff_differing_rows": 0,
+      "active_rows_with_boundary_ties": 1379,
+      "gold_targets_tied_at_boundary": 8,
+      "set_differences_not_at_cutoff_rows": 0,
+      "pair_only_base_probability_mass_sum": 0.0,
+      "unary_only_base_probability_mass_sum": 0.0,
+      "retained_base_probability_mass_max_absolute_difference": 0.0,
+      "cutoff_max_absolute_difference": 0.0,
+      "all_active_ordered_ids_match": true,
+      "all_active_candidate_sets_match": true,
+      "all_active_gold_membership_matches": true,
+      "pair_candidate_recall": 0.8515625,
+      "unary_candidate_recall": 0.8515625,
+      "examples": 32,
+      "batches": [
+        {
+          "active_tokens": 256,
+          "ordered_id_differing_rows": 0,
+          "ordered_id_differing_slots": 0,
+          "candidate_set_differing_rows": 0,
+          "candidate_symmetric_difference_tokens": 0,
+          "gold_membership_differing_rows": 0,
+          "pair_gold_hits": 218,
+          "unary_gold_hits": 218,
+          "cutoff_differing_rows": 0,
+          "cutoff_max_absolute_difference": 0.0,
+          "active_rows_with_boundary_ties": 182,
+          "gold_targets_tied_at_boundary": 0,
+          "set_differences_not_at_cutoff_rows": 0,
+          "pair_only_base_probability_mass_sum": 0.0,
+          "unary_only_base_probability_mass_sum": 0.0,
+          "retained_base_probability_mass_max_absolute_difference": 0.0,
+          "pair_active_candidate_ids_sha256": "a4d51643b28686000073710b7bcb00e16fd6d8ce654f2d4ae0b65ddc8ea139b8",
+          "unary_active_candidate_ids_sha256": "a4d51643b28686000073710b7bcb00e16fd6d8ce654f2d4ae0b65ddc8ea139b8",
+          "differing_rows_first": [],
+          "detail_rows_truncated": false,
+          "pair_input_shape": [
+            4,
+            128,
+            50258
+          ],
+          "unary_chunk_input_shapes": [
+            [
+              32,
+              50258
+            ],
+            [
+              32,
+              50258
+            ],
+            [
+              32,
+              50258
+            ],
+            [
+              32,
+              50258
+            ],
+            [
+              32,
+              50258
+            ],
+            [
+              32,
+              50258
+            ],
+            [
+              32,
+              50258
+            ],
+            [
+              32,
+              50258
+            ]
+          ],
+          "active_flat_indices_sha256": "8216c617272fe99f4a81b0e1e8a612e57b73ed8f655e2d9e5c14ca1e907bfc36",
+          "cached_logits_dtype": "torch.float32",
+          "cache_files": [
+            "example-0000.pt",
+            "example-0001.pt",
+            "example-0002.pt",
+            "example-0003.pt"
+          ]
+        },
+        {
+          "active_tokens": 256,
+          "ordered_id_differing_rows": 0,
+          "ordered_id_differing_slots": 0,
+          "candidate_set_differing_rows": 0,
+          "candidate_symmetric_difference_tokens": 0,
+          "gold_membership_differing_rows": 0,
+          "pair_gold_hits": 224,
+          "unary_gold_hits": 224,
+          "cutoff_differing_rows": 0,
+          "cutoff_max_absolute_difference": 0.0,
+          "active_rows_with_boundary_ties": 157,
+          "gold_targets_tied_at_boundary": 2,
+          "set_differences_not_at_cutoff_rows": 0,
+          "pair_only_base_probability_mass_sum": 0.0,
+          "unary_only_base_probability_mass_sum": 0.0,
+          "retained_base_probability_mass_max_absolute_difference": 0.0,
+          "pair_active_candidate_ids_sha256": "7a3d3fc415c80cb6f250269437ae6bf0d7ee3b5f826a5723c6115ba65f1c2722",
+          "unary_active_candidate_ids_sha256": "7a3d3fc415c80cb6f250269437ae6bf0d7ee3b5f826a5723c6115ba65f1c2722",
+          "differing_rows_first": [],
+          "detail_rows_truncated": false,
+          "pair_input_shape": [
+            4,
+            128,
+            50258
+          ],
+          "unary_chunk_input_shapes": [
+            [
+              32,
+              50258
+            ],
+            [
+              32,
+              50258
+            ],
+            [
+              32,
+              50258
+            ],
+            [
+              32,
+              50258
+            ],
+            [
+              32,
+              50258
+            ],
+            [
+              32,
+              50258
+            ],
+            [
+              32,
+              50258
+            ],
+            [
+              32,
+              50258
+            ]
+          ],
+          "active_flat_indices_sha256": "78e565425aadff7dc2f26537c583069bda4e187f6559a3a4a1f31fa7afa715a1",
+          "cached_logits_dtype": "torch.float32",
+          "cache_files": [
+            "example-0004.pt",
+            "example-0005.pt",
+            "example-0006.pt",
+            "example-0007.pt"
+          ]
+        },
+        {
+          "active_tokens": 256,
+          "ordered_id_differing_rows": 0,
+          "ordered_id_differing_slots": 0,
+          "candidate_set_differing_rows": 0,
+          "candidate_symmetric_difference_tokens": 0,
+          "gold_membership_differing_rows": 0,
+          "pair_gold_hits": 228,
+          "unary_gold_hits": 228,
+          "cutoff_differing_rows": 0,
+          "cutoff_max_absolute_difference": 0.0,
+          "active_rows_with_boundary_ties": 168,
+          "gold_targets_tied_at_boundary": 0,
+          "set_differences_not_at_cutoff_rows": 0,
+          "pair_only_base_probability_mass_sum": 0.0,
+          "unary_only_base_probability_mass_sum": 0.0,
+          "retained_base_probability_mass_max_absolute_difference": 0.0,
+          "pair_active_candidate_ids_sha256": "c02b5d841b49f6754e28dc755e52442b416deebd94c4891fb43f0573c9d765e6",
+          "unary_active_candidate_ids_sha256": "c02b5d841b49f6754e28dc755e52442b416deebd94c4891fb43f0573c9d765e6",
+          "differing_rows_first": [],
+          "detail_rows_truncated": false,
+          "pair_input_shape": [
+            4,
+            128,
+            50258
+          ],
+          "unary_chunk_input_shapes": [
+            [
+              32,
+              50258
+            ],
+            [
+              32,
+              50258
+            ],
+            [
+              32,
+              50258
+            ],
+            [
+              32,
+              50258
+            ],
+            [
+              32,
+              50258
+            ],
+            [
+              32,
+              50258
+            ],
+            [
+              32,
+              50258
+            ],
+            [
+              32,
+              50258
+            ]
+          ],
+          "active_flat_indices_sha256": "126aecffdf0fa85f6bce76432df8972932285c74fe8c60479cb473149b00eedb",
+          "cached_logits_dtype": "torch.float32",
+          "cache_files": [
+            "example-0008.pt",
+            "example-0009.pt",
+            "example-0010.pt",
+            "example-0011.pt"
+          ]
+        },
+        {
+          "active_tokens": 256,
+          "ordered_id_differing_rows": 0,
+          "ordered_id_differing_slots": 0,
+          "candidate_set_differing_rows": 0,
+          "candidate_symmetric_difference_tokens": 0,
+          "gold_membership_differing_rows": 0,
+          "pair_gold_hits": 212,
+          "unary_gold_hits": 212,
+          "cutoff_differing_rows": 0,
+          "cutoff_max_absolute_difference": 0.0,
+          "active_rows_with_boundary_ties": 172,
+          "gold_targets_tied_at_boundary": 2,
+          "set_differences_not_at_cutoff_rows": 0,
+          "pair_only_base_probability_mass_sum": 0.0,
+          "unary_only_base_probability_mass_sum": 0.0,
+          "retained_base_probability_mass_max_absolute_difference": 0.0,
+          "pair_active_candidate_ids_sha256": "fb736ab977533fa4de95754b023856dbb15b8bc316f00df22d14c9c0fe349281",
+          "unary_active_candidate_ids_sha256": "fb736ab977533fa4de95754b023856dbb15b8bc316f00df22d14c9c0fe349281",
+          "differing_rows_first": [],
+          "detail_rows_truncated": false,
+          "pair_input_shape": [
+            4,
+            128,
+            50258
+          ],
+          "unary_chunk_input_shapes": [
+            [
+              32,
+              50258
+            ],
+            [
+              32,
+              50258
+            ],
+            [
+              32,
+              50258
+            ],
+            [
+              32,
+              50258
+            ],
+            [
+              32,
+              50258
+            ],
+            [
+              32,
+              50258
+            ],
+            [
+              32,
+              50258
+            ],
+            [
+              32,
+              50258
+            ]
+          ],
+          "active_flat_indices_sha256": "84b897f11b820fc025e9804c88273f93b91b689cea89ec6c1203bd232cfbce6c",
+          "cached_logits_dtype": "torch.float32",
+          "cache_files": [
+            "example-0012.pt",
+            "example-0013.pt",
+            "example-0014.pt",
+            "example-0015.pt"
+          ]
+        },
+        {
+          "active_tokens": 256,
+          "ordered_id_differing_rows": 0,
+          "ordered_id_differing_slots": 0,
+          "candidate_set_differing_rows": 0,
+          "candidate_symmetric_difference_tokens": 0,
+          "gold_membership_differing_rows": 0,
+          "pair_gold_hits": 215,
+          "unary_gold_hits": 215,
+          "cutoff_differing_rows": 0,
+          "cutoff_max_absolute_difference": 0.0,
+          "active_rows_with_boundary_ties": 174,
+          "gold_targets_tied_at_boundary": 0,
+          "set_differences_not_at_cutoff_rows": 0,
+          "pair_only_base_probability_mass_sum": 0.0,
+          "unary_only_base_probability_mass_sum": 0.0,
+          "retained_base_probability_mass_max_absolute_difference": 0.0,
+          "pair_active_candidate_ids_sha256": "1e871722995f2a628e3ce4c6b6ba282b5b428fec998cb1f821c482825f6c4b69",
+          "unary_active_candidate_ids_sha256": "1e871722995f2a628e3ce4c6b6ba282b5b428fec998cb1f821c482825f6c4b69",
+          "differing_rows_first": [],
+          "detail_rows_truncated": false,
+          "pair_input_shape": [
+            4,
+            128,
+            50258
+          ],
+          "unary_chunk_input_shapes": [
+            [
+              32,
+              50258
+            ],
+            [
+              32,
+              50258
+            ],
+            [
+              32,
+              50258
+            ],
+            [
+              32,
+              50258
+            ],
+            [
+              32,
+              50258
+            ],
+            [
+              32,
+              50258
+            ],
+            [
+              32,
+              50258
+            ],
+            [
+              32,
+              50258
+            ]
+          ],
+          "active_flat_indices_sha256": "3adb2f1403625e419e7438439325457a0a0a86ff803b50966cfa86d1f170f96f",
+          "cached_logits_dtype": "torch.float32",
+          "cache_files": [
+            "example-0016.pt",
+            "example-0017.pt",
+            "example-0018.pt",
+            "example-0019.pt"
+          ]
+        },
+        {
+          "active_tokens": 256,
+          "ordered_id_differing_rows": 0,
+          "ordered_id_differing_slots": 0,
+          "candidate_set_differing_rows": 0,
+          "candidate_symmetric_difference_tokens": 0,
+          "gold_membership_differing_rows": 0,
+          "pair_gold_hits": 223,
+          "unary_gold_hits": 223,
+          "cutoff_differing_rows": 0,
+          "cutoff_max_absolute_difference": 0.0,
+          "active_rows_with_boundary_ties": 178,
+          "gold_targets_tied_at_boundary": 1,
+          "set_differences_not_at_cutoff_rows": 0,
+          "pair_only_base_probability_mass_sum": 0.0,
+          "unary_only_base_probability_mass_sum": 0.0,
+          "retained_base_probability_mass_max_absolute_difference": 0.0,
+          "pair_active_candidate_ids_sha256": "b75d2e99d10d8c3d8158a290468e2f99adc4e574cf1ddbd5b23d4be72692b758",
+          "unary_active_candidate_ids_sha256": "b75d2e99d10d8c3d8158a290468e2f99adc4e574cf1ddbd5b23d4be72692b758",
+          "differing_rows_first": [],
+          "detail_rows_truncated": false,
+          "pair_input_shape": [
+            4,
+            128,
+            50258
+          ],
+          "unary_chunk_input_shapes": [
+            [
+              32,
+              50258
+            ],
+            [
+              32,
+              50258
+            ],
+            [
+              32,
+              50258
+            ],
+            [
+              32,
+              50258
+            ],
+            [
+              32,
+              50258
+            ],
+            [
+              32,
+              50258
+            ],
+            [
+              32,
+              50258
+            ],
+            [
+              32,
+              50258
+            ]
+          ],
+          "active_flat_indices_sha256": "5fa9d20f60f56b682e44ce800fcb26ea1eb08564273a9748639b08515bc5cb73",
+          "cached_logits_dtype": "torch.float32",
+          "cache_files": [
+            "example-0020.pt",
+            "example-0021.pt",
+            "example-0022.pt",
+            "example-0023.pt"
+          ]
+        },
+        {
+          "active_tokens": 256,
+          "ordered_id_differing_rows": 0,
+          "ordered_id_differing_slots": 0,
+          "candidate_set_differing_rows": 0,
+          "candidate_symmetric_difference_tokens": 0,
+          "gold_membership_differing_rows": 0,
+          "pair_gold_hits": 215,
+          "unary_gold_hits": 215,
+          "cutoff_differing_rows": 0,
+          "cutoff_max_absolute_difference": 0.0,
+          "active_rows_with_boundary_ties": 184,
+          "gold_targets_tied_at_boundary": 2,
+          "set_differences_not_at_cutoff_rows": 0,
+          "pair_only_base_probability_mass_sum": 0.0,
+          "unary_only_base_probability_mass_sum": 0.0,
+          "retained_base_probability_mass_max_absolute_difference": 0.0,
+          "pair_active_candidate_ids_sha256": "e3e7b4f588dda28ebfd5b076204f1d7620950ddc3089e1a000319e7563f8ccd8",
+          "unary_active_candidate_ids_sha256": "e3e7b4f588dda28ebfd5b076204f1d7620950ddc3089e1a000319e7563f8ccd8",
+          "differing_rows_first": [],
+          "detail_rows_truncated": false,
+          "pair_input_shape": [
+            4,
+            128,
+            50258
+          ],
+          "unary_chunk_input_shapes": [
+            [
+              32,
+              50258
+            ],
+            [
+              32,
+              50258
+            ],
+            [
+              32,
+              50258
+            ],
+            [
+              32,
+              50258
+            ],
+            [
+              32,
+              50258
+            ],
+            [
+              32,
+              50258
+            ],
+            [
+              32,
+              50258
+            ],
+            [
+              32,
+              50258
+            ]
+          ],
+          "active_flat_indices_sha256": "15bb2e3912069866ab2d1bb9208a2e8664fee826bdebc014ffe3c2a4e0abb955",
+          "cached_logits_dtype": "torch.float32",
+          "cache_files": [
+            "example-0024.pt",
+            "example-0025.pt",
+            "example-0026.pt",
+            "example-0027.pt"
+          ]
+        },
+        {
+          "active_tokens": 256,
+          "ordered_id_differing_rows": 0,
+          "ordered_id_differing_slots": 0,
+          "candidate_set_differing_rows": 0,
+          "candidate_symmetric_difference_tokens": 0,
+          "gold_membership_differing_rows": 0,
+          "pair_gold_hits": 209,
+          "unary_gold_hits": 209,
+          "cutoff_differing_rows": 0,
+          "cutoff_max_absolute_difference": 0.0,
+          "active_rows_with_boundary_ties": 164,
+          "gold_targets_tied_at_boundary": 1,
+          "set_differences_not_at_cutoff_rows": 0,
+          "pair_only_base_probability_mass_sum": 0.0,
+          "unary_only_base_probability_mass_sum": 0.0,
+          "retained_base_probability_mass_max_absolute_difference": 0.0,
+          "pair_active_candidate_ids_sha256": "f4dfe2c2c0cacfb7f5381daaf9dd3cae655fd611b8d623df9ef18022572d3c82",
+          "unary_active_candidate_ids_sha256": "f4dfe2c2c0cacfb7f5381daaf9dd3cae655fd611b8d623df9ef18022572d3c82",
+          "differing_rows_first": [],
+          "detail_rows_truncated": false,
+          "pair_input_shape": [
+            4,
+            128,
+            50258
+          ],
+          "unary_chunk_input_shapes": [
+            [
+              32,
+              50258
+            ],
+            [
+              32,
+              50258
+            ],
+            [
+              32,
+              50258
+            ],
+            [
+              32,
+              50258
+            ],
+            [
+              32,
+              50258
+            ],
+            [
+              32,
+              50258
+            ],
+            [
+              32,
+              50258
+            ],
+            [
+              32,
+              50258
+            ]
+          ],
+          "active_flat_indices_sha256": "e77418325a938c1872fc8a74b1c089e354a3f59a68ee1b6af1500f72f571da50",
+          "cached_logits_dtype": "torch.float32",
+          "cache_files": [
+            "example-0028.pt",
+            "example-0029.pt",
+            "example-0030.pt",
+            "example-0031.pt"
+          ]
+        }
+      ],
+      "cache_files": [
+        {
+          "name": "example-0000.pt",
+          "sha256": "06e5856fc5d7d1a7144417452122ec74cf29c06d9c4389c71e040bab4eb8d1f0"
+        },
+        {
+          "name": "example-0001.pt",
+          "sha256": "6ad845df5c580dd0a5f12818d6b4c7156a0402ac4fa01066b5c076e85d5d63a4"
+        },
+        {
+          "name": "example-0002.pt",
+          "sha256": "73b3f5ac2563c23e78583ade728d8d8b0c48218e1375725b2bf027b2d1012f2f"
+        },
+        {
+          "name": "example-0003.pt",
+          "sha256": "6001247fc4ebc8efe1af1c667f7d684966dd987e2c51233a4889da7f727795e7"
+        },
+        {
+          "name": "example-0004.pt",
+          "sha256": "7e5b3bbba8483324705d8c589d73c6ff210b1a7803789e334b80b11cc9a0dd88"
+        },
+        {
+          "name": "example-0005.pt",
+          "sha256": "7c517080e667dc457859b386750f044ecc386fad518d64074668b2ba2a5fd12e"
+        },
+        {
+          "name": "example-0006.pt",
+          "sha256": "bb384ac8e00b54bca828358405d153a36aa9e510a8952e0926e5a6a8e9277388"
+        },
+        {
+          "name": "example-0007.pt",
+          "sha256": "f6e37c520151057339aa88d14dd00fe16055a9ddb2215fb5957e0506f9f784ad"
+        },
+        {
+          "name": "example-0008.pt",
+          "sha256": "e41d75a847a8fc8ed9c4ab47d172bf2a43b06bf74c3593a8a544f516873b8786"
+        },
+        {
+          "name": "example-0009.pt",
+          "sha256": "cc4598ff2e7afe4c81a5d2cfc5c1c44ff96d9db98bd2e006f94110278c3b377e"
+        },
+        {
+          "name": "example-0010.pt",
+          "sha256": "3308a63a0289e09cc49be7c2d773f06745739ba04982b36466c00d4d60395885"
+        },
+        {
+          "name": "example-0011.pt",
+          "sha256": "f343a44a42466d86e5706d353d37204507ddc56cdde624b7488b7f2776ffbb04"
+        },
+        {
+          "name": "example-0012.pt",
+          "sha256": "a67726dddec983d6a0182f3957a3ca3f92fb69db8252cd4a5b1b030da9ddefdb"
+        },
+        {
+          "name": "example-0013.pt",
+          "sha256": "f8680761b608082c81ee7ce01d173c1c1482f29abc066c630a8cffef048d8f9e"
+        },
+        {
+          "name": "example-0014.pt",
+          "sha256": "894094bd40a36c3eb28660b69982b6b7771ed8b27e46c3f83d609eaa8bd7fc74"
+        },
+        {
+          "name": "example-0015.pt",
+          "sha256": "8536483280ddc75ede4e7cf633f361cb892a2fb2a8f550b1e6fd7d2eae9dca64"
+        },
+        {
+          "name": "example-0016.pt",
+          "sha256": "bb17dfd4e3a7115db32dd43e3ea730171bcdd413b5f3491652f2a9d3d46941b8"
+        },
+        {
+          "name": "example-0017.pt",
+          "sha256": "820d05461dc53effd1893e521efe5719c5c35dd5bdf4c2d1443b981e04392440"
+        },
+        {
+          "name": "example-0018.pt",
+          "sha256": "b4a1b8f917d8cd4ab60d669fa964e909eda30ffc4895528cd15a18dc440c7ac9"
+        },
+        {
+          "name": "example-0019.pt",
+          "sha256": "46ca3a95118a5f6f206aa377e3b856f1b39619ee58ecbc5ef65eb0c4c3db4d21"
+        },
+        {
+          "name": "example-0020.pt",
+          "sha256": "1cecebe3df88c9106cac65e3f4ff76a96c675688e69d2b45a9ecd21e12ab0ffa"
+        },
+        {
+          "name": "example-0021.pt",
+          "sha256": "e1510e5adad56c195fcbf7d7db0f3a9f75592d8059c678946a82043e78819c88"
+        },
+        {
+          "name": "example-0022.pt",
+          "sha256": "3bf0744543354f0862c71860433f38ef708b80685edaf2cf99a66866119a6dae"
+        },
+        {
+          "name": "example-0023.pt",
+          "sha256": "3be9a6991a8ae84110ad9fc6e31627ad4287cec93fa7d56134903c316f1caec5"
+        },
+        {
+          "name": "example-0024.pt",
+          "sha256": "9e3639b2ef32e62e3f74eb351ba7c3e3d89e79d32dcf759928add5b5dd73d0a5"
+        },
+        {
+          "name": "example-0025.pt",
+          "sha256": "0fcb5c6698a6a1066e9b724f6deaa401e4af2ad04c3f0c941c717c2c1869a17f"
+        },
+        {
+          "name": "example-0026.pt",
+          "sha256": "2029b7a3cd588c381712aeeabb3caf2ba4d677983624b4a3ed8d2b3a807de665"
+        },
+        {
+          "name": "example-0027.pt",
+          "sha256": "e9e0b396c2cad6d66dedbbe38e37d6cc183d1a42b4e292ceeb65d97099104bbd"
+        },
+        {
+          "name": "example-0028.pt",
+          "sha256": "fb843d177350cd18a7eeaaf0aa9cb56444de129f0d243ff4b295216207c1362f"
+        },
+        {
+          "name": "example-0029.pt",
+          "sha256": "541ba99f9772105cf4a865ca7307d808779e6110c515dafa0fca98648efe7dfc"
+        },
+        {
+          "name": "example-0030.pt",
+          "sha256": "207a7ed86b520a9f3f7ce9efea1242114a91540230fc189884c9095b39f9dc4f"
+        },
+        {
+          "name": "example-0031.pt",
+          "sha256": "f965b214ea89dfc87ac260863a09ca9ef9abdcca2bea672d82d1365c51c701b4"
+        }
+      ],
+      "pair_recall_matches_original_run": true
+    },
+    "dev": {
+      "active_tokens": 2048,
+      "ordered_id_differing_rows": 0,
+      "ordered_id_differing_slots": 0,
+      "candidate_set_differing_rows": 0,
+      "candidate_symmetric_difference_tokens": 0,
+      "gold_membership_differing_rows": 0,
+      "pair_gold_hits": 1733,
+      "unary_gold_hits": 1733,
+      "cutoff_differing_rows": 0,
+      "active_rows_with_boundary_ties": 1391,
+      "gold_targets_tied_at_boundary": 7,
+      "set_differences_not_at_cutoff_rows": 0,
+      "pair_only_base_probability_mass_sum": 0.0,
+      "unary_only_base_probability_mass_sum": 0.0,
+      "retained_base_probability_mass_max_absolute_difference": 0.0,
+      "cutoff_max_absolute_difference": 0.0,
+      "all_active_ordered_ids_match": true,
+      "all_active_candidate_sets_match": true,
+      "all_active_gold_membership_matches": true,
+      "pair_candidate_recall": 0.84619140625,
+      "unary_candidate_recall": 0.84619140625,
+      "examples": 32,
+      "batches": [
+        {
+          "active_tokens": 256,
+          "ordered_id_differing_rows": 0,
+          "ordered_id_differing_slots": 0,
+          "candidate_set_differing_rows": 0,
+          "candidate_symmetric_difference_tokens": 0,
+          "gold_membership_differing_rows": 0,
+          "pair_gold_hits": 214,
+          "unary_gold_hits": 214,
+          "cutoff_differing_rows": 0,
+          "cutoff_max_absolute_difference": 0.0,
+          "active_rows_with_boundary_ties": 178,
+          "gold_targets_tied_at_boundary": 1,
+          "set_differences_not_at_cutoff_rows": 0,
+          "pair_only_base_probability_mass_sum": 0.0,
+          "unary_only_base_probability_mass_sum": 0.0,
+          "retained_base_probability_mass_max_absolute_difference": 0.0,
+          "pair_active_candidate_ids_sha256": "a634f75464abf96bea2501d582cff0dbe125c925e3cd8918bcab1447e4bdfe93",
+          "unary_active_candidate_ids_sha256": "a634f75464abf96bea2501d582cff0dbe125c925e3cd8918bcab1447e4bdfe93",
+          "differing_rows_first": [],
+          "detail_rows_truncated": false,
+          "pair_input_shape": [
+            4,
+            128,
+            50258
+          ],
+          "unary_chunk_input_shapes": [
+            [
+              32,
+              50258
+            ],
+            [
+              32,
+              50258
+            ],
+            [
+              32,
+              50258
+            ],
+            [
+              32,
+              50258
+            ],
+            [
+              32,
+              50258
+            ],
+            [
+              32,
+              50258
+            ],
+            [
+              32,
+              50258
+            ],
+            [
+              32,
+              50258
+            ]
+          ],
+          "active_flat_indices_sha256": "14ff24ba46c5e4ca7016aef57055b7dd78654cb074300947cd17171b5547fc3c",
+          "cached_logits_dtype": "torch.float32",
+          "cache_files": [
+            "example-0000.pt",
+            "example-0001.pt",
+            "example-0002.pt",
+            "example-0003.pt"
+          ]
+        },
+        {
+          "active_tokens": 256,
+          "ordered_id_differing_rows": 0,
+          "ordered_id_differing_slots": 0,
+          "candidate_set_differing_rows": 0,
+          "candidate_symmetric_difference_tokens": 0,
+          "gold_membership_differing_rows": 0,
+          "pair_gold_hits": 212,
+          "unary_gold_hits": 212,
+          "cutoff_differing_rows": 0,
+          "cutoff_max_absolute_difference": 0.0,
+          "active_rows_with_boundary_ties": 164,
+          "gold_targets_tied_at_boundary": 1,
+          "set_differences_not_at_cutoff_rows": 0,
+          "pair_only_base_probability_mass_sum": 0.0,
+          "unary_only_base_probability_mass_sum": 0.0,
+          "retained_base_probability_mass_max_absolute_difference": 0.0,
+          "pair_active_candidate_ids_sha256": "12938ee7509169e797e2f3d6a8eee02efd4c9e449e7edbe7d0ffd147fc7cd8f0",
+          "unary_active_candidate_ids_sha256": "12938ee7509169e797e2f3d6a8eee02efd4c9e449e7edbe7d0ffd147fc7cd8f0",
+          "differing_rows_first": [],
+          "detail_rows_truncated": false,
+          "pair_input_shape": [
+            4,
+            128,
+            50258
+          ],
+          "unary_chunk_input_shapes": [
+            [
+              32,
+              50258
+            ],
+            [
+              32,
+              50258
+            ],
+            [
+              32,
+              50258
+            ],
+            [
+              32,
+              50258
+            ],
+            [
+              32,
+              50258
+            ],
+            [
+              32,
+              50258
+            ],
+            [
+              32,
+              50258
+            ],
+            [
+              32,
+              50258
+            ]
+          ],
+          "active_flat_indices_sha256": "2cb26a46955eed1a7540b7e9d17062bd89e50813f18254506f4692209aeb79af",
+          "cached_logits_dtype": "torch.float32",
+          "cache_files": [
+            "example-0004.pt",
+            "example-0005.pt",
+            "example-0006.pt",
+            "example-0007.pt"
+          ]
+        },
+        {
+          "active_tokens": 256,
+          "ordered_id_differing_rows": 0,
+          "ordered_id_differing_slots": 0,
+          "candidate_set_differing_rows": 0,
+          "candidate_symmetric_difference_tokens": 0,
+          "gold_membership_differing_rows": 0,
+          "pair_gold_hits": 228,
+          "unary_gold_hits": 228,
+          "cutoff_differing_rows": 0,
+          "cutoff_max_absolute_difference": 0.0,
+          "active_rows_with_boundary_ties": 174,
+          "gold_targets_tied_at_boundary": 0,
+          "set_differences_not_at_cutoff_rows": 0,
+          "pair_only_base_probability_mass_sum": 0.0,
+          "unary_only_base_probability_mass_sum": 0.0,
+          "retained_base_probability_mass_max_absolute_difference": 0.0,
+          "pair_active_candidate_ids_sha256": "36dbb864e6b4971e0f42c8f1e141054b717d8bfaddc11a4211eb2abd9d813f17",
+          "unary_active_candidate_ids_sha256": "36dbb864e6b4971e0f42c8f1e141054b717d8bfaddc11a4211eb2abd9d813f17",
+          "differing_rows_first": [],
+          "detail_rows_truncated": false,
+          "pair_input_shape": [
+            4,
+            128,
+            50258
+          ],
+          "unary_chunk_input_shapes": [
+            [
+              32,
+              50258
+            ],
+            [
+              32,
+              50258
+            ],
+            [
+              32,
+              50258
+            ],
+            [
+              32,
+              50258
+            ],
+            [
+              32,
+              50258
+            ],
+            [
+              32,
+              50258
+            ],
+            [
+              32,
+              50258
+            ],
+            [
+              32,
+              50258
+            ]
+          ],
+          "active_flat_indices_sha256": "bb8abb09c33f2d03116d544009e70eb155fa9dc81a130d571599fea7a72709e0",
+          "cached_logits_dtype": "torch.float32",
+          "cache_files": [
+            "example-0008.pt",
+            "example-0009.pt",
+            "example-0010.pt",
+            "example-0011.pt"
+          ]
+        },
+        {
+          "active_tokens": 256,
+          "ordered_id_differing_rows": 0,
+          "ordered_id_differing_slots": 0,
+          "candidate_set_differing_rows": 0,
+          "candidate_symmetric_difference_tokens": 0,
+          "gold_membership_differing_rows": 0,
+          "pair_gold_hits": 211,
+          "unary_gold_hits": 211,
+          "cutoff_differing_rows": 0,
+          "cutoff_max_absolute_difference": 0.0,
+          "active_rows_with_boundary_ties": 177,
+          "gold_targets_tied_at_boundary": 1,
+          "set_differences_not_at_cutoff_rows": 0,
+          "pair_only_base_probability_mass_sum": 0.0,
+          "unary_only_base_probability_mass_sum": 0.0,
+          "retained_base_probability_mass_max_absolute_difference": 0.0,
+          "pair_active_candidate_ids_sha256": "83c87df249be32fb4b77fd5ef78a394ce299a51dbe08173ff52d95d888ba5cab",
+          "unary_active_candidate_ids_sha256": "83c87df249be32fb4b77fd5ef78a394ce299a51dbe08173ff52d95d888ba5cab",
+          "differing_rows_first": [],
+          "detail_rows_truncated": false,
+          "pair_input_shape": [
+            4,
+            128,
+            50258
+          ],
+          "unary_chunk_input_shapes": [
+            [
+              32,
+              50258
+            ],
+            [
+              32,
+              50258
+            ],
+            [
+              32,
+              50258
+            ],
+            [
+              32,
+              50258
+            ],
+            [
+              32,
+              50258
+            ],
+            [
+              32,
+              50258
+            ],
+            [
+              32,
+              50258
+            ],
+            [
+              32,
+              50258
+            ]
+          ],
+          "active_flat_indices_sha256": "53e591f5b83608ee2a9215c5d8817cd1dced4aa785ed9fe07263ab10471caa43",
+          "cached_logits_dtype": "torch.float32",
+          "cache_files": [
+            "example-0012.pt",
+            "example-0013.pt",
+            "example-0014.pt",
+            "example-0015.pt"
+          ]
+        },
+        {
+          "active_tokens": 256,
+          "ordered_id_differing_rows": 0,
+          "ordered_id_differing_slots": 0,
+          "candidate_set_differing_rows": 0,
+          "candidate_symmetric_difference_tokens": 0,
+          "gold_membership_differing_rows": 0,
+          "pair_gold_hits": 221,
+          "unary_gold_hits": 221,
+          "cutoff_differing_rows": 0,
+          "cutoff_max_absolute_difference": 0.0,
+          "active_rows_with_boundary_ties": 177,
+          "gold_targets_tied_at_boundary": 2,
+          "set_differences_not_at_cutoff_rows": 0,
+          "pair_only_base_probability_mass_sum": 0.0,
+          "unary_only_base_probability_mass_sum": 0.0,
+          "retained_base_probability_mass_max_absolute_difference": 0.0,
+          "pair_active_candidate_ids_sha256": "80a6bd38a8762714662dc12544566f52c5b44f4677d43029983fe8c2d76e05e7",
+          "unary_active_candidate_ids_sha256": "80a6bd38a8762714662dc12544566f52c5b44f4677d43029983fe8c2d76e05e7",
+          "differing_rows_first": [],
+          "detail_rows_truncated": false,
+          "pair_input_shape": [
+            4,
+            128,
+            50258
+          ],
+          "unary_chunk_input_shapes": [
+            [
+              32,
+              50258
+            ],
+            [
+              32,
+              50258
+            ],
+            [
+              32,
+              50258
+            ],
+            [
+              32,
+              50258
+            ],
+            [
+              32,
+              50258
+            ],
+            [
+              32,
+              50258
+            ],
+            [
+              32,
+              50258
+            ],
+            [
+              32,
+              50258
+            ]
+          ],
+          "active_flat_indices_sha256": "b6fe848b2a7603d1a3b15ff8fd73ec582683a4e14d8473f385d423b2f370bce1",
+          "cached_logits_dtype": "torch.float32",
+          "cache_files": [
+            "example-0016.pt",
+            "example-0017.pt",
+            "example-0018.pt",
+            "example-0019.pt"
+          ]
+        },
+        {
+          "active_tokens": 256,
+          "ordered_id_differing_rows": 0,
+          "ordered_id_differing_slots": 0,
+          "candidate_set_differing_rows": 0,
+          "candidate_symmetric_difference_tokens": 0,
+          "gold_membership_differing_rows": 0,
+          "pair_gold_hits": 222,
+          "unary_gold_hits": 222,
+          "cutoff_differing_rows": 0,
+          "cutoff_max_absolute_difference": 0.0,
+          "active_rows_with_boundary_ties": 165,
+          "gold_targets_tied_at_boundary": 1,
+          "set_differences_not_at_cutoff_rows": 0,
+          "pair_only_base_probability_mass_sum": 0.0,
+          "unary_only_base_probability_mass_sum": 0.0,
+          "retained_base_probability_mass_max_absolute_difference": 0.0,
+          "pair_active_candidate_ids_sha256": "6a2c18069e5b56dbb85c527c7906f0f31d2998dd719d6aaf5fa26c0b553b04b3",
+          "unary_active_candidate_ids_sha256": "6a2c18069e5b56dbb85c527c7906f0f31d2998dd719d6aaf5fa26c0b553b04b3",
+          "differing_rows_first": [],
+          "detail_rows_truncated": false,
+          "pair_input_shape": [
+            4,
+            128,
+            50258
+          ],
+          "unary_chunk_input_shapes": [
+            [
+              32,
+              50258
+            ],
+            [
+              32,
+              50258
+            ],
+            [
+              32,
+              50258
+            ],
+            [
+              32,
+              50258
+            ],
+            [
+              32,
+              50258
+            ],
+            [
+              32,
+              50258
+            ],
+            [
+              32,
+              50258
+            ],
+            [
+              32,
+              50258
+            ]
+          ],
+          "active_flat_indices_sha256": "f87230c1c4c0397d4026b571143ac637029570f8847f2312c6d26b68b461947e",
+          "cached_logits_dtype": "torch.float32",
+          "cache_files": [
+            "example-0020.pt",
+            "example-0021.pt",
+            "example-0022.pt",
+            "example-0023.pt"
+          ]
+        },
+        {
+          "active_tokens": 256,
+          "ordered_id_differing_rows": 0,
+          "ordered_id_differing_slots": 0,
+          "candidate_set_differing_rows": 0,
+          "candidate_symmetric_difference_tokens": 0,
+          "gold_membership_differing_rows": 0,
+          "pair_gold_hits": 208,
+          "unary_gold_hits": 208,
+          "cutoff_differing_rows": 0,
+          "cutoff_max_absolute_difference": 0.0,
+          "active_rows_with_boundary_ties": 190,
+          "gold_targets_tied_at_boundary": 1,
+          "set_differences_not_at_cutoff_rows": 0,
+          "pair_only_base_probability_mass_sum": 0.0,
+          "unary_only_base_probability_mass_sum": 0.0,
+          "retained_base_probability_mass_max_absolute_difference": 0.0,
+          "pair_active_candidate_ids_sha256": "29cfe130ab64c7796fefadba737044e2377efc5e03dbaa9de619c6395a12def6",
+          "unary_active_candidate_ids_sha256": "29cfe130ab64c7796fefadba737044e2377efc5e03dbaa9de619c6395a12def6",
+          "differing_rows_first": [],
+          "detail_rows_truncated": false,
+          "pair_input_shape": [
+            4,
+            128,
+            50258
+          ],
+          "unary_chunk_input_shapes": [
+            [
+              32,
+              50258
+            ],
+            [
+              32,
+              50258
+            ],
+            [
+              32,
+              50258
+            ],
+            [
+              32,
+              50258
+            ],
+            [
+              32,
+              50258
+            ],
+            [
+              32,
+              50258
+            ],
+            [
+              32,
+              50258
+            ],
+            [
+              32,
+              50258
+            ]
+          ],
+          "active_flat_indices_sha256": "52a423c6f055cc2d08569a9e440ed176ece327bfa730ec29c7230ab5ab96d584",
+          "cached_logits_dtype": "torch.float32",
+          "cache_files": [
+            "example-0024.pt",
+            "example-0025.pt",
+            "example-0026.pt",
+            "example-0027.pt"
+          ]
+        },
+        {
+          "active_tokens": 256,
+          "ordered_id_differing_rows": 0,
+          "ordered_id_differing_slots": 0,
+          "candidate_set_differing_rows": 0,
+          "candidate_symmetric_difference_tokens": 0,
+          "gold_membership_differing_rows": 0,
+          "pair_gold_hits": 217,
+          "unary_gold_hits": 217,
+          "cutoff_differing_rows": 0,
+          "cutoff_max_absolute_difference": 0.0,
+          "active_rows_with_boundary_ties": 166,
+          "gold_targets_tied_at_boundary": 0,
+          "set_differences_not_at_cutoff_rows": 0,
+          "pair_only_base_probability_mass_sum": 0.0,
+          "unary_only_base_probability_mass_sum": 0.0,
+          "retained_base_probability_mass_max_absolute_difference": 0.0,
+          "pair_active_candidate_ids_sha256": "f110218e21831834e8b071f7b94ec52a69868d53bc28f1b85afba0259541bd35",
+          "unary_active_candidate_ids_sha256": "f110218e21831834e8b071f7b94ec52a69868d53bc28f1b85afba0259541bd35",
+          "differing_rows_first": [],
+          "detail_rows_truncated": false,
+          "pair_input_shape": [
+            4,
+            128,
+            50258
+          ],
+          "unary_chunk_input_shapes": [
+            [
+              32,
+              50258
+            ],
+            [
+              32,
+              50258
+            ],
+            [
+              32,
+              50258
+            ],
+            [
+              32,
+              50258
+            ],
+            [
+              32,
+              50258
+            ],
+            [
+              32,
+              50258
+            ],
+            [
+              32,
+              50258
+            ],
+            [
+              32,
+              50258
+            ]
+          ],
+          "active_flat_indices_sha256": "811fef8a0fbd8fdd901854312f06a7d71d7571eb5209e329ef1649eeeaf30523",
+          "cached_logits_dtype": "torch.float32",
+          "cache_files": [
+            "example-0028.pt",
+            "example-0029.pt",
+            "example-0030.pt",
+            "example-0031.pt"
+          ]
+        }
+      ],
+      "cache_files": [
+        {
+          "name": "example-0000.pt",
+          "sha256": "7ac9b2230990aaf5672dd1604c3e8f35ff56af491c8cedb41344240dfd1deb97"
+        },
+        {
+          "name": "example-0001.pt",
+          "sha256": "b171ba0f64b43e75bc1e79f175f243a7407c17398800b871898e9c63cee6bffe"
+        },
+        {
+          "name": "example-0002.pt",
+          "sha256": "43a36a32f75fe011cceff04a87dd03835130596b2aeda2401a773868c8adb31c"
+        },
+        {
+          "name": "example-0003.pt",
+          "sha256": "2cd73e3a7178a6d01e64e242a8ae7408ef476bec5c8cf87efb7affcd99e7e7f9"
+        },
+        {
+          "name": "example-0004.pt",
+          "sha256": "852d4642af8308d626910ac57222669ef52dffcbe2c0beb7f9f61d31dfe25882"
+        },
+        {
+          "name": "example-0005.pt",
+          "sha256": "63627646e6a0b2d3a547406d2859ed16d7a991fd4baf43162d63d248fe4a0f5c"
+        },
+        {
+          "name": "example-0006.pt",
+          "sha256": "fd8c65be1fbef56fac5b046a24011fdab8107d5dd7491beb918f1c00cb872149"
+        },
+        {
+          "name": "example-0007.pt",
+          "sha256": "f575113142eea07f0fe367a2d92fee5fdae01d330f68aa25680d111328003558"
+        },
+        {
+          "name": "example-0008.pt",
+          "sha256": "3ca5adf01ece811c341f42bfa7dad7576b608efa86cad75517909ac769689f25"
+        },
+        {
+          "name": "example-0009.pt",
+          "sha256": "ad4765856e81ffa4db4693676dd54dbb3cbd26f3103a86203dc92f2719666f04"
+        },
+        {
+          "name": "example-0010.pt",
+          "sha256": "ea9487ac0a6ce46d7174256016be6537461afa61740a8f763b5797f0c17f5ab3"
+        },
+        {
+          "name": "example-0011.pt",
+          "sha256": "2b861757ada4d7fc4db926d4f31134c56e8bfc317b4d710ad04b54b0874921d2"
+        },
+        {
+          "name": "example-0012.pt",
+          "sha256": "7b11c8215d5378892cc7f75f6e0c99fd83fad469ab0240878bcfe58f7e0991d3"
+        },
+        {
+          "name": "example-0013.pt",
+          "sha256": "dec2f8d7399fcd2a7be0509121f04e71193d2d3233cf2be3701bf5c10cfdbaa2"
+        },
+        {
+          "name": "example-0014.pt",
+          "sha256": "531090d56c698ae901023e162a7d27a94a6a10428814bd96a284a68b8fd513fa"
+        },
+        {
+          "name": "example-0015.pt",
+          "sha256": "c3ebf4dd7dbb2a26a3e2f4e910081cac4b64b31456ed84f1e276637dedd39021"
+        },
+        {
+          "name": "example-0016.pt",
+          "sha256": "a1652382fa173a18580c42e6b5d4134d136852f54ce36c2919a0af9b7c2317b0"
+        },
+        {
+          "name": "example-0017.pt",
+          "sha256": "8ace9843636c5a4b5b3a2f275f59f91b0834f564f6cbce32f36c6531f9bd76d6"
+        },
+        {
+          "name": "example-0018.pt",
+          "sha256": "b51ee0d1af7ae72a3ee44c76549e366f8e34eab476bafe8bfbd19d4ab3f43bb3"
+        },
+        {
+          "name": "example-0019.pt",
+          "sha256": "f88f2f1dbed1ae5f08975d9fbf7dc94386d7344ad6cb6321ca78d2b1ee27540a"
+        },
+        {
+          "name": "example-0020.pt",
+          "sha256": "5d33fcfaffc36bac063744c126d994b6193975d3cbda25ba904a07e1eab04851"
+        },
+        {
+          "name": "example-0021.pt",
+          "sha256": "7b8be365abdbb4ca95e6824819ca05ff4067d7756f6ca1f648bf18a184dcd6f8"
+        },
+        {
+          "name": "example-0022.pt",
+          "sha256": "d4d86fdb431e07eafefca21c9fbf9f251829b231f7d6d386f5182d87667f20ab"
+        },
+        {
+          "name": "example-0023.pt",
+          "sha256": "1a9f5d1484710e011e0dfc9d987196966a113dddfddad83b50a970c9bbb891f2"
+        },
+        {
+          "name": "example-0024.pt",
+          "sha256": "a7a5d2a2e2d6482f4f0fe6a1e9b8018014f9b9214e6c8b097ff1f88349ba4cc0"
+        },
+        {
+          "name": "example-0025.pt",
+          "sha256": "60b06c6241acb7cf0187a1feb5d7f27ecca29cab268df8666fff658170c94271"
+        },
+        {
+          "name": "example-0026.pt",
+          "sha256": "7cb7da9a3c69afae873715aec2729ef12b20d968ac3367a89521829173b57315"
+        },
+        {
+          "name": "example-0027.pt",
+          "sha256": "3389821345cbb8159941746803b3056e7819415eaebf00263c8c6854e06d0377"
+        },
+        {
+          "name": "example-0028.pt",
+          "sha256": "a2b84a57e0287dc81eb218cc1436c71a85fec8fd53e8186b672a21c81c07a3a8"
+        },
+        {
+          "name": "example-0029.pt",
+          "sha256": "c8c8f22eb68ee59213e8908930f9e509966ddfe91fc11cd4b026d9792d0f3fdb"
+        },
+        {
+          "name": "example-0030.pt",
+          "sha256": "d3c32d01804b5f8194a78bdc245ed901843eabbea4e708007f0d532b822803aa"
+        },
+        {
+          "name": "example-0031.pt",
+          "sha256": "dd1c68d0def6965afbc82921a0e0d07ede4091894c24b821119af3e7024ce711"
+        }
+      ],
+      "pair_recall_matches_original_run": true
+    }
+  }
+}

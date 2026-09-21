@@ -1,0 +1,12 @@
+# Keep the original small config byte-for-byte intact for pinned paper replay.
+defaults:
+  - contextual-forest-small
+  - _self_
+
+name: contextual-forest-endpoints-small
+structured_decoder:
+  # Separate left/right token tables AND hidden/time FiLM projections.
+  # Rank is explicit: separate rank=8 matches shared rank=16 parameters.
+  factor_embedding_mode: shared
+  # 0 = original affine FiLM; positive = hidden width of a joint h/time MLP.
+  factor_conditioner_hidden_dim: 0

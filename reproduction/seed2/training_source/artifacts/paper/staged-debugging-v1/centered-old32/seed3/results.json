@@ -1,0 +1,97 @@
+{
+  "backbone_calls": 0,
+  "checkpoint_sha256": "ad40561382b909f4554c92ed732a9fb6c2e4338a5f1d774cb9b6fc5bd3985c03",
+  "completed": true,
+  "completed_steps": 300,
+  "curve": [
+    {
+      "dev": {
+        "active_tokens": 2048,
+        "dependence_gain_nats_per_masked_token": 0.0,
+        "frozen_unary_nll_per_masked_token": 2.926867383047715,
+        "joint_nll_per_masked_token": 2.926867383047715,
+        "max_direct_inferred_score_error_nats": 5.684341886080802e-14,
+        "max_marginal_error": 6.661338147750939e-16
+      },
+      "elapsed_seconds": 0.010824897000020428,
+      "frozen_unary_sha256": "88224f381a5866f02b1b1c293efcd5ccd76febb30e7257bdf5b5c0aa2f2bf041",
+      "step": 0,
+      "train": {
+        "active_tokens": 2048,
+        "dependence_gain_nats_per_masked_token": 0.0,
+        "frozen_unary_nll_per_masked_token": 2.9090687672816204,
+        "joint_nll_per_masked_token": 2.9090687672816204,
+        "max_direct_inferred_score_error_nats": 5.684341886080802e-14,
+        "max_marginal_error": 6.661338147750939e-16
+      }
+    },
+    {
+      "dev": {
+        "active_tokens": 2048,
+        "dependence_gain_nats_per_masked_token": -0.0014754655102753311,
+        "frozen_unary_nll_per_masked_token": 2.926867383047715,
+        "joint_nll_per_masked_token": 2.9283428485579903,
+        "max_direct_inferred_score_error_nats": 5.684341886080802e-14,
+        "max_marginal_error": 6.661338147750939e-16
+      },
+      "elapsed_seconds": 12.864621622999948,
+      "frozen_unary_sha256": "88224f381a5866f02b1b1c293efcd5ccd76febb30e7257bdf5b5c0aa2f2bf041",
+      "step": 100,
+      "train": {
+        "active_tokens": 2048,
+        "dependence_gain_nats_per_masked_token": 0.10664549771086707,
+        "frozen_unary_nll_per_masked_token": 2.9090687672816204,
+        "joint_nll_per_masked_token": 2.8024232695707534,
+        "max_direct_inferred_score_error_nats": 5.684341886080802e-14,
+        "max_marginal_error": 6.661338147750939e-16
+      }
+    },
+    {
+      "dev": {
+        "active_tokens": 2048,
+        "dependence_gain_nats_per_masked_token": -0.0014202486456427188,
+        "frozen_unary_nll_per_masked_token": 2.926867383047715,
+        "joint_nll_per_masked_token": 2.9282876316933577,
+        "max_direct_inferred_score_error_nats": 5.684341886080802e-14,
+        "max_marginal_error": 6.661338147750939e-16
+      },
+      "elapsed_seconds": 25.126578703999712,
+      "frozen_unary_sha256": "88224f381a5866f02b1b1c293efcd5ccd76febb30e7257bdf5b5c0aa2f2bf041",
+      "step": 200,
+      "train": {
+        "active_tokens": 2048,
+        "dependence_gain_nats_per_masked_token": 0.10815728672352387,
+        "frozen_unary_nll_per_masked_token": 2.9090687672816204,
+        "joint_nll_per_masked_token": 2.8009114805580966,
+        "max_direct_inferred_score_error_nats": 5.684341886080802e-14,
+        "max_marginal_error": 6.661338147750939e-16
+      }
+    },
+    {
+      "dev": {
+        "active_tokens": 2048,
+        "dependence_gain_nats_per_masked_token": -0.0017255156052962128,
+        "frozen_unary_nll_per_masked_token": 2.926867383047715,
+        "joint_nll_per_masked_token": 2.928592898653011,
+        "max_direct_inferred_score_error_nats": 5.684341886080802e-14,
+        "max_marginal_error": 6.661338147750939e-16
+      },
+      "elapsed_seconds": 37.40823546499996,
+      "frozen_unary_sha256": "88224f381a5866f02b1b1c293efcd5ccd76febb30e7257bdf5b5c0aa2f2bf041",
+      "step": 300,
+      "train": {
+        "active_tokens": 2048,
+        "dependence_gain_nats_per_masked_token": 0.10923035009788373,
+        "frozen_unary_nll_per_masked_token": 2.9090687672816204,
+        "joint_nll_per_masked_token": 2.7998384171837367,
+        "max_direct_inferred_score_error_nats": 5.684341886080802e-14,
+        "max_marginal_error": 6.661338147750939e-16
+      }
+    }
+  ],
+  "final_head_sha256": "b38c2380cbc5ef9f61c3cb66f192423ddacaeb1e245f893a3622967267c05cbe",
+  "frozen_unary_unchanged": true,
+  "input_caches_unchanged": true,
+  "reserved_test_access": false,
+  "train_nll_reduction": 0.10923035009788373
+}

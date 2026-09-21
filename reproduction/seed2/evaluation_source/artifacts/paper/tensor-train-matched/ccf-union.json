@@ -1,0 +1,997 @@
+{
+  "artifact": "verified_generation_shard_union",
+  "bootstrap": {
+    "base_rng_seed": 91017,
+    "confidence_level": 0.95,
+    "num_resamples": 20000,
+    "paired_draw_resampling": true,
+    "pairing_scope": "intervals condition on the frozen shard and batch layout; the generation harness seeds each batch from its ordered paired draws",
+    "prompt_cluster_resampling": true,
+    "repeated_prompt_draws_are_clustered_by": "prompt_id"
+  },
+  "comparisons": [
+    {
+      "baseline": {
+        "requested_nfe_budget": 8,
+        "sampling_mode": "structured_joint"
+      },
+      "comparison_kind": "nfe_budget_within_sampling_mode",
+      "endpoints": {
+        "reference_lm_mean_nll_nats": {
+          "direction": "treatment_minus_baseline",
+          "paired_draws": {
+            "ci_lower": -1.0202093644998966,
+            "ci_upper": -0.8617495577316732,
+            "confidence_level": 0.95,
+            "estimand": "equal-weight mean across paired sample draws",
+            "method": "paired_sample_draw_bootstrap_percentile",
+            "num_paired_draws": 256,
+            "num_resamples": 20000,
+            "point_estimate": -0.94176578335464,
+            "rng": "NumPy Generator (PCG64)",
+            "rng_seed": 91017
+          },
+          "prompt_clusters": {
+            "ci_lower": -0.94176578335464,
+            "ci_upper": -0.94176578335464,
+            "confidence_level": 0.95,
+            "degenerate_single_cluster": true,
+            "draws_per_prompt": {
+              "unconditional": 256
+            },
+            "estimand": "equal-weight mean across prompt means after averaging repeated paired draws within prompt_id",
+            "method": "paired_prompt_cluster_bootstrap_percentile",
+            "num_paired_draws": 256,
+            "num_prompt_clusters": 1,
+            "num_resamples": 20000,
+            "point_estimate": -0.94176578335464,
+            "rng": "NumPy Generator (PCG64)",
+            "rng_seed": 91018
+          }
+        },
+        "repetition_rate_1gram": {
+          "direction": "treatment_minus_baseline",
+          "paired_draws": {
+            "ci_lower": 0.029445648193359375,
+            "ci_upper": 0.037265777587890625,
+            "confidence_level": 0.95,
+            "estimand": "equal-weight mean across paired sample draws",
+            "method": "paired_sample_draw_bootstrap_percentile",
+            "num_paired_draws": 256,
+            "num_resamples": 20000,
+            "point_estimate": 0.03328704833984375,
+            "rng": "NumPy Generator (PCG64)",
+            "rng_seed": 91019
+          },
+          "prompt_clusters": {
+            "ci_lower": 0.03328704833984375,
+            "ci_upper": 0.03328704833984375,
+            "confidence_level": 0.95,
+            "degenerate_single_cluster": true,
+            "draws_per_prompt": {
+              "unconditional": 256
+            },
+            "estimand": "equal-weight mean across prompt means after averaging repeated paired draws within prompt_id",
+            "method": "paired_prompt_cluster_bootstrap_percentile",
+            "num_paired_draws": 256,
+            "num_prompt_clusters": 1,
+            "num_resamples": 20000,
+            "point_estimate": 0.03328704833984375,
+            "rng": "NumPy Generator (PCG64)",
+            "rng_seed": 91020
+          }
+        },
+        "repetition_rate_2gram": {
+          "direction": "treatment_minus_baseline",
+          "paired_draws": {
+            "ci_lower": 0.024327097843352918,
+            "ci_upper": 0.02960063080400785,
+            "confidence_level": 0.95,
+            "estimand": "equal-weight mean across paired sample draws",
+            "method": "paired_sample_draw_bootstrap_percentile",
+            "num_paired_draws": 256,
+            "num_resamples": 20000,
+            "point_estimate": 0.026950452101661814,
+            "rng": "NumPy Generator (PCG64)",
+            "rng_seed": 91021
+          },
+          "prompt_clusters": {
+            "ci_lower": 0.026950452101661814,
+            "ci_upper": 0.026950452101661814,
+            "confidence_level": 0.95,
+            "degenerate_single_cluster": true,
+            "draws_per_prompt": {
+              "unconditional": 256
+            },
+            "estimand": "equal-weight mean across prompt means after averaging repeated paired draws within prompt_id",
+            "method": "paired_prompt_cluster_bootstrap_percentile",
+            "num_paired_draws": 256,
+            "num_prompt_clusters": 1,
+            "num_resamples": 20000,
+            "point_estimate": 0.026950452101661814,
+            "rng": "NumPy Generator (PCG64)",
+            "rng_seed": 91022
+          }
+        },
+        "repetition_rate_4gram": {
+          "direction": "treatment_minus_baseline",
+          "paired_draws": {
+            "ci_lower": 0.0022687622428991232,
+            "ci_upper": 0.00322141283055828,
+            "confidence_level": 0.95,
+            "estimand": "equal-weight mean across paired sample draws",
+            "method": "paired_sample_draw_bootstrap_percentile",
+            "num_paired_draws": 256,
+            "num_resamples": 20000,
+            "point_estimate": 0.00273169686581783,
+            "rng": "NumPy Generator (PCG64)",
+            "rng_seed": 91023
+          },
+          "prompt_clusters": {
+            "ci_lower": 0.00273169686581783,
+            "ci_upper": 0.00273169686581783,
+            "confidence_level": 0.95,
+            "degenerate_single_cluster": true,
+            "draws_per_prompt": {
+              "unconditional": 256
+            },
+            "estimand": "equal-weight mean across prompt means after averaging repeated paired draws within prompt_id",
+            "method": "paired_prompt_cluster_bootstrap_percentile",
+            "num_paired_draws": 256,
+            "num_prompt_clusters": 1,
+            "num_resamples": 20000,
+            "point_estimate": 0.00273169686581783,
+            "rng": "NumPy Generator (PCG64)",
+            "rng_seed": 91024
+          }
+        }
+      },
+      "num_paired_draws": 256,
+      "num_prompt_clusters": 1,
+      "treatment": {
+        "requested_nfe_budget": 16,
+        "sampling_mode": "structured_joint"
+      }
+    },
+    {
+      "baseline": {
+        "requested_nfe_budget": 8,
+        "sampling_mode": "structured_joint"
+      },
+      "comparison_kind": "nfe_budget_within_sampling_mode",
+      "endpoints": {
+        "reference_lm_mean_nll_nats": {
+          "direction": "treatment_minus_baseline",
+          "paired_draws": {
+            "ci_lower": -1.7083671759814023,
+            "ci_upper": -1.5460144613403828,
+            "confidence_level": 0.95,
+            "estimand": "equal-weight mean across paired sample draws",
+            "method": "paired_sample_draw_bootstrap_percentile",
+            "num_paired_draws": 256,
+            "num_resamples": 20000,
+            "point_estimate": -1.627694582566619,
+            "rng": "NumPy Generator (PCG64)",
+            "rng_seed": 92017
+          },
+          "prompt_clusters": {
+            "ci_lower": -1.627694582566619,
+            "ci_upper": -1.627694582566619,
+            "confidence_level": 0.95,
+            "degenerate_single_cluster": true,
+            "draws_per_prompt": {
+              "unconditional": 256
+            },
+            "estimand": "equal-weight mean across prompt means after averaging repeated paired draws within prompt_id",
+            "method": "paired_prompt_cluster_bootstrap_percentile",
+            "num_paired_draws": 256,
+            "num_prompt_clusters": 1,
+            "num_resamples": 20000,
+            "point_estimate": -1.627694582566619,
+            "rng": "NumPy Generator (PCG64)",
+            "rng_seed": 92018
+          }
+        },
+        "repetition_rate_1gram": {
+          "direction": "treatment_minus_baseline",
+          "paired_draws": {
+            "ci_lower": 0.05446615219116211,
+            "ci_upper": 0.06346902847290038,
+            "confidence_level": 0.95,
+            "estimand": "equal-weight mean across paired sample draws",
+            "method": "paired_sample_draw_bootstrap_percentile",
+            "num_paired_draws": 256,
+            "num_resamples": 20000,
+            "point_estimate": 0.058990478515625,
+            "rng": "NumPy Generator (PCG64)",
+            "rng_seed": 92019
+          },
+          "prompt_clusters": {
+            "ci_lower": 0.058990478515625,
+            "ci_upper": 0.058990478515625,
+            "confidence_level": 0.95,
+            "degenerate_single_cluster": true,
+            "draws_per_prompt": {
+              "unconditional": 256
+            },
+            "estimand": "equal-weight mean across prompt means after averaging repeated paired draws within prompt_id",
+            "method": "paired_prompt_cluster_bootstrap_percentile",
+            "num_paired_draws": 256,
+            "num_prompt_clusters": 1,
+            "num_resamples": 20000,
+            "point_estimate": 0.058990478515625,
+            "rng": "NumPy Generator (PCG64)",
+            "rng_seed": 92020
+          }
+        },
+        "repetition_rate_2gram": {
+          "direction": "treatment_minus_baseline",
+          "paired_draws": {
+            "ci_lower": 0.04163974676197462,
+            "ci_upper": 0.04827636241446728,
+            "confidence_level": 0.95,
+            "estimand": "equal-weight mean across paired sample draws",
+            "method": "paired_sample_draw_bootstrap_percentile",
+            "num_paired_draws": 256,
+            "num_resamples": 20000,
+            "point_estimate": 0.0449199657869013,
+            "rng": "NumPy Generator (PCG64)",
+            "rng_seed": 92021
+          },
+          "prompt_clusters": {
+            "ci_lower": 0.0449199657869013,
+            "ci_upper": 0.0449199657869013,
+            "confidence_level": 0.95,
+            "degenerate_single_cluster": true,
+            "draws_per_prompt": {
+              "unconditional": 256
+            },
+            "estimand": "equal-weight mean across prompt means after averaging repeated paired draws within prompt_id",
+            "method": "paired_prompt_cluster_bootstrap_percentile",
+            "num_paired_draws": 256,
+            "num_prompt_clusters": 1,
+            "num_resamples": 20000,
+            "point_estimate": 0.0449199657869013,
+            "rng": "NumPy Generator (PCG64)",
+            "rng_seed": 92022
+          }
+        },
+        "repetition_rate_4gram": {
+          "direction": "treatment_minus_baseline",
+          "paired_draws": {
+            "ci_lower": 0.005574345004897164,
+            "ci_upper": 0.0072653954456415315,
+            "confidence_level": 0.95,
+            "estimand": "equal-weight mean across paired sample draws",
+            "method": "paired_sample_draw_bootstrap_percentile",
+            "num_paired_draws": 256,
+            "num_resamples": 20000,
+            "point_estimate": 0.006393088883447603,
+            "rng": "NumPy Generator (PCG64)",
+            "rng_seed": 92023
+          },
+          "prompt_clusters": {
+            "ci_lower": 0.006393088883447603,
+            "ci_upper": 0.006393088883447603,
+            "confidence_level": 0.95,
+            "degenerate_single_cluster": true,
+            "draws_per_prompt": {
+              "unconditional": 256
+            },
+            "estimand": "equal-weight mean across prompt means after averaging repeated paired draws within prompt_id",
+            "method": "paired_prompt_cluster_bootstrap_percentile",
+            "num_paired_draws": 256,
+            "num_prompt_clusters": 1,
+            "num_resamples": 20000,
+            "point_estimate": 0.006393088883447603,
+            "rng": "NumPy Generator (PCG64)",
+            "rng_seed": 92024
+          }
+        }
+      },
+      "num_paired_draws": 256,
+      "num_prompt_clusters": 1,
+      "treatment": {
+        "requested_nfe_budget": 32,
+        "sampling_mode": "structured_joint"
+      }
+    }
+  ],
+  "coverage": {
+    "canonical_union_records_sha256": "ff8506bcd788796fb71bdcbe3f8a43429a977de047d92dd6a433b67413e64b86",
+    "expected_output_records": 768,
+    "global_num_paired_draws": 256,
+    "global_pairing_digest": "5884c154674234407ae5b27ece06e67ae475fb41cad87fbffbaca65e2d8384d2",
+    "num_groups": 3,
+    "num_nfe_budgets": 3,
+    "num_sampling_modes": 1,
+    "num_shards": 32,
+    "num_unique_prompts": 1,
+    "paired_draws_per_prompt": {
+      "unconditional": 256
+    },
+    "record_digest_algorithm": "sha256-canonical-json-array-v1",
+    "shard_indices": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      22,
+      23,
+      24,
+      25,
+      26,
+      27,
+      28,
+      29,
+      30,
+      31
+    ],
+    "verified_output_records": 768
+  },
+  "created_utc": "2026-09-02T02:47:52.306965+00:00",
+  "experiment": "paired_contextual_forest_generation_pilot",
+  "groups": [
+    {
+      "active_tokens_per_second": 107.52959072213062,
+      "distinct_n": {
+        "1": 0.10857391357421875,
+        "2": 0.7027507942326491,
+        "4": 0.9900373408423114
+      },
+      "mean_repetition_rate": {
+        "1": 0.4052085876464844,
+        "2": 0.05719620601173019,
+        "4": 0.0008034402546523087
+      },
+      "measured_nfe_values": [
+        7,
+        8
+      ],
+      "num_batches": 256,
+      "num_sequences": 256,
+      "num_tokens": 262144,
+      "pairing_digest": "5884c154674234407ae5b27ece06e67ae475fb41cad87fbffbaca65e2d8384d2",
+      "peak_memory_bytes": 1331128320,
+      "records_sha256": "188ebbf25b270c0a35d5e69d431dbff28bd1d11b62426e74a01125c8592822be",
+      "reference": null,
+      "reference_lm": {
+        "mean_nll_nats": 6.813958999842104,
+        "model_name_or_path": "gpt2-large",
+        "num_scored_sequences": 256,
+        "num_scored_tokens": 168655,
+        "perplexity": 910.4682247185498,
+        "revision": "32b71b12589c2f8d625668d2335a01cac3249519",
+        "sequence_policy": "retokenize_decoded_text_score_through_first_nonleading_eos_v1"
+      },
+      "requested_nfe_budget": 8,
+      "sampling_mode": "structured_joint",
+      "timing": {
+        "active_tokens_per_second_per_batch": {
+          "maximum": 112.67343684179663,
+          "mean": 107.58724317896967,
+          "median": 107.98911134085267,
+          "minimum": 100.0287096463238
+        },
+        "aggregate_active_tokens_per_second": 107.52959072213062,
+        "inferential_status": "descriptive_only",
+        "num_unique_sample_batches": 256,
+        "peak_memory_bytes_maximum": 1331128320,
+        "reason": "each unique sample batch has one timing measurement; different sample batches are not repeated timing trials",
+        "repeated_measurements_per_identical_batch": false,
+        "sequence_tokens_per_second_per_batch": {
+          "maximum": 112.67343684179663,
+          "mean": 107.58724317896967,
+          "median": 107.98911134085267,
+          "minimum": 100.0287096463238
+        },
+        "total_wall_clock_seconds": 2437.8777807999995,
+        "wall_clock_seconds_per_batch": {
+          "maximum": 10.237060975999839,
+          "mean": 9.522960081249998,
+          "median": 9.482437720500002,
+          "minimum": 9.088211282999964
+        }
+      },
+      "unresolved_mask_tokens": 0,
+      "wall_clock_seconds": 2437.8777807999995
+    },
+    {
+      "active_tokens_per_second": 52.21065906950113,
+      "distinct_n": {
+        "1": 0.104461669921875,
+        "2": 0.6429466031280547,
+        "4": 0.9735706415279138
+      },
+      "mean_repetition_rate": {
+        "1": 0.4384956359863281,
+        "2": 0.084146658113392,
+        "4": 0.0035351371204701385
+      },
+      "measured_nfe_values": [
+        15,
+        16
+      ],
+      "num_batches": 256,
+      "num_sequences": 256,
+      "num_tokens": 262144,
+      "pairing_digest": "5884c154674234407ae5b27ece06e67ae475fb41cad87fbffbaca65e2d8384d2",
+      "peak_memory_bytes": 1331128320,
+      "records_sha256": "ba7850b17cceea8fd0ce69d9feb7f6927626a57c8c06248b9759c74aa8c68f6c",
+      "reference": null,
+      "reference_lm": {
+        "mean_nll_nats": 5.8527611641001585,
+        "model_name_or_path": "gpt2-large",
+        "num_scored_sequences": 256,
+        "num_scored_tokens": 134188,
+        "perplexity": 348.19447646575617,
+        "revision": "32b71b12589c2f8d625668d2335a01cac3249519",
+        "sequence_policy": "retokenize_decoded_text_score_through_first_nonleading_eos_v1"
+      },
+      "requested_nfe_budget": 16,
+      "sampling_mode": "structured_joint",
+      "timing": {
+        "active_tokens_per_second_per_batch": {
+          "maximum": 53.92847040314102,
+          "mean": 52.221655572758905,
+          "median": 52.27227030779157,
+          "minimum": 49.34721833634197
+        },
+        "aggregate_active_tokens_per_second": 52.21065906950113,
+        "inferential_status": "descriptive_only",
+        "num_unique_sample_batches": 256,
+        "peak_memory_bytes_maximum": 1331128320,
+        "reason": "each unique sample batch has one timing measurement; different sample batches are not repeated timing trials",
+        "repeated_measurements_per_identical_batch": false,
+        "sequence_tokens_per_second_per_batch": {
+          "maximum": 53.92847040314102,
+          "mean": 52.221655572758905,
+          "median": 52.27227030779157,
+          "minimum": 49.34721833634197
+        },
+        "total_wall_clock_seconds": 5020.890459379998,
+        "wall_clock_seconds_per_batch": {
+          "maximum": 20.750916353999855,
+          "mean": 19.612853356953117,
+          "median": 19.58973647400012,
+          "minimum": 18.9881150409999
+        }
+      },
+      "unresolved_mask_tokens": 0,
+      "wall_clock_seconds": 5020.890459379998
+    },
+    {
+      "active_tokens_per_second": 25.7267218736924,
+      "distinct_n": {
+        "1": 0.09993362426757812,
+        "2": 0.6044072275171065,
+        "4": 0.9601034524975515
+      },
+      "mean_repetition_rate": {
+        "1": 0.4641990661621094,
+        "2": 0.1021161717986315,
+        "4": 0.007196529138099912
+      },
+      "measured_nfe_values": [
+        31,
+        32
+      ],
+      "num_batches": 256,
+      "num_sequences": 256,
+      "num_tokens": 262144,
+      "pairing_digest": "5884c154674234407ae5b27ece06e67ae475fb41cad87fbffbaca65e2d8384d2",
+      "peak_memory_bytes": 1331128320,
+      "records_sha256": "a650402cd34e25716ec89a30b169e6e66fae38461c6d9764630cdc37a944939f",
+      "reference": null,
+      "reference_lm": {
+        "mean_nll_nats": 5.125054831114762,
+        "model_name_or_path": "gpt2-large",
+        "num_scored_sequences": 256,
+        "num_scored_tokens": 126086,
+        "perplexity": 168.1833630803147,
+        "revision": "32b71b12589c2f8d625668d2335a01cac3249519",
+        "sequence_policy": "retokenize_decoded_text_score_through_first_nonleading_eos_v1"
+      },
+      "requested_nfe_budget": 32,
+      "sampling_mode": "structured_joint",
+      "timing": {
+        "active_tokens_per_second_per_batch": {
+          "maximum": 26.607695066176852,
+          "mean": 25.73073016529085,
+          "median": 25.726317563582462,
+          "minimum": 24.738038622448094
+        },
+        "aggregate_active_tokens_per_second": 25.7267218736924,
+        "inferential_status": "descriptive_only",
+        "num_unique_sample_batches": 256,
+        "peak_memory_bytes_maximum": 1331128320,
+        "reason": "each unique sample batch has one timing measurement; different sample batches are not repeated timing trials",
+        "repeated_measurements_per_identical_batch": false,
+        "sequence_tokens_per_second_per_batch": {
+          "maximum": 26.607695066176852,
+          "mean": 25.73073016529085,
+          "median": 25.726317563582462,
+          "minimum": 24.738038622448094
+        },
+        "total_wall_clock_seconds": 10189.560927622997,
+        "wall_clock_seconds_per_batch": {
+          "maximum": 41.39374247199976,
+          "mean": 39.80297237352733,
+          "median": 39.803598189999775,
+          "minimum": 38.48510731399983
+        }
+      },
+      "unresolved_mask_tokens": 0,
+      "wall_clock_seconds": 10189.560927622997
+    }
+  ],
+  "identity": {
+    "adapter_origin_evidence": {
+      "adapter": {
+        "manifest_path": "/mnt/contextual-forest/experiments/contextual-forest-causal-evidence-v1/runs/export--dynamic_dynamic--s001--k128/attempts/attempt-0001/adapter-manifest.json",
+        "manifest_sha256": "d527f40926eda894e1ee5c9c1a91317353941463acbdfe059a279884fdbd2da9",
+        "path": "/mnt/contextual-forest/experiments/contextual-forest-causal-evidence-v1/runs/export--dynamic_dynamic--s001--k128/attempts/attempt-0001/adapter.safetensors",
+        "released_backbone": {
+          "repository": "kuleshov-group/mdlm-owt",
+          "revision": "d0958fa851335ece6c15260ce0025f030673c0fb",
+          "source_sha256": "47149e73f7552f39ea9776dbe74d925d25237bcf2ed2e2ec03cdff9d51c82aa4",
+          "source_size_bytes": 678522728,
+          "tensor_count": 131
+        },
+        "sha256": "c40d9bf0854059a85da88d4f0062ac280e4d7f621338845ae43357a7dfa69c4a",
+        "source_checkpoint_global_step": 1000,
+        "source_checkpoint_sha256": "97068015ff6e5b1de5ac5461a845ebb8680dc6f0cd67441073dde24cac07d1f0",
+        "structured_decoder_identity": {
+          "candidate_top_k": 128,
+          "control_identity": "dynamic_dynamic",
+          "factor_mode": "dynamic",
+          "head_semantics": {
+            "component_size_cap": 32,
+            "contextual_neighbors": 4,
+            "fixed_edge_path": null,
+            "fixed_edges": null,
+            "local_window": 2,
+            "min_edge_score": null,
+            "num_anchor_slots": 16,
+            "rank": 16,
+            "time_embed_dim": 64,
+            "topology_dim": 128
+          },
+          "independent_mode": false,
+          "topology_mode": "dynamic",
+          "topology_weight": 0.1,
+          "training_semantics": {
+            "factorized_aux_weight": 0.0,
+            "objective_name": "conditional_denoising_nll_not_diffusion_elbo",
+            "topology_anchor_weight": 0.25,
+            "topology_edge_weight": 1.0,
+            "topology_minimum_choices": 2,
+            "topology_on_validation": false,
+            "topology_slot_weight": 0.25,
+            "topology_strategy": "gold_reveal_influence",
+            "topology_temperature": 0.25
+          }
+        },
+        "structured_decoder_identity_sha256": "8840553c9e4612b03962ce42666b6adf5d1097cb41dc9caa2aa7295f887d203a"
+      },
+      "arm": "dynamic_dynamic",
+      "artifact": "contextual_forest_generation_adapter_origin_binding",
+      "binding_sha256": "8b541aae155219ff87e47610e2cbd9191a4bc6655f726d6db48073c9becab966",
+      "evidence_file": {
+        "evidence_sha256": "ddf7e496a3791d971c66ea9b370194a283faeb327bc51b0d5f7c8580f796b7b7",
+        "path": "/mnt/contextual-forest/experiments/contextual-forest-tensor-train-matched-v1/adapter-pair-origin.json",
+        "sha256": "0c5ef69ee6bd14d1d40bbc8c8e6ea9d412eb7e65a25b42b530cd45e3d456a558"
+      },
+      "plan_export": {
+        "adapter_manifest_sha256": "d527f40926eda894e1ee5c9c1a91317353941463acbdfe059a279884fdbd2da9",
+        "adapter_sha256": "c40d9bf0854059a85da88d4f0062ac280e4d7f621338845ae43357a7dfa69c4a",
+        "checkpoint_sha256": "97068015ff6e5b1de5ac5461a845ebb8680dc6f0cd67441073dde24cac07d1f0",
+        "export_job_execution_sha256": "f30420289793372fdc1b9f012697702e9f39e5d4821463f37982b761085ec272",
+        "export_job_id": "export--dynamic_dynamic--s001--k128",
+        "export_job_spec_sha256": "deea38c70afc98c1cd889e607a25d240c0e031964ddd4d1e8bfbd942b8853e96",
+        "export_success_marker_sha256": "84999a22540451e8b5a495eafc1284298072cb29648b1e1561671905903a89a3",
+        "train_job_execution_sha256": "81aef78ce148bc63580c74479cbdfd4b95898673dbfb86647671ac49a8ac15f0",
+        "train_job_id": "train--dynamic_dynamic--s001--k128",
+        "train_job_spec_sha256": "cf0b1d825edd6876c2c1dd9270867e7e2ac03fcf191dc6aab6697f16d5939a69",
+        "train_success_marker_sha256": "4ae4a24a9859f1dd8ae01acd528b0514c3dfb6c6f43c6ad91984226295e05855",
+        "training_data_provenance_sha256": "420dc9a2e7f91de3fbfd4a0507123622610173cc065ba92791fe86f82d50cd4f",
+        "training_validation_data_provenance_sha256": "fec875d1eac701c2be448c3dcfa3eb0a7cf21e05342daf01401c7e88ab6929c4"
+      },
+      "schema_version": 1,
+      "source": {
+        "candidate_k": 128,
+        "compiled_plan_path": "/mnt/contextual-forest/experiments/contextual-forest-causal-evidence-v1/plans/causal-primary-from-d8671a0-v1/compiled-plan.json",
+        "compiled_plan_sha256": "b75f5f213a3fc51247e1d96042710a0d1e01f7ae7049ccfd2dc26111afdfc7a9",
+        "legacy_plan_schema": false,
+        "plan_id": "c0c690d586157236704969fe0966de84a8c19e336b2c1fb7f21b0fda974d6f2e",
+        "protocol_id": "contextual-forest-causal-evidence-v1",
+        "repository": {
+          "clean": true,
+          "sha": "a574aca873d6de66a3b847c13efd1c7bc4efb66b"
+        },
+        "source_manifest_sha256": "611780e313cc0264b40334507844333a5d2dfee661cbf3191d32d128b93a1ca6",
+        "suite": "causal_primary",
+        "train_seed": 1
+      }
+    },
+    "artifacts": {
+      "backbone_checkpoint": {
+        "sha256": "1b7c724d0228b1a2c825185c96642ffd706bd828b237f84512f0e1c7b5765573",
+        "size_bytes": 678551282
+      },
+      "structured_adapter": {
+        "identity_sha256": "8840553c9e4612b03962ce42666b6adf5d1097cb41dc9caa2aa7295f887d203a",
+        "manifest_sha256": "d527f40926eda894e1ee5c9c1a91317353941463acbdfe059a279884fdbd2da9",
+        "semantic_identity": {
+          "candidate_top_k": 128,
+          "control_identity": "dynamic_dynamic",
+          "factor_mode": "dynamic",
+          "head_semantics": {
+            "component_size_cap": 32,
+            "contextual_neighbors": 4,
+            "fixed_edge_path": null,
+            "fixed_edges": null,
+            "local_window": 2,
+            "min_edge_score": null,
+            "num_anchor_slots": 16,
+            "rank": 16,
+            "time_embed_dim": 64,
+            "topology_dim": 128
+          },
+          "independent_mode": false,
+          "topology_mode": "dynamic",
+          "topology_weight": 0.1,
+          "training_semantics": {
+            "factorized_aux_weight": 0.0,
+            "objective_name": "conditional_denoising_nll_not_diffusion_elbo",
+            "topology_anchor_weight": 0.25,
+            "topology_edge_weight": 1.0,
+            "topology_minimum_choices": 2,
+            "topology_on_validation": false,
+            "topology_slot_weight": 0.25,
+            "topology_strategy": "gold_reveal_influence",
+            "topology_temperature": 0.25
+          }
+        },
+        "sha256": "c40d9bf0854059a85da88d4f0062ac280e4d7f621338845ae43357a7dfa69c4a",
+        "size_bytes": 3940324
+      }
+    },
+    "base_seed": 260703,
+    "batch_size": 1,
+    "global_num_samples": 256,
+    "global_pairing_digest": "5884c154674234407ae5b27ece06e67ae475fb41cad87fbffbaca65e2d8384d2",
+    "nfe_budgets": [
+      8,
+      16,
+      32
+    ],
+    "num_shards": 32,
+    "prompts": {
+      "num_prompt_records": 1,
+      "sha256": null,
+      "source": "generated_unconditional_prompt"
+    },
+    "reference_lm": {
+      "model_name_or_path": "gpt2-large",
+      "revision": "32b71b12589c2f8d625668d2335a01cac3249519",
+      "runtime_identity": {
+        "add_special_tokens": true,
+        "batch_size": 8,
+        "cuda_runtime": "12.1",
+        "device": "cuda",
+        "max_length": 1024,
+        "model_class": "transformers.models.gpt2.modeling_gpt2.GPT2LMHeadModel",
+        "model_config_class": "transformers.models.gpt2.configuration_gpt2.GPT2Config",
+        "model_name_or_path": "gpt2-large",
+        "model_revision": "32b71b12589c2f8d625668d2335a01cac3249519",
+        "parameter_dtypes": [
+          "torch.float32"
+        ],
+        "precision_policy": "explicit_checkpoint_dtype_no_autocast_float32_cross_entropy_v1",
+        "python": "3.10.12",
+        "requested_dtype": "float32",
+        "schema_version": 1,
+        "sequence_policy": "retokenize_decoded_text_score_through_first_nonleading_eos_v1",
+        "tokenization_policy": "fast_tokenizer_right_padding_right_truncation_add_special_tokens_v1",
+        "tokenizer_bos_token_id": 50256,
+        "tokenizer_class": "transformers.models.gpt2.tokenization_gpt2_fast.GPT2TokenizerFast",
+        "tokenizer_eos_token_id": 50256,
+        "tokenizer_name_or_path": "gpt2-large",
+        "tokenizer_pad_token_id": 50256,
+        "tokenizer_padding_side": "right",
+        "tokenizer_revision": "32b71b12589c2f8d625668d2335a01cac3249519",
+        "tokenizer_truncation_side": "right",
+        "tokenizer_vocab_size": 50257,
+        "tokenizers": "0.15.2",
+        "torch": "2.5.1+cu121",
+        "transformers": "4.38.2"
+      },
+      "sequence_policy": "retokenize_decoded_text_score_through_first_nonleading_eos_v1"
+    },
+    "repository": {
+      "dirty": false,
+      "dirty_content_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "git_sha": "a574aca873d6de66a3b847c13efd1c7bc4efb66b",
+      "status_porcelain": [],
+      "tracked_diff_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "untracked_files": []
+    },
+    "resolved_config_sha256": "cf847b7db3cdeed1c3234964f42614eb5f15f7d70fd8a872c9a0a1a61c83cdd6",
+    "runtime": {
+      "cuda_runtime": "12.1",
+      "device_type": "cuda",
+      "packages": {
+        "numpy": "1.26.4",
+        "safetensors": "0.4.2",
+        "tokenizers": "0.15.2",
+        "transformers": "4.38.2"
+      },
+      "parameter_dtypes": [
+        "torch.float32"
+      ],
+      "platform": "Linux-6.8.0-1066-gcp-x86_64-with-glibc2.35",
+      "precision_policy": "checkpoint dtype; DIT-managed bf16 autocast on CUDA",
+      "python": "3.10.12",
+      "torch": "2.5.1+cu121"
+    },
+    "sampling_modes": [
+      "structured_joint"
+    ],
+    "sequence_length": 1024
+  },
+  "input_shards": [
+    {
+      "manifest_path": "/private/tmp/ttmatch-seed-shards-20260901/shard-00/manifest.json",
+      "manifest_sha256": "e3ca01ca20295e246c5916623fe62711cf3146581f23b473d0a71cd91aaedc83",
+      "num_records": 24,
+      "samples_sha256": "858a82d838fceab527e6e585190b94961a732f8f127a9155f1ac81d3ad265422",
+      "shard_index": 0
+    },
+    {
+      "manifest_path": "/private/tmp/ttmatch-seed-shards-20260901/shard-01/manifest.json",
+      "manifest_sha256": "18d0a1101e7e024b455964501d304ea1b497f4101828d215ebc58b234cb9dcb1",
+      "num_records": 24,
+      "samples_sha256": "d0af56cb3fb122699addff7660ad923c2dcc8df51eee4cacf3a82a6c17bb1b69",
+      "shard_index": 1
+    },
+    {
+      "manifest_path": "/private/tmp/ttmatch-seed-shards-20260901/shard-02/manifest.json",
+      "manifest_sha256": "ff2e0684a323f4b635d6c9cc4f24c9371d6bce75f5665afa3e1395d9e4057f54",
+      "num_records": 24,
+      "samples_sha256": "352797977b23c08c73d249e4abca2872e31b07adabbf3803b47b262b2447937a",
+      "shard_index": 2
+    },
+    {
+      "manifest_path": "/private/tmp/ttmatch-seed-shards-20260901/shard-03/manifest.json",
+      "manifest_sha256": "64bb6bdd86b5973a27c6539b68fc368906302bb5678b136978fc45a8fae16643",
+      "num_records": 24,
+      "samples_sha256": "393c4e0d72fd898e4d17eae7c9707fe740a72a0596411e360d508a73ac56cec0",
+      "shard_index": 3
+    },
+    {
+      "manifest_path": "/private/tmp/ttmatch-seed-shards-20260901/shard-04/manifest.json",
+      "manifest_sha256": "5f92f4ca1aea250e3376c137aef285f7d5c17e9e807c52251a5ac4dcf3d91437",
+      "num_records": 24,
+      "samples_sha256": "5f2c22a8a7a6463e896e5b63563393eecbd818ff41f9893f92e01977323cc4ad",
+      "shard_index": 4
+    },
+    {
+      "manifest_path": "/private/tmp/ttmatch-seed-shards-20260901/shard-05/manifest.json",
+      "manifest_sha256": "a1efafdc75996b09b538e93461da3edf2ada7864d93ee4d194784278c0039448",
+      "num_records": 24,
+      "samples_sha256": "b8a8b3e8fb704ffc0029a32e03ca3abbafdf8e82fd1b4a3e2f551ea7adbaa700",
+      "shard_index": 5
+    },
+    {
+      "manifest_path": "/private/tmp/ttmatch-seed-shards-20260901/shard-06/manifest.json",
+      "manifest_sha256": "a1211eb4d4c7ff8cddefb3166fbd23cbb7deeb55cd257b2a89b7f3fe9304f4cf",
+      "num_records": 24,
+      "samples_sha256": "b60ca463c72153b81cbb4d175fdf19ff52de0a72e187494065e536ac426ceac7",
+      "shard_index": 6
+    },
+    {
+      "manifest_path": "/private/tmp/ttmatch-seed-shards-20260901/shard-07/manifest.json",
+      "manifest_sha256": "29f7192edc437b2654733b64f40ebaf023f4959f6272a66b94d242e4bf816b75",
+      "num_records": 24,
+      "samples_sha256": "5d10f1582e40adaf7a839b32287de64e6647c61cc0913f3b485876bbbd0898a6",
+      "shard_index": 7
+    },
+    {
+      "manifest_path": "/private/tmp/ttmatch-seed-shards-20260901/shard-08/manifest.json",
+      "manifest_sha256": "9bc6176d5c71e4552fc1414a19d2a047297216e154606a1a4e70d0360b1d1e8d",
+      "num_records": 24,
+      "samples_sha256": "d0119ef20ce9c7dc8f83878908ac4d8d44691b136c304931d49ba0a5cfacf0a7",
+      "shard_index": 8
+    },
+    {
+      "manifest_path": "/private/tmp/ttmatch-seed-shards-20260901/shard-09/manifest.json",
+      "manifest_sha256": "37dc8491d3714e9a8f9d9a50aed69aac635f946b8c0d47b7e1b74ef24c4b987d",
+      "num_records": 24,
+      "samples_sha256": "12d6fc798fa7c839674d1eb0ee0bf3c0155bfd225daa9b92cd7ff25a72a62e5a",
+      "shard_index": 9
+    },
+    {
+      "manifest_path": "/private/tmp/ttmatch-seed-shards-20260901/shard-10/manifest.json",
+      "manifest_sha256": "839052304cea6031ea3c86c97bbca9cb4a0231f5af3ab89ae8c1635d2e0f2955",
+      "num_records": 24,
+      "samples_sha256": "b4c29ad5d04031ca57532a728c9ce5c7c5e8507cf3aa3e9a297a21bec1c6e1ad",
+      "shard_index": 10
+    },
+    {
+      "manifest_path": "/private/tmp/ttmatch-seed-shards-20260901/shard-11/manifest.json",
+      "manifest_sha256": "86783ed11626f1457c283a1849dc104dd5fe9978402f95f40409f0f678922f06",
+      "num_records": 24,
+      "samples_sha256": "5a91edbf13796e5ea8d0c53df2cd2437a7c2319569a671a6edef79b99a74f405",
+      "shard_index": 11
+    },
+    {
+      "manifest_path": "/private/tmp/ttmatch-seed-shards-20260901/shard-12/manifest.json",
+      "manifest_sha256": "5ec5446cb3c729b87dbdcfa3e857b8c38f7db58a4873f14ed9096b2f69cbb1de",
+      "num_records": 24,
+      "samples_sha256": "284b25dcc59c8cbb1754ed82613ecd8e6b248d910de1a9c87355e0585c5cdb04",
+      "shard_index": 12
+    },
+    {
+      "manifest_path": "/private/tmp/ttmatch-seed-shards-20260901/shard-13/manifest.json",
+      "manifest_sha256": "011acf434b0fd949259b7cf6442ab1abaf5703be580c7587286f05261b68ad0d",
+      "num_records": 24,
+      "samples_sha256": "b97caffafc97028710383ab168ba778bb100d39d1d53a437383a49b2c9d5111b",
+      "shard_index": 13
+    },
+    {
+      "manifest_path": "/private/tmp/ttmatch-seed-shards-20260901/shard-14/manifest.json",
+      "manifest_sha256": "7a9a661810873c49dfc004fef0dad4dc113f0d9da66a4263927f388a7ade6bef",
+      "num_records": 24,
+      "samples_sha256": "aa1af84c38f2fb21359f22d883c6d8bb281f16a14807e13c46a557afe51595fd",
+      "shard_index": 14
+    },
+    {
+      "manifest_path": "/private/tmp/ttmatch-seed-shards-20260901/shard-15/manifest.json",
+      "manifest_sha256": "5999c2111337456f93fed5acd876f563c5d1fb410aba8736b8db2c55f99edc3d",
+      "num_records": 24,
+      "samples_sha256": "16702244a1f8d2e343f9021f64f253bd9f2598451de685cf88a64d06f4f980ee",
+      "shard_index": 15
+    },
+    {
+      "manifest_path": "/private/tmp/ttmatch-seed-shards-20260901/shard-16/manifest.json",
+      "manifest_sha256": "18a706f11c4e542525445b9846508903906521bd1f158e3fef58ce07bd043016",
+      "num_records": 24,
+      "samples_sha256": "0a934fade5e71adc628e9794503c6f1ae43970674320acdc6f67938d8088941f",
+      "shard_index": 16
+    },
+    {
+      "manifest_path": "/private/tmp/ttmatch-seed-shards-20260901/shard-17/manifest.json",
+      "manifest_sha256": "260e5a3922b7904253831c6500173c98eb4097d994bcdcbe19e7fbd620aebed2",
+      "num_records": 24,
+      "samples_sha256": "9c6e1c06f69bc8f762f140ec06b617733ae268631352855f5f38ce787611dbb8",
+      "shard_index": 17
+    },
+    {
+      "manifest_path": "/private/tmp/ttmatch-seed-shards-20260901/shard-18/manifest.json",
+      "manifest_sha256": "758b57037090930779ced4cda8f9d946cd9f3ccbd0893cf96603f80dec768524",
+      "num_records": 24,
+      "samples_sha256": "4cdb75460e0d351323bbba156ddd53af36f52673e118701e7b5b8381ef4d3c61",
+      "shard_index": 18
+    },
+    {
+      "manifest_path": "/private/tmp/ttmatch-seed-shards-20260901/shard-19/manifest.json",
+      "manifest_sha256": "e602bd0f36d749f9ca5217d567a0824c2d1446350b4e9cd0017daccd4e13e98a",
+      "num_records": 24,
+      "samples_sha256": "259a4c929efe6c2effab3d39d46fb0a058bfb9cfc2e8f22b67e38460c33e775b",
+      "shard_index": 19
+    },
+    {
+      "manifest_path": "/private/tmp/ttmatch-seed-shards-20260901/shard-20/manifest.json",
+      "manifest_sha256": "5d88c7c1d17c6e4be2ce5620a184dc5b3fc2cfd27d9c73a934a80b7d87380b49",
+      "num_records": 24,
+      "samples_sha256": "bd10886b10369e2d8b71d5a11b62c5cc7f8b62d4854092f6f5953323ce462ec1",
+      "shard_index": 20
+    },
+    {
+      "manifest_path": "/private/tmp/ttmatch-seed-shards-20260901/shard-21/manifest.json",
+      "manifest_sha256": "3ff780aea44809c7021f8cb5e121f7153627c19b1f60df5107bfcfdeeda21d50",
+      "num_records": 24,
+      "samples_sha256": "d542980aabf6c9d71a566d6cc7c00e3efd9dc1d561e8c031254958aa8d2b5a66",
+      "shard_index": 21
+    },
+    {
+      "manifest_path": "/private/tmp/ttmatch-seed-shards-20260901/shard-22/manifest.json",
+      "manifest_sha256": "68cabf682db76444f9313594a834c2fb1380e457a40d76a543bfcbd2ef33e21e",
+      "num_records": 24,
+      "samples_sha256": "7f12b2f14fefdd800c5bee04df92713e0f52b605fb57a3a65275d3454b7c67e4",
+      "shard_index": 22
+    },
+    {
+      "manifest_path": "/private/tmp/ttmatch-seed-shards-20260901/shard-23/manifest.json",
+      "manifest_sha256": "1e9e2177e1ba7e09481b44b8a0e05e9223b76f05ebd344581f9202fd33d1d86b",
+      "num_records": 24,
+      "samples_sha256": "e2afc6f778d6e8e73bf0800dc3339927602a927b04c918b02408c21395feb738",
+      "shard_index": 23
+    },
+    {
+      "manifest_path": "/private/tmp/ttmatch-seed-shards-20260901/shard-24/manifest.json",
+      "manifest_sha256": "e16a6e466424d2f40a0d7e6c5546217e98da88379735fadf149a0885af666ad8",
+      "num_records": 24,
+      "samples_sha256": "4c358a3461e03c564cb4b44d6e12138845f6bf48de2dea9a1186a9f75a5dd8a5",
+      "shard_index": 24
+    },
+    {
+      "manifest_path": "/private/tmp/ttmatch-seed-shards-20260901/shard-25/manifest.json",
+      "manifest_sha256": "972f30128bfdff88f52666a4919362a184799fb995861d599252c1dcdb0966a2",
+      "num_records": 24,
+      "samples_sha256": "1e4c3c331f7fb4c210f35cc78ce30bcc1e28bd6e06ed1e96e2035873aae6844c",
+      "shard_index": 25
+    },
+    {
+      "manifest_path": "/private/tmp/ttmatch-seed-shards-20260901/shard-26/manifest.json",
+      "manifest_sha256": "cd4975f9dfa2521c33c784d933d39fc7ffb88e0413d65367710b0ce67ab1e92e",
+      "num_records": 24,
+      "samples_sha256": "e100fcfa9fc8b846493233fcabf4b8307dd49807cb0222b6cfbbae44598fe50b",
+      "shard_index": 26
+    },
+    {
+      "manifest_path": "/private/tmp/ttmatch-seed-shards-20260901/shard-27/manifest.json",
+      "manifest_sha256": "f66c0705bd99a0f5ef115491c3586be08ccb61ed21033d984b4ba008bef69e60",
+      "num_records": 24,
+      "samples_sha256": "2e98d27cc81ee4cdd222f03fabe45aa086c2e3714ccc02230e899d997cfd5696",
+      "shard_index": 27
+    },
+    {
+      "manifest_path": "/private/tmp/ttmatch-seed-shards-20260901/shard-28/manifest.json",
+      "manifest_sha256": "bfec85b9277f6180783ade9becd9e9bc21fc95b53aea21b55833be452305dc79",
+      "num_records": 24,
+      "samples_sha256": "654649f76dfca71beb2152160d2a48caf2cda6a8e2fb87d83efa2fa381f53a65",
+      "shard_index": 28
+    },
+    {
+      "manifest_path": "/private/tmp/ttmatch-seed-shards-20260901/shard-29/manifest.json",
+      "manifest_sha256": "f1e949f99450a00178c805f24f437f84a8ae264a005fdf3e5c6f34c3d88780b8",
+      "num_records": 24,
+      "samples_sha256": "b1cca10b2c471ab1d493196d1d1877254f98e4660d56b407b8c9d1f4c48797cb",
+      "shard_index": 29
+    },
+    {
+      "manifest_path": "/private/tmp/ttmatch-seed-shards-20260901/shard-30/manifest.json",
+      "manifest_sha256": "fc090e73d809fc8117846676fbcf8b8f21a11366448aebcb89137d9045f8076d",
+      "num_records": 24,
+      "samples_sha256": "1cbba7e19762b015d04cf616719cd988715dc3c1a360f30a5ee6d149c0a1a982",
+      "shard_index": 30
+    },
+    {
+      "manifest_path": "/private/tmp/ttmatch-seed-shards-20260901/shard-31/manifest.json",
+      "manifest_sha256": "7c9bfb54e7f3b107129b3aab9355c9b93b4a08588f5d49439bc5fd4fffc02765",
+      "num_records": 24,
+      "samples_sha256": "719be69be0c2b776e24bf6a7f5de91ef02ec00e26d783d577234fa088863ab67",
+      "shard_index": 31
+    }
+  ],
+  "schema_version": 1,
+  "scope_note": "Generation quality summaries and paired bootstrap intervals; not a diffusion ELBO or likelihood estimate. Timing is descriptive unless the collection protocol adds repeated identical timing trials.",
+  "timing_policy": {
+    "hardware_identity": {
+      "device_type": "cuda",
+      "gpu": "NVIDIA L4"
+    },
+    "reason": "the generation harness records one timing measurement per unique sample batch, not repeated trials of identical work",
+    "status": "descriptive_only"
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "scripts/evaluate_ccf_selected_five.py": "282e36b80f522cdaae387a8e28f57d8d85481ce5ee58c1c17231e65d1b715b54",
+  "scripts/evaluate_ccf_eight_steps.sh": "9a09a3d446cf191b497ec8f1f5db1fbc46652a4f8ef91bffaa24193a12af9084",
+  "tests/test_ccf_selected_five.py": "bc225ae8fb4f6eb4188eb6708a4aafb3ed115ae7d329422a818393094c2e97e5",
+  "docs/ccf-eight-steps.md": "13632daa7c955cc761c4cfccd5e30b413168d97c87cf0dfa672fd5d43cdbbaa9",
+  "docs/patches/ccf-eight-steps.patch": "e21082d16055b35520651d89390dec6749a26b18fab329794a9b7c59ff97ff08"
+}

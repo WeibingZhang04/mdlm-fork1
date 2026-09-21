@@ -1,0 +1,87 @@
+schema_version: 1
+protocol_id: tensor-train-owt-feasibility-v1
+protocol_status: frozen_before_execution
+scientific_scope: >-
+  Reproducibility and quality feasibility check for the released
+  Tensor-Train MDLM OpenWebText baseline. The study is unconditional
+  generation and does not estimate a diffusion ELBO or data likelihood.
+
+source:
+  repository: https://github.com/ssamt/tensor-train.git
+  revision: 9d0087afd3771ac3e94898ed842858fcc81fb3b0
+  require_clean_checkout: true
+
+checkpoints:
+  repository: ssamt/tensor-train
+  revision: 09c0042df4be9608de81302d79c16d08a95889db
+  arms:
+    marginal:
+      relative_path: owt/marginal.pt
+      sha256: 84fc03cacd818df293602987d4367b8ead7c96539b9b536b748bc86a6cd7079c
+      decomposition: cp
+      rank: 1
+      rank_weights: false
+      marginal_head: false
+    tensor_train_rank4:
+      relative_path: owt/ttd_4_marg.pt
+      sha256: 8ad8d956af127795686489e9f3496e7a634da18ecf79464df1319668a2a3a7a2
+      decomposition: tt
+      rank: 4
+      rank_weights: false
+      marginal_head: true
+
+model_inputs:
+  backbone:
+    repository: kuleshov-group/mdlm-owt
+    revision: d0958fa851335ece6c15260ce0025f030673c0fb
+  tokenizer:
+    repository: openai-community/gpt2
+    revision: 607a30d783dfa663caf39e06633721c8d4cfcd7e
+
+generation:
+  dataset_label: openwebtext
+  num_samples: 256
+  sequence_length: 1024
+  nfe_steps: [8, 16, 32]
+  ordering: random
+  temperature: 1.0
+  sampling: top-k
+  batch_size: 1
+  generation_seed: 260703
+  deterministic_algorithms: true
+  require_exclusive_gpu: true
+  schedule_policy: recorded_selected_position_chunks_v1
+
+evaluator:
+  model_name_or_path: gpt2-large
+  revision: 32b71b12589c2f8d625668d2335a01cac3249519
+  batch_size: 8
+  max_length: 1024
+  dtype: float32
+  sequence_policy: retokenize_decoded_text_score_through_first_nonleading_eos_v1
+
+runtime:
+  python_major_minor: '3.12'
+  critical_packages:
+    torch: '2.3.1'
+    transformers: '4.46.2'
+    tokenizers: '0.20.3'
+    flash-attn: '2.7.4.post1'
+    packaging: '23.2'
+    lightning: '2.2.1'
+    pytorch-lightning: '2.2.1'
+    torchmetrics: '1.3.2'
+    lightning-utilities: '0.15.3'
+    fsspec: '2024.2.0'
+    setuptools: '69.5.1'
+    timm: '0.9.16'
+    torchvision: '0.18.1'
+  device: cuda
+  precision_policy: upstream_float32_no_autocast
+  cache_policy: pinned_snapshot_offline_warm_cache_v1
+  gpu_exclusivity_policy: nonblocking_flock_and_continuous_pid_monitor_v1
+  gpu_monitor_interval_seconds: 1.0
+  interruption_policy: >-
+    Atomic fresh attempts only. A complete output may be reused only after
+    full hash and schema replay; partial or invalid directories are never
+    appended, resumed, or overwritten.

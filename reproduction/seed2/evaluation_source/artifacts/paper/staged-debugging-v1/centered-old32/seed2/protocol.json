@@ -1,0 +1,452 @@
+{
+  "arguments": {
+    "batch_size": 4,
+    "device": "cuda",
+    "eta": 0.95,
+    "eval_every": 100,
+    "feature_dim": 8,
+    "include_dev": true,
+    "learning_rate": 0.003,
+    "output_dir": "/mnt/contextual-forest/staged-debug-20260907/centered-old32-seed2-v1",
+    "seed": 2,
+    "source_results_sha256": "26ff20d7e5e4fce89e4a2f98eeaffbf979ec304cf31be34afecf0a379b8ff784",
+    "source_run_dir": "/mnt/contextual-forest/staged-debug-20260907/overfit32-v1",
+    "steps": 300,
+    "threads": 4,
+    "unary_checkpoint": "/mnt/contextual-forest/staged-debug-20260907/fresh-pilot-resume-v1/checkpoints/step-001000.pt"
+  },
+  "backbone_calls": 0,
+  "cache": {
+    "dev": {
+      "active_tokens": 2048,
+      "cache_sha256": "cb139453a5581161a0441793bbcf4f56029cc5f957db81055f40be35dcec87fc",
+      "examples": 32,
+      "files": [
+        {
+          "path": "/mnt/contextual-forest/staged-debug-20260907/overfit32-v1/cache/dev/example-0000.pt",
+          "sha256": "7ac9b2230990aaf5672dd1604c3e8f35ff56af491c8cedb41344240dfd1deb97"
+        },
+        {
+          "path": "/mnt/contextual-forest/staged-debug-20260907/overfit32-v1/cache/dev/example-0001.pt",
+          "sha256": "b171ba0f64b43e75bc1e79f175f243a7407c17398800b871898e9c63cee6bffe"
+        },
+        {
+          "path": "/mnt/contextual-forest/staged-debug-20260907/overfit32-v1/cache/dev/example-0002.pt",
+          "sha256": "43a36a32f75fe011cceff04a87dd03835130596b2aeda2401a773868c8adb31c"
+        },
+        {
+          "path": "/mnt/contextual-forest/staged-debug-20260907/overfit32-v1/cache/dev/example-0003.pt",
+          "sha256": "2cd73e3a7178a6d01e64e242a8ae7408ef476bec5c8cf87efb7affcd99e7e7f9"
+        },
+        {
+          "path": "/mnt/contextual-forest/staged-debug-20260907/overfit32-v1/cache/dev/example-0004.pt",
+          "sha256": "852d4642af8308d626910ac57222669ef52dffcbe2c0beb7f9f61d31dfe25882"
+        },
+        {
+          "path": "/mnt/contextual-forest/staged-debug-20260907/overfit32-v1/cache/dev/example-0005.pt",
+          "sha256": "63627646e6a0b2d3a547406d2859ed16d7a991fd4baf43162d63d248fe4a0f5c"
+        },
+        {
+          "path": "/mnt/contextual-forest/staged-debug-20260907/overfit32-v1/cache/dev/example-0006.pt",
+          "sha256": "fd8c65be1fbef56fac5b046a24011fdab8107d5dd7491beb918f1c00cb872149"
+        },
+        {
+          "path": "/mnt/contextual-forest/staged-debug-20260907/overfit32-v1/cache/dev/example-0007.pt",
+          "sha256": "f575113142eea07f0fe367a2d92fee5fdae01d330f68aa25680d111328003558"
+        },
+        {
+          "path": "/mnt/contextual-forest/staged-debug-20260907/overfit32-v1/cache/dev/example-0008.pt",
+          "sha256": "3ca5adf01ece811c341f42bfa7dad7576b608efa86cad75517909ac769689f25"
+        },
+        {
+          "path": "/mnt/contextual-forest/staged-debug-20260907/overfit32-v1/cache/dev/example-0009.pt",
+          "sha256": "ad4765856e81ffa4db4693676dd54dbb3cbd26f3103a86203dc92f2719666f04"
+        },
+        {
+          "path": "/mnt/contextual-forest/staged-debug-20260907/overfit32-v1/cache/dev/example-0010.pt",
+          "sha256": "ea9487ac0a6ce46d7174256016be6537461afa61740a8f763b5797f0c17f5ab3"
+        },
+        {
+          "path": "/mnt/contextual-forest/staged-debug-20260907/overfit32-v1/cache/dev/example-0011.pt",
+          "sha256": "2b861757ada4d7fc4db926d4f31134c56e8bfc317b4d710ad04b54b0874921d2"
+        },
+        {
+          "path": "/mnt/contextual-forest/staged-debug-20260907/overfit32-v1/cache/dev/example-0012.pt",
+          "sha256": "7b11c8215d5378892cc7f75f6e0c99fd83fad469ab0240878bcfe58f7e0991d3"
+        },
+        {
+          "path": "/mnt/contextual-forest/staged-debug-20260907/overfit32-v1/cache/dev/example-0013.pt",
+          "sha256": "dec2f8d7399fcd2a7be0509121f04e71193d2d3233cf2be3701bf5c10cfdbaa2"
+        },
+        {
+          "path": "/mnt/contextual-forest/staged-debug-20260907/overfit32-v1/cache/dev/example-0014.pt",
+          "sha256": "531090d56c698ae901023e162a7d27a94a6a10428814bd96a284a68b8fd513fa"
+        },
+        {
+          "path": "/mnt/contextual-forest/staged-debug-20260907/overfit32-v1/cache/dev/example-0015.pt",
+          "sha256": "c3ebf4dd7dbb2a26a3e2f4e910081cac4b64b31456ed84f1e276637dedd39021"
+        },
+        {
+          "path": "/mnt/contextual-forest/staged-debug-20260907/overfit32-v1/cache/dev/example-0016.pt",
+          "sha256": "a1652382fa173a18580c42e6b5d4134d136852f54ce36c2919a0af9b7c2317b0"
+        },
+        {
+          "path": "/mnt/contextual-forest/staged-debug-20260907/overfit32-v1/cache/dev/example-0017.pt",
+          "sha256": "8ace9843636c5a4b5b3a2f275f59f91b0834f564f6cbce32f36c6531f9bd76d6"
+        },
+        {
+          "path": "/mnt/contextual-forest/staged-debug-20260907/overfit32-v1/cache/dev/example-0018.pt",
+          "sha256": "b51ee0d1af7ae72a3ee44c76549e366f8e34eab476bafe8bfbd19d4ab3f43bb3"
+        },
+        {
+          "path": "/mnt/contextual-forest/staged-debug-20260907/overfit32-v1/cache/dev/example-0019.pt",
+          "sha256": "f88f2f1dbed1ae5f08975d9fbf7dc94386d7344ad6cb6321ca78d2b1ee27540a"
+        },
+        {
+          "path": "/mnt/contextual-forest/staged-debug-20260907/overfit32-v1/cache/dev/example-0020.pt",
+          "sha256": "5d33fcfaffc36bac063744c126d994b6193975d3cbda25ba904a07e1eab04851"
+        },
+        {
+          "path": "/mnt/contextual-forest/staged-debug-20260907/overfit32-v1/cache/dev/example-0021.pt",
+          "sha256": "7b8be365abdbb4ca95e6824819ca05ff4067d7756f6ca1f648bf18a184dcd6f8"
+        },
+        {
+          "path": "/mnt/contextual-forest/staged-debug-20260907/overfit32-v1/cache/dev/example-0022.pt",
+          "sha256": "d4d86fdb431e07eafefca21c9fbf9f251829b231f7d6d386f5182d87667f20ab"
+        },
+        {
+          "path": "/mnt/contextual-forest/staged-debug-20260907/overfit32-v1/cache/dev/example-0023.pt",
+          "sha256": "1a9f5d1484710e011e0dfc9d987196966a113dddfddad83b50a970c9bbb891f2"
+        },
+        {
+          "path": "/mnt/contextual-forest/staged-debug-20260907/overfit32-v1/cache/dev/example-0024.pt",
+          "sha256": "a7a5d2a2e2d6482f4f0fe6a1e9b8018014f9b9214e6c8b097ff1f88349ba4cc0"
+        },
+        {
+          "path": "/mnt/contextual-forest/staged-debug-20260907/overfit32-v1/cache/dev/example-0025.pt",
+          "sha256": "60b06c6241acb7cf0187a1feb5d7f27ecca29cab268df8666fff658170c94271"
+        },
+        {
+          "path": "/mnt/contextual-forest/staged-debug-20260907/overfit32-v1/cache/dev/example-0026.pt",
+          "sha256": "7cb7da9a3c69afae873715aec2729ef12b20d968ac3367a89521829173b57315"
+        },
+        {
+          "path": "/mnt/contextual-forest/staged-debug-20260907/overfit32-v1/cache/dev/example-0027.pt",
+          "sha256": "3389821345cbb8159941746803b3056e7819415eaebf00263c8c6854e06d0377"
+        },
+        {
+          "path": "/mnt/contextual-forest/staged-debug-20260907/overfit32-v1/cache/dev/example-0028.pt",
+          "sha256": "a2b84a57e0287dc81eb218cc1436c71a85fec8fd53e8186b672a21c81c07a3a8"
+        },
+        {
+          "path": "/mnt/contextual-forest/staged-debug-20260907/overfit32-v1/cache/dev/example-0029.pt",
+          "sha256": "c8c8f22eb68ee59213e8908930f9e509966ddfe91fc11cd4b026d9792d0f3fdb"
+        },
+        {
+          "path": "/mnt/contextual-forest/staged-debug-20260907/overfit32-v1/cache/dev/example-0030.pt",
+          "sha256": "d3c32d01804b5f8194a78bdc245ed901843eabbea4e708007f0d532b822803aa"
+        },
+        {
+          "path": "/mnt/contextual-forest/staged-debug-20260907/overfit32-v1/cache/dev/example-0031.pt",
+          "sha256": "dd1c68d0def6965afbc82921a0e0d07ede4091894c24b821119af3e7024ce711"
+        }
+      ],
+      "storage": "authenticated immutable CPU tensor snapshot",
+      "tensor_state_sha256": "4f81320c3e0caed9cff36757c29c55cf206581e7e1e51872d90549f9ea39ad21"
+    },
+    "train": {
+      "active_tokens": 2048,
+      "cache_sha256": "f4d31bf31a5b34ffc29881abfe86e7937ce81a9f409f992df09b45ebd1b7780b",
+      "examples": 32,
+      "files": [
+        {
+          "path": "/mnt/contextual-forest/staged-debug-20260907/overfit32-v1/cache/train/example-0000.pt",
+          "sha256": "06e5856fc5d7d1a7144417452122ec74cf29c06d9c4389c71e040bab4eb8d1f0"
+        },
+        {
+          "path": "/mnt/contextual-forest/staged-debug-20260907/overfit32-v1/cache/train/example-0001.pt",
+          "sha256": "6ad845df5c580dd0a5f12818d6b4c7156a0402ac4fa01066b5c076e85d5d63a4"
+        },
+        {
+          "path": "/mnt/contextual-forest/staged-debug-20260907/overfit32-v1/cache/train/example-0002.pt",
+          "sha256": "73b3f5ac2563c23e78583ade728d8d8b0c48218e1375725b2bf027b2d1012f2f"
+        },
+        {
+          "path": "/mnt/contextual-forest/staged-debug-20260907/overfit32-v1/cache/train/example-0003.pt",
+          "sha256": "6001247fc4ebc8efe1af1c667f7d684966dd987e2c51233a4889da7f727795e7"
+        },
+        {
+          "path": "/mnt/contextual-forest/staged-debug-20260907/overfit32-v1/cache/train/example-0004.pt",
+          "sha256": "7e5b3bbba8483324705d8c589d73c6ff210b1a7803789e334b80b11cc9a0dd88"
+        },
+        {
+          "path": "/mnt/contextual-forest/staged-debug-20260907/overfit32-v1/cache/train/example-0005.pt",
+          "sha256": "7c517080e667dc457859b386750f044ecc386fad518d64074668b2ba2a5fd12e"
+        },
+        {
+          "path": "/mnt/contextual-forest/staged-debug-20260907/overfit32-v1/cache/train/example-0006.pt",
+          "sha256": "bb384ac8e00b54bca828358405d153a36aa9e510a8952e0926e5a6a8e9277388"
+        },
+        {
+          "path": "/mnt/contextual-forest/staged-debug-20260907/overfit32-v1/cache/train/example-0007.pt",
+          "sha256": "f6e37c520151057339aa88d14dd00fe16055a9ddb2215fb5957e0506f9f784ad"
+        },
+        {
+          "path": "/mnt/contextual-forest/staged-debug-20260907/overfit32-v1/cache/train/example-0008.pt",
+          "sha256": "e41d75a847a8fc8ed9c4ab47d172bf2a43b06bf74c3593a8a544f516873b8786"
+        },
+        {
+          "path": "/mnt/contextual-forest/staged-debug-20260907/overfit32-v1/cache/train/example-0009.pt",
+          "sha256": "cc4598ff2e7afe4c81a5d2cfc5c1c44ff96d9db98bd2e006f94110278c3b377e"
+        },
+        {
+          "path": "/mnt/contextual-forest/staged-debug-20260907/overfit32-v1/cache/train/example-0010.pt",
+          "sha256": "3308a63a0289e09cc49be7c2d773f06745739ba04982b36466c00d4d60395885"
+        },
+        {
+          "path": "/mnt/contextual-forest/staged-debug-20260907/overfit32-v1/cache/train/example-0011.pt",
+          "sha256": "f343a44a42466d86e5706d353d37204507ddc56cdde624b7488b7f2776ffbb04"
+        },
+        {
+          "path": "/mnt/contextual-forest/staged-debug-20260907/overfit32-v1/cache/train/example-0012.pt",
+          "sha256": "a67726dddec983d6a0182f3957a3ca3f92fb69db8252cd4a5b1b030da9ddefdb"
+        },
+        {
+          "path": "/mnt/contextual-forest/staged-debug-20260907/overfit32-v1/cache/train/example-0013.pt",
+          "sha256": "f8680761b608082c81ee7ce01d173c1c1482f29abc066c630a8cffef048d8f9e"
+        },
+        {
+          "path": "/mnt/contextual-forest/staged-debug-20260907/overfit32-v1/cache/train/example-0014.pt",
+          "sha256": "894094bd40a36c3eb28660b69982b6b7771ed8b27e46c3f83d609eaa8bd7fc74"
+        },
+        {
+          "path": "/mnt/contextual-forest/staged-debug-20260907/overfit32-v1/cache/train/example-0015.pt",
+          "sha256": "8536483280ddc75ede4e7cf633f361cb892a2fb2a8f550b1e6fd7d2eae9dca64"
+        },
+        {
+          "path": "/mnt/contextual-forest/staged-debug-20260907/overfit32-v1/cache/train/example-0016.pt",
+          "sha256": "bb17dfd4e3a7115db32dd43e3ea730171bcdd413b5f3491652f2a9d3d46941b8"
+        },
+        {
+          "path": "/mnt/contextual-forest/staged-debug-20260907/overfit32-v1/cache/train/example-0017.pt",
+          "sha256": "820d05461dc53effd1893e521efe5719c5c35dd5bdf4c2d1443b981e04392440"
+        },
+        {
+          "path": "/mnt/contextual-forest/staged-debug-20260907/overfit32-v1/cache/train/example-0018.pt",
+          "sha256": "b4a1b8f917d8cd4ab60d669fa964e909eda30ffc4895528cd15a18dc440c7ac9"
+        },
+        {
+          "path": "/mnt/contextual-forest/staged-debug-20260907/overfit32-v1/cache/train/example-0019.pt",
+          "sha256": "46ca3a95118a5f6f206aa377e3b856f1b39619ee58ecbc5ef65eb0c4c3db4d21"
+        },
+        {
+          "path": "/mnt/contextual-forest/staged-debug-20260907/overfit32-v1/cache/train/example-0020.pt",
+          "sha256": "1cecebe3df88c9106cac65e3f4ff76a96c675688e69d2b45a9ecd21e12ab0ffa"
+        },
+        {
+          "path": "/mnt/contextual-forest/staged-debug-20260907/overfit32-v1/cache/train/example-0021.pt",
+          "sha256": "e1510e5adad56c195fcbf7d7db0f3a9f75592d8059c678946a82043e78819c88"
+        },
+        {
+          "path": "/mnt/contextual-forest/staged-debug-20260907/overfit32-v1/cache/train/example-0022.pt",
+          "sha256": "3bf0744543354f0862c71860433f38ef708b80685edaf2cf99a66866119a6dae"
+        },
+        {
+          "path": "/mnt/contextual-forest/staged-debug-20260907/overfit32-v1/cache/train/example-0023.pt",
+          "sha256": "3be9a6991a8ae84110ad9fc6e31627ad4287cec93fa7d56134903c316f1caec5"
+        },
+        {
+          "path": "/mnt/contextual-forest/staged-debug-20260907/overfit32-v1/cache/train/example-0024.pt",
+          "sha256": "9e3639b2ef32e62e3f74eb351ba7c3e3d89e79d32dcf759928add5b5dd73d0a5"
+        },
+        {
+          "path": "/mnt/contextual-forest/staged-debug-20260907/overfit32-v1/cache/train/example-0025.pt",
+          "sha256": "0fcb5c6698a6a1066e9b724f6deaa401e4af2ad04c3f0c941c717c2c1869a17f"
+        },
+        {
+          "path": "/mnt/contextual-forest/staged-debug-20260907/overfit32-v1/cache/train/example-0026.pt",
+          "sha256": "2029b7a3cd588c381712aeeabb3caf2ba4d677983624b4a3ed8d2b3a807de665"
+        },
+        {
+          "path": "/mnt/contextual-forest/staged-debug-20260907/overfit32-v1/cache/train/example-0027.pt",
+          "sha256": "e9e0b396c2cad6d66dedbbe38e37d6cc183d1a42b4e292ceeb65d97099104bbd"
+        },
+        {
+          "path": "/mnt/contextual-forest/staged-debug-20260907/overfit32-v1/cache/train/example-0028.pt",
+          "sha256": "fb843d177350cd18a7eeaaf0aa9cb56444de129f0d243ff4b295216207c1362f"
+        },
+        {
+          "path": "/mnt/contextual-forest/staged-debug-20260907/overfit32-v1/cache/train/example-0029.pt",
+          "sha256": "541ba99f9772105cf4a865ca7307d808779e6110c515dafa0fca98648efe7dfc"
+        },
+        {
+          "path": "/mnt/contextual-forest/staged-debug-20260907/overfit32-v1/cache/train/example-0030.pt",
+          "sha256": "207a7ed86b520a9f3f7ce9efea1242114a91540230fc189884c9095b39f9dc4f"
+        },
+        {
+          "path": "/mnt/contextual-forest/staged-debug-20260907/overfit32-v1/cache/train/example-0031.pt",
+          "sha256": "f965b214ea89dfc87ac260863a09ca9ef9abdcca2bea672d82d1365c51c701b4"
+        }
+      ],
+      "storage": "authenticated immutable CPU tensor snapshot",
+      "tensor_state_sha256": "6a9885cd01499dd2afccaa96cd6e341d3f43259d87b8a527fea0de09411ce155"
+    }
+  },
+  "created_utc": "2026-09-08T04:38:37.241550+00:00",
+  "frozen_unary_sha256": "88224f381a5866f02b1b1c293efcd5ccd76febb30e7257bdf5b5c0aa2f2bf041",
+  "initial_head_sha256": "2919a87660264aef105b73d68450f8b1476229a6aa9f1b1303297201a1902db3",
+  "optimizer": {
+    "gradient_clip": 1.0,
+    "name": "AdamW",
+    "weight_decay": 0
+  },
+  "parameters": {
+    "eta": 0.95,
+    "feature_dim": 8,
+    "frozen_unary_parameters": 827312,
+    "positive_factor_rank": 17,
+    "status": "standalone_experimental",
+    "top_k": 64,
+    "topology": "natural_order_active_chain",
+    "trainable_parameters": 827312
+  },
+  "protocol": "centered_old_debug_fixed_corruption_overfit_v1",
+  "reserved_test_access": false,
+  "runtime": {
+    "device": "cuda",
+    "gpu_name": "NVIDIA L4",
+    "head_dtype": "float32",
+    "probability_dtype": "float64",
+    "torch_version": "2.5.1+cu121"
+  },
+  "schema_version": 1,
+  "scope": "old fixed-corruption fitting gate; optional old dev is diagnostic; no checkpoint selection",
+  "source_results_sha256": "26ff20d7e5e4fce89e4a2f98eeaffbf979ec304cf31be34afecf0a379b8ff784",
+  "source_sha256": {
+    "evaluation/centered_coupling.py": "1ea2c16ecce5417c7e8c3d7dcf7854257e8b46956ff6bac1228db5dc6a282b55",
+    "models/centered_forest.py": "5d146676b4a2a408df67449690bf3178b3b1e9816eb25d780de80d1a58dc27c3",
+    "models/contextual_unary.py": "c252baf7502d8f4c13dd495dbfe482ae3a754f8413d5238b126c36973a640a2b",
+    "models/structured_decoder.py": "b90fd02618d5162f8908f266fef1bdb2418a4bc172ede0863cd60ddeaa0f257a",
+    "scripts/evaluate_staged_fresh_selected.py": "b08d823cc60891f8670965ae525a764c59456aabf2ce4332277fec70ab70f5af",
+    "scripts/run_staged_centered_overfit.py": "702b3eb8ab0de638088137ebb7e2bd9965ecee7f8775f3b32daa9718ce452246",
+    "scripts/run_staged_real_overfit.py": "dd976f808089fb8cecf89353080454c248ccfdc84ed390af1a05aeb3975a010a",
+    "structured_objective.py": "57f54eef2c1bbc6d1efb313a4ec3b936c7175c5a93294a1f850ddfd567a787c9",
+    "structured_utils.py": "9c26e3ecd764945fcdf171d205e22f5f331f2822baa1e7418358908a1dda9226"
+  },
+  "unary": {
+    "checkpoint_sha256": "2cdd03bcd6985a6c7c89b7bffcff391c6b43c3eff4284df67fefd5236bfe8701",
+    "checkpoint_step": 1000,
+    "identity": {
+      "backbone_provenance": {
+        "attestation_type": "authenticated_released_backbone_wrapper_v1",
+        "backbone_parameter_count": 169627250,
+        "backbone_tensor_bytes": 678509000,
+        "backbone_tensor_content_sha256": "1bbf3736b36125b2f47e9e970101bb84a803d7059d4e93509a8f093ecb192901",
+        "backbone_tensor_count": 131,
+        "backbone_tensor_schema_sha256": "d5aeee0343134374ce4c596e7831c7b31938e7b5b25d669b090e9b5da5ab2150",
+        "backbone_wrapper_metadata_sha256": "5a71bdf6388cb0a56ae587468617469c02092293633dce5316e69d1779b2f2ea",
+        "backbone_wrapper_sha256": "94046f5e3952580f5b69697a78f72398160b19c268eeefa15cf558d8cf688a01",
+        "backbone_wrapper_size_bytes": 678553556,
+        "production_expectations_file_sha256": "a978c17befc2788b0b773eee7cd608ac0200379947a63a0ba8699a0b9818c956",
+        "production_expectations_identity_sha256": "6282b0d1fc4ad5cadae11c315c511d9fe6e8367ff58d1ba4e0facd7c5d8c8f6e",
+        "released_backbone": {
+          "repository": "kuleshov-group/mdlm-owt",
+          "revision": "d0958fa851335ece6c15260ce0025f030673c0fb",
+          "source_sha256": "47149e73f7552f39ea9776dbe74d925d25237bcf2ed2e2ec03cdff9d51c82aa4",
+          "source_size_bytes": 678522728,
+          "tensor_count": 131
+        },
+        "released_backbone_identity_sha256": "b63bc497859f9f8401eee5b9606b19565f5ddb165fe25e865e4c9b4078539091"
+      },
+      "backbone_runtime_config": {
+        "T": 0,
+        "backbone": "dit",
+        "model": {
+          "cond_dim": 128,
+          "dropout": 0.1,
+          "hidden_size": 768,
+          "length": 128,
+          "monitor_metric": "val/structured/conditional_nll_per_masked_token",
+          "n_blocks": 12,
+          "n_heads": 12,
+          "name": "contextual-forest-small",
+          "scale_by_sigma": true,
+          "tie_word_embeddings": false,
+          "type": "ddit"
+        },
+        "noise": {
+          "sigma_max": 20,
+          "sigma_min": 0.0001,
+          "type": "loglinear"
+        },
+        "parameterization": "subs",
+        "subs_masking": false,
+        "time_conditioning": false
+      },
+      "dataset": "openwebtext",
+      "dev_cache_sha256": [
+        "68a3445921d7bfa7849a2fc1626338bd305366fae4931baedb4f4094d29d0982",
+        "0f1bac26b2bb14f6d1d10a2feb3d0c2781ed5ed9157ffb92309bdd712f979e59",
+        "b70bc4a90d677fb8d57206a3a037944298c1f06a2d64f8f7f1239af5ce3e4add",
+        "2153f76c17bd650dad05952c900c3944187430e583a86a322cfe295bca8516b2"
+      ],
+      "dev_source": {
+        "document_ids_sha256": "2b65034b1769ce1f8ad3f3909acd4d938d84a8cc9ddee6f5078ade0d26f73a83",
+        "duplicate_records_skipped": 0,
+        "examples": 64,
+        "file_sha256": "68390ef4a9e2f5be6df70657ea70e186957ae68450e4f680392eff84fc36802a",
+        "length": 128,
+        "records_scanned": 64,
+        "selected_token_sha256": "88c2b3f3c2e6eea6504ee784922d5f6d40e52af208266a907e2ac5a014e69ccd",
+        "short_records_skipped": 0
+      },
+      "eval_every": 100,
+      "head_config": {
+        "component_size_cap": 0,
+        "directional_rank": 8,
+        "hidden_size": 768,
+        "init_std": 0.25,
+        "rank": 16,
+        "seed": 1,
+        "time_embed_dim": 64,
+        "top_k": 64,
+        "unary_rank": 16,
+        "vocab_size": 50258
+      },
+      "runtime": {
+        "backbone_cuda_autocast": "bfloat16",
+        "cached_output_dtype": "float32",
+        "device_type": "cuda",
+        "gpu_name": "NVIDIA L4",
+        "torch_version": "2.5.1+cu121"
+      },
+      "source_sha256": {
+        "diffusion.py": "204aa815b73799de7eeacc760ec494adda5d546983fd750884d74ac704f7e825",
+        "evaluation/dependence_diagnostics.py": "41289287f1b418cbac65fe5d8b43d20271048904523c3c3c7a1844cf1ee0f9a4",
+        "models/contextual_unary.py": "c252baf7502d8f4c13dd495dbfe482ae3a754f8413d5238b126c36973a640a2b",
+        "models/directional_forest.py": "5c81101e1c44e2cb30c3567eb2e27dce2129014157be63d1dc5686c663cb94e1",
+        "models/dit.py": "2ad0ea896f2a59947b0baa72679851f7238b2836d336e39975b44b3cc95d8377",
+        "models/structured_decoder.py": "b90fd02618d5162f8908f266fef1bdb2418a4bc172ede0863cd60ddeaa0f257a",
+        "noise_schedule.py": "da16320cebbc727c03e8e45297593505fb41a597c7a5ef29eacd7043207a763c",
+        "scripts/run_staged_fresh_training.py": "e1f61b69570b09fd49a8c461e992fb00e66eae1078e77d4a59996fac1440380a",
+        "scripts/run_staged_real_overfit.py": "dd976f808089fb8cecf89353080454c248ccfdc84ed390af1a05aeb3975a010a",
+        "structured_objective.py": "57f54eef2c1bbc6d1efb313a4ec3b936c7175c5a93294a1f850ddfd567a787c9",
+        "structured_training.py": "0a242f3a437f9193cb69fdb336bbd4414451d6d621135cbd9a97a1a9f998bbdf",
+        "structured_utils.py": "9c26e3ecd764945fcdf171d205e22f5f331f2822baa1e7418358908a1dda9226"
+      },
+      "train_source": {
+        "document_ids_sha256": "b3ea02347e2665a295b44127d04c34fbbf0737f98683067b6139a1b1dccdc11c",
+        "duplicate_records_skipped": 0,
+        "examples": 2048,
+        "file_sha256": "1d387c4b4e90e2a7a994eb70521335c45ef2e1574aae8de9108dc944f1ee7dd6",
+        "length": 128,
+        "records_scanned": 2048,
+        "selected_token_sha256": "c640839b6053c8c6592353c3762de5f48e96a854a118d17dc80384454a3a6d15",
+        "short_records_skipped": 0
+      }
+    },
+    "identity_sha256": "3550045fb44cf4d23311343f7ea8c43185de9530b4a29aea20cbb691251fbc2a",
+    "training_seed": 1,
+    "unary_state_sha256": "88224f381a5866f02b1b1c293efcd5ccd76febb30e7257bdf5b5c0aa2f2bf041"
+  }
+}

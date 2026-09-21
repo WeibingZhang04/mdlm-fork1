@@ -1,0 +1,163 @@
+{
+  "experiment": "paired_contextual_forest_generation_pilot",
+  "global_num_paired_samples": 100,
+  "global_pairing_digest": "98419fb2e6586b64d77b8c54494d8402f660c8a73d099fae8e0a53fabb1fc80f",
+  "groups": [
+    {
+      "active_tokens_per_second": 2310.7126441449427,
+      "distinct_n": {
+        "1": 0.178671875,
+        "2": 0.7797947214076246,
+        "4": 0.9926934378060724
+      },
+      "input_pairing_digest": "98419fb2e6586b64d77b8c54494d8402f660c8a73d099fae8e0a53fabb1fc80f",
+      "mean_repetition_rate": {
+        "1": 0.39294921875,
+        "2": 0.05176930596285431,
+        "4": 0.0009010773751224354
+      },
+      "measured_nfe_values": [
+        8,
+        9
+      ],
+      "num_batches": 100,
+      "num_sequences": 100,
+      "num_tokens": 102400,
+      "pairing_digest": "98419fb2e6586b64d77b8c54494d8402f660c8a73d099fae8e0a53fabb1fc80f",
+      "peak_memory_bytes": 1330598400,
+      "reference": null,
+      "reference_lm": {
+        "mean_nll_nats": 6.7804554073798595,
+        "model_name_or_path": "gpt2-large",
+        "num_scored_sequences": 100,
+        "num_scored_tokens": 76432,
+        "perplexity": 880.4696051747148,
+        "revision": "32b71b12589c2f8d625668d2335a01cac3249519",
+        "sequence_policy": "retokenize_decoded_text_score_through_first_nonleading_eos_v1"
+      },
+      "requested_nfe_budget": 9,
+      "sampling_mode": "structured_joint",
+      "unresolved_mask_tokens": 0,
+      "wall_clock_seconds": 44.315332873375155
+    },
+    {
+      "active_tokens_per_second": 1239.3655058296813,
+      "distinct_n": {
+        "1": 0.169091796875,
+        "2": 0.7241544477028348,
+        "4": 0.9815475024485798
+      },
+      "input_pairing_digest": "98419fb2e6586b64d77b8c54494d8402f660c8a73d099fae8e0a53fabb1fc80f",
+      "mean_repetition_rate": {
+        "1": 0.427880859375,
+        "2": 0.07442815249266857,
+        "4": 0.003486777668952019
+      },
+      "measured_nfe_values": [
+        16
+      ],
+      "num_batches": 100,
+      "num_sequences": 100,
+      "num_tokens": 102400,
+      "pairing_digest": "98419fb2e6586b64d77b8c54494d8402f660c8a73d099fae8e0a53fabb1fc80f",
+      "peak_memory_bytes": 1330598400,
+      "reference": null,
+      "reference_lm": {
+        "mean_nll_nats": 5.786286213336191,
+        "model_name_or_path": "gpt2-large",
+        "num_scored_sequences": 100,
+        "num_scored_tokens": 62664,
+        "perplexity": 325.80082009444675,
+        "revision": "32b71b12589c2f8d625668d2335a01cac3249519",
+        "sequence_policy": "retokenize_decoded_text_score_through_first_nonleading_eos_v1"
+      },
+      "requested_nfe_budget": 17,
+      "sampling_mode": "structured_joint",
+      "unresolved_mask_tokens": 0,
+      "wall_clock_seconds": 82.62292238918599
+    },
+    {
+      "active_tokens_per_second": 616.1362572659092,
+      "distinct_n": {
+        "1": 0.16693359375,
+        "2": 0.6966666666666667,
+        "4": 0.9733104799216454
+      },
+      "input_pairing_digest": "98419fb2e6586b64d77b8c54494d8402f660c8a73d099fae8e0a53fabb1fc80f",
+      "mean_repetition_rate": {
+        "1": 0.44794921875,
+        "2": 0.09280547409579666,
+        "4": 0.005847208619000985
+      },
+      "measured_nfe_values": [
+        32,
+        33
+      ],
+      "num_batches": 100,
+      "num_sequences": 100,
+      "num_tokens": 102400,
+      "pairing_digest": "98419fb2e6586b64d77b8c54494d8402f660c8a73d099fae8e0a53fabb1fc80f",
+      "peak_memory_bytes": 1330598400,
+      "reference": null,
+      "reference_lm": {
+        "mean_nll_nats": 5.293334988341208,
+        "model_name_or_path": "gpt2-large",
+        "num_scored_sequences": 100,
+        "num_scored_tokens": 52793,
+        "perplexity": 199.00600265025673,
+        "revision": "32b71b12589c2f8d625668d2335a01cac3249519",
+        "sequence_policy": "retokenize_decoded_text_score_through_first_nonleading_eos_v1"
+      },
+      "requested_nfe_budget": 33,
+      "sampling_mode": "structured_joint",
+      "unresolved_mask_tokens": 0,
+      "wall_clock_seconds": 166.19700397830456
+    }
+  ],
+  "input_pairing_digest": "98419fb2e6586b64d77b8c54494d8402f660c8a73d099fae8e0a53fabb1fc80f",
+  "num_paired_samples": 100,
+  "num_shards": 1,
+  "reference_lm": {
+    "mean_nll_nats": 6.0466553111895625,
+    "model_name_or_path": "gpt2-large",
+    "num_scored_sequences": 300,
+    "num_scored_tokens": 191889,
+    "perplexity": 422.6968735603912,
+    "revision": "32b71b12589c2f8d625668d2335a01cac3249519",
+    "runtime_identity": {
+      "add_special_tokens": true,
+      "batch_size": 1,
+      "cuda_runtime": "12.1",
+      "device": "cuda",
+      "max_length": 1024,
+      "model_class": "transformers.models.gpt2.modeling_gpt2.GPT2LMHeadModel",
+      "model_config_class": "transformers.models.gpt2.configuration_gpt2.GPT2Config",
+      "model_name_or_path": "gpt2-large",
+      "model_revision": "32b71b12589c2f8d625668d2335a01cac3249519",
+      "parameter_dtypes": [
+        "torch.float32"
+      ],
+      "precision_policy": "explicit_checkpoint_dtype_no_autocast_float32_cross_entropy_v1",
+      "python": "3.9.25",
+      "requested_dtype": "float32",
+      "schema_version": 1,
+      "sequence_policy": "retokenize_decoded_text_score_through_first_nonleading_eos_v1",
+      "tokenization_policy": "fast_tokenizer_right_padding_right_truncation_add_special_tokens_v1",
+      "tokenizer_bos_token_id": 50256,
+      "tokenizer_class": "transformers.models.gpt2.tokenization_gpt2_fast.GPT2TokenizerFast",
+      "tokenizer_eos_token_id": 50256,
+      "tokenizer_name_or_path": "gpt2-large",
+      "tokenizer_pad_token_id": 50256,
+      "tokenizer_padding_side": "right",
+      "tokenizer_revision": "32b71b12589c2f8d625668d2335a01cac3249519",
+      "tokenizer_truncation_side": "right",
+      "tokenizer_vocab_size": 50257,
+      "tokenizers": "0.15.2",
+      "torch": "2.2.2+cu121",
+      "transformers": "4.38.2"
+    },
+    "sequence_policy": "retokenize_decoded_text_score_through_first_nonleading_eos_v1"
+  },
+  "schema_version": 1,
+  "shard_index": 0
+}

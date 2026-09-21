@@ -1,0 +1,168 @@
+{
+  "adapter_file": "structured-adapter.safetensors",
+  "adapter_namespace_in_file": "prefix-stripped",
+  "adapter_namespace_in_source": "structured_head.*",
+  "adapter_parameter_count": 984417,
+  "adapter_sha256": "3e1cdc200dba3a46290578e7b62404c0a7d39a63f580693e26ef35855cf64573",
+  "adapter_size_bytes": 3939804,
+  "adapter_tensor_bytes": 3937668,
+  "adapter_tensor_count": 21,
+  "artifact_role": "contextual_forest_structured_adapter",
+  "ema_available": false,
+  "ema_used": false,
+  "format": "safetensors",
+  "omitted_frozen_backbone_tensor_count": 131,
+  "released_backbone": {
+    "repository": "kuleshov-group/mdlm-owt",
+    "revision": "d0958fa851335ece6c15260ce0025f030673c0fb",
+    "source_sha256": "47149e73f7552f39ea9776dbe74d925d25237bcf2ed2e2ec03cdff9d51c82aa4",
+    "source_size_bytes": 678522728,
+    "tensor_count": 131
+  },
+  "required_loader": "scripts.export_structured_adapter.load_adapter_into_head",
+  "required_loader_strict": true,
+  "schema_version": 1,
+  "source_checkpoint_global_step": 1000,
+  "source_checkpoint_sha256": "ff01fc9b069034b0fac90ca0ba00a520dce853c44756b20515d4b321d0ce7655",
+  "source_checkpoint_size_bytes": 691932032,
+  "source_state_dict_tensor_count": 152,
+  "tensor_schema": {
+    "edge_proposer.anchor_projection.bias": {
+      "dtype": "torch.float32",
+      "shape": [
+        16
+      ]
+    },
+    "edge_proposer.anchor_projection.weight": {
+      "dtype": "torch.float32",
+      "shape": [
+        16,
+        128
+      ]
+    },
+    "edge_proposer.edge_scorer.0.bias": {
+      "dtype": "torch.float32",
+      "shape": [
+        128
+      ]
+    },
+    "edge_proposer.edge_scorer.0.weight": {
+      "dtype": "torch.float32",
+      "shape": [
+        128,
+        256
+      ]
+    },
+    "edge_proposer.edge_scorer.2.bias": {
+      "dtype": "torch.float32",
+      "shape": [
+        1
+      ]
+    },
+    "edge_proposer.edge_scorer.2.weight": {
+      "dtype": "torch.float32",
+      "shape": [
+        1,
+        128
+      ]
+    },
+    "edge_proposer.slot_projection.bias": {
+      "dtype": "torch.float32",
+      "shape": [
+        16
+      ]
+    },
+    "edge_proposer.slot_projection.weight": {
+      "dtype": "torch.float32",
+      "shape": [
+        16,
+        128
+      ]
+    },
+    "factor_hidden_projection.bias": {
+      "dtype": "torch.float32",
+      "shape": [
+        32
+      ]
+    },
+    "factor_hidden_projection.weight": {
+      "dtype": "torch.float32",
+      "shape": [
+        32,
+        768
+      ]
+    },
+    "factor_time_projection.weight": {
+      "dtype": "torch.float32",
+      "shape": [
+        32,
+        64
+      ]
+    },
+    "hidden_norm.bias": {
+      "dtype": "torch.float32",
+      "shape": [
+        768
+      ]
+    },
+    "hidden_norm.weight": {
+      "dtype": "torch.float32",
+      "shape": [
+        768
+      ]
+    },
+    "time_embedding.mlp.0.bias": {
+      "dtype": "torch.float32",
+      "shape": [
+        64
+      ]
+    },
+    "time_embedding.mlp.0.weight": {
+      "dtype": "torch.float32",
+      "shape": [
+        64,
+        64
+      ]
+    },
+    "time_embedding.mlp.2.bias": {
+      "dtype": "torch.float32",
+      "shape": [
+        64
+      ]
+    },
+    "time_embedding.mlp.2.weight": {
+      "dtype": "torch.float32",
+      "shape": [
+        64,
+        64
+      ]
+    },
+    "token_factor_embedding.weight": {
+      "dtype": "torch.float32",
+      "shape": [
+        50258,
+        16
+      ]
+    },
+    "topology_hidden_projection.bias": {
+      "dtype": "torch.float32",
+      "shape": [
+        128
+      ]
+    },
+    "topology_hidden_projection.weight": {
+      "dtype": "torch.float32",
+      "shape": [
+        128,
+        768
+      ]
+    },
+    "topology_time_projection.weight": {
+      "dtype": "torch.float32",
+      "shape": [
+        128,
+        64
+      ]
+    }
+  }
+}

@@ -1,0 +1,108 @@
+{
+  "added_fields": [
+    "source_selection_sha256",
+    "source_test_records_file_sha256",
+    "source_record_sha256",
+    "source_record_bytes_sha256",
+    "source_record_line"
+  ],
+  "artifact": "fresh_pair_test_shard_aggregation_lineage",
+  "backbone_rescored": false,
+  "changed_original_fields": [
+    "selection_sha256"
+  ],
+  "combined_selection_manifest_digest_mode": "serialized_json_keys",
+  "combined_selection_manifest_file_sha256": "9f5f917b88cc296a1ee39ecc9a94b8af1618e20f1ac23bbbc3b17b5855cfa122",
+  "combined_selection_manifest_path": "/Users/yuntiandeng/Documents/ChatGPT/diffusion lm/output/results/staged-debugging-v1/fresh-three-seeds-v1/selection/selection-manifest.json",
+  "combined_selection_sha256": "c0f1525b1722c3f02bb0b8be5c4cce744f07c3ed5d0009e6f5ef660db0f02107",
+  "created_utc": "2026-09-08T04:58:59.798115+00:00",
+  "data_manifest_file_sha256": "70d989988c6318a52960791667804fde30e794f324628186df8d010438439753",
+  "manifest_sha256": "dd510ccdb3704db963f2f91d359d582578c63e039201639ac038e0d89ac5b095",
+  "original_statistics_recomputed_exactly": true,
+  "records": 4608,
+  "schema_version": 1,
+  "seed_invariant_identity_sha256": "48f1ac16b028daa38c283907fec1a4a8316dc13ea22b9a2713220febe9fdf156",
+  "shards": [
+    {
+      "commitment_file_sha256": "27908585836a58d2dd0f4f594548b3fbfbf94f59e27355934b33ca615cfc3488",
+      "records": 1536,
+      "results_file_sha256": "538bf373dddcba7c0ed03a80f6f3bf594ccf1293f31895d1be98483a2f284cad",
+      "selection_file_sha256": "f05a08df0de9bd81e7b782eae44bd2672f8290288137fe6de77b9fe6f6f68ad0",
+      "selection_manifest_digest_mode": "legacy_v1_integer_checkpoint_step_keys",
+      "selection_manifest_file_sha256": "7d425ba57cf1b5f419c8e90a3d7ddfe1e8afec6e2995ec46773b9a30e1bb5644",
+      "selection_manifest_path": "/Users/yuntiandeng/Documents/ChatGPT/diffusion lm/output/results/staged-debugging-v1/fresh-selection-v1/selection-manifest.json",
+      "selection_sha256": "c0ffd54ac2360e8f2787d8b5cf03e605b63c9ccbdd70637c5f72e11a49b95662",
+      "test_dir": "/Users/yuntiandeng/Documents/ChatGPT/diffusion lm/output/results/staged-debugging-v1/fresh-test-v1",
+      "test_records_file_sha256": "863bc44caa063e6a9e76568392682ee8b185218d617bd7f83beaff5fb8305314",
+      "training_seeds": [
+        1
+      ]
+    },
+    {
+      "commitment_file_sha256": "865c21dca7cdd5948b23429247f6ef01ccbaee43fde80ff164194cf34fe4791a",
+      "records": 1536,
+      "results_file_sha256": "94959cc0d6605ff14becbddc21290596162ddb0efb7f7f8142412a90c19ef3af",
+      "selection_file_sha256": "6c206a23b3e0cd9c47fdae6ef589c54e4753fc1db4c7d8430433efcb3d2b9823",
+      "selection_manifest_digest_mode": "serialized_json_keys",
+      "selection_manifest_file_sha256": "28206c9350d62ac410884c7b8d7c5c62e7e20307bd5b06055576ef8e92259939",
+      "selection_manifest_path": "/Users/yuntiandeng/Documents/ChatGPT/diffusion lm/output/results/staged-debugging-v1/fresh-selection-seed2-v1/selection-manifest.json",
+      "selection_sha256": "ca9690ad05fa800269a8e8cbdab3c20461aedc79f94731f775a7ace22c1fb400",
+      "test_dir": "/Users/yuntiandeng/Documents/ChatGPT/diffusion lm/output/results/staged-debugging-v1/fresh-test-seed2-v1",
+      "test_records_file_sha256": "bdb8ab926d61cb16855149911b2b5208c75eb8e831cc226d20e91f69f11ab9f7",
+      "training_seeds": [
+        2
+      ]
+    },
+    {
+      "commitment_file_sha256": "146b3a094a41d2c13f687be20dee314c713f29792853d9b47626193f7affc5e0",
+      "records": 1536,
+      "results_file_sha256": "c477a654dbc8efcb73ae5303563554573f9ade826277783d5e754e1a4ed2aa24",
+      "selection_file_sha256": "28a0c86f007b5c17e65ebf25ad90e2dc6a9c84aa3cb62bafe92c73424ade4270",
+      "selection_manifest_digest_mode": "serialized_json_keys",
+      "selection_manifest_file_sha256": "0169542df43d66926f2da63eec5f018aebbdaf5b8e57f010d84d3b8499a10b7c",
+      "selection_manifest_path": "/Users/yuntiandeng/Documents/ChatGPT/diffusion lm/output/results/staged-debugging-v1/fresh-selection-seed3-v1/selection-manifest.json",
+      "selection_sha256": "495567eb8f82b0439a08b068003f959e677e7e7af3fbf1e86936d25c02bd36d5",
+      "test_dir": "/Users/yuntiandeng/Documents/ChatGPT/diffusion lm/output/results/staged-debugging-v1/fresh-test-seed3-v1",
+      "test_records_file_sha256": "854f0b33d82091840e011c43cc995739678a25d3c3bb1c72af5b8c2986417824",
+      "training_seeds": [
+        3
+      ]
+    }
+  ],
+  "source_files_modified": false,
+  "source_sha256": {
+    "evaluation/fresh_pair_statistics.py": "0657a63d30fa8c06c3012c810a0d4746c3c2e05be53b00ce4518ce5214667729",
+    "scripts/aggregate_staged_fresh_tests.py": "0423ad30e7d4ba220f229709990457d3483c0c13efe58b33c90f1d3600a8cc92"
+  },
+  "test_records_file_sha256": "e35c8b45b06a67f5ba10d08169e3123419af38c7254d8e13b7af3220a564f1a0",
+  "test_tokens_read": false,
+  "training_runs": [
+    {
+      "authenticated_run_dir": "/Users/yuntiandeng/Documents/ChatGPT/diffusion lm/output/results/staged-debugging-v1/fresh-pilot-resume-v1",
+      "dev_records_file_sha256": "7d827cdcfa083dbe5b84d2589710af738fb5a5edbd0d84f8fe2dd203a2a3a51a",
+      "identity_sha256": "3550045fb44cf4d23311343f7ea8c43185de9530b4a29aea20cbb691251fbc2a",
+      "protocol_file_sha256": "3287222e1c7043a58718da25588f8bf38f84d259a2ed49cce37ca0da0195fbdf",
+      "training_seed": 1
+    },
+    {
+      "authenticated_run_dir": "/Users/yuntiandeng/Documents/ChatGPT/diffusion lm/output/results/staged-debugging-v1/fresh-replication-seed2-resume-v1",
+      "dev_records_file_sha256": "c254111dec43776a16fbfcc996674afe3aa8286ee8dfb192238b0134deea483c",
+      "identity_sha256": "5d50a9c33fed9f4907c647f01287d6fbbebbd2af42c0f8b2bf5858747edd7f4b",
+      "protocol_file_sha256": "aef99696e3a5cedca87143588c491f50a14c58dd7c911d5ce2f6772f10d468c9",
+      "training_seed": 2
+    },
+    {
+      "authenticated_run_dir": "/Users/yuntiandeng/Documents/ChatGPT/diffusion lm/output/results/staged-debugging-v1/fresh-replication-seed3-retry1-v1",
+      "dev_records_file_sha256": "09378d23dba3191c265b24a83c52442e4e64f5312fed7aa01319780ce59aa4a8",
+      "identity_sha256": "4ac0c8e69c960e03260b89a1c16d05decc31931e817abf5e8cc38866057649d6",
+      "protocol_file_sha256": "77ab7778a7fd2be63b2638126a4c948c8041d72569c2576b7809fefdd0dd7c62",
+      "training_seed": 3
+    }
+  ],
+  "training_seeds": [
+    1,
+    2,
+    3
+  ],
+  "transformation": "copy every original field unchanged except selection_sha256; add explicit source lineage"
+}

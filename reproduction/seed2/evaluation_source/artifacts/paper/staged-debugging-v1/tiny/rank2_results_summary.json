@@ -1,0 +1,592 @@
+{
+  "protocol": "two_token_full_vocabulary_staged_debugging_v1",
+  "source_sha256": {
+    "synthetic/tiny_joint_debug.py": "8067d16f268c4aaeb24270dd9b5f708c85c015029ab01cc724ecdf8b833b1f8f",
+    "models/directional_forest.py": "5c81101e1c44e2cb30c3567eb2e27dce2129014157be63d1dc5686c663cb94e1",
+    "models/structured_decoder.py": "b90fd02618d5162f8908f266fef1bdb2418a4bc172ede0863cd60ddeaa0f257a",
+    "structured_objective.py": "57f54eef2c1bbc6d1efb313a4ec3b936c7175c5a93294a1f850ddfd567a787c9",
+    "structured_utils.py": "9c26e3ecd764945fcdf171d205e22f5f331f2822baa1e7418358908a1dda9226",
+    "scripts/run_tiny_joint_debug.py": "46c286939db18229bfaa816c02b7c64e2d29c3cb34c964dfc8800d2a1b84a0c6"
+  },
+  "run_count": 18,
+  "groups": [
+    {
+      "task": "opposite",
+      "variant": "directional_contextual_rank2_wide",
+      "seeds": [
+        1,
+        2,
+        3
+      ],
+      "target_reached_count": 3,
+      "parameter_count": 549,
+      "gradient_active_parameter_count": 274,
+      "kl_target_to_model": {
+        "mean": 0.00887818909923512,
+        "min": 0.008154616599775844,
+        "max": 0.009730417688111503,
+        "sample_std": 0.0007957396304747174
+      },
+      "invalid_mass": {
+        "mean": 0.008751536716694656,
+        "min": 0.008118616203858797,
+        "max": 0.009682273033603108,
+        "sample_std": 0.0008232717413880192
+      },
+      "total_variation": {
+        "mean": 0.011109655955055921,
+        "min": 0.008118616203858791,
+        "max": 0.015528078627705876,
+        "sample_std": 0.003905521713669235
+      },
+      "max_marginal_error": {
+        "mean": 0.004909323386913393,
+        "min": 0.001477455966984953,
+        "max": 0.01172749249772198,
+        "sample_std": 0.005904751610068302
+      },
+      "mutual_information": {
+        "mean": 0.6429728846160948,
+        "min": 0.6387516474029243,
+        "max": 0.6459995222380024,
+        "sample_std": 0.0037687164318668917
+      },
+      "steps_run": {
+        "mean": 125.0,
+        "min": 100,
+        "max": 150,
+        "sample_std": 25.0
+      },
+      "joint_sample_invalid_rate": {
+        "mean": 0.00845,
+        "min": 0.008,
+        "max": 0.00925,
+        "sample_std": 0.0006946221994724901
+      },
+      "marginal_sample_invalid_rate": {
+        "mean": 0.5014,
+        "min": 0.4963,
+        "max": 0.50935,
+        "sample_std": 0.006976209572540079
+      },
+      "mean_probabilities": {
+        "AA": 0.0040522709217485015,
+        "AB": 0.4924823717933791,
+        "BA": 0.4987660914899262,
+        "BB": 0.004699265794946154
+      }
+    },
+    {
+      "task": "opposite",
+      "variant": "directional_contextual_rank2_warmup",
+      "seeds": [
+        1,
+        2,
+        3
+      ],
+      "target_reached_count": 3,
+      "parameter_count": 549,
+      "gradient_active_parameter_count": 274,
+      "kl_target_to_model": {
+        "mean": 0.0004306543731137739,
+        "min": 0.0002858692353446268,
+        "max": 0.0006489958509048321,
+        "sample_std": 0.00019241397064692715
+      },
+      "invalid_mass": {
+        "mean": 0.0003880523744680064,
+        "min": 0.00026205213407490627,
+        "max": 0.0005773357813288912,
+        "sample_std": 0.00016689671634003412
+      },
+      "total_variation": {
+        "mean": 0.00467351897685962,
+        "min": 0.003578469415567236,
+        "max": 0.006263854684421722,
+        "sample_std": 0.001409540629269054
+      },
+      "max_marginal_error": {
+        "mean": 0.0045257335642195735,
+        "min": 0.003453336677920249,
+        "max": 0.006097461436339768,
+        "sample_std": 0.0013909879616921213
+      },
+      "mutual_information": {
+        "mean": 0.6897098560574171,
+        "min": 0.6882468080256183,
+        "max": 0.690700528772725,
+        "sample_std": 0.0012932672600502219
+      },
+      "steps_run": {
+        "mean": 150.0,
+        "min": 150,
+        "max": 150,
+        "sample_std": 0.0
+      },
+      "joint_sample_invalid_rate": {
+        "mean": 0.0004166666666666667,
+        "min": 0.00025,
+        "max": 0.00055,
+        "sample_std": 0.00015275252316519468
+      },
+      "marginal_sample_invalid_rate": {
+        "mean": 0.5009333333333333,
+        "min": 0.4964,
+        "max": 0.50905,
+        "sample_std": 0.007045270281070376
+      },
+      "mean_probabilities": {
+        "AA": 0.00015482164717932448,
+        "AB": 0.5042854666023916,
+        "BA": 0.49532648102314036,
+        "BB": 0.00023323072728868196
+      }
+    },
+    {
+      "task": "independent",
+      "variant": "directional_contextual_rank2_wide",
+      "seeds": [
+        1,
+        2,
+        3
+      ],
+      "target_reached_count": 3,
+      "parameter_count": 549,
+      "gradient_active_parameter_count": 274,
+      "kl_target_to_model": {
+        "mean": 2.5344066386286573e-07,
+        "min": 0.0,
+        "max": 6.894304966365006e-07,
+        "sample_std": 3.792383837715037e-07
+      },
+      "invalid_mass": {
+        "mean": 0.0,
+        "min": 0.0,
+        "max": 0.0,
+        "sample_std": 0.0
+      },
+      "total_variation": {
+        "mean": 0.0002078563019375738,
+        "min": 0.0,
+        "max": 0.0004474073781790544,
+        "sample_std": 0.00022538136469303657
+      },
+      "max_marginal_error": {
+        "mean": 0.0002078563019375738,
+        "min": 0.0,
+        "max": 0.0004474073781790544,
+        "sample_std": 0.00022538136469303657
+      },
+      "mutual_information": {
+        "mean": 4.773675149753166e-10,
+        "min": 0.0,
+        "max": 1.4320999149871954e-09,
+        "sample_std": 8.268225122274192e-10
+      },
+      "steps_run": {
+        "mean": 50.0,
+        "min": 50,
+        "max": 50,
+        "sample_std": 0.0
+      },
+      "joint_sample_invalid_rate": {
+        "mean": 0.0,
+        "min": 0.0,
+        "max": 0.0,
+        "sample_std": 0.0
+      },
+      "marginal_sample_invalid_rate": {
+        "mean": 0.0,
+        "min": 0.0,
+        "max": 0.0,
+        "sample_std": 0.0
+      },
+      "mean_probabilities": {
+        "AA": 0.2498982672847656,
+        "AB": 0.2500113174317193,
+        "BA": 0.24999746928659383,
+        "BB": 0.2500929459969213
+      }
+    },
+    {
+      "task": "independent",
+      "variant": "directional_contextual_rank2_warmup",
+      "seeds": [
+        1,
+        2,
+        3
+      ],
+      "target_reached_count": 3,
+      "parameter_count": 549,
+      "gradient_active_parameter_count": 274,
+      "kl_target_to_model": {
+        "mean": 2.2409970910445645e-07,
+        "min": 3.916328761288668e-09,
+        "max": 6.288245889551902e-07,
+        "sample_std": 3.5095477941612074e-07
+      },
+      "invalid_mass": {
+        "mean": 0.0,
+        "min": 0.0,
+        "max": 0.0,
+        "sample_std": 0.0
+      },
+      "total_variation": {
+        "mean": 0.0002430454005521628,
+        "min": 3.3915042877197266e-05,
+        "max": 0.0005545840245796407,
+        "sample_std": 0.0002750266112392766
+      },
+      "max_marginal_error": {
+        "mean": 0.0002430454005521628,
+        "min": 3.3915042877197266e-05,
+        "max": 0.0005545840245796407,
+        "sample_std": 0.0002750266112392766
+      },
+      "mutual_information": {
+        "mean": 2.697871483216791e-09,
+        "min": 3.236236959623504e-13,
+        "max": 8.087328570912657e-09,
+        "sample_std": 4.66740760204498e-09
+      },
+      "steps_run": {
+        "mean": 150.0,
+        "min": 150,
+        "max": 150,
+        "sample_std": 0.0
+      },
+      "joint_sample_invalid_rate": {
+        "mean": 0.0,
+        "min": 0.0,
+        "max": 0.0,
+        "sample_std": 0.0
+      },
+      "marginal_sample_invalid_rate": {
+        "mean": 0.0,
+        "min": 0.0,
+        "max": 0.0,
+        "sample_std": 0.0
+      },
+      "mean_probabilities": {
+        "AA": 0.24990232661023773,
+        "AB": 0.2500571198897948,
+        "BA": 0.24992214514221897,
+        "BB": 0.2501184083577484
+      }
+    },
+    {
+      "task": "equal",
+      "variant": "directional_contextual_rank2_wide",
+      "seeds": [
+        1,
+        2,
+        3
+      ],
+      "target_reached_count": 2,
+      "parameter_count": 549,
+      "gradient_active_parameter_count": 274,
+      "kl_target_to_model": {
+        "mean": 0.23578008010056703,
+        "min": 0.006393416144325592,
+        "max": 0.6931471805599453,
+        "sample_std": 0.39609215191149233
+      },
+      "invalid_mass": {
+        "mean": 0.1713584267395966,
+        "min": 0.006309825376348735,
+        "max": 0.5,
+        "sample_std": 0.28461288177204924
+      },
+      "total_variation": {
+        "mean": 0.17217458071997213,
+        "min": 0.007765454842441114,
+        "max": 0.5,
+        "sample_std": 0.283905575101433
+      },
+      "max_marginal_error": {
+        "mean": 0.002570268724958006,
+        "min": 0.0,
+        "max": 0.005636999341838367,
+        "sample_std": 0.0028511043829663424
+      },
+      "mutual_information": {
+        "mean": 0.4342123044852217,
+        "min": 0.0,
+        "max": 0.6548319100923805,
+        "sample_std": 0.3760552996293497
+      },
+      "steps_run": {
+        "mean": 291.6666666666667,
+        "min": 125,
+        "max": 600,
+        "sample_std": 267.3169155390907
+      },
+      "joint_sample_invalid_rate": {
+        "mean": 0.17036666666666667,
+        "min": 0.0064,
+        "max": 0.49755,
+        "sample_std": 0.28334932650940486
+      },
+      "marginal_sample_invalid_rate": {
+        "mean": 0.49876666666666675,
+        "min": 0.49105,
+        "max": 0.5034000000000001,
+        "sample_std": 0.006727617210672276
+      },
+      "mean_probabilities": {
+        "AA": 0.41291370432663915,
+        "AB": 0.08589856483709328,
+        "BA": 0.08545986190250333,
+        "BB": 0.41572786893376423
+      }
+    },
+    {
+      "task": "equal",
+      "variant": "directional_contextual_rank2_warmup",
+      "seeds": [
+        1,
+        2,
+        3
+      ],
+      "target_reached_count": 3,
+      "parameter_count": 549,
+      "gradient_active_parameter_count": 274,
+      "kl_target_to_model": {
+        "mean": 0.00028827598011151495,
+        "min": 0.00023947669940482808,
+        "max": 0.0003351092740901396,
+        "sample_std": 4.784658987949515e-05
+      },
+      "invalid_mass": {
+        "mean": 0.00026894975252461536,
+        "min": 0.00023906653347334028,
+        "max": 0.0002845320617953287,
+        "sample_std": 2.5887556505263463e-05
+      },
+      "total_variation": {
+        "mean": 0.0025372775021063974,
+        "min": 0.0005562267521158394,
+        "max": 0.005230164124957698,
+        "sample_std": 0.0024169102949283252
+      },
+      "max_marginal_error": {
+        "mean": 0.0024212203199804883,
+        "min": 0.00045890876940485326,
+        "max": 0.005105228591935795,
+        "sample_std": 0.00240576528189028
+      },
+      "mutual_information": {
+        "mean": 0.6906514770957766,
+        "min": 0.6905002424408078,
+        "max": 0.6909183916202404,
+        "sample_std": 0.00023183735294345746
+      },
+      "steps_run": {
+        "mean": 150.0,
+        "min": 150,
+        "max": 150,
+        "sample_std": 0.0
+      },
+      "joint_sample_invalid_rate": {
+        "mean": 0.00025,
+        "min": 0.00019999999999999998,
+        "max": 0.00030000000000000003,
+        "sample_std": 5.000000000000002e-05
+      },
+      "marginal_sample_invalid_rate": {
+        "mean": 0.49890000000000007,
+        "min": 0.49065000000000003,
+        "max": 0.5039,
+        "sample_std": 0.007198090024443968
+      },
+      "mean_probabilities": {
+        "AA": 0.4974627224978936,
+        "AB": 0.00015289257039867218,
+        "BA": 0.0001160571821259432,
+        "BB": 0.5022683277495817
+      }
+    }
+  ],
+  "oracles": [
+    {
+      "task": "opposite",
+      "variant": "oracle_positive_floor",
+      "target": {
+        "AA": 0.0,
+        "AB": 0.5,
+        "BA": 0.5,
+        "BB": 0.0
+      },
+      "factor_epsilon": 1e-12,
+      "probabilities": {
+        "AA": 1.4999999999929981e-12,
+        "AB": 0.4999999999985,
+        "BA": 0.4999999999985,
+        "BB": 1.4999999999929981e-12
+      },
+      "normalization_error": 0.0,
+      "kl_target_to_model": 3.000044657142098e-12,
+      "total_variation": 3.000022328564047e-12,
+      "invalid_mass": 2.9999999999859962e-12,
+      "marginals": [
+        [
+          0.5,
+          0.5
+        ],
+        [
+          0.5,
+          0.5
+        ]
+      ],
+      "max_marginal_error": 0.0,
+      "independent_marginal_probabilities": {
+        "AA": 0.25,
+        "AB": 0.25,
+        "BA": 0.25,
+        "BB": 0.25
+      },
+      "independent_marginal_invalid_mass": 0.5,
+      "mutual_information": 0.693147180477348,
+      "max_dense_low_rank_probability_error": 0.0,
+      "max_enumerated_inference_marginal_error": 0.0,
+      "joint_sample_frequencies": {
+        "AA": 0.0,
+        "AB": 0.5075,
+        "BA": 0.4925,
+        "BB": 0.0
+      },
+      "joint_sample_invalid_rate": 0.0,
+      "marginal_sample_frequencies": {
+        "AA": 0.24655,
+        "AB": 0.2503,
+        "BA": 0.2519,
+        "BB": 0.25125
+      },
+      "marginal_sample_invalid_rate": 0.49779999999999996,
+      "samples_per_sampler": 20000
+    },
+    {
+      "task": "independent",
+      "variant": "oracle_positive_floor",
+      "target": {
+        "AA": 0.25,
+        "AB": 0.25,
+        "BA": 0.25,
+        "BB": 0.25
+      },
+      "factor_epsilon": 1e-12,
+      "probabilities": {
+        "AA": 0.25,
+        "AB": 0.25,
+        "BA": 0.25,
+        "BB": 0.25
+      },
+      "normalization_error": 0.0,
+      "kl_target_to_model": 0.0,
+      "total_variation": 0.0,
+      "invalid_mass": 0.0,
+      "marginals": [
+        [
+          0.5,
+          0.5
+        ],
+        [
+          0.5,
+          0.5
+        ]
+      ],
+      "max_marginal_error": 0.0,
+      "independent_marginal_probabilities": {
+        "AA": 0.25,
+        "AB": 0.25,
+        "BA": 0.25,
+        "BB": 0.25
+      },
+      "independent_marginal_invalid_mass": 0.0,
+      "mutual_information": 0.0,
+      "max_dense_low_rank_probability_error": 0.0,
+      "max_enumerated_inference_marginal_error": 0.0,
+      "joint_sample_frequencies": {
+        "AA": 0.25155,
+        "AB": 0.25595,
+        "BA": 0.24745,
+        "BB": 0.24505
+      },
+      "joint_sample_invalid_rate": 0.0,
+      "marginal_sample_frequencies": {
+        "AA": 0.24655,
+        "AB": 0.2503,
+        "BA": 0.2519,
+        "BB": 0.25125
+      },
+      "marginal_sample_invalid_rate": 0.0,
+      "samples_per_sampler": 20000
+    },
+    {
+      "task": "equal",
+      "variant": "oracle_positive_floor",
+      "target": {
+        "AA": 0.5,
+        "AB": 0.0,
+        "BA": 0.0,
+        "BB": 0.5
+      },
+      "factor_epsilon": 1e-12,
+      "probabilities": {
+        "AA": 0.4999999999985,
+        "AB": 1.4999999999929981e-12,
+        "BA": 1.4999999999929981e-12,
+        "BB": 0.4999999999985
+      },
+      "normalization_error": 0.0,
+      "kl_target_to_model": 3.000044657142098e-12,
+      "total_variation": 3.000022328564047e-12,
+      "invalid_mass": 2.9999999999859962e-12,
+      "marginals": [
+        [
+          0.5,
+          0.5
+        ],
+        [
+          0.5,
+          0.5
+        ]
+      ],
+      "max_marginal_error": 0.0,
+      "independent_marginal_probabilities": {
+        "AA": 0.25,
+        "AB": 0.25,
+        "BA": 0.25,
+        "BB": 0.25
+      },
+      "independent_marginal_invalid_mass": 0.5,
+      "mutual_information": 0.693147180477348,
+      "max_dense_low_rank_probability_error": 0.0,
+      "max_enumerated_inference_marginal_error": 0.0,
+      "joint_sample_frequencies": {
+        "AA": 0.5075,
+        "AB": 0.0,
+        "BA": 0.0,
+        "BB": 0.4925
+      },
+      "joint_sample_invalid_rate": 0.0,
+      "marginal_sample_frequencies": {
+        "AA": 0.24655,
+        "AB": 0.2503,
+        "BA": 0.2519,
+        "BB": 0.25125
+      },
+      "marginal_sample_invalid_rate": 0.5022,
+      "samples_per_sampler": 20000
+    }
+  ],
+  "max_backend_probability_error": 2.384185791015625e-07,
+  "max_raw_normalization_error": 2.8172507882118225e-07,
+  "shared_head_bound": {
+    "premises": "two tokens, uniform unaries, full vocabulary, one edge",
+    "formula": "F_AA+F_BB-F_AB-F_BA=sum_r (u_A-u_B)(v_A-v_B)>=0",
+    "reason": "shared token factors and positive contextual scale preserve order",
+    "opposite_invalid_mass_lower_bound": 0.5,
+    "opposite_kl_lower_bound": 0.6931471805599453
+  }
+}

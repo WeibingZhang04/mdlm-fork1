@@ -1,0 +1,329 @@
+{
+  "adapter_verification": {
+    "adapter_production_attested": false,
+    "adapter_schema": 4,
+    "backbone_authenticated": true,
+    "strict_load": true
+  },
+  "all_parameters_frozen": true,
+  "artifact": "staged_frozen_checkpoint_dependence",
+  "commitments": {
+    "adapter_manifest_sha256": "d527f40926eda894e1ee5c9c1a91317353941463acbdfe059a279884fdbd2da9",
+    "adapter_sha256": "c40d9bf0854059a85da88d4f0062ac280e4d7f621338845ae43357a7dfa69c4a",
+    "checkpoint_sha256": "94046f5e3952580f5b69697a78f72398160b19c268eeefa15cf558d8cf688a01",
+    "diagnostic_module_sha256": "41289287f1b418cbac65fe5d8b43d20271048904523c3c3c7a1844cf1ee0f9a4",
+    "expectations_sha256": "a978c17befc2788b0b773eee7cd608ac0200379947a63a0ba8699a0b9818c956",
+    "git_sha": "ae731e49b3a0f1e483a490241a03a8adf4a2e966",
+    "input_sha256": "c9ff3569e04b2c5234553548b9e5bd35f55625df9c9039333e2594012a02aaf6",
+    "script_sha256": "deb8137bcff4af6feec66b75f7cd1307083b99e4d0937d02843640896194970f",
+    "structured_identity_sha256": "8840553c9e4612b03962ce42666b6adf5d1097cb41dc9caa2aa7295f887d203a"
+  },
+  "created_utc": "2026-09-08T00:25:01.788732+00:00",
+  "device": "cuda",
+  "elapsed_seconds": 52.325009905000115,
+  "forest_inference_dtype": "float64",
+  "head_semantics": {
+    "candidate_top_k": 128,
+    "control_identity": "dynamic_dynamic",
+    "factor_mode": "dynamic",
+    "head_semantics": {
+      "component_size_cap": 32,
+      "contextual_neighbors": 4,
+      "fixed_edge_path": null,
+      "fixed_edges": null,
+      "local_window": 2,
+      "min_edge_score": null,
+      "num_anchor_slots": 16,
+      "rank": 16,
+      "time_embed_dim": 64,
+      "topology_dim": 128
+    },
+    "independent_mode": false,
+    "topology_mode": "dynamic",
+    "topology_weight": 0.1,
+    "training_semantics": {
+      "factorized_aux_weight": 0.0,
+      "objective_name": "conditional_denoising_nll_not_diffusion_elbo",
+      "topology_anchor_weight": 0.25,
+      "topology_edge_weight": 1.0,
+      "topology_minimum_choices": 2,
+      "topology_on_validation": false,
+      "topology_slot_weight": 0.25,
+      "topology_strategy": "gold_reveal_influence",
+      "topology_temperature": 0.25
+    }
+  },
+  "lambda_grid": [
+    0.0,
+    0.25,
+    0.5,
+    0.75,
+    1.0
+  ],
+  "length": 128,
+  "mask_policy": "nested Bernoulli uniforms per example id; same masks for all lambda values",
+  "mask_rates": [
+    0.25,
+    0.5,
+    0.75,
+    0.9
+  ],
+  "mask_seed": 20260907,
+  "max_per_split": 32,
+  "records_sha256": "74dda8a6da6d96e9adf9454b2750457d9f3c848ef0bfde6cf71de7125fb2c1dc",
+  "run_id": "141b993338736bc205e1889a3ff87b39ca50455926182e925681663d753471fa",
+  "schema_version": 1,
+  "scope": "exploratory frozen-checkpoint diagnostic; no training, no significance claim",
+  "selected_ids": {
+    "dev": [
+      "owt-debug-7913884",
+      "owt-debug-7913887",
+      "owt-debug-7913891",
+      "owt-debug-7913896",
+      "owt-debug-7913897",
+      "owt-debug-7913904",
+      "owt-debug-7913907",
+      "owt-debug-7913908",
+      "owt-debug-7913912",
+      "owt-debug-7913913",
+      "owt-debug-7913916",
+      "owt-debug-7913919",
+      "owt-debug-7913920",
+      "owt-debug-7913924",
+      "owt-debug-7913930",
+      "owt-debug-7913936",
+      "owt-debug-7913937",
+      "owt-debug-7913941",
+      "owt-debug-7913944",
+      "owt-debug-7913946",
+      "owt-debug-7913949",
+      "owt-debug-7913950",
+      "owt-debug-7913951",
+      "owt-debug-7913952",
+      "owt-debug-7913953",
+      "owt-debug-7913954",
+      "owt-debug-7913958",
+      "owt-debug-7913960",
+      "owt-debug-7913964",
+      "owt-debug-7913965",
+      "owt-debug-7913966",
+      "owt-debug-7913969"
+    ],
+    "test": [
+      "owt-debug-7913970",
+      "owt-debug-7913971",
+      "owt-debug-7913972",
+      "owt-debug-7913975",
+      "owt-debug-7913977",
+      "owt-debug-7913983",
+      "owt-debug-7913985",
+      "owt-debug-7913988",
+      "owt-debug-7913991",
+      "owt-debug-7913997",
+      "owt-debug-7913998",
+      "owt-debug-7914006",
+      "owt-debug-7914014",
+      "owt-debug-7914015",
+      "owt-debug-7914021",
+      "owt-debug-7914025",
+      "owt-debug-7914027",
+      "owt-debug-7914034",
+      "owt-debug-7914038",
+      "owt-debug-7914039",
+      "owt-debug-7914044",
+      "owt-debug-7914047",
+      "owt-debug-7914062",
+      "owt-debug-7914064",
+      "owt-debug-7914067",
+      "owt-debug-7914069",
+      "owt-debug-7914070",
+      "owt-debug-7914072",
+      "owt-debug-7914073",
+      "owt-debug-7914077",
+      "owt-debug-7914079",
+      "owt-debug-7914081"
+    ]
+  },
+  "selected_lambda": 1.0,
+  "selection_objective": "total dev NLL / total active dev tokens; lowest lambda breaks ties",
+  "selection_split": "dev",
+  "splits": {
+    "dev": {
+      "active_tokens": 9828,
+      "backbone_nll": 5.024012302061771,
+      "by_mask_rate": {
+        "0.25": {
+          "active_tokens": 997,
+          "backbone_nll": 1.8219193484383815,
+          "dependence_gain_nats_per_token": 0.0019597146662101183,
+          "examples": 32,
+          "joint_nll": 1.8371517233629275,
+          "lambda_nll": {
+            "0.0": 1.8391114380291373,
+            "0.25": 1.8384558668185969,
+            "0.5": 1.8379345779024643,
+            "0.75": 1.8375071952640705,
+            "1.0": 1.8371517233629275
+          },
+          "marginal_nll": 1.8391114380291373,
+          "observations": 32,
+          "singleton_gain_nats_per_token": -0.017192089590755962
+        },
+        "0.5": {
+          "active_tokens": 2061,
+          "backbone_nll": 3.1896087816766836,
+          "dependence_gain_nats_per_token": 0.005856177178663341,
+          "examples": 32,
+          "joint_nll": 3.211581265931803,
+          "lambda_nll": {
+            "0.0": 3.217437443110465,
+            "0.25": 3.2156320593774117,
+            "0.5": 3.21408080025354,
+            "0.75": 3.2127402192536727,
+            "1.0": 3.211581265931803
+          },
+          "marginal_nll": 3.217437443110465,
+          "observations": 32,
+          "singleton_gain_nats_per_token": -0.027828661433782296
+        },
+        "0.75": {
+          "active_tokens": 3080,
+          "backbone_nll": 5.163541144829292,
+          "dependence_gain_nats_per_token": 0.003955225661136155,
+          "examples": 32,
+          "joint_nll": 5.178121526751522,
+          "lambda_nll": {
+            "0.0": 5.18207675241266,
+            "0.25": 5.180731700740715,
+            "0.5": 5.179623276290363,
+            "0.75": 5.178750638468753,
+            "1.0": 5.178121526751522
+          },
+          "marginal_nll": 5.18207675241266,
+          "observations": 32,
+          "singleton_gain_nats_per_token": -0.01853560758336703
+        },
+        "0.9": {
+          "active_tokens": 3690,
+          "backbone_nll": 6.797303221994622,
+          "dependence_gain_nats_per_token": 0.0065604058704271054,
+          "examples": 32,
+          "joint_nll": 6.79578200885243,
+          "lambda_nll": {
+            "0.0": 6.802342414722857,
+            "0.25": 6.800267454477253,
+            "0.5": 6.798470238250268,
+            "0.75": 6.796963700866349,
+            "1.0": 6.79578200885243
+          },
+          "marginal_nll": 6.802342414722857,
+          "observations": 32,
+          "singleton_gain_nats_per_token": -0.005039192728235675
+        }
+      },
+      "dependence_gain_nats_per_token": 0.005129569534555557,
+      "examples": 32,
+      "joint_nll": 5.034163529948966,
+      "lambda_nll": {
+        "0.0": 5.0392930994835226,
+        "0.25": 5.037647407295223,
+        "0.5": 5.036247066911794,
+        "0.75": 5.035083464411955,
+        "1.0": 5.034163529948966
+      },
+      "marginal_nll": 5.0392930994835226,
+      "observations": 128,
+      "selected_lambda_nll": 5.034163529948966,
+      "singleton_gain_nats_per_token": -0.015280797421751025
+    },
+    "test": {
+      "active_tokens": 9861,
+      "backbone_nll": 4.9611939468051105,
+      "by_mask_rate": {
+        "0.25": {
+          "active_tokens": 1030,
+          "backbone_nll": 1.9199876859350111,
+          "dependence_gain_nats_per_token": 0.002246801961603295,
+          "examples": 32,
+          "joint_nll": 1.9348332939843198,
+          "lambda_nll": {
+            "0.0": 1.9370800959459233,
+            "0.25": 1.9363877861271601,
+            "0.5": 1.935794876664871,
+            "0.75": 1.9352813042113792,
+            "1.0": 1.9348332939843198
+          },
+          "marginal_nll": 1.9370800959459233,
+          "observations": 32,
+          "singleton_gain_nats_per_token": -0.017092410010912263
+        },
+        "0.5": {
+          "active_tokens": 2079,
+          "backbone_nll": 3.133196270655072,
+          "dependence_gain_nats_per_token": 0.0042951998489062755,
+          "examples": 32,
+          "joint_nll": 3.1541740190390124,
+          "lambda_nll": {
+            "0.0": 3.1584692188879187,
+            "0.25": 3.15715737144877,
+            "0.5": 3.1560155926545295,
+            "0.75": 3.1550254889616394,
+            "1.0": 3.1541740190390124
+          },
+          "marginal_nll": 3.1584692188879187,
+          "observations": 32,
+          "singleton_gain_nats_per_token": -0.025272948232847054
+        },
+        "0.75": {
+          "active_tokens": 3064,
+          "backbone_nll": 5.022001012498342,
+          "dependence_gain_nats_per_token": 0.004743113747523362,
+          "examples": 32,
+          "joint_nll": 5.037166232059606,
+          "lambda_nll": {
+            "0.0": 5.041909345807129,
+            "0.25": 5.040437326929582,
+            "0.5": 5.039156235363442,
+            "0.75": 5.038064165466802,
+            "1.0": 5.037166232059606
+          },
+          "marginal_nll": 5.041909345807129,
+          "observations": 32,
+          "singleton_gain_nats_per_token": -0.019908333308786094
+        },
+        "0.9": {
+          "active_tokens": 3688,
+          "backbone_nll": 6.790515196297536,
+          "dependence_gain_nats_per_token": 0.008302905949673714,
+          "examples": 32,
+          "joint_nll": 6.792985894751745,
+          "lambda_nll": {
+            "0.0": 6.8012888007014185,
+            "0.25": 6.798927336557656,
+            "0.5": 6.796760987455319,
+            "0.75": 6.794782243526275,
+            "1.0": 6.792985894751745
+          },
+          "marginal_nll": 6.8012888007014185,
+          "observations": 32,
+          "singleton_gain_nats_per_token": -0.01077360440388359
+        }
+      },
+      "dependence_gain_nats_per_token": 0.005719292584031617,
+      "examples": 32,
+      "joint_nll": 4.972803508088535,
+      "lambda_nll": {
+        "0.0": 4.9785228006725655,
+        "0.25": 4.976833341637749,
+        "0.5": 4.975322418312786,
+        "0.75": 4.973980656323308,
+        "1.0": 4.972803508088535
+      },
+      "marginal_nll": 4.9785228006725655,
+      "observations": 128,
+      "selected_lambda_nll": 4.972803508088535,
+      "singleton_gain_nats_per_token": -0.017328853867454818
+    }
+  },
+  "torch_version": "2.5.1+cu121"
+}

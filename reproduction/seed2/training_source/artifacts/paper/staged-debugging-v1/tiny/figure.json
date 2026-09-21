@@ -1,0 +1,72 @@
+{
+  "source": "artifacts/paper/staged-debugging-v1/tiny/results.json",
+  "seed": 1,
+  "task": "opposite",
+  "shared_variant": "shared_contextual_wide",
+  "directional_variant": "directional_contextual_wide",
+  "shared_config": {
+    "name": "shared_contextual_wide",
+    "kind": "shared",
+    "factor_mode": "dynamic",
+    "init_std": 0.25,
+    "warmup_steps": 0
+  },
+  "directional_config": {
+    "name": "directional_contextual_wide",
+    "kind": "directional",
+    "factor_mode": "dynamic",
+    "init_std": 0.25,
+    "warmup_steps": 0
+  },
+  "shared_gradient_active_parameter_count": 274,
+  "directional_gradient_active_parameter_count": 394,
+  "panel_order": [
+    "Target",
+    "Shared factors",
+    "Separate factors",
+    "Independent draws\nfrom the same marginals"
+  ],
+  "panels": [
+    [
+      [
+        0.0,
+        0.5
+      ],
+      [
+        0.5,
+        0.0
+      ]
+    ],
+    [
+      [
+        0.24993620811752226,
+        0.2500018328431546
+      ],
+      [
+        0.2499981373545177,
+        0.25006382168480545
+      ]
+    ],
+    [
+      [
+        0.004163106936838348,
+        0.49208384904665825
+      ],
+      [
+        0.4983779463497011,
+        0.0053750976668023144
+      ]
+    ],
+    [
+      [
+        0.24938446795018535,
+        0.24686248803331126
+      ],
+      [
+        0.2531565853363541,
+        0.25059645868014935
+      ]
+    ]
+  ],
+  "caption_details": "AA and BB are invalid. Both learned models use Gaussian factor initialization std=0.25, uniform frozen unaries, full vocabulary, one fixed edge, and exact likelihood training. The final panel is the exact distribution of independent draws from the directional model marginals. The seed was fixed to 1 before plotting; no examples selected."
+}

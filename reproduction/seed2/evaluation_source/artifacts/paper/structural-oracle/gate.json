@@ -1,0 +1,30 @@
+{
+  "checks": {
+    "all_seeds_same_direction": true,
+    "contextual_edge_f1": true,
+    "contextual_tv_relative_reduction": true,
+    "joint_invalid_absolute": true,
+    "joint_invalid_relative_reduction": true,
+    "paired_95pct_ci_excludes_zero": true
+  },
+  "gate_name": "g1_table_fit_structural_sanity",
+  "metrics": {
+    "best_static_tv": 0.9010568374446203,
+    "contextual_edge_f1": 1.0,
+    "contextual_invalid_rate": 0.0021935161561788138,
+    "contextual_tv": 0.02002247849099877,
+    "contextual_tv_relative_reduction": 0.9777788951163368,
+    "invalid_relative_reduction": 0.9977715874499785,
+    "paired_tv_improvement_95pct_ci": [
+      0.8697674221120341,
+      0.8892131742545498
+    ],
+    "paired_tv_improvements_by_seed": [
+      0.8892131742545499,
+      0.8841224804942807,
+      0.869767422112034
+    ]
+  },
+  "passed": true,
+  "scientific_scope": "finite-data additively smoothed empirical forest projection; not neural-head training evidence"
+}

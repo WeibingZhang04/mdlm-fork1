@@ -1,0 +1,94 @@
+schema_version: 2
+artifact: experiment_promotion_policy
+policy_id: contextual-forest-expansion-v1-pilot-routing-v2
+policy_status: frozen_before_pilot_results
+frozen_utc: '2026-08-30T14:23:09Z'
+
+# Bind the decision rule to the already-compiled pilot. A change to the
+# scientific protocol, compiled plan, or aggregate contract invalidates this
+# policy instead of silently changing the promotion decision.
+protocol_id: contextual-forest-expansion-v1
+source_manifest_sha256: aa9f7269a202f88985793f4f48e58d7289bc80da5c370a1f209e469b7fb02b93
+source_suite: pilot
+
+analysis_contract:
+  analysis_schema_version: 2
+  analysis_artifact: hierarchical_conditional_denoising_analysis
+  objective: conditional_denoising_nll_per_masked_token
+  comparison: contextual_vs_static
+  baseline_arm: static_static
+  treatment_arm: dynamic_dynamic
+  source_plan_id: 6c926739f0c7a68e842f65c8e0a7696b6fc0a8b5fc9d6f74a377cb816fc56ff7
+  # The completed pilot uses a legacy v1 plan ID that did not hash repository
+  # metadata. Preserve it only through this exact file and clean-checkout pin.
+  source_compiled_plan_sha256: 67a11c102084f5987043e0cb1ddfcf03e3a0f53ffe5ed77f9b8468ae82b5ce22
+  source_repository_sha: eaffd28a6667307d64f78fdd05c3ea7574f218d0
+  source_repository_clean: true
+  candidate_k: 64
+  train_seeds: [1]
+  corruption_seeds: [201, 202]
+  datasets:
+    wikitext103-pinned:
+      revision: b08601e04326c79dfdd32d625aee71d232d685c3
+    openwebtext-heldout-pinned:
+      revision: 79d93d786212f7344586290adb811d4ae6a1762c
+    scientific-papers-arxiv-pinned:
+      revision: 0c23eb103b9f78874e0ac93d01bbd935fb8f59b1
+    scientific-papers-pubmed-pinned:
+      revision: 0c23eb103b9f78874e0ac93d01bbd935fb8f59b1
+  mask_rates: [0.25, 0.75, 0.90]
+  expected_num_strata: 12
+  bootstrap:
+    method: hierarchical_paired_percentile_bootstrap
+    num_resamples: 20000
+    # The aggregate adds candidate K to the protocol bootstrap seed (1701).
+    rng_seed: 1765
+    confidence_level: 0.95
+
+# Improvement is baseline NLL minus treatment NLL, in nats per masked token.
+# Confirmation is intentionally independent of candidate-support sufficiency:
+# a quality-positive but support-limited pilot launches both confirmation and
+# the diagnostic K=128 pilot.
+confirmation_gates:
+  pooled:
+    min_mean_improvement: 0.01
+    ci_lower_strictly_above: 0.0
+  corpus_breadth:
+    min_positive_dataset_means: 3
+  high_mask_robustness:
+    mask_rates: [0.75, 0.90]
+    min_pooled_mean_improvement: 0.01
+    min_positive_dataset_means: 3
+    min_worst_dataset_mean_improvement: -0.01
+
+# Recall@64 >= 99% is the predeclared target in PAPER_EXPERIMENT_PLAN.md; the
+# 98% high-mask floor permits at most a two-point worst-corpus drop. The 95%
+# overall and 90% high-mask retained-mass floors bound average and worst-corpus
+# unary truncation at 5% and 10%. If any one threshold is missed, K=64 is
+# declared support-limited and K=128 is the prescribed diagnostic route; this
+# is not treated as a failed experiment.
+k64_support_sufficiency:
+  arm: dynamic_dynamic
+  aggregation: equal_weight_analysis_strata
+  min_overall_candidate_recall: 0.99
+  min_high_mask_dataset_candidate_recall: 0.98
+  min_overall_retained_unary_mass: 0.95
+  min_high_mask_dataset_retained_unary_mass: 0.90
+
+routing:
+  allow_parallel_routes: true
+  confirmation:
+    target_suite: confirmation
+    requires:
+      - integrity_complete
+      - pooled_mean
+      - pooled_ci
+      - corpus_breadth
+      - high_mask_pooled
+      - high_mask_breadth
+      - high_mask_no_material_regression
+  k128:
+    target_suite: candidate_k_128_pilot
+    requires:
+      - integrity_complete
+      - k64_support_limited

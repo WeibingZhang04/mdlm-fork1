@@ -1,0 +1,101 @@
+{
+  "examples": 3,
+  "active_tokens": 192,
+  "top_k": 64,
+  "hidden_max_absolute_difference": 47.875,
+  "hidden_mean_absolute_difference": 0.18191666901111603,
+  "finite_logits_max_absolute_difference": 0.5,
+  "finite_logits_mean_absolute_difference": 0.021311839884638556,
+  "finite_support_matches_exactly": true,
+  "negative_infinity_masks_match_exactly": true,
+  "serial_nan_count": 0,
+  "batched_nan_count": 0,
+  "active_target_logprob_max_absolute_difference_nats": 0.12458038330078125,
+  "active_target_logprob_mean_absolute_difference_nats": 0.0182353463023901,
+  "active_argmax_disagreement_fraction": 0.0,
+  "active_top_k_set_disagreement_fraction": 0.6458333134651184,
+  "active_top_k_mean_overlap_fraction": 0.9874674677848816,
+  "per_example": [
+    {
+      "example_index": 0,
+      "hidden_max_absolute_difference": 21.4072265625,
+      "active_target_logprob_max_absolute_difference_nats": 0.12458038330078125,
+      "active_target_logprob_mean_absolute_difference_nats": 0.017458200454711914,
+      "active_argmax_disagreement_fraction": 0.0,
+      "active_top_k_set_disagreement_fraction": 0.6875,
+      "active_top_k_mean_overlap_fraction": 0.98681640625
+    },
+    {
+      "example_index": 1,
+      "hidden_max_absolute_difference": 6.48272705078125,
+      "active_target_logprob_max_absolute_difference_nats": 0.08100700378417969,
+      "active_target_logprob_mean_absolute_difference_nats": 0.020141929388046265,
+      "active_argmax_disagreement_fraction": 0.0,
+      "active_top_k_set_disagreement_fraction": 0.65625,
+      "active_top_k_mean_overlap_fraction": 0.987060546875
+    },
+    {
+      "example_index": 2,
+      "hidden_max_absolute_difference": 47.875,
+      "active_target_logprob_max_absolute_difference_nats": 0.10051536560058594,
+      "active_target_logprob_mean_absolute_difference_nats": 0.017105907201766968,
+      "active_argmax_disagreement_fraction": 0.0,
+      "active_top_k_set_disagreement_fraction": 0.59375,
+      "active_top_k_mean_overlap_fraction": 0.988525390625
+    }
+  ],
+  "mask_rate": 0.5,
+  "diffusion_time": 0.5005005005005005,
+  "sigma": 0.6931471824645996,
+  "loglinear_eps": 0.001,
+  "returned_hidden_dtype": "torch.float32",
+  "returned_logits_dtype": "torch.float32",
+  "production_cuda_autocast_dtype": "bfloat16",
+  "parameter_dtype": "torch.float32",
+  "comparison_only_no_posthoc_pass_threshold": true,
+  "clean_token_sha256": "073cff4eae209e4e6a417f77d295f5ccb706f74dbc18fe2f6d86699389ac84b6",
+  "mask_sha256": "7356e183aa6a45689d5e122dfa4c1b8486bfaacc64a338da668994e02619e242",
+  "corrupted_token_sha256": "ecd2243e93d91424c41122a7d77acd109f7523bc2dcb8be349c373b94c251f5c",
+  "protocol": "released_backbone_serial_batch_numerical_audit_v1",
+  "created_utc": "2026-09-08T00:02:26.022739+00:00",
+  "source": {
+    "file_sha256": "968dfc8893bb147767ef64b36c74ea6479b0e29ed58957cc07bc78961c3bddb7",
+    "selected_token_sha256": "073cff4eae209e4e6a417f77d295f5ccb706f74dbc18fe2f6d86699389ac84b6",
+    "examples": 3,
+    "length": 128,
+    "records_scanned": 3,
+    "short_records_skipped": 0,
+    "duplicate_records_skipped": 0
+  },
+  "backbone_provenance": {
+    "attestation_type": "authenticated_released_backbone_wrapper_v1",
+    "production_expectations_file_sha256": "a978c17befc2788b0b773eee7cd608ac0200379947a63a0ba8699a0b9818c956",
+    "production_expectations_identity_sha256": "6282b0d1fc4ad5cadae11c315c511d9fe6e8367ff58d1ba4e0facd7c5d8c8f6e",
+    "backbone_wrapper_sha256": "94046f5e3952580f5b69697a78f72398160b19c268eeefa15cf558d8cf688a01",
+    "backbone_wrapper_size_bytes": 678553556,
+    "backbone_wrapper_metadata_sha256": "5a71bdf6388cb0a56ae587468617469c02092293633dce5316e69d1779b2f2ea",
+    "backbone_tensor_count": 131,
+    "backbone_parameter_count": 169627250,
+    "backbone_tensor_bytes": 678509000,
+    "backbone_tensor_schema_sha256": "d5aeee0343134374ce4c596e7831c7b31938e7b5b25d669b090e9b5da5ab2150",
+    "backbone_tensor_content_sha256": "1bbf3736b36125b2f47e9e970101bb84a803d7059d4e93509a8f093ecb192901",
+    "released_backbone_identity_sha256": "b63bc497859f9f8401eee5b9606b19565f5ddb165fe25e865e4c9b4078539091",
+    "released_backbone": {
+      "repository": "kuleshov-group/mdlm-owt",
+      "revision": "d0958fa851335ece6c15260ce0025f030673c0fb",
+      "source_sha256": "47149e73f7552f39ea9776dbe74d925d25237bcf2ed2e2ec03cdff9d51c82aa4",
+      "source_size_bytes": 678522728,
+      "tensor_count": 131
+    }
+  },
+  "torch_version": "2.5.1+cu121",
+  "device": "cuda",
+  "gpu_name": "NVIDIA L4",
+  "git_head": "bdb505b478419249a5f40a25877f761e41b0ae22",
+  "source_sha256": {
+    "scripts/audit_staged_backbone_batch.py": "53a7dfae7b75a071e87072effadba8dd5699918d58cefc97442fbcc0d9b0d1fe",
+    "scripts/run_staged_real_overfit.py": "dd976f808089fb8cecf89353080454c248ccfdc84ed390af1a05aeb3975a010a",
+    "models/dit.py": "2ad0ea896f2a59947b0baa72679851f7238b2836d336e39975b44b3cc95d8377",
+    "diffusion.py": "204aa815b73799de7eeacc760ec494adda5d546983fd750884d74ac704f7e825"
+  }
+}

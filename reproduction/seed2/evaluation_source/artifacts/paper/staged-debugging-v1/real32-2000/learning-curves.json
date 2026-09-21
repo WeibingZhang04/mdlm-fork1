@@ -1,0 +1,881 @@
+{
+  "artifact": "staged_overfit_learning_curves",
+  "schema_version": 1,
+  "purpose": "staged memorization diagnostic; not benchmark or generation evidence",
+  "protocol": "verified_fixed_corruption_replay_and_extension_v1",
+  "run_dir": "/Users/yuntiandeng/Documents/ChatGPT/diffusion lm/mdlm_crf_recovery/artifacts/paper/staged-debugging-v1/real32-2000",
+  "source_sha256": {
+    "/Users/yuntiandeng/Documents/ChatGPT/diffusion lm/mdlm_crf_recovery/artifacts/paper/staged-debugging-v1/real32-2000/protocol.json": "018ab72849ec865d20ed0d3962d4c5a8f766eaf74bd1e9be84a425ba2d6d3dfa",
+    "/Users/yuntiandeng/Documents/ChatGPT/diffusion lm/mdlm_crf_recovery/artifacts/paper/staged-debugging-v1/real32-2000/results.json": "8d5c4a8a090e21d46c04da6dee16eedd5a6c9cbaebbb488fef80f5fbcedf4028",
+    "/Users/yuntiandeng/Documents/ChatGPT/diffusion lm/mdlm_crf_recovery/artifacts/paper/staged-debugging-v1/real32-2000/shared-curve.jsonl": "7d4a5032ea887ed1c24f0cad998a24fe2c25cc586b93d312ac45588a11bd16b1",
+    "/Users/yuntiandeng/Documents/ChatGPT/diffusion lm/mdlm_crf_recovery/artifacts/paper/staged-debugging-v1/real32-2000/directional-curve.jsonl": "01d7711c1f0a4af3981719be3141795fbed4baee42a6032a37b81aa3374b16fa",
+    "/Users/yuntiandeng/Documents/ChatGPT/diffusion lm/mdlm_crf_recovery/artifacts/paper/staged-debugging-v1/real32-2000/unary-curve.jsonl": "8c7c9d1c706c533b5ad786cf29151feada85720ad0548c1f526c5c2cc1603ef4",
+    "/Users/yuntiandeng/Documents/ChatGPT/diffusion lm/mdlm_crf_recovery/artifacts/paper/staged-debugging-v1/real32-2000/support-floor-train.json": "a8ab663b63d30b2ef53ca9f66617270fcb6e66b5dc35330a44dfed8933960cdc",
+    "/Users/yuntiandeng/Documents/ChatGPT/diffusion lm/mdlm_crf_recovery/artifacts/paper/staged-debugging-v1/real32-2000/support-floor-dev.json": "f0fabf6e58aebd6b77bb9c1f4f5161167bafc0c1f688b0130fb13a3bc7211ee4",
+    "/Users/yuntiandeng/Documents/ChatGPT/diffusion lm/mdlm_crf_recovery/scripts/plot_staged_overfit.py": "dcbbace9a21f64925f7977d524bfbe26c1504bff0d33d47f0f7f016180fb6fdc"
+  },
+  "run_marked_completed": true,
+  "train_examples": 32,
+  "dev_examples": 32,
+  "seed": 1,
+  "planned_updates": 2000,
+  "backbone_nll": {
+    "train": 2.9250035732984543,
+    "dev": 2.9366679154336452
+  },
+  "support_floor_display": {
+    "train": {
+      "value": 1.1121920048013094,
+      "drawn_on_axis": true,
+      "axis_limits": [
+        0.9347386062145233,
+        3.163051363825798
+      ]
+    },
+    "dev": {
+      "value": 1.145767085981093,
+      "drawn_on_axis": false,
+      "axis_limits": [
+        2.284284916520119,
+        10.308595482409
+      ]
+    }
+  },
+  "plotted_curves": {
+    "shared": [
+      {
+        "step": 0,
+        "train": {
+          "joint_nll_per_masked_token": 2.926445722579956,
+          "dependence_gain_nats_per_masked_token": 0.00018672391161089763,
+          "backbone_nll_per_masked_token": 2.9250035881996155
+        },
+        "dev": {
+          "joint_nll_per_masked_token": 2.9381929636001587,
+          "dependence_gain_nats_per_masked_token": 0.000118384683446493,
+          "backbone_nll_per_masked_token": 2.9366679191589355
+        }
+      },
+      {
+        "step": 100,
+        "train": {
+          "joint_nll_per_masked_token": 2.862054228782654,
+          "dependence_gain_nats_per_masked_token": 0.0009118305242736824,
+          "backbone_nll_per_masked_token": 2.9250035881996155
+        },
+        "dev": {
+          "joint_nll_per_masked_token": 2.937906861305237,
+          "dependence_gain_nats_per_masked_token": -0.0006047445385775063,
+          "backbone_nll_per_masked_token": 2.9366679191589355
+        }
+      },
+      {
+        "step": 200,
+        "train": {
+          "joint_nll_per_masked_token": 2.528578519821167,
+          "dependence_gain_nats_per_masked_token": 0.018295434827450663,
+          "backbone_nll_per_masked_token": 2.9250035881996155
+        },
+        "dev": {
+          "joint_nll_per_masked_token": 3.0652921199798584,
+          "dependence_gain_nats_per_masked_token": -0.04863881756318733,
+          "backbone_nll_per_masked_token": 2.9366679191589355
+        }
+      },
+      {
+        "step": 300,
+        "train": {
+          "joint_nll_per_masked_token": 2.3612782955169678,
+          "dependence_gain_nats_per_masked_token": 0.025750643806532025,
+          "backbone_nll_per_masked_token": 2.9250035881996155
+        },
+        "dev": {
+          "joint_nll_per_masked_token": 3.189597487449646,
+          "dependence_gain_nats_per_masked_token": -0.11226167296990752,
+          "backbone_nll_per_masked_token": 2.9366679191589355
+        }
+      },
+      {
+        "step": 400,
+        "train": {
+          "joint_nll_per_masked_token": 2.247977614402771,
+          "dependence_gain_nats_per_masked_token": 0.025900829816237092,
+          "backbone_nll_per_masked_token": 2.9250035881996155
+        },
+        "dev": {
+          "joint_nll_per_masked_token": 3.256865978240967,
+          "dependence_gain_nats_per_masked_token": -0.14794918172992766,
+          "backbone_nll_per_masked_token": 2.9366679191589355
+        }
+      },
+      {
+        "step": 500,
+        "train": {
+          "joint_nll_per_masked_token": 2.14565372467041,
+          "dependence_gain_nats_per_masked_token": 0.046708508394658566,
+          "backbone_nll_per_masked_token": 2.9250035881996155
+        },
+        "dev": {
+          "joint_nll_per_masked_token": 3.3915872871875763,
+          "dependence_gain_nats_per_masked_token": -0.22947154007852077,
+          "backbone_nll_per_masked_token": 2.9366679191589355
+        }
+      },
+      {
+        "step": 600,
+        "train": {
+          "joint_nll_per_masked_token": 2.070560321211815,
+          "dependence_gain_nats_per_masked_token": 0.036495238775387406,
+          "backbone_nll_per_masked_token": 2.9250035881996155
+        },
+        "dev": {
+          "joint_nll_per_masked_token": 3.377666026353836,
+          "dependence_gain_nats_per_masked_token": -0.21814690995961428,
+          "backbone_nll_per_masked_token": 2.9366679191589355
+        }
+      },
+      {
+        "step": 700,
+        "train": {
+          "joint_nll_per_masked_token": 2.0055378526449203,
+          "dependence_gain_nats_per_masked_token": 0.05046071019023657,
+          "backbone_nll_per_masked_token": 2.9250035881996155
+        },
+        "dev": {
+          "joint_nll_per_masked_token": 3.4610327780246735,
+          "dependence_gain_nats_per_masked_token": -0.27064051758497953,
+          "backbone_nll_per_masked_token": 2.9366679191589355
+        }
+      },
+      {
+        "step": 800,
+        "train": {
+          "joint_nll_per_masked_token": 1.9555712640285492,
+          "dependence_gain_nats_per_masked_token": 0.05012288875877857,
+          "backbone_nll_per_masked_token": 2.9250035881996155
+        },
+        "dev": {
+          "joint_nll_per_masked_token": 3.483192592859268,
+          "dependence_gain_nats_per_masked_token": -0.2834927523508668,
+          "backbone_nll_per_masked_token": 2.9366679191589355
+        }
+      },
+      {
+        "step": 900,
+        "train": {
+          "joint_nll_per_masked_token": 1.9101797044277191,
+          "dependence_gain_nats_per_masked_token": 0.04209866910241544,
+          "backbone_nll_per_masked_token": 2.9250035881996155
+        },
+        "dev": {
+          "joint_nll_per_masked_token": 3.466070204973221,
+          "dependence_gain_nats_per_masked_token": -0.26786792278289795,
+          "backbone_nll_per_masked_token": 2.9366679191589355
+        }
+      },
+      {
+        "step": 1000,
+        "train": {
+          "joint_nll_per_masked_token": 1.8809218108654022,
+          "dependence_gain_nats_per_masked_token": 0.0760237043723464,
+          "backbone_nll_per_masked_token": 2.9250035881996155
+        },
+        "dev": {
+          "joint_nll_per_masked_token": 3.6233172714710236,
+          "dependence_gain_nats_per_masked_token": -0.3761244975030422,
+          "backbone_nll_per_masked_token": 2.9366679191589355
+        }
+      },
+      {
+        "step": 1100,
+        "train": {
+          "joint_nll_per_masked_token": 1.844917744398117,
+          "dependence_gain_nats_per_masked_token": 0.06500260066241026,
+          "backbone_nll_per_masked_token": 2.9250035881996155
+        },
+        "dev": {
+          "joint_nll_per_masked_token": 3.5960626900196075,
+          "dependence_gain_nats_per_masked_token": -0.3501709196716547,
+          "backbone_nll_per_masked_token": 2.9366679191589355
+        }
+      },
+      {
+        "step": 1200,
+        "train": {
+          "joint_nll_per_masked_token": 1.8055600821971893,
+          "dependence_gain_nats_per_masked_token": 0.05093645816668868,
+          "backbone_nll_per_masked_token": 2.9250035881996155
+        },
+        "dev": {
+          "joint_nll_per_masked_token": 3.554774194955826,
+          "dependence_gain_nats_per_masked_token": -0.31633053719997406,
+          "backbone_nll_per_masked_token": 2.9366679191589355
+        }
+      },
+      {
+        "step": 1300,
+        "train": {
+          "joint_nll_per_masked_token": 1.7782863080501556,
+          "dependence_gain_nats_per_masked_token": 0.048073030542582273,
+          "backbone_nll_per_masked_token": 2.9250035881996155
+        },
+        "dev": {
+          "joint_nll_per_masked_token": 3.5649551451206207,
+          "dependence_gain_nats_per_masked_token": -0.317680801730603,
+          "backbone_nll_per_masked_token": 2.9366679191589355
+        }
+      },
+      {
+        "step": 1400,
+        "train": {
+          "joint_nll_per_masked_token": 1.7546416223049164,
+          "dependence_gain_nats_per_masked_token": 0.05616644583642483,
+          "backbone_nll_per_masked_token": 2.9250035881996155
+        },
+        "dev": {
+          "joint_nll_per_masked_token": 3.6204055845737457,
+          "dependence_gain_nats_per_masked_token": -0.3505834457464516,
+          "backbone_nll_per_masked_token": 2.9366679191589355
+        }
+      },
+      {
+        "step": 1500,
+        "train": {
+          "joint_nll_per_masked_token": 1.7318289130926132,
+          "dependence_gain_nats_per_masked_token": 0.05402581160888076,
+          "backbone_nll_per_masked_token": 2.9250035881996155
+        },
+        "dev": {
+          "joint_nll_per_masked_token": 3.6370836794376373,
+          "dependence_gain_nats_per_masked_token": -0.3557121902704239,
+          "backbone_nll_per_masked_token": 2.9366679191589355
+        }
+      },
+      {
+        "step": 1600,
+        "train": {
+          "joint_nll_per_masked_token": 1.7150100320577621,
+          "dependence_gain_nats_per_masked_token": 0.04108887771144509,
+          "backbone_nll_per_masked_token": 2.9250035881996155
+        },
+        "dev": {
+          "joint_nll_per_masked_token": 3.6100036203861237,
+          "dependence_gain_nats_per_masked_token": -0.3225452748592943,
+          "backbone_nll_per_masked_token": 2.9366679191589355
+        }
+      },
+      {
+        "step": 1700,
+        "train": {
+          "joint_nll_per_masked_token": 1.6985078901052475,
+          "dependence_gain_nats_per_masked_token": 0.037817941163666546,
+          "backbone_nll_per_masked_token": 2.9250035881996155
+        },
+        "dev": {
+          "joint_nll_per_masked_token": 3.60167196393013,
+          "dependence_gain_nats_per_masked_token": -0.3062604460865259,
+          "backbone_nll_per_masked_token": 2.9366679191589355
+        }
+      },
+      {
+        "step": 1800,
+        "train": {
+          "joint_nll_per_masked_token": 1.675254926085472,
+          "dependence_gain_nats_per_masked_token": 0.050677577033638954,
+          "backbone_nll_per_masked_token": 2.9250035881996155
+        },
+        "dev": {
+          "joint_nll_per_masked_token": 3.6873634457588196,
+          "dependence_gain_nats_per_masked_token": -0.36436578910797834,
+          "backbone_nll_per_masked_token": 2.9366679191589355
+        }
+      },
+      {
+        "step": 1900,
+        "train": {
+          "joint_nll_per_masked_token": 1.6604648679494858,
+          "dependence_gain_nats_per_masked_token": 0.049816284561529756,
+          "backbone_nll_per_masked_token": 2.9250035881996155
+        },
+        "dev": {
+          "joint_nll_per_masked_token": 3.7106499075889587,
+          "dependence_gain_nats_per_masked_token": -0.3731822082772851,
+          "backbone_nll_per_masked_token": 2.9366679191589355
+        }
+      },
+      {
+        "step": 2000,
+        "train": {
+          "joint_nll_per_masked_token": 1.6454588025808334,
+          "dependence_gain_nats_per_masked_token": 0.047618504613637924,
+          "backbone_nll_per_masked_token": 2.9250035881996155
+        },
+        "dev": {
+          "joint_nll_per_masked_token": 3.7322590947151184,
+          "dependence_gain_nats_per_masked_token": -0.3778979070484638,
+          "backbone_nll_per_masked_token": 2.9366679191589355
+        }
+      }
+    ],
+    "directional": [
+      {
+        "step": 0,
+        "train": {
+          "joint_nll_per_masked_token": 2.9275386333465576,
+          "dependence_gain_nats_per_masked_token": 0.00011017179349437356,
+          "backbone_nll_per_masked_token": 2.9250035881996155
+        },
+        "dev": {
+          "joint_nll_per_masked_token": 2.939388632774353,
+          "dependence_gain_nats_per_masked_token": -0.0006479757066699676,
+          "backbone_nll_per_masked_token": 2.9366679191589355
+        }
+      },
+      {
+        "step": 100,
+        "train": {
+          "joint_nll_per_masked_token": 2.8600882291793823,
+          "dependence_gain_nats_per_masked_token": 0.005367608275264502,
+          "backbone_nll_per_masked_token": 2.9250035881996155
+        },
+        "dev": {
+          "joint_nll_per_masked_token": 2.9388870000839233,
+          "dependence_gain_nats_per_masked_token": -0.0011159438117829268,
+          "backbone_nll_per_masked_token": 2.9366679191589355
+        }
+      },
+      {
+        "step": 200,
+        "train": {
+          "joint_nll_per_masked_token": 2.484938144683838,
+          "dependence_gain_nats_per_masked_token": 0.03303443593904376,
+          "backbone_nll_per_masked_token": 2.9250035881996155
+        },
+        "dev": {
+          "joint_nll_per_masked_token": 3.078214406967163,
+          "dependence_gain_nats_per_masked_token": -0.050448818830773234,
+          "backbone_nll_per_masked_token": 2.9366679191589355
+        }
+      },
+      {
+        "step": 300,
+        "train": {
+          "joint_nll_per_masked_token": 2.2831872701644897,
+          "dependence_gain_nats_per_masked_token": 0.03972270153462887,
+          "backbone_nll_per_masked_token": 2.9250035881996155
+        },
+        "dev": {
+          "joint_nll_per_masked_token": 3.2198245525360107,
+          "dependence_gain_nats_per_masked_token": -0.11874151113443077,
+          "backbone_nll_per_masked_token": 2.9366679191589355
+        }
+      },
+      {
+        "step": 400,
+        "train": {
+          "joint_nll_per_masked_token": 2.1358914375305176,
+          "dependence_gain_nats_per_masked_token": 0.03608721378259361,
+          "backbone_nll_per_masked_token": 2.9250035881996155
+        },
+        "dev": {
+          "joint_nll_per_masked_token": 3.294804096221924,
+          "dependence_gain_nats_per_masked_token": -0.1567708202637732,
+          "backbone_nll_per_masked_token": 2.9366679191589355
+        }
+      },
+      {
+        "step": 500,
+        "train": {
+          "joint_nll_per_masked_token": 2.0272995084524155,
+          "dependence_gain_nats_per_masked_token": 0.04181187623180449,
+          "backbone_nll_per_masked_token": 2.9250035881996155
+        },
+        "dev": {
+          "joint_nll_per_masked_token": 3.395947813987732,
+          "dependence_gain_nats_per_masked_token": -0.21220443863421679,
+          "backbone_nll_per_masked_token": 2.9366679191589355
+        }
+      },
+      {
+        "step": 600,
+        "train": {
+          "joint_nll_per_masked_token": 1.9548960626125336,
+          "dependence_gain_nats_per_masked_token": 0.026812197407707572,
+          "backbone_nll_per_masked_token": 2.9250035881996155
+        },
+        "dev": {
+          "joint_nll_per_masked_token": 3.364701747894287,
+          "dependence_gain_nats_per_masked_token": -0.17709584441035986,
+          "backbone_nll_per_masked_token": 2.9366679191589355
+        }
+      },
+      {
+        "step": 700,
+        "train": {
+          "joint_nll_per_masked_token": 1.8741210401058197,
+          "dependence_gain_nats_per_masked_token": 0.04139769449830055,
+          "backbone_nll_per_masked_token": 2.9250035881996155
+        },
+        "dev": {
+          "joint_nll_per_masked_token": 3.50599268078804,
+          "dependence_gain_nats_per_masked_token": -0.26780074555426836,
+          "backbone_nll_per_masked_token": 2.9366679191589355
+        }
+      },
+      {
+        "step": 800,
+        "train": {
+          "joint_nll_per_masked_token": 1.819518893957138,
+          "dependence_gain_nats_per_masked_token": 0.04486099211499095,
+          "backbone_nll_per_masked_token": 2.9250035881996155
+        },
+        "dev": {
+          "joint_nll_per_masked_token": 3.5811895430088043,
+          "dependence_gain_nats_per_masked_token": -0.31399008445441723,
+          "backbone_nll_per_masked_token": 2.9366679191589355
+        }
+      },
+      {
+        "step": 900,
+        "train": {
+          "joint_nll_per_masked_token": 1.7740190923213959,
+          "dependence_gain_nats_per_masked_token": 0.044122585793957114,
+          "backbone_nll_per_masked_token": 2.9250035881996155
+        },
+        "dev": {
+          "joint_nll_per_masked_token": 3.627357393503189,
+          "dependence_gain_nats_per_masked_token": -0.33591743744909763,
+          "backbone_nll_per_masked_token": 2.9366679191589355
+        }
+      },
+      {
+        "step": 1000,
+        "train": {
+          "joint_nll_per_masked_token": 1.7378468215465546,
+          "dependence_gain_nats_per_masked_token": 0.03110660845413804,
+          "backbone_nll_per_masked_token": 2.9250035881996155
+        },
+        "dev": {
+          "joint_nll_per_masked_token": 3.604471832513809,
+          "dependence_gain_nats_per_masked_token": -0.3060303144156933,
+          "backbone_nll_per_masked_token": 2.9366679191589355
+        }
+      },
+      {
+        "step": 1100,
+        "train": {
+          "joint_nll_per_masked_token": 1.70824633538723,
+          "dependence_gain_nats_per_masked_token": 0.03691544709727168,
+          "backbone_nll_per_masked_token": 2.9250035881996155
+        },
+        "dev": {
+          "joint_nll_per_masked_token": 3.6596474945545197,
+          "dependence_gain_nats_per_masked_token": -0.338212251663208,
+          "backbone_nll_per_masked_token": 2.9366679191589355
+        }
+      },
+      {
+        "step": 1200,
+        "train": {
+          "joint_nll_per_masked_token": 1.6774053424596786,
+          "dependence_gain_nats_per_masked_token": 0.04184901970438659,
+          "backbone_nll_per_masked_token": 2.9250035881996155
+        },
+        "dev": {
+          "joint_nll_per_masked_token": 3.7389762699604034,
+          "dependence_gain_nats_per_masked_token": -0.38864994421601295,
+          "backbone_nll_per_masked_token": 2.9366679191589355
+        }
+      },
+      {
+        "step": 1300,
+        "train": {
+          "joint_nll_per_masked_token": 1.6569855064153671,
+          "dependence_gain_nats_per_masked_token": 0.04907837137579918,
+          "backbone_nll_per_masked_token": 2.9250035881996155
+        },
+        "dev": {
+          "joint_nll_per_masked_token": 3.8111111223697662,
+          "dependence_gain_nats_per_masked_token": -0.43093838170170784,
+          "backbone_nll_per_masked_token": 2.9366679191589355
+        }
+      },
+      {
+        "step": 1400,
+        "train": {
+          "joint_nll_per_masked_token": 1.6347237676382065,
+          "dependence_gain_nats_per_masked_token": 0.03860712028108537,
+          "backbone_nll_per_masked_token": 2.9250035881996155
+        },
+        "dev": {
+          "joint_nll_per_masked_token": 3.7910915911197662,
+          "dependence_gain_nats_per_masked_token": -0.3989440184086561,
+          "backbone_nll_per_masked_token": 2.9366679191589355
+        }
+      },
+      {
+        "step": 1500,
+        "train": {
+          "joint_nll_per_masked_token": 1.6142493337392807,
+          "dependence_gain_nats_per_masked_token": 0.03584447340108454,
+          "backbone_nll_per_masked_token": 2.9250035881996155
+        },
+        "dev": {
+          "joint_nll_per_masked_token": 3.7983182966709137,
+          "dependence_gain_nats_per_masked_token": -0.39542347379028797,
+          "backbone_nll_per_masked_token": 2.9366679191589355
+        }
+      },
+      {
+        "step": 1600,
+        "train": {
+          "joint_nll_per_masked_token": 1.596122607588768,
+          "dependence_gain_nats_per_masked_token": 0.04016622109338641,
+          "backbone_nll_per_masked_token": 2.9250035881996155
+        },
+        "dev": {
+          "joint_nll_per_masked_token": 3.8595511317253113,
+          "dependence_gain_nats_per_masked_token": -0.43186768889427185,
+          "backbone_nll_per_masked_token": 2.9366679191589355
+        }
+      },
+      {
+        "step": 1700,
+        "train": {
+          "joint_nll_per_masked_token": 1.5842091888189316,
+          "dependence_gain_nats_per_masked_token": 0.04177184752188623,
+          "backbone_nll_per_masked_token": 2.9250035881996155
+        },
+        "dev": {
+          "joint_nll_per_masked_token": 3.885035812854767,
+          "dependence_gain_nats_per_masked_token": -0.4431092571467161,
+          "backbone_nll_per_masked_token": 2.9366679191589355
+        }
+      },
+      {
+        "step": 1800,
+        "train": {
+          "joint_nll_per_masked_token": 1.572710856795311,
+          "dependence_gain_nats_per_masked_token": 0.03413079190067947,
+          "backbone_nll_per_masked_token": 2.9250035881996155
+        },
+        "dev": {
+          "joint_nll_per_masked_token": 3.874607026576996,
+          "dependence_gain_nats_per_masked_token": -0.42237901501357555,
+          "backbone_nll_per_masked_token": 2.9366679191589355
+        }
+      },
+      {
+        "step": 1900,
+        "train": {
+          "joint_nll_per_masked_token": 1.5588111728429794,
+          "dependence_gain_nats_per_masked_token": 0.03842087020166218,
+          "backbone_nll_per_masked_token": 2.9250035881996155
+        },
+        "dev": {
+          "joint_nll_per_masked_token": 3.914637267589569,
+          "dependence_gain_nats_per_masked_token": -0.4495001435279846,
+          "backbone_nll_per_masked_token": 2.9366679191589355
+        }
+      },
+      {
+        "step": 2000,
+        "train": {
+          "joint_nll_per_masked_token": 1.544496163725853,
+          "dependence_gain_nats_per_masked_token": 0.03845177451148629,
+          "backbone_nll_per_masked_token": 2.9250035881996155
+        },
+        "dev": {
+          "joint_nll_per_masked_token": 3.946943461894989,
+          "dependence_gain_nats_per_masked_token": -0.4678394105285406,
+          "backbone_nll_per_masked_token": 2.9366679191589355
+        }
+      }
+    ],
+    "unary": [
+      {
+        "step": 0,
+        "train": {
+          "joint_nll_per_masked_token": 2.9250035881996155,
+          "dependence_gain_nats_per_masked_token": 0.0,
+          "backbone_nll_per_masked_token": 2.9250035881996155
+        },
+        "dev": {
+          "joint_nll_per_masked_token": 2.936667889356613,
+          "dependence_gain_nats_per_masked_token": 0.0,
+          "backbone_nll_per_masked_token": 2.9366679191589355
+        }
+      },
+      {
+        "step": 100,
+        "train": {
+          "joint_nll_per_masked_token": 2.0791249573230743,
+          "dependence_gain_nats_per_masked_token": 0.0,
+          "backbone_nll_per_masked_token": 2.9250035881996155
+        },
+        "dev": {
+          "joint_nll_per_masked_token": 4.159910172224045,
+          "dependence_gain_nats_per_masked_token": 0.0,
+          "backbone_nll_per_masked_token": 2.9366679191589355
+        }
+      },
+      {
+        "step": 200,
+        "train": {
+          "joint_nll_per_masked_token": 1.6565531194210052,
+          "dependence_gain_nats_per_masked_token": 0.0,
+          "backbone_nll_per_masked_token": 2.9250035881996155
+        },
+        "dev": {
+          "joint_nll_per_masked_token": 4.2516100108623505,
+          "dependence_gain_nats_per_masked_token": 0.0,
+          "backbone_nll_per_masked_token": 2.9366679191589355
+        }
+      },
+      {
+        "step": 300,
+        "train": {
+          "joint_nll_per_masked_token": 1.3906169533729553,
+          "dependence_gain_nats_per_masked_token": 0.0,
+          "backbone_nll_per_masked_token": 2.9250035881996155
+        },
+        "dev": {
+          "joint_nll_per_masked_token": 4.646847069263458,
+          "dependence_gain_nats_per_masked_token": 0.0,
+          "backbone_nll_per_masked_token": 2.9366679191589355
+        }
+      },
+      {
+        "step": 400,
+        "train": {
+          "joint_nll_per_masked_token": 1.2614124342799187,
+          "dependence_gain_nats_per_masked_token": 0.0,
+          "backbone_nll_per_masked_token": 2.9250035881996155
+        },
+        "dev": {
+          "joint_nll_per_masked_token": 5.230366349220276,
+          "dependence_gain_nats_per_masked_token": 0.0,
+          "backbone_nll_per_masked_token": 2.9366679191589355
+        }
+      },
+      {
+        "step": 500,
+        "train": {
+          "joint_nll_per_masked_token": 1.1972414180636406,
+          "dependence_gain_nats_per_masked_token": 0.0,
+          "backbone_nll_per_masked_token": 2.9250035881996155
+        },
+        "dev": {
+          "joint_nll_per_masked_token": 5.909825563430786,
+          "dependence_gain_nats_per_masked_token": 0.0,
+          "backbone_nll_per_masked_token": 2.9366679191589355
+        }
+      },
+      {
+        "step": 600,
+        "train": {
+          "joint_nll_per_masked_token": 1.1650597378611565,
+          "dependence_gain_nats_per_masked_token": 0.0,
+          "backbone_nll_per_masked_token": 2.9250035881996155
+        },
+        "dev": {
+          "joint_nll_per_masked_token": 6.517261564731598,
+          "dependence_gain_nats_per_masked_token": 0.0,
+          "backbone_nll_per_masked_token": 2.9366679191589355
+        }
+      },
+      {
+        "step": 700,
+        "train": {
+          "joint_nll_per_masked_token": 1.1476917266845703,
+          "dependence_gain_nats_per_masked_token": 0.0,
+          "backbone_nll_per_masked_token": 2.9250035881996155
+        },
+        "dev": {
+          "joint_nll_per_masked_token": 7.041434288024902,
+          "dependence_gain_nats_per_masked_token": 0.0,
+          "backbone_nll_per_masked_token": 2.9366679191589355
+        }
+      },
+      {
+        "step": 800,
+        "train": {
+          "joint_nll_per_masked_token": 1.142641618847847,
+          "dependence_gain_nats_per_masked_token": 0.0,
+          "backbone_nll_per_masked_token": 2.9250035881996155
+        },
+        "dev": {
+          "joint_nll_per_masked_token": 7.557755708694458,
+          "dependence_gain_nats_per_masked_token": 0.0,
+          "backbone_nll_per_masked_token": 2.9366679191589355
+        }
+      },
+      {
+        "step": 900,
+        "train": {
+          "joint_nll_per_masked_token": 1.1315483525395393,
+          "dependence_gain_nats_per_masked_token": 0.0,
+          "backbone_nll_per_masked_token": 2.9250035881996155
+        },
+        "dev": {
+          "joint_nll_per_masked_token": 7.522094368934631,
+          "dependence_gain_nats_per_masked_token": 0.0,
+          "backbone_nll_per_masked_token": 2.9366679191589355
+        }
+      },
+      {
+        "step": 1000,
+        "train": {
+          "joint_nll_per_masked_token": 1.1281905770301819,
+          "dependence_gain_nats_per_masked_token": 0.0,
+          "backbone_nll_per_masked_token": 2.9250035881996155
+        },
+        "dev": {
+          "joint_nll_per_masked_token": 7.8756378293037415,
+          "dependence_gain_nats_per_masked_token": 0.0,
+          "backbone_nll_per_masked_token": 2.9366679191589355
+        }
+      },
+      {
+        "step": 1100,
+        "train": {
+          "joint_nll_per_masked_token": 1.1245960667729378,
+          "dependence_gain_nats_per_masked_token": 0.0,
+          "backbone_nll_per_masked_token": 2.9250035881996155
+        },
+        "dev": {
+          "joint_nll_per_masked_token": 8.172453045845032,
+          "dependence_gain_nats_per_masked_token": 0.0,
+          "backbone_nll_per_masked_token": 2.9366679191589355
+        }
+      },
+      {
+        "step": 1200,
+        "train": {
+          "joint_nll_per_masked_token": 1.1248666271567345,
+          "dependence_gain_nats_per_masked_token": 0.0,
+          "backbone_nll_per_masked_token": 2.9250035881996155
+        },
+        "dev": {
+          "joint_nll_per_masked_token": 8.142332196235657,
+          "dependence_gain_nats_per_masked_token": 0.0,
+          "backbone_nll_per_masked_token": 2.9366679191589355
+        }
+      },
+      {
+        "step": 1300,
+        "train": {
+          "joint_nll_per_masked_token": 1.1210387274622917,
+          "dependence_gain_nats_per_masked_token": 0.0,
+          "backbone_nll_per_masked_token": 2.9250035881996155
+        },
+        "dev": {
+          "joint_nll_per_masked_token": 8.54814612865448,
+          "dependence_gain_nats_per_masked_token": 0.0,
+          "backbone_nll_per_masked_token": 2.9366679191589355
+        }
+      },
+      {
+        "step": 1400,
+        "train": {
+          "joint_nll_per_masked_token": 1.1213632822036743,
+          "dependence_gain_nats_per_masked_token": 0.0,
+          "backbone_nll_per_masked_token": 2.9250035881996155
+        },
+        "dev": {
+          "joint_nll_per_masked_token": 8.865403532981873,
+          "dependence_gain_nats_per_masked_token": 0.0,
+          "backbone_nll_per_masked_token": 2.9366679191589355
+        }
+      },
+      {
+        "step": 1500,
+        "train": {
+          "joint_nll_per_masked_token": 1.1211936324834824,
+          "dependence_gain_nats_per_masked_token": 0.0,
+          "backbone_nll_per_masked_token": 2.9250035881996155
+        },
+        "dev": {
+          "joint_nll_per_masked_token": 8.532295823097229,
+          "dependence_gain_nats_per_masked_token": 0.0,
+          "backbone_nll_per_masked_token": 2.9366679191589355
+        }
+      },
+      {
+        "step": 1600,
+        "train": {
+          "joint_nll_per_masked_token": 1.1181656792759895,
+          "dependence_gain_nats_per_masked_token": 0.0,
+          "backbone_nll_per_masked_token": 2.9250035881996155
+        },
+        "dev": {
+          "joint_nll_per_masked_token": 8.648873209953308,
+          "dependence_gain_nats_per_masked_token": 0.0,
+          "backbone_nll_per_masked_token": 2.9366679191589355
+        }
+      },
+      {
+        "step": 1700,
+        "train": {
+          "joint_nll_per_masked_token": 1.1172267347574234,
+          "dependence_gain_nats_per_masked_token": 0.0,
+          "backbone_nll_per_masked_token": 2.9250035881996155
+        },
+        "dev": {
+          "joint_nll_per_masked_token": 8.908115148544312,
+          "dependence_gain_nats_per_masked_token": 0.0,
+          "backbone_nll_per_masked_token": 2.9366679191589355
+        }
+      },
+      {
+        "step": 1800,
+        "train": {
+          "joint_nll_per_masked_token": 1.1167073175311089,
+          "dependence_gain_nats_per_masked_token": 0.0,
+          "backbone_nll_per_masked_token": 2.9250035881996155
+        },
+        "dev": {
+          "joint_nll_per_masked_token": 9.109346985816956,
+          "dependence_gain_nats_per_masked_token": 0.0,
+          "backbone_nll_per_masked_token": 2.9366679191589355
+        }
+      },
+      {
+        "step": 1900,
+        "train": {
+          "joint_nll_per_masked_token": 1.1162636131048203,
+          "dependence_gain_nats_per_masked_token": 0.0,
+          "backbone_nll_per_masked_token": 2.9250035881996155
+        },
+        "dev": {
+          "joint_nll_per_masked_token": 9.291260004043579,
+          "dependence_gain_nats_per_masked_token": 0.0,
+          "backbone_nll_per_masked_token": 2.9366679191589355
+        }
+      },
+      {
+        "step": 2000,
+        "train": {
+          "joint_nll_per_masked_token": 1.1159022450447083,
+          "dependence_gain_nats_per_masked_token": 0.0,
+          "backbone_nll_per_masked_token": 2.9250035881996155
+        },
+        "dev": {
+          "joint_nll_per_masked_token": 9.460497617721558,
+          "dependence_gain_nats_per_masked_token": 0.0,
+          "backbone_nll_per_masked_token": 2.9366679191589355
+        }
+      }
+    ]
+  },
+  "dependence_definition": "held-out log joint probability minus sum of log singleton marginals from that same model, divided by masked tokens",
+  "sign": "positive helps; negative hurts relative to the same singleton marginals",
+  "uncertainty": "single-run diagnostic curves; no confidence intervals estimated",
+  "note": "support bounds do not expand the observed NLL axes",
+  "layout": {
+    "width_inches": 5.5,
+    "height_inches": 6.0,
+    "minimum_font_size_pt": 8,
+    "panels": "two NLL panels above one full-width dependence panel"
+  }
+}

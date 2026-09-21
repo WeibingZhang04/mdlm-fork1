@@ -1,0 +1,408 @@
+{
+  "artifact": "tensor_train_owt_feasibility_plan",
+  "artifact_root": "/mnt/contextual-forest/experiments/tensor-train-owt-feasibility-446cb8a-v1",
+  "cache": {
+    "identity_sha256": "6a71487fa93b87ab95c0b125cb4bb53284c5a6f32fd00d178f8b3602d5c11bd3",
+    "policy": "pinned_snapshot_offline_warm_cache_v1",
+    "root": "/mnt/contextual-forest/third_party/tensor-train-hf-cache",
+    "snapshots": {
+      "backbone": {
+        "files": [
+          {
+            "path": ".gitattributes",
+            "sha256": "11ad7efa24975ee4b0c3c3a38ed18737f0658a5f75a0a96787b576a78a023361",
+            "size_bytes": 1519
+          },
+          {
+            "path": "README.md",
+            "sha256": "393eb53038b34d16312006a3f0e7baacd3142e2a0514aea8f0d19241264f4ee1",
+            "size_bytes": 2431
+          },
+          {
+            "path": "config.json",
+            "sha256": "605429edee54b28322b94c3a018982ddb74bf94e3bf15f4ae7d5fbc73613138c",
+            "size_bytes": 489
+          },
+          {
+            "path": "configuration_mdlm.py",
+            "sha256": "0b1fe1d01c0ca375e1b24e06926a78e436b465b12448749cfbaa76318499cec2",
+            "size_bytes": 740
+          },
+          {
+            "path": "model.safetensors",
+            "sha256": "47149e73f7552f39ea9776dbe74d925d25237bcf2ed2e2ec03cdff9d51c82aa4",
+            "size_bytes": 678522728
+          },
+          {
+            "path": "modeling_mdlm.py",
+            "sha256": "d952a4de135a662abd25a2ce0f43fb67844e4cb38e034d5957e500957aa422a7",
+            "size_bytes": 13776
+          }
+        ],
+        "files_manifest_sha256": "425a2fca0708bf5e6e9e145477d3eb1125a968142b044bf5cc865eabc1019fd8",
+        "repository": "kuleshov-group/mdlm-owt",
+        "revision": "d0958fa851335ece6c15260ce0025f030673c0fb",
+        "snapshot_path": "/mnt/contextual-forest/third_party/tensor-train-hf-cache/hub/models--kuleshov-group--mdlm-owt/snapshots/d0958fa851335ece6c15260ce0025f030673c0fb",
+        "snapshot_revision": "d0958fa851335ece6c15260ce0025f030673c0fb"
+      },
+      "evaluator": {
+        "files": [
+          {
+            "path": ".gitattributes",
+            "sha256": "961efef3eb444ea986c072bd2ad570c500d48a62b36c9d23c9612d0c2c199e10",
+            "size_bytes": 789
+          },
+          {
+            "path": "README.md",
+            "sha256": "858e46e4722747071242fbc8f4cbdb97b55e54b7f8ee9d8c943d454ee37ba360",
+            "size_bytes": 12348
+          },
+          {
+            "path": "config.json",
+            "sha256": "7fccdcfd6622055342a734c663ee0b61ff4fd697f42467595df0bf4448c8c170",
+            "size_bytes": 666
+          },
+          {
+            "path": "flax_model.msgpack",
+            "sha256": "9aa10eb25a628041355dfb4803839c592573a33d4bcdc9300f2c50a170f04a42",
+            "size_bytes": 3096134690
+          },
+          {
+            "path": "generation_config.json",
+            "sha256": "b90eadacf585a743a30ea51e8b5c88b8d282a2a34dc0c7e556d0987cdbd68805",
+            "size_bytes": 124
+          },
+          {
+            "path": "generation_config_for_text_generation.json",
+            "sha256": "a69e99c4a690c2015aaaeaef066516f1df9316317b3605869039fa896108efce",
+            "size_bytes": 165
+          },
+          {
+            "path": "merges.txt",
+            "sha256": "1ce1664773c50f3e0cc8842619a93edc4624525b728b188a9e0be33b7726adc5",
+            "size_bytes": 456318
+          },
+          {
+            "path": "model.safetensors",
+            "sha256": "5f47f3e12f91cd33b662ce7e433b6150ad5512b5884a2cee961b50e9c3bbebce",
+            "size_bytes": 3247159078
+          },
+          {
+            "path": "onnx/Constant_164_attr__value",
+            "sha256": "ae525b5c247f1f7b8310c42b37be7aed79adadb1806bb109d1e14c8c896fc319",
+            "size_bytes": 1048576
+          },
+          {
+            "path": "onnx/Constant_174_attr__value",
+            "sha256": "ae525b5c247f1f7b8310c42b37be7aed79adadb1806bb109d1e14c8c896fc319",
+            "size_bytes": 1048576
+          },
+          {
+            "path": "onnx/config.json",
+            "sha256": "69aab9dc7c31e4e3a6c0aaacfc0ecefc29892a2ae7311c9cdb7b3b5fffdbf1b6",
+            "size_bytes": 886
+          },
+          {
+            "path": "onnx/decoder_model.onnx",
+            "sha256": "6928b9ea9cefb712ddb36264ac8b572f7df0ee5d3d774f45154ca0cd381ccbc2",
+            "size_bytes": 2650140
+          },
+          {
+            "path": "onnx/decoder_model.onnx_data",
+            "sha256": "37e3f7ff14aa5b4d2eb0362f3139744f0a327054d16806a8d8b5cbf021c8d990",
+            "size_bytes": 3353436160
+          },
+          {
+            "path": "onnx/decoder_model_merged.onnx",
+            "sha256": "fb52fbf6a99a73c98e2125a77d5932d4d0a3da5ef2cf6451cb6408a96e57a504",
+            "size_bytes": 5289305
+          },
+          {
+            "path": "onnx/decoder_model_merged.onnx_data",
+            "sha256": "37e3f7ff14aa5b4d2eb0362f3139744f0a327054d16806a8d8b5cbf021c8d990",
+            "size_bytes": 3353436160
+          },
+          {
+            "path": "onnx/decoder_with_past_model.onnx",
+            "sha256": "620cad159131a999e2a5b73717246b0e1ceb85c644f0f4d4e7899907d133abed",
+            "size_bytes": 2673585
+          },
+          {
+            "path": "onnx/decoder_with_past_model.onnx_data",
+            "sha256": "37e3f7ff14aa5b4d2eb0362f3139744f0a327054d16806a8d8b5cbf021c8d990",
+            "size_bytes": 3353436160
+          },
+          {
+            "path": "onnx/generation_config.json",
+            "sha256": "067a873d1d1a67ffa7237a0ad0eebdb547d3f9209793c8aa476ec130815e3c8c",
+            "size_bytes": 119
+          },
+          {
+            "path": "onnx/merges.txt",
+            "sha256": "1ce1664773c50f3e0cc8842619a93edc4624525b728b188a9e0be33b7726adc5",
+            "size_bytes": 456318
+          },
+          {
+            "path": "onnx/special_tokens_map.json",
+            "sha256": "6f50ab5a5a509a1c309d6171f339b196a900dc9c99ad0408ff23bb615fdae7ad",
+            "size_bytes": 99
+          },
+          {
+            "path": "onnx/tokenizer.json",
+            "sha256": "cda20b8ca044949aa07ac4078420c80d1a57139d5f9f33700e46fb2d891e7c66",
+            "size_bytes": 2107653
+          },
+          {
+            "path": "onnx/tokenizer_config.json",
+            "sha256": "551e26ec611d8d0c8edc3ef72e518a38418cb71f40de1347dd486a595e1557d7",
+            "size_bytes": 234
+          },
+          {
+            "path": "onnx/vocab.json",
+            "sha256": "3ba3c3109ff33976c4bd966589c11ee14fcaa1f4c9e5e154c2ed7f99d80709e7",
+            "size_bytes": 798156
+          },
+          {
+            "path": "pytorch_model.bin",
+            "sha256": "8d3ade6b55ac440e926112267b9ec784097437c7300544b8beec562a411428ec",
+            "size_bytes": 3247202234
+          },
+          {
+            "path": "rust_model.ot",
+            "sha256": "4da5e3c0a8b10f3fecb775a1c312814d7f0b08699ca08b14f820801caf9ca42f",
+            "size_bytes": 3504540144
+          },
+          {
+            "path": "tf_model.h5",
+            "sha256": "71e91ce5f1120392f874e9dd6037c6fd81e24ea945c957156e8e5b31f00c81fe",
+            "size_bytes": 3096618024
+          },
+          {
+            "path": "tokenizer.json",
+            "sha256": "8414cab924d8b9b33013f0d221c5862f365ee9be39c5c2bfae8a5a9e970478a6",
+            "size_bytes": 1355256
+          },
+          {
+            "path": "tokenizer_config.json",
+            "sha256": "5e04eb606e3a1583530a42e36c2a6b6615c86f34fe77e44d9ddeb43ff940931f",
+            "size_bytes": 26
+          },
+          {
+            "path": "vocab.json",
+            "sha256": "196139668be63f3b5d6574427317ae82f612a97c5d1cdaf36ed2256dbf636783",
+            "size_bytes": 1042301
+          }
+        ],
+        "files_manifest_sha256": "022eed78dd3acf50f68d62afc361192481324e69fa71ed2e161fdcbacc996d23",
+        "repository": "gpt2-large",
+        "revision": "32b71b12589c2f8d625668d2335a01cac3249519",
+        "snapshot_path": "/mnt/contextual-forest/third_party/tensor-train-hf-cache/hub/models--gpt2-large/snapshots/32b71b12589c2f8d625668d2335a01cac3249519",
+        "snapshot_revision": "32b71b12589c2f8d625668d2335a01cac3249519"
+      },
+      "tokenizer": {
+        "files": [
+          {
+            "path": ".gitattributes",
+            "sha256": "98c91dabef4df27b2fc7c8454d220aba47476f73593cbd034d961fe4927304c1",
+            "size_bytes": 445
+          },
+          {
+            "path": "64-8bits.tflite",
+            "sha256": "c966da3b74697803352ca7c6f2f220e7090a557b619de9da0c6b34d89f7825c1",
+            "size_bytes": 125162496
+          },
+          {
+            "path": "64-fp16.tflite",
+            "sha256": "1ceafd82e733dd4b21570b2a86cf27556a983041806c033a55d086e0ed782cd3",
+            "size_bytes": 248269688
+          },
+          {
+            "path": "64.tflite",
+            "sha256": "cfcd510b239d90b71ee87d4e57a5a8c2d55b2a941e5d9fe5852298268ddbe61b",
+            "size_bytes": 495791932
+          },
+          {
+            "path": "README.md",
+            "sha256": "0fcd631078093c2aa1d93438b898320b8a1167784e2a1ab37b8016e9de8b3c2e",
+            "size_bytes": 8092
+          },
+          {
+            "path": "config.json",
+            "sha256": "0daed7749b4f02b8f76240d5444551d7b08712dab4d0adb8239c56ba823bb7b4",
+            "size_bytes": 665
+          },
+          {
+            "path": "flax_model.msgpack",
+            "sha256": "192e8257ae9e8f796f764630f4a488a6a16d1461762d62b49ef7405df951a283",
+            "size_bytes": 497764120
+          },
+          {
+            "path": "generation_config.json",
+            "sha256": "ed0b32ac72c0f5f44a719abb2d7786ea5146c871f83717b7f2018065954de02b",
+            "size_bytes": 124
+          },
+          {
+            "path": "merges.txt",
+            "sha256": "1ce1664773c50f3e0cc8842619a93edc4624525b728b188a9e0be33b7726adc5",
+            "size_bytes": 456318
+          },
+          {
+            "path": "model.safetensors",
+            "sha256": "248dfc3911869ec493c76e65bf2fcf7f615828b0254c12b473182f0f81d3a707",
+            "size_bytes": 548105171
+          },
+          {
+            "path": "onnx/config.json",
+            "sha256": "c6d8a78631f7a03a14493eb78d584ba92c8e68c8774b810426b34df1f8a15b10",
+            "size_bytes": 879
+          },
+          {
+            "path": "onnx/decoder_model.onnx",
+            "sha256": "e3fc9615868ff8f5e0429b892a0f6ca692784ba6c4ca31c4e9ee8218e7cce34f",
+            "size_bytes": 653665842
+          },
+          {
+            "path": "onnx/decoder_model_merged.onnx",
+            "sha256": "e6fc046fe5a7cfeeb8bb3c7d4c1b6a8bd90ced7339a75d5567957e3bc9d48abe",
+            "size_bytes": 655189339
+          },
+          {
+            "path": "onnx/decoder_with_past_model.onnx",
+            "sha256": "570d958241de81f12d82a8358dfc0b408a7bf44ff2bd10ac4a97dab24a8118db",
+            "size_bytes": 653672649
+          },
+          {
+            "path": "onnx/generation_config.json",
+            "sha256": "067a873d1d1a67ffa7237a0ad0eebdb547d3f9209793c8aa476ec130815e3c8c",
+            "size_bytes": 119
+          },
+          {
+            "path": "onnx/merges.txt",
+            "sha256": "1ce1664773c50f3e0cc8842619a93edc4624525b728b188a9e0be33b7726adc5",
+            "size_bytes": 456318
+          },
+          {
+            "path": "onnx/special_tokens_map.json",
+            "sha256": "6f50ab5a5a509a1c309d6171f339b196a900dc9c99ad0408ff23bb615fdae7ad",
+            "size_bytes": 99
+          },
+          {
+            "path": "onnx/tokenizer.json",
+            "sha256": "cda20b8ca044949aa07ac4078420c80d1a57139d5f9f33700e46fb2d891e7c66",
+            "size_bytes": 2107653
+          },
+          {
+            "path": "onnx/tokenizer_config.json",
+            "sha256": "551e26ec611d8d0c8edc3ef72e518a38418cb71f40de1347dd486a595e1557d7",
+            "size_bytes": 234
+          },
+          {
+            "path": "onnx/vocab.json",
+            "sha256": "3ba3c3109ff33976c4bd966589c11ee14fcaa1f4c9e5e154c2ed7f99d80709e7",
+            "size_bytes": 798156
+          },
+          {
+            "path": "pytorch_model.bin",
+            "sha256": "7c5d3f4b8b76583b422fcb9189ad6c89d5d97a094541ce8932dce3ecabde1421",
+            "size_bytes": 548118077
+          },
+          {
+            "path": "rust_model.ot",
+            "sha256": "adf0adedbf4016b249550f866c66a3b3a3d09c8b3b3a1f6e5e9a265d94e0270e",
+            "size_bytes": 702517648
+          },
+          {
+            "path": "tf_model.h5",
+            "sha256": "d08c1307f7dfae6f878e0a2ca5715d587d2640530db8ef96fc0c1fc474dd9fee",
+            "size_bytes": 497933648
+          },
+          {
+            "path": "tokenizer.json",
+            "sha256": "8414cab924d8b9b33013f0d221c5862f365ee9be39c5c2bfae8a5a9e970478a6",
+            "size_bytes": 1355256
+          },
+          {
+            "path": "tokenizer_config.json",
+            "sha256": "5e04eb606e3a1583530a42e36c2a6b6615c86f34fe77e44d9ddeb43ff940931f",
+            "size_bytes": 26
+          },
+          {
+            "path": "vocab.json",
+            "sha256": "196139668be63f3b5d6574427317ae82f612a97c5d1cdaf36ed2256dbf636783",
+            "size_bytes": 1042301
+          }
+        ],
+        "files_manifest_sha256": "f877882f1b12ec154d2d6b1fd712bdf2c02826728d04dc602a42c53769f8d98a",
+        "repository": "openai-community/gpt2",
+        "revision": "607a30d783dfa663caf39e06633721c8d4cfcd7e",
+        "snapshot_path": "/mnt/contextual-forest/third_party/tensor-train-hf-cache/hub/models--openai-community--gpt2/snapshots/607a30d783dfa663caf39e06633721c8d4cfcd7e",
+        "snapshot_revision": "607a30d783dfa663caf39e06633721c8d4cfcd7e"
+      }
+    }
+  },
+  "checkpoint_revision": "09c0042df4be9608de81302d79c16d08a95889db",
+  "checkpoints": {
+    "marginal": {
+      "huggingface_repository": "ssamt/tensor-train",
+      "huggingface_revision": "09c0042df4be9608de81302d79c16d08a95889db",
+      "path": "/mnt/contextual-forest/third_party/tensor-train-9d0087a/checkpoints/owt/marginal.pt",
+      "relative_path": "owt/marginal.pt",
+      "sha256": "84fc03cacd818df293602987d4367b8ead7c96539b9b536b748bc86a6cd7079c",
+      "size_bytes": 7092428
+    },
+    "tensor_train_rank4": {
+      "huggingface_repository": "ssamt/tensor-train",
+      "huggingface_revision": "09c0042df4be9608de81302d79c16d08a95889db",
+      "path": "/mnt/contextual-forest/third_party/tensor-train-9d0087a/checkpoints/owt/ttd_4_marg.pt",
+      "relative_path": "owt/ttd_4_marg.pt",
+      "sha256": "8ad8d956af127795686489e9f3496e7a634da18ecf79464df1319668a2a3a7a2",
+      "size_bytes": 127728181
+    }
+  },
+  "harness_repository": {
+    "clean": true,
+    "origin": "git@github.com:yuntian-group/mdlm.git",
+    "path": "/mnt/contextual-forest/mdlm-controller-446cb8a-v2",
+    "revision": "446cb8abe1a19db74f16efa658d17882812a0e76"
+  },
+  "job_ids": [
+    "owt--marginal--nfe008--s260703",
+    "owt--marginal--nfe016--s260703",
+    "owt--marginal--nfe032--s260703",
+    "owt--tensor_train_rank4--nfe008--s260703",
+    "owt--tensor_train_rank4--nfe016--s260703",
+    "owt--tensor_train_rank4--nfe032--s260703"
+  ],
+  "job_spec_sha256": {
+    "owt--marginal--nfe008--s260703": "9c35ecda970418f7804cac58d7ff8a0d7bf91c6500c8ee4e92e5d5c71a15f30c",
+    "owt--marginal--nfe016--s260703": "d2eec586ef72e77e103305dc00363edfeb8b88bef6ccfd35e2682f8578d2dd2d",
+    "owt--marginal--nfe032--s260703": "91a43d58e4b634c2ed16d0d2697ee053e3b52de01de502a0a6f03ec18e218fc3",
+    "owt--tensor_train_rank4--nfe008--s260703": "8b5a7bdb718da415d5e21de5443e1aab2465fbe517799c4c9d148cd90c734921",
+    "owt--tensor_train_rank4--nfe016--s260703": "f23182662a1c5662e87851d931f824697dd895094e7ed483a97814d85209b70c",
+    "owt--tensor_train_rank4--nfe032--s260703": "7e2f22259174660fcf299ce383a16542a83ddd59ac8f7b86d79cee4b81d750fe"
+  },
+  "model_inputs": {
+    "backbone": {
+      "repository": "kuleshov-group/mdlm-owt",
+      "revision": "d0958fa851335ece6c15260ce0025f030673c0fb"
+    },
+    "tokenizer": {
+      "repository": "openai-community/gpt2",
+      "revision": "607a30d783dfa663caf39e06633721c8d4cfcd7e"
+    }
+  },
+  "num_jobs": 6,
+  "plan_id": "d55bfa4740319f42488ca6e6f33441d97ea634b8081bfac525e89d33f7aaed68",
+  "plan_sha256": "d55bfa4740319f42488ca6e6f33441d97ea634b8081bfac525e89d33f7aaed68",
+  "protocol_id": "tensor-train-owt-feasibility-v1",
+  "protocol_path": "/mnt/contextual-forest/mdlm-controller-446cb8a-v2/configs/experiment/tensor-train-owt-feasibility-v1.yaml",
+  "protocol_sha256": "2227fcb10f09d6e424cc7c839583c00384e29cd813c9aad635484b16e771eaa1",
+  "schema_version": 1,
+  "scientific_scope": "Reproducibility and quality feasibility check for the released Tensor-Train MDLM OpenWebText baseline. The study is unconditional generation and does not estimate a diffusion ELBO or data likelihood.",
+  "source": {
+    "clean": true,
+    "origin": "https://github.com/ssamt/tensor-train.git",
+    "path": "/mnt/contextual-forest/third_party/tensor-train-9d0087a",
+    "revision": "9d0087afd3771ac3e94898ed842858fcc81fb3b0"
+  }
+}

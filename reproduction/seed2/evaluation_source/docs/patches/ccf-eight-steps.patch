@@ -1,0 +1,126 @@
+diff --git a/docs/ccf-eight-steps.md b/docs/ccf-eight-steps.md
+new file mode 100644
+index 0000000..5f463c3
+--- /dev/null
++++ b/docs/ccf-eight-steps.md
+@@ -0,0 +1,47 @@
++# Eight-step generation checkpoint sweep
++
++The user requested an 8-step follow-up to the ongoing 16/32-step sweep.
++Carry forward the complete checkpoint matrix and 20 samples per configuration.
++
++| Family | Arms | Training checkpoints | Evaluations |
++|---|---|---|---:|
++| Released MDLM | Factorized baseline | Released backbone | 1 |
++| Basic shared rank 16 | SS, FD, DF, DD | 1k, 2k, 3k, 4k, 5k, 6k, 7k | 28 |
++| Separate rank 8 | FD, DD | 1k, 2k, 3k, 4k, 5k, 6k, 7k | 14 |
++| Separate rank 16 | FD, DD | 1k, 2k, 3k, 4k, 5k, 6k, 7k | 14 |
++
++All 57 evaluations are fresh: 1,140 scored samples. The 16/32-step baseline
++results cannot be reused at 8 steps. MDLM retains the same frozen backbone;
++the runner's SS/7k adapter input is authenticated but bypassed in factorized
++mode. It is not a 7k-trained MDLM model.
++
++Task 0 is MDLM; tasks 1–56 cover all CCF cells in ascending checkpoint order,
++then basic SS/FD/DF/DD, separate R8 FD/DD, and separate R16 FD/DD.
++The existing suite `low_steps_sweep` remains unchanged; the new
++`full_checkpoint_sweep` includes the previously reused basic 7k cells.
++
++Protocol: 8 reverse transitions plus the existing optional cleanup call
++(requested NFE budget 9, actual model calls recorded), length 1,024, batch 1,
++K=128, seeds 91001–91020, the same checkpoint precision/internal bf16 autocast,
++reveal logic, and pinned GPT-2-large float32 first-nonleading-EOS scoring.
++Generation runtime and quality are both recorded.
++
++Each CCF cell must pass the existing same-GPU first-sample reference comparison
++for exact final tokens, NFE, and CPU/CUDA RNG before accepting results.
++Separate R8 DD uses pinned reference v1; other CCF cells use reference v2.
++The candidate remains `level_draws`. Historical 1,000-step output replay is
++inapplicable to this schedule. The 56 additional reference samples are not
++included in quality aggregates. No sampler algorithm or scoring changes.
++
++Copy the immutable snapshot used by array 1546050 to a fresh directory and
++overlay only the orchestration, tests, documentation, and review patch.
++Verify source hashes and all checkpoint paths before submission. Keep a
++local Git commit and patch without pushing. Attribution remains in
++`docs/ccf-fast-generation.md`; no new external implementation was consulted.
++
++Submit array `0-56%2` with `afterany:1546050` so the eight-step follow-up starts
++after the current sweep ends. This dependency controls scheduling only;
++the eight-step experiment does not consume its results. Request watgpu508/H200,
++1 GPU, 4 CPUs, 30 GB, and 30 minutes per task. Enable all configured email,
++time-limit, and array-task notifications. Existing submitted jobs and snapshots
++are not modified.
+diff --git a/scripts/evaluate_ccf_eight_steps.sh b/scripts/evaluate_ccf_eight_steps.sh
+new file mode 100644
+index 0000000..53ea595
+--- /dev/null
++++ b/scripts/evaluate_ccf_eight_steps.sh
+@@ -0,0 +1,23 @@
++#!/bin/bash
++# Task 0: MDLM. Tasks 1–56: all CCF checkpoints, ascending training step.
++# Submit with afterany dependency on the current 16/32-step sweep.
++#SBATCH --job-name=ccf-eight-steps
++#SBATCH --array=0-56%2
++#SBATCH --time=00:30:00
++#SBATCH --mem=30G
++#SBATCH --cpus-per-task=4
++#SBATCH --gres=gpu:1
++#SBATCH --constraint=H200
++#SBATCH --nodelist=watgpu508
++#SBATCH --mail-user=n23zhang@uwaterloo.ca
++#SBATCH --mail-type=ALL,TIME_LIMIT,TIME_LIMIT_90,TIME_LIMIT_80,TIME_LIMIT_50,ARRAY_TASKS
++set -euo pipefail
++source /opt/anaconda3/etc/profile.d/conda.sh
++conda activate mdlm
++cd "${CCF_CODE_ROOT:?}"
++export HF_HUB_CACHE=/u401/n23zhang/mdlm_data/tree_mdlm_cache/huggingface
++export TOKENIZERS_PARALLELISM=false
++srun --ntasks=1 python -u scripts/evaluate_ccf_selected_five.py \
++  --suite full_checkpoint_sweep --index "${SLURM_ARRAY_TASK_ID:?}" \
++  --num-samples 20 --sampling-steps 8 \
++  --output-root "${CCF_OUTPUT_ROOT:?}/steps_8"
+diff --git a/scripts/evaluate_ccf_selected_five.py b/scripts/evaluate_ccf_selected_five.py
+index c95f58c..b0acd1b 100644
+--- a/scripts/evaluate_ccf_selected_five.py
++++ b/scripts/evaluate_ccf_selected_five.py
+@@ -39,0 +40,7 @@ def matrix(suite='selected'):
++  if suite == 'full_checkpoint_sweep':
++    basic_7k = matrix('basic_7k')
++    cells = matrix('low_steps_sweep') + basic_7k[1:]
++    arm_order = {arm: index for index, arm in enumerate(ARMS)}
++    cells.sort(key=lambda cell: (cell['step'], cell['family'], arm_order[cell['arm']]))
++    # One released MDLM baseline, then all 56 CCF checkpoints. No result reuse.
++    return [basic_7k[0]] + cells
+@@ -190 +197 @@ def main():
+-  parser.add_argument('--suite', choices=('selected', 'original_5k6k', 'all_1k', 'basic_7k', 'low_steps_sweep'), default='selected')
++  parser.add_argument('--suite', choices=('selected', 'original_5k6k', 'all_1k', 'basic_7k', 'low_steps_sweep', 'full_checkpoint_sweep'), default='selected')
+diff --git a/tests/test_ccf_selected_five.py b/tests/test_ccf_selected_five.py
+index 0ec6aa3..df05319 100644
+--- a/tests/test_ccf_selected_five.py
++++ b/tests/test_ccf_selected_five.py
+@@ -12,0 +13,24 @@ class SelectedFiveTest(unittest.TestCase):
++  def test_full_sweep_includes_fresh_baseline_and_every_checkpoint_at_eight_steps(self):
++    cells = matrix('full_checkpoint_sweep')
++    self.assertEqual(len(cells), 57)
++    self.assertEqual(cells[0], matrix('basic_7k')[0])
++    self.assertEqual([c['mode'] for c in cells], ['factorized'] + ['structured_joint'] * 56)
++    expected = {(family, arm, step)
++                for family, arms in (
++                  ('B', ('static_static', 'fixed_dynamic', 'dynamic_fixed', 'dynamic_dynamic')),
++                  ('C', ('fixed_dynamic', 'dynamic_dynamic')),
++                  ('D', ('fixed_dynamic', 'dynamic_dynamic')))
++                for arm in arms for step in range(1000, 7001, 1000)}
++    self.assertEqual({(c['family'], c['arm'], c['step']) for c in cells[1:]}, expected)
++    self.assertEqual(len({c['checkpoint'] for c in cells[1:]}), 56)
++    self.assertEqual([c['step'] for c in cells[1:]],
++                     [step for step in range(1000, 7001, 1000) for _ in range(8)])
++    for start in range(1, 57, 8):
++      self.assertEqual([c['family'] for c in cells[start:start + 8]], ['B'] * 4 + ['C'] * 2 + ['D'] * 2)
++    for cell in cells:
++      args = generation_args(dict(cell, num_samples=20, sampling_steps=8), Path('/tmp/test'), 'a', 'm')
++      for flag, value in (('--num-samples', '20'), ('--nfe-budgets', '9'),
++                          ('--base-seed', '91001'), ('--sequence-length', '1024'),
++                          ('--batch-size', '1')):
++        self.assertEqual(args[args.index(flag) + 1], value)
++

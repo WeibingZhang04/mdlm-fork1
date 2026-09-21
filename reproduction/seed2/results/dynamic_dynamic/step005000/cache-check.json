@@ -1,0 +1,5 @@
+{
+  "cache_dtype": "torch.float32",
+  "sampler": "historical level_draws",
+  "architecture_changed": false
+}

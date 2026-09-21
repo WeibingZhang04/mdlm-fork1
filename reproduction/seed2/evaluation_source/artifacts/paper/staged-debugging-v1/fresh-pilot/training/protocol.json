@@ -1,0 +1,257 @@
+{
+  "protocol": "paired_fresh_corruption_frozen_backbone_v1",
+  "schema_version": 1,
+  "created_utc": "2026-09-08T02:41:29.241798+00:00",
+  "git_head": "a8d202a9599c51738ce33d9134b7316a9fa873bf",
+  "arguments": {
+    "train_jsonl": "/mnt/contextual-forest/staged-debug-20260907/fresh-data-v1/train.jsonl",
+    "dev_jsonl": "/mnt/contextual-forest/staged-debug-20260907/fresh-data-v1/dev.jsonl",
+    "expected_train_sha256": "1d387c4b4e90e2a7a994eb70521335c45ef2e1574aae8de9108dc944f1ee7dd6",
+    "expected_dev_sha256": "68390ef4a9e2f5be6df70657ea70e186957ae68450e4f680392eff84fc36802a",
+    "backbone_checkpoint": "/mnt/contextual-forest/releases/contextual-forest-adapter-cf8b808-20260831T131607Z/inputs/mdlm-owt-backbone-schema-v2.pt",
+    "expectations": "/mnt/contextual-forest/releases/contextual-forest-adapter-cf8b808-20260831T131607Z/expectations/production-expectations-v2.json",
+    "expected_expectations_sha256": "a978c17befc2788b0b773eee7cd608ac0200379947a63a0ba8699a0b9818c956",
+    "output_dir": "/mnt/contextual-forest/staged-debug-20260907/fresh-pilot-resume-v1",
+    "resume_checkpoint": "/mnt/contextual-forest/staged-debug-20260907/fresh-pilot-v1/checkpoints/step-000800.pt",
+    "expected_resume_sha256": "5eb5fc41d8b62770b09b8de3fac9fec681f43ef91eaefd603ecc9c357376a4a4",
+    "model_config": "contextual-forest-small",
+    "data_config": "train_openwebtext_pinned",
+    "data_cache_dir": null,
+    "override": [
+      "model.length=128"
+    ],
+    "dataset_label": "openwebtext",
+    "train_examples": 2048,
+    "dev_examples": 64,
+    "length": 128,
+    "steps": 1000,
+    "batch_size": 4,
+    "backbone_batch_size": 1,
+    "mask_rates": [
+      0.25,
+      0.5,
+      0.75,
+      0.9
+    ],
+    "learning_rate": 0.0003,
+    "warmup_steps": 100,
+    "eval_every": 100,
+    "rank": 16,
+    "directional_rank": 8,
+    "unary_rank": 16,
+    "top_k": 64,
+    "time_embed_dim": 64,
+    "factor_init_std": 0.25,
+    "seed": 1,
+    "device": "cuda",
+    "threads": 4
+  },
+  "identity": {
+    "train_source": {
+      "file_sha256": "1d387c4b4e90e2a7a994eb70521335c45ef2e1574aae8de9108dc944f1ee7dd6",
+      "selected_token_sha256": "c640839b6053c8c6592353c3762de5f48e96a854a118d17dc80384454a3a6d15",
+      "document_ids_sha256": "b3ea02347e2665a295b44127d04c34fbbf0737f98683067b6139a1b1dccdc11c",
+      "examples": 2048,
+      "length": 128,
+      "records_scanned": 2048,
+      "short_records_skipped": 0,
+      "duplicate_records_skipped": 0
+    },
+    "dev_source": {
+      "file_sha256": "68390ef4a9e2f5be6df70657ea70e186957ae68450e4f680392eff84fc36802a",
+      "selected_token_sha256": "88c2b3f3c2e6eea6504ee784922d5f6d40e52af208266a907e2ac5a014e69ccd",
+      "document_ids_sha256": "2b65034b1769ce1f8ad3f3909acd4d938d84a8cc9ddee6f5078ade0d26f73a83",
+      "examples": 64,
+      "length": 128,
+      "records_scanned": 64,
+      "short_records_skipped": 0,
+      "duplicate_records_skipped": 0
+    },
+    "dev_cache_sha256": [
+      "68a3445921d7bfa7849a2fc1626338bd305366fae4931baedb4f4094d29d0982",
+      "0f1bac26b2bb14f6d1d10a2feb3d0c2781ed5ed9157ffb92309bdd712f979e59",
+      "b70bc4a90d677fb8d57206a3a037944298c1f06a2d64f8f7f1239af5ce3e4add",
+      "2153f76c17bd650dad05952c900c3944187430e583a86a322cfe295bca8516b2"
+    ],
+    "head_config": {
+      "hidden_size": 768,
+      "vocab_size": 50258,
+      "seed": 1,
+      "rank": 16,
+      "directional_rank": 8,
+      "unary_rank": 16,
+      "top_k": 64,
+      "time_embed_dim": 64,
+      "init_std": 0.25,
+      "component_size_cap": 0
+    },
+    "source_sha256": {
+      "scripts/run_staged_fresh_training.py": "e1f61b69570b09fd49a8c461e992fb00e66eae1078e77d4a59996fac1440380a",
+      "scripts/run_staged_real_overfit.py": "dd976f808089fb8cecf89353080454c248ccfdc84ed390af1a05aeb3975a010a",
+      "models/contextual_unary.py": "c252baf7502d8f4c13dd495dbfe482ae3a754f8413d5238b126c36973a640a2b",
+      "models/directional_forest.py": "5c81101e1c44e2cb30c3567eb2e27dce2129014157be63d1dc5686c663cb94e1",
+      "models/structured_decoder.py": "b90fd02618d5162f8908f266fef1bdb2418a4bc172ede0863cd60ddeaa0f257a",
+      "structured_objective.py": "57f54eef2c1bbc6d1efb313a4ec3b936c7175c5a93294a1f850ddfd567a787c9",
+      "structured_utils.py": "9c26e3ecd764945fcdf171d205e22f5f331f2822baa1e7418358908a1dda9226",
+      "structured_training.py": "0a242f3a437f9193cb69fdb336bbd4414451d6d621135cbd9a97a1a9f998bbdf",
+      "evaluation/dependence_diagnostics.py": "41289287f1b418cbac65fe5d8b43d20271048904523c3c3c7a1844cf1ee0f9a4",
+      "models/dit.py": "2ad0ea896f2a59947b0baa72679851f7238b2836d336e39975b44b3cc95d8377",
+      "diffusion.py": "204aa815b73799de7eeacc760ec494adda5d546983fd750884d74ac704f7e825",
+      "noise_schedule.py": "da16320cebbc727c03e8e45297593505fb41a597c7a5ef29eacd7043207a763c"
+    },
+    "backbone_provenance": {
+      "attestation_type": "authenticated_released_backbone_wrapper_v1",
+      "production_expectations_file_sha256": "a978c17befc2788b0b773eee7cd608ac0200379947a63a0ba8699a0b9818c956",
+      "production_expectations_identity_sha256": "6282b0d1fc4ad5cadae11c315c511d9fe6e8367ff58d1ba4e0facd7c5d8c8f6e",
+      "backbone_wrapper_sha256": "94046f5e3952580f5b69697a78f72398160b19c268eeefa15cf558d8cf688a01",
+      "backbone_wrapper_size_bytes": 678553556,
+      "backbone_wrapper_metadata_sha256": "5a71bdf6388cb0a56ae587468617469c02092293633dce5316e69d1779b2f2ea",
+      "backbone_tensor_count": 131,
+      "backbone_parameter_count": 169627250,
+      "backbone_tensor_bytes": 678509000,
+      "backbone_tensor_schema_sha256": "d5aeee0343134374ce4c596e7831c7b31938e7b5b25d669b090e9b5da5ab2150",
+      "backbone_tensor_content_sha256": "1bbf3736b36125b2f47e9e970101bb84a803d7059d4e93509a8f093ecb192901",
+      "released_backbone_identity_sha256": "b63bc497859f9f8401eee5b9606b19565f5ddb165fe25e865e4c9b4078539091",
+      "released_backbone": {
+        "repository": "kuleshov-group/mdlm-owt",
+        "revision": "d0958fa851335ece6c15260ce0025f030673c0fb",
+        "source_sha256": "47149e73f7552f39ea9776dbe74d925d25237bcf2ed2e2ec03cdff9d51c82aa4",
+        "source_size_bytes": 678522728,
+        "tensor_count": 131
+      }
+    },
+    "backbone_runtime_config": {
+      "model": {
+        "name": "contextual-forest-small",
+        "type": "ddit",
+        "monitor_metric": "val/structured/conditional_nll_per_masked_token",
+        "hidden_size": 768,
+        "cond_dim": 128,
+        "length": 128,
+        "n_blocks": 12,
+        "n_heads": 12,
+        "scale_by_sigma": true,
+        "dropout": 0.1,
+        "tie_word_embeddings": false
+      },
+      "noise": {
+        "type": "loglinear",
+        "sigma_min": 0.0001,
+        "sigma_max": 20
+      },
+      "parameterization": "subs",
+      "time_conditioning": false,
+      "subs_masking": false,
+      "backbone": "dit",
+      "T": 0
+    },
+    "runtime": {
+      "torch_version": "2.5.1+cu121",
+      "device_type": "cuda",
+      "gpu_name": "NVIDIA L4",
+      "backbone_cuda_autocast": "bfloat16",
+      "cached_output_dtype": "float32"
+    },
+    "eval_every": 100,
+    "dataset": "openwebtext"
+  },
+  "identity_sha256": "3550045fb44cf4d23311343f7ea8c43185de9530b4a29aea20cbb691251fbc2a",
+  "training_config": {
+    "seed": 1,
+    "batch_size": 4,
+    "backbone_batch_size": 1,
+    "mask_rates": [
+      0.25,
+      0.5,
+      0.75,
+      0.9
+    ],
+    "learning_rate": 0.0003,
+    "pair_warmup_steps": 100,
+    "gradient_clip": 1.0
+  },
+  "parameter_counts": {
+    "shared": {
+      "rank": 16,
+      "active_trainable_parameters": 840640,
+      "inactive_frozen_parameters": 6827
+    },
+    "directional": {
+      "rank": 8,
+      "active_trainable_parameters": 840640,
+      "inactive_frozen_parameters": 6827
+    },
+    "unary": {
+      "rank": 16,
+      "active_trainable_parameters": 827312,
+      "inactive_frozen_parameters": 0
+    }
+  },
+  "dev_cache": [
+    {
+      "cache_sha256": "68a3445921d7bfa7849a2fc1626338bd305366fae4931baedb4f4094d29d0982",
+      "dtype": "float32",
+      "storage": "disk",
+      "active_tokens": 2048,
+      "examples": 64,
+      "backbone_nll_per_masked_token": 1.8080287463963032,
+      "mask_rate": 0.25,
+      "diffusion_time": 0.2502502502502503,
+      "head_and_backbone_sigma": 0.28768205642700195,
+      "loglinear_eps": 0.001,
+      "mask_sha256": "38d210007fa01d71efe979eed350ad5ee49011f68767a335238c22324ca518b9",
+      "corruption": "fixed-count uniformly selected positions, fixed for all updates"
+    },
+    {
+      "cache_sha256": "0f1bac26b2bb14f6d1d10a2feb3d0c2781ed5ed9157ffb92309bdd712f979e59",
+      "dtype": "float32",
+      "storage": "disk",
+      "active_tokens": 4096,
+      "examples": 64,
+      "backbone_nll_per_masked_token": 3.1072179339826107,
+      "mask_rate": 0.5,
+      "diffusion_time": 0.5005005005005005,
+      "head_and_backbone_sigma": 0.6931471824645996,
+      "loglinear_eps": 0.001,
+      "mask_sha256": "8620be5321fd2f5dd545b4ef9febe3b356a52b218e87f53299997f3204ffa786",
+      "corruption": "fixed-count uniformly selected positions, fixed for all updates"
+    },
+    {
+      "cache_sha256": "b70bc4a90d677fb8d57206a3a037944298c1f06a2d64f8f7f1239af5ce3e4add",
+      "dtype": "float32",
+      "storage": "disk",
+      "active_tokens": 6144,
+      "examples": 64,
+      "backbone_nll_per_masked_token": 5.126164332032204,
+      "mask_rate": 0.75,
+      "diffusion_time": 0.7507507507507507,
+      "head_and_backbone_sigma": 1.3862946033477783,
+      "loglinear_eps": 0.001,
+      "mask_sha256": "a0547824d18f1bc4d5b939a419d785bc93414b42e7a79c4353a61ee3fb5a3783",
+      "corruption": "fixed-count uniformly selected positions, fixed for all updates"
+    },
+    {
+      "cache_sha256": "2153f76c17bd650dad05952c900c3944187430e583a86a322cfe295bca8516b2",
+      "dtype": "float32",
+      "storage": "disk",
+      "active_tokens": 7360,
+      "examples": 64,
+      "backbone_nll_per_masked_token": 6.700031015147333,
+      "mask_rate": 0.9,
+      "diffusion_time": 0.9009009009009009,
+      "head_and_backbone_sigma": 2.3025853633880615,
+      "loglinear_eps": 0.001,
+      "mask_sha256": "edcab44dfd0ce1731ee0e4e472c3014b3a71f3990e93820a100c0d82a1c4a753",
+      "corruption": "fixed-count uniformly selected positions, fixed for all updates"
+    }
+  ],
+  "document_disjoint": true,
+  "test_data_access": false,
+  "corruption": "fresh uniform fixed-count masks: max(2,round(scheduled_rate*length)); sigma uses scheduled_rate",
+  "backbone_policy": "identical explicit microbatch size for training and dev; encoded outputs shared across all heads",
+  "loss": "joint conditional NLL summed over examples, divided by total active tokens in the shared minibatch",
+  "resume_parent_sha256": "5eb5fc41d8b62770b09b8de3fac9fec681f43ef91eaefd603ecc9c357376a4a4",
+  "resume_start_step": 800,
+  "resume_semantics": "same-runtime exact state continuation; saved checkpoint precedes its recomputed dev evaluation",
+  "step_zero_included": true
+}

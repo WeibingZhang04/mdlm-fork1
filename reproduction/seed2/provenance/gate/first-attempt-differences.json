@@ -1,0 +1,56 @@
+{
+  "source": "/u401/n23zhang/mdlm_data/tree_mdlm_cache/runs/ccf_replication15k_20260921.wmjngfco/legacy_bf16_seed2/study_zw0v21df",
+  "differences": [
+    {
+      "name": "structured_head.hidden_norm.weight",
+      "max_abs": 2.384185791015625e-07,
+      "different_elements": 85
+    },
+    {
+      "name": "structured_head.hidden_norm.bias",
+      "max_abs": 7.721528163529001e-07,
+      "different_elements": 765
+    },
+    {
+      "name": "structured_head.time_embedding.mlp.0.weight",
+      "max_abs": 3.129243850708008e-07,
+      "different_elements": 2818
+    },
+    {
+      "name": "structured_head.time_embedding.mlp.0.bias",
+      "max_abs": 1.564621925354004e-07,
+      "different_elements": 44
+    },
+    {
+      "name": "structured_head.time_embedding.mlp.2.weight",
+      "max_abs": 7.301568984985352e-07,
+      "different_elements": 2939
+    },
+    {
+      "name": "structured_head.time_embedding.mlp.2.bias",
+      "max_abs": 1.7136335372924805e-07,
+      "different_elements": 43
+    },
+    {
+      "name": "structured_head.topology_hidden_projection.weight",
+      "max_abs": 1.344829797744751e-06,
+      "different_elements": 23681
+    },
+    {
+      "name": "structured_head.topology_hidden_projection.bias",
+      "max_abs": 8.489005267620087e-07,
+      "different_elements": 42
+    },
+    {
+      "name": "structured_head.topology_time_projection.weight",
+      "max_abs": 1.0188668966293335e-06,
+      "different_elements": 2718
+    },
+    {
+      "name": "structured_head.edge_proposer.anchor_projection.weight",
+      "max_abs": 1.6763806343078613e-08,
+      "different_elements": 7
+    }
+  ],
+  "conclusion": "Strict equality failed. The added observer is excluded from all production runs."
+}

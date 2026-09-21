@@ -1,0 +1,76 @@
+{
+  "artifact_root": "/mnt/contextual-forest/experiments/contextual-forest-k256-7f161d3-v1",
+  "job_counts": {
+    "eval": 16,
+    "export": 2,
+    "train": 2
+  },
+  "job_ids": [
+    "eval--dynamic_dynamic--s001--scientific_papers_arxiv--e201--m500000--k256--n0256",
+    "eval--dynamic_dynamic--s001--scientific_papers_arxiv--e201--m900000--k256--n0256",
+    "eval--dynamic_dynamic--s001--scientific_papers_arxiv--e202--m500000--k256--n0256",
+    "eval--dynamic_dynamic--s001--scientific_papers_arxiv--e202--m900000--k256--n0256",
+    "eval--dynamic_dynamic--s001--wikitext103--e201--m500000--k256--n0256",
+    "eval--dynamic_dynamic--s001--wikitext103--e201--m900000--k256--n0256",
+    "eval--dynamic_dynamic--s001--wikitext103--e202--m500000--k256--n0256",
+    "eval--dynamic_dynamic--s001--wikitext103--e202--m900000--k256--n0256",
+    "eval--static_static--s001--scientific_papers_arxiv--e201--m500000--k256--n0256",
+    "eval--static_static--s001--scientific_papers_arxiv--e201--m900000--k256--n0256",
+    "eval--static_static--s001--scientific_papers_arxiv--e202--m500000--k256--n0256",
+    "eval--static_static--s001--scientific_papers_arxiv--e202--m900000--k256--n0256",
+    "eval--static_static--s001--wikitext103--e201--m500000--k256--n0256",
+    "eval--static_static--s001--wikitext103--e201--m900000--k256--n0256",
+    "eval--static_static--s001--wikitext103--e202--m500000--k256--n0256",
+    "eval--static_static--s001--wikitext103--e202--m900000--k256--n0256",
+    "export--dynamic_dynamic--s001--k256",
+    "export--static_static--s001--k256",
+    "train--dynamic_dynamic--s001--k256",
+    "train--static_static--s001--k256"
+  ],
+  "job_spec_sha256": {
+    "eval--dynamic_dynamic--s001--scientific_papers_arxiv--e201--m500000--k256--n0256": "6c094d9a7c31876619dc32b771fe700a79a3233b654349fbb24a3346446fcd16",
+    "eval--dynamic_dynamic--s001--scientific_papers_arxiv--e201--m900000--k256--n0256": "60b0bdaeb53e76242b621c3db51d1a18f5e24aef388135ed29c9040f1d569ec3",
+    "eval--dynamic_dynamic--s001--scientific_papers_arxiv--e202--m500000--k256--n0256": "73b93f7844b2f1601b83c362362bebf374120e6adbb2b2ed90eb5e249b31ddb6",
+    "eval--dynamic_dynamic--s001--scientific_papers_arxiv--e202--m900000--k256--n0256": "5537664992347c7c420bc556fd484873ea401e8daafa695da7b9ad34cab8c873",
+    "eval--dynamic_dynamic--s001--wikitext103--e201--m500000--k256--n0256": "ae9ea7ebfc6a6839faf62f199a6adb4dab38c329c5d368be9471433dfaf859fd",
+    "eval--dynamic_dynamic--s001--wikitext103--e201--m900000--k256--n0256": "881c3be5115cb303864459dc26e52656067a1317212ad94065f36a4d5b1eb900",
+    "eval--dynamic_dynamic--s001--wikitext103--e202--m500000--k256--n0256": "bbbba4c31a28d49f871e0a195b71acc06569a2b7a12693bbdff053a76483bfb5",
+    "eval--dynamic_dynamic--s001--wikitext103--e202--m900000--k256--n0256": "1b47854ab75123548ed99cd668fc1b260286ad3ed1c5d0b19a487b149e9194c6",
+    "eval--static_static--s001--scientific_papers_arxiv--e201--m500000--k256--n0256": "e746766df99164a7c4d152b4af4b21a8c34f77c26c07fef48fb8d86011f68462",
+    "eval--static_static--s001--scientific_papers_arxiv--e201--m900000--k256--n0256": "09ba19364fe1d8dd2ccfacb3eedd277ba11f06bb995e483ad13d4550a8ef8b77",
+    "eval--static_static--s001--scientific_papers_arxiv--e202--m500000--k256--n0256": "bac89ba302556801a1c487c4efb2e25937bcfecce28d23d80008a7dfdd76c89c",
+    "eval--static_static--s001--scientific_papers_arxiv--e202--m900000--k256--n0256": "a7ddcff9ebae1af1b18a45d981bde2919b2f17be4155d180565c1828525f40e2",
+    "eval--static_static--s001--wikitext103--e201--m500000--k256--n0256": "80531d9432d48594ae2fea43a234912c254d4ca16556bf26364bd07b60c1578f",
+    "eval--static_static--s001--wikitext103--e201--m900000--k256--n0256": "bb7b5198eabd124824037484f0f9e07382b9fe8569f257c22e4865c5f600dfd8",
+    "eval--static_static--s001--wikitext103--e202--m500000--k256--n0256": "bc6b8e99954039e02e73e40feb35fb1984799d1998bdddaad0bbf37f1005a07b",
+    "eval--static_static--s001--wikitext103--e202--m900000--k256--n0256": "b728dbc50bfb1fd213aa989f316bf74acc918f47223be4e1b78a8692693fbb78",
+    "export--dynamic_dynamic--s001--k256": "5e0da17402e6050955622becf781a5531fd59734c0ba59fa8173b071ee7b2367",
+    "export--static_static--s001--k256": "f4d8365ae30542c4a7dd4d47aa00c7de15ddf0fc691293e8da7c68d34e3a5d7d",
+    "train--dynamic_dynamic--s001--k256": "65f1a800f29334b766f8d2390e66746b22afc883bce9d88d03e3aad97d59a77f",
+    "train--static_static--s001--k256": "e3361dc45a55fc601db0e814d730f23c90dedb54d5db4098ca82dcef7cd26f97"
+  },
+  "manifest_protocol_status": "frozen_before_primary_results",
+  "num_jobs": 20,
+  "plan_id": "424b49179dbd4e12f556e3c73baa2243b9cd7acde1e9771f137a4e0d7d390006",
+  "promotion_evidence": {
+    "candidate_k_256_pilot": {
+      "canonical_decision_sha256": "727a840a78194c6c373fe098bafd0cc67e2353e762a6c45a5d075a5aaeff403c",
+      "path": "/mnt/contextual-forest/experiments/contextual-forest-expansion-v1/candidate-k128-promotion-evidence-48f218b/candidate_k_256_pilot-promotion.json",
+      "route_name": "k256",
+      "sha256": "96f2450c6164f54cf78e20723da6de9addb97458ff4a8cfddd2a623ce1f45dc0",
+      "source_compiled_plan_sha256": "9bbb28fd8f5bcd64d7171be06a9e8c2a7ef27403c6f602f85d5881cd1cfa4fa3",
+      "source_suite": "candidate_k_128_pilot"
+    }
+  },
+  "protocol_id": "contextual-forest-expansion-v1",
+  "repository": {
+    "dirty": false,
+    "sha": "7f161d3da3f059c5b310d165fa7fa5668d217616"
+  },
+  "schema_version": 2,
+  "scientific_scope": "Frozen-backbone conditional denoising NLL per masked token. This protocol does not estimate a diffusion ELBO, data likelihood, perplexity, or generation quality.",
+  "selected_suites": [
+    "candidate_k_256_pilot"
+  ],
+  "source_manifest_sha256": "aa9f7269a202f88985793f4f48e58d7289bc80da5c370a1f209e469b7fb02b93"
+}

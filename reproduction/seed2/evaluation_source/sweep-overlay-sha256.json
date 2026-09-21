@@ -1,0 +1,7 @@
+{
+  "scripts/evaluate_ccf_selected_five.py": "cc6a020a75965a7eb9e66a829b73ed2244699274e452ae70728d0521be12dd1e",
+  "scripts/evaluate_ccf_low_steps_sweep.sh": "e4330cb509983951770d30629040c5c5966e6a7ab9259cbed419a4a056835cd8",
+  "tests/test_ccf_selected_five.py": "d5245481f14bdf363979c93c7fd30f353c70970e9b44ca845e55766c79ac3a0c",
+  "docs/ccf-low-steps-checkpoint-sweep.md": "62bede99a7b5c083c417653fd265b66d3d447a49d74981daae1bd2336db25766",
+  "docs/patches/ccf-low-steps-checkpoint-sweep.patch": "664c08425aa5767dc1e9f356c1ab1988955c12263225b4cc7b58fd872c1f30e7"
+}

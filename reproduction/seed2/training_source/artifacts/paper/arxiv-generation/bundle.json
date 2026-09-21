@@ -1,0 +1,57 @@
+{
+  "artifact": "verified_cross_domain_generation_analysis_bundle",
+  "artifacts": {
+    "dynamic_union": {
+      "path": "/mnt/contextual-forest/experiments/contextual-forest-generation-paper-v1/arxiv/verified-analysis-v1/verified-dynamic-union.json",
+      "sha256": "65749643b9c3052e289c34432a07fc0ba0c29288a2af245fb4735a75017589b0"
+    },
+    "paired_comparison": {
+      "path": "/mnt/contextual-forest/experiments/contextual-forest-generation-paper-v1/arxiv/verified-analysis-v1/paired-adapter-comparison.json",
+      "sha256": "2acdcad5b3f2bdd888c62ade6271bdb34377df64b7356e53418c69204b138cac"
+    },
+    "static_union": {
+      "path": "/mnt/contextual-forest/experiments/contextual-forest-generation-paper-v1/arxiv/verified-analysis-v1/verified-static-union.json",
+      "sha256": "24720bfd5662329075523f9930c2c9cc0853c730ce8c63cb5b13be31aa12212c"
+    }
+  },
+  "created_utc": "2026-09-01T13:26:51.751455+00:00",
+  "dataset_slug": "arxiv",
+  "immutable_runner_git_sha": "09f89c00bbf8c65f679cd40b92609754608817b8",
+  "launch_plan_sha256": "18d40e9883a82906fccafcc068f1e7fec5e1bcd8f037fc06ca610d4f5ceb1601",
+  "logical_dataset": "scientific-papers-arxiv-pinned",
+  "queue_completion_evidence": {
+    "path": "/mnt/contextual-forest/experiments/contextual-forest-generation-paper-v1/arxiv/queue-complete.json",
+    "sha256": "aa8e9aec34361211e4bd33d0f019dd9d48e2005f055c720d8515d8ba06166a37"
+  },
+  "reviewed_wikitext_gate": {
+    "controller_repository": {
+      "clean": true,
+      "git_sha": "446cb8abe1a19db74f16efa658d17882812a0e76",
+      "root": "/mnt/contextual-forest/mdlm-controller-446cb8a-v2",
+      "source_sha256": {
+        "evaluation/generation_adapter_comparison.py": "f5133b399744d69d5a8f6b1ce9dd8d2e069b5438b0e98338e136d7e7d289004c",
+        "evaluation/generation_analysis_artifacts.py": "b0b69c3e799dd136d17171d45e780f73c17f2336f0617a4c7493adb8017ea1cf",
+        "evaluation/generation_protocol.py": "ce1927b543cec3b04fcebca3ada4b8aa8a2d9d2c1cbb0019c3b0289403852ced",
+        "evaluation/generation_queue_artifacts.py": "ad6d08bd52cfe5f728795e8db028b4f212e64f3d7592131cf8e845311d0bb11b",
+        "evaluation/generation_shard_aggregation.py": "ba7cc0ade743d169a064417d13feeb0d57ae71d70048a1f77b619a0496166fbe",
+        "scripts/compile_wikitext_cross_domain_gate.py": "b1f765ed9495b8eab3d9062e5bbb491c206293e4e9618300bda740882c746945",
+        "scripts/run_cross_domain_generation_post.py": "4044c5b2652cfb00e19ea45771fe5f20ba79570ead8fb3fdee070bb1aea8b319",
+        "scripts/run_cross_domain_generation_queue.py": "92c92c48427a1e85ee52e6c895fff27a90309d4ac913cdd4243be7e1ae09e34e",
+        "scripts/run_wikitext_generation_queue.py": "1c8a2aa7dc5bfb45cbb8385502c7b55b195c8d447c047d573d060e796591557d"
+      }
+    },
+    "decision": "proceed",
+    "path": "/mnt/contextual-forest/experiments/contextual-forest-generation-paper-v1/wikitext/reviewed-cross-domain-gate-446cb8a-v2.json",
+    "sha256": "a33ae2b0ea1834ced45047fe50ecffaef69b9571e9cd67199054edbe02b7ee86"
+  },
+  "schema_version": 1,
+  "validated_analysis": {
+    "dataset_slug": "arxiv",
+    "dynamic_records": 12288,
+    "global_num_samples": 1024,
+    "logical_dataset": "scientific-papers-arxiv-pinned",
+    "num_paired_comparisons": 16,
+    "num_prompts": 256,
+    "static_records": 4096
+  }
+}

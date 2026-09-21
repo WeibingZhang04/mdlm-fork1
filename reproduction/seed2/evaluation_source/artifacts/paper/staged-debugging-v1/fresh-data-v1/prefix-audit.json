@@ -1,0 +1,18 @@
+{
+  "artifact": "old_benchmark_prefix_vs_fresh_document_window",
+  "audit_date_utc": "2026-09-08",
+  "prepared_manifest_file_sha256": "70d989988c6318a52960791667804fde30e794f324628186df8d010438439753",
+  "heldout_cache_rows": 62780,
+  "inspected_prefix_rows": 4096,
+  "inspected_prefix_distinct_source_documents": 2222,
+  "inspected_prefix_source_index_min": 7913771,
+  "inspected_prefix_source_index_max": 7920407,
+  "fresh_heldout_min_source_index": 8003769,
+  "fresh_dev_source_index_range": [8003769, 8003957],
+  "fresh_test_source_index_range": [8003960, 8004282],
+  "old_prefix_precedes_new_window": true,
+  "prepared_counts": {"train": 2048, "dev": 64, "test": 128},
+  "old_debug_documents_excluded": 96,
+  "all_12_manifest_overlap_counts_zero": true,
+  "scope": "Source-index separation from the inspected cache prefix, plus manifest document and token-prefix disjointness. No model outcomes used."
+}

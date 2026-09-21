@@ -1,0 +1,471 @@
+{
+  "schema_version": 1,
+  "selection_rule": "For each of six FD/DD variants and each sampling budget, select the three lowest token-weighted GPT-2 PPL checkpoints from the seven-checkpoint 20-sample pilot; include one fresh released MDLM baseline per budget. Ties favor earlier checkpoints. Freeze selection before observing confirmation samples.",
+  "pilot_snapshot_utc": "2026-09-17T18:22:09.497247+00:00",
+  "pilot_snapshot_sha256": "a366ea06dd38cc8ad33628e0b12efa7ad1cfeea1ef6a0d1ba2ec613149bf6423",
+  "num_samples": 100,
+  "base_seed": 100001,
+  "sampling_budgets": [
+    8,
+    16,
+    32
+  ],
+  "cells": [
+    {
+      "family": "A",
+      "arm": "static_static",
+      "step": 7000,
+      "sampling_steps": 8,
+      "pilot_ppl": 929.7529905152336,
+      "pilot_samples": 20
+    },
+    {
+      "family": "B",
+      "arm": "fixed_dynamic",
+      "step": 6000,
+      "sampling_steps": 8,
+      "pilot_ppl": 669.687855802742,
+      "pilot_samples": 20
+    },
+    {
+      "family": "B",
+      "arm": "fixed_dynamic",
+      "step": 3000,
+      "sampling_steps": 8,
+      "pilot_ppl": 673.4271858142553,
+      "pilot_samples": 20
+    },
+    {
+      "family": "B",
+      "arm": "fixed_dynamic",
+      "step": 4000,
+      "sampling_steps": 8,
+      "pilot_ppl": 679.259606929814,
+      "pilot_samples": 20
+    },
+    {
+      "family": "B",
+      "arm": "dynamic_dynamic",
+      "step": 3000,
+      "sampling_steps": 8,
+      "pilot_ppl": 655.3251951463028,
+      "pilot_samples": 20
+    },
+    {
+      "family": "B",
+      "arm": "dynamic_dynamic",
+      "step": 5000,
+      "sampling_steps": 8,
+      "pilot_ppl": 670.4491224880903,
+      "pilot_samples": 20
+    },
+    {
+      "family": "B",
+      "arm": "dynamic_dynamic",
+      "step": 7000,
+      "sampling_steps": 8,
+      "pilot_ppl": 700.2495764083958,
+      "pilot_samples": 20
+    },
+    {
+      "family": "C",
+      "arm": "fixed_dynamic",
+      "step": 6000,
+      "sampling_steps": 8,
+      "pilot_ppl": 666.1428434762472,
+      "pilot_samples": 20
+    },
+    {
+      "family": "C",
+      "arm": "fixed_dynamic",
+      "step": 3000,
+      "sampling_steps": 8,
+      "pilot_ppl": 689.2977754716967,
+      "pilot_samples": 20
+    },
+    {
+      "family": "C",
+      "arm": "fixed_dynamic",
+      "step": 1000,
+      "sampling_steps": 8,
+      "pilot_ppl": 697.3110203034241,
+      "pilot_samples": 20
+    },
+    {
+      "family": "C",
+      "arm": "dynamic_dynamic",
+      "step": 2000,
+      "sampling_steps": 8,
+      "pilot_ppl": 668.0037372546248,
+      "pilot_samples": 20
+    },
+    {
+      "family": "C",
+      "arm": "dynamic_dynamic",
+      "step": 4000,
+      "sampling_steps": 8,
+      "pilot_ppl": 692.2862732754602,
+      "pilot_samples": 20
+    },
+    {
+      "family": "C",
+      "arm": "dynamic_dynamic",
+      "step": 5000,
+      "sampling_steps": 8,
+      "pilot_ppl": 694.2144235951001,
+      "pilot_samples": 20
+    },
+    {
+      "family": "D",
+      "arm": "fixed_dynamic",
+      "step": 6000,
+      "sampling_steps": 8,
+      "pilot_ppl": 665.8148837202075,
+      "pilot_samples": 20
+    },
+    {
+      "family": "D",
+      "arm": "fixed_dynamic",
+      "step": 5000,
+      "sampling_steps": 8,
+      "pilot_ppl": 691.5769947311657,
+      "pilot_samples": 20
+    },
+    {
+      "family": "D",
+      "arm": "fixed_dynamic",
+      "step": 2000,
+      "sampling_steps": 8,
+      "pilot_ppl": 692.4646539525919,
+      "pilot_samples": 20
+    },
+    {
+      "family": "D",
+      "arm": "dynamic_dynamic",
+      "step": 6000,
+      "sampling_steps": 8,
+      "pilot_ppl": 638.4029243782111,
+      "pilot_samples": 20
+    },
+    {
+      "family": "D",
+      "arm": "dynamic_dynamic",
+      "step": 3000,
+      "sampling_steps": 8,
+      "pilot_ppl": 676.6102219318627,
+      "pilot_samples": 20
+    },
+    {
+      "family": "D",
+      "arm": "dynamic_dynamic",
+      "step": 2000,
+      "sampling_steps": 8,
+      "pilot_ppl": 699.8655051493665,
+      "pilot_samples": 20
+    },
+    {
+      "family": "A",
+      "arm": "static_static",
+      "step": 7000,
+      "sampling_steps": 16,
+      "pilot_ppl": 311.7825222652105,
+      "pilot_samples": 20
+    },
+    {
+      "family": "B",
+      "arm": "fixed_dynamic",
+      "step": 6000,
+      "sampling_steps": 16,
+      "pilot_ppl": 221.93495744787455,
+      "pilot_samples": 20
+    },
+    {
+      "family": "B",
+      "arm": "fixed_dynamic",
+      "step": 5000,
+      "sampling_steps": 16,
+      "pilot_ppl": 234.61376374923535,
+      "pilot_samples": 20
+    },
+    {
+      "family": "B",
+      "arm": "fixed_dynamic",
+      "step": 4000,
+      "sampling_steps": 16,
+      "pilot_ppl": 247.45743290709453,
+      "pilot_samples": 20
+    },
+    {
+      "family": "B",
+      "arm": "dynamic_dynamic",
+      "step": 7000,
+      "sampling_steps": 16,
+      "pilot_ppl": 258.7460281853351,
+      "pilot_samples": 20
+    },
+    {
+      "family": "B",
+      "arm": "dynamic_dynamic",
+      "step": 3000,
+      "sampling_steps": 16,
+      "pilot_ppl": 259.7400084622483,
+      "pilot_samples": 20
+    },
+    {
+      "family": "B",
+      "arm": "dynamic_dynamic",
+      "step": 6000,
+      "sampling_steps": 16,
+      "pilot_ppl": 264.41401682161546,
+      "pilot_samples": 20
+    },
+    {
+      "family": "C",
+      "arm": "fixed_dynamic",
+      "step": 5000,
+      "sampling_steps": 16,
+      "pilot_ppl": 248.50470340706994,
+      "pilot_samples": 20
+    },
+    {
+      "family": "C",
+      "arm": "fixed_dynamic",
+      "step": 1000,
+      "sampling_steps": 16,
+      "pilot_ppl": 266.9684540714219,
+      "pilot_samples": 20
+    },
+    {
+      "family": "C",
+      "arm": "fixed_dynamic",
+      "step": 6000,
+      "sampling_steps": 16,
+      "pilot_ppl": 267.96015737484714,
+      "pilot_samples": 20
+    },
+    {
+      "family": "C",
+      "arm": "dynamic_dynamic",
+      "step": 6000,
+      "sampling_steps": 16,
+      "pilot_ppl": 248.13959844061898,
+      "pilot_samples": 20
+    },
+    {
+      "family": "C",
+      "arm": "dynamic_dynamic",
+      "step": 5000,
+      "sampling_steps": 16,
+      "pilot_ppl": 257.7686096447384,
+      "pilot_samples": 20
+    },
+    {
+      "family": "C",
+      "arm": "dynamic_dynamic",
+      "step": 4000,
+      "sampling_steps": 16,
+      "pilot_ppl": 275.4965887191333,
+      "pilot_samples": 20
+    },
+    {
+      "family": "D",
+      "arm": "fixed_dynamic",
+      "step": 5000,
+      "sampling_steps": 16,
+      "pilot_ppl": 239.69456881630623,
+      "pilot_samples": 20
+    },
+    {
+      "family": "D",
+      "arm": "fixed_dynamic",
+      "step": 6000,
+      "sampling_steps": 16,
+      "pilot_ppl": 252.1799040737871,
+      "pilot_samples": 20
+    },
+    {
+      "family": "D",
+      "arm": "fixed_dynamic",
+      "step": 1000,
+      "sampling_steps": 16,
+      "pilot_ppl": 268.69855131987714,
+      "pilot_samples": 20
+    },
+    {
+      "family": "D",
+      "arm": "dynamic_dynamic",
+      "step": 2000,
+      "sampling_steps": 16,
+      "pilot_ppl": 277.2881054489368,
+      "pilot_samples": 20
+    },
+    {
+      "family": "D",
+      "arm": "dynamic_dynamic",
+      "step": 5000,
+      "sampling_steps": 16,
+      "pilot_ppl": 287.62051814376576,
+      "pilot_samples": 20
+    },
+    {
+      "family": "D",
+      "arm": "dynamic_dynamic",
+      "step": 6000,
+      "sampling_steps": 16,
+      "pilot_ppl": 299.0269198823354,
+      "pilot_samples": 20
+    },
+    {
+      "family": "A",
+      "arm": "static_static",
+      "step": 7000,
+      "sampling_steps": 32,
+      "pilot_ppl": 136.3403076136824,
+      "pilot_samples": 20
+    },
+    {
+      "family": "B",
+      "arm": "fixed_dynamic",
+      "step": 2000,
+      "sampling_steps": 32,
+      "pilot_ppl": 126.83031512021132,
+      "pilot_samples": 20
+    },
+    {
+      "family": "B",
+      "arm": "fixed_dynamic",
+      "step": 3000,
+      "sampling_steps": 32,
+      "pilot_ppl": 141.54627114003443,
+      "pilot_samples": 20
+    },
+    {
+      "family": "B",
+      "arm": "fixed_dynamic",
+      "step": 6000,
+      "sampling_steps": 32,
+      "pilot_ppl": 141.83975070080558,
+      "pilot_samples": 20
+    },
+    {
+      "family": "B",
+      "arm": "dynamic_dynamic",
+      "step": 5000,
+      "sampling_steps": 32,
+      "pilot_ppl": 132.2998690762931,
+      "pilot_samples": 20
+    },
+    {
+      "family": "B",
+      "arm": "dynamic_dynamic",
+      "step": 3000,
+      "sampling_steps": 32,
+      "pilot_ppl": 147.4654863566062,
+      "pilot_samples": 20
+    },
+    {
+      "family": "B",
+      "arm": "dynamic_dynamic",
+      "step": 6000,
+      "sampling_steps": 32,
+      "pilot_ppl": 150.84196889512089,
+      "pilot_samples": 20
+    },
+    {
+      "family": "C",
+      "arm": "fixed_dynamic",
+      "step": 6000,
+      "sampling_steps": 32,
+      "pilot_ppl": 130.75566042895284,
+      "pilot_samples": 20
+    },
+    {
+      "family": "C",
+      "arm": "fixed_dynamic",
+      "step": 3000,
+      "sampling_steps": 32,
+      "pilot_ppl": 139.29795720297585,
+      "pilot_samples": 20
+    },
+    {
+      "family": "C",
+      "arm": "fixed_dynamic",
+      "step": 2000,
+      "sampling_steps": 32,
+      "pilot_ppl": 145.9597556379055,
+      "pilot_samples": 20
+    },
+    {
+      "family": "C",
+      "arm": "dynamic_dynamic",
+      "step": 2000,
+      "sampling_steps": 32,
+      "pilot_ppl": 130.89146487416764,
+      "pilot_samples": 20
+    },
+    {
+      "family": "C",
+      "arm": "dynamic_dynamic",
+      "step": 6000,
+      "sampling_steps": 32,
+      "pilot_ppl": 150.73032368299351,
+      "pilot_samples": 20
+    },
+    {
+      "family": "C",
+      "arm": "dynamic_dynamic",
+      "step": 4000,
+      "sampling_steps": 32,
+      "pilot_ppl": 160.52409560272525,
+      "pilot_samples": 20
+    },
+    {
+      "family": "D",
+      "arm": "fixed_dynamic",
+      "step": 3000,
+      "sampling_steps": 32,
+      "pilot_ppl": 131.57362762720635,
+      "pilot_samples": 20
+    },
+    {
+      "family": "D",
+      "arm": "fixed_dynamic",
+      "step": 6000,
+      "sampling_steps": 32,
+      "pilot_ppl": 139.77434023808436,
+      "pilot_samples": 20
+    },
+    {
+      "family": "D",
+      "arm": "fixed_dynamic",
+      "step": 5000,
+      "sampling_steps": 32,
+      "pilot_ppl": 142.8118521774979,
+      "pilot_samples": 20
+    },
+    {
+      "family": "D",
+      "arm": "dynamic_dynamic",
+      "step": 3000,
+      "sampling_steps": 32,
+      "pilot_ppl": 151.60227818170208,
+      "pilot_samples": 20
+    },
+    {
+      "family": "D",
+      "arm": "dynamic_dynamic",
+      "step": 2000,
+      "sampling_steps": 32,
+      "pilot_ppl": 151.97430491188322,
+      "pilot_samples": 20
+    },
+    {
+      "family": "D",
+      "arm": "dynamic_dynamic",
+      "step": 6000,
+      "sampling_steps": 32,
+      "pilot_ppl": 160.3426587035514,
+      "pilot_samples": 20
+    }
+  ]
+}

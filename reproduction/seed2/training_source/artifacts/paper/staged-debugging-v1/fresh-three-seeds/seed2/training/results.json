@@ -1,0 +1,411 @@
+{
+  "protocol_sha256": "aef99696e3a5cedca87143588c491f50a14c58dd7c911d5ce2f6772f10d468c9",
+  "completed_steps": 1000,
+  "target_steps": 1000,
+  "completed": true,
+  "best_dev_checkpoints": {
+    "shared": {
+      "step": 1000,
+      "checkpoint_sha256": "4a9b9d083a8d771a8567f78c897c2ad278680c676f05bc6cec9123525a99e4d2",
+      "dev_joint_nll_per_masked_token": 4.9460586390976795
+    },
+    "directional": {
+      "step": 1000,
+      "checkpoint_sha256": "4a9b9d083a8d771a8567f78c897c2ad278680c676f05bc6cec9123525a99e4d2",
+      "dev_joint_nll_per_masked_token": 4.9446403669612025
+    },
+    "unary": {
+      "step": 1000,
+      "checkpoint_sha256": "4a9b9d083a8d771a8567f78c897c2ad278680c676f05bc6cec9123525a99e4d2",
+      "dev_joint_nll_per_masked_token": 4.9474755174173985
+    }
+  },
+  "evaluations": [
+    {
+      "step": 0,
+      "checkpoint_sha256": "bf77d7547653db8c77c5028ec821260c374bf4659dd398bcb3a67547be6067b5",
+      "arms": {
+        "shared": {
+          "active_token_count": 19648,
+          "backbone_nll_per_masked_token": 4.9645623075457275,
+          "joint_nll_per_masked_token": 4.966390403940157,
+          "marginal_nll_per_masked_token": 4.966423214695353,
+          "dependence_gain_nats_per_masked_token": 3.363906051974944e-05,
+          "joint_gain_nats_per_masked_token": -0.0018280963944301543,
+          "marginal_gain_nats_per_masked_token": -0.0018609071496255235
+        },
+        "directional": {
+          "active_token_count": 19648,
+          "backbone_nll_per_masked_token": 4.9645623075457275,
+          "joint_nll_per_masked_token": 4.9662236258727335,
+          "marginal_nll_per_masked_token": 4.966330603007774,
+          "dependence_gain_nats_per_masked_token": 0.00010775599177150929,
+          "joint_gain_nats_per_masked_token": -0.001661318327005989,
+          "marginal_gain_nats_per_masked_token": -0.0017682954620460733
+        },
+        "unary": {
+          "active_token_count": 19648,
+          "backbone_nll_per_masked_token": 4.9645623075457275,
+          "joint_nll_per_masked_token": 4.964562292596028,
+          "marginal_nll_per_masked_token": 4.964562292596028,
+          "dependence_gain_nats_per_masked_token": 0.0,
+          "joint_gain_nats_per_masked_token": 1.4949699178192437e-08,
+          "marginal_gain_nats_per_masked_token": 1.4949699178192437e-08
+        }
+      }
+    },
+    {
+      "step": 100,
+      "checkpoint_sha256": "fe449b8fe743fee95d791661ee1efc0d984ba3c81546e5f4a5ea563db146147b",
+      "arms": {
+        "shared": {
+          "active_token_count": 19648,
+          "backbone_nll_per_masked_token": 4.9645623075457275,
+          "joint_nll_per_masked_token": 4.965379148818771,
+          "marginal_nll_per_masked_token": 4.9656435179399745,
+          "dependence_gain_nats_per_masked_token": 0.00026454220235877496,
+          "joint_gain_nats_per_masked_token": -0.0008168412730437536,
+          "marginal_gain_nats_per_masked_token": -0.001081210394247347
+        },
+        "directional": {
+          "active_token_count": 19648,
+          "backbone_nll_per_masked_token": 4.9645623075457275,
+          "joint_nll_per_masked_token": 4.965241198431009,
+          "marginal_nll_per_masked_token": 4.965654385303441,
+          "dependence_gain_nats_per_masked_token": 0.00041362819731254844,
+          "joint_gain_nats_per_masked_token": -0.0006788908852816404,
+          "marginal_gain_nats_per_masked_token": -0.0010920777577142374
+        },
+        "unary": {
+          "active_token_count": 19648,
+          "backbone_nll_per_masked_token": 4.9645623075457275,
+          "joint_nll_per_masked_token": 4.963708657929097,
+          "marginal_nll_per_masked_token": 4.963708657929097,
+          "dependence_gain_nats_per_masked_token": 0.0,
+          "joint_gain_nats_per_masked_token": 0.0008536496166297589,
+          "marginal_gain_nats_per_masked_token": 0.0008536496166297589
+        }
+      }
+    },
+    {
+      "step": 200,
+      "checkpoint_sha256": "9953ee2ac342773174066912478a8b5042e7a4e9981708849e3cc36f9fdf6922",
+      "arms": {
+        "shared": {
+          "active_token_count": 19648,
+          "backbone_nll_per_masked_token": 4.9645623075457275,
+          "joint_nll_per_masked_token": 4.9522448851930205,
+          "marginal_nll_per_masked_token": 4.951153011731682,
+          "dependence_gain_nats_per_masked_token": -0.0010915132889580794,
+          "joint_gain_nats_per_masked_token": 0.012317422352706959,
+          "marginal_gain_nats_per_masked_token": 0.01340929581404509
+        },
+        "directional": {
+          "active_token_count": 19648,
+          "backbone_nll_per_masked_token": 4.9645623075457275,
+          "joint_nll_per_masked_token": 4.952623172381025,
+          "marginal_nll_per_masked_token": 4.952147635895188,
+          "dependence_gain_nats_per_masked_token": -0.0004750577099260579,
+          "joint_gain_nats_per_masked_token": 0.011939135164701978,
+          "marginal_gain_nats_per_masked_token": 0.012414671650538615
+        },
+        "unary": {
+          "active_token_count": 19648,
+          "backbone_nll_per_masked_token": 4.9645623075457275,
+          "joint_nll_per_masked_token": 4.958305793204603,
+          "marginal_nll_per_masked_token": 4.958305793204603,
+          "dependence_gain_nats_per_masked_token": 0.0,
+          "joint_gain_nats_per_masked_token": 0.0062565143411244944,
+          "marginal_gain_nats_per_masked_token": 0.0062565143411244944
+        }
+      }
+    },
+    {
+      "step": 300,
+      "checkpoint_sha256": "0a3a17ba63ad88c2d512081b60a44b70da528bd086bfa828bca5fd3bd89ffc34",
+      "arms": {
+        "shared": {
+          "active_token_count": 19648,
+          "backbone_nll_per_masked_token": 4.9645623075457275,
+          "joint_nll_per_masked_token": 4.952261324425862,
+          "marginal_nll_per_masked_token": 4.952319382504842,
+          "dependence_gain_nats_per_masked_token": 5.756118069743208e-05,
+          "joint_gain_nats_per_masked_token": 0.012300983119865194,
+          "marginal_gain_nats_per_masked_token": 0.012242925040884981
+        },
+        "directional": {
+          "active_token_count": 19648,
+          "backbone_nll_per_masked_token": 4.9645623075457275,
+          "joint_nll_per_masked_token": 4.952505042576246,
+          "marginal_nll_per_masked_token": 4.953164303729899,
+          "dependence_gain_nats_per_masked_token": 0.0006597681955804769,
+          "joint_gain_nats_per_masked_token": 0.012057264969480931,
+          "marginal_gain_nats_per_masked_token": 0.011398003815828006
+        },
+        "unary": {
+          "active_token_count": 19648,
+          "backbone_nll_per_masked_token": 4.9645623075457275,
+          "joint_nll_per_masked_token": 4.955977657330541,
+          "marginal_nll_per_masked_token": 4.955977657330541,
+          "dependence_gain_nats_per_masked_token": 0.0,
+          "joint_gain_nats_per_masked_token": 0.008584650215186203,
+          "marginal_gain_nats_per_masked_token": 0.008584650215186203
+        }
+      }
+    },
+    {
+      "step": 400,
+      "checkpoint_sha256": "32b89e704a0c9810c70a86656ccb00f80cebfe70d2d7f03432ce1373bcd64fbe",
+      "arms": {
+        "shared": {
+          "active_token_count": 19648,
+          "backbone_nll_per_masked_token": 4.9645623075457275,
+          "joint_nll_per_masked_token": 4.95253372114722,
+          "marginal_nll_per_masked_token": 4.953681510415062,
+          "dependence_gain_nats_per_masked_token": 0.001148617917434608,
+          "joint_gain_nats_per_masked_token": 0.012028586398506786,
+          "marginal_gain_nats_per_masked_token": 0.010880797130665485
+        },
+        "directional": {
+          "active_token_count": 19648,
+          "backbone_nll_per_masked_token": 4.9645623075457275,
+          "joint_nll_per_masked_token": 4.952733178868744,
+          "marginal_nll_per_masked_token": 4.954859354208657,
+          "dependence_gain_nats_per_masked_token": 0.0021255874054234153,
+          "joint_gain_nats_per_masked_token": 0.011829128676982967,
+          "marginal_gain_nats_per_masked_token": 0.00970295333706983
+        },
+        "unary": {
+          "active_token_count": 19648,
+          "backbone_nll_per_masked_token": 4.9645623075457275,
+          "joint_nll_per_masked_token": 4.954521846547966,
+          "marginal_nll_per_masked_token": 4.954521846547966,
+          "dependence_gain_nats_per_masked_token": 0.0,
+          "joint_gain_nats_per_masked_token": 0.010040460997761656,
+          "marginal_gain_nats_per_masked_token": 0.010040460997761656
+        }
+      }
+    },
+    {
+      "step": 500,
+      "checkpoint_sha256": "47be718ce733f645514073423bda3cf318b743aa9e7902d3ff7d3d7d9ce1b957",
+      "arms": {
+        "shared": {
+          "active_token_count": 19648,
+          "backbone_nll_per_masked_token": 4.9645623075457275,
+          "joint_nll_per_masked_token": 4.950406249260669,
+          "marginal_nll_per_masked_token": 4.95128690080068,
+          "dependence_gain_nats_per_masked_token": 0.0008803606136421012,
+          "joint_gain_nats_per_masked_token": 0.014156058285057739,
+          "marginal_gain_nats_per_masked_token": 0.013275406745047057
+        },
+        "directional": {
+          "active_token_count": 19648,
+          "backbone_nll_per_masked_token": 4.9645623075457275,
+          "joint_nll_per_masked_token": 4.950305339956128,
+          "marginal_nll_per_masked_token": 4.952319240871004,
+          "dependence_gain_nats_per_masked_token": 0.0020141775189482353,
+          "joint_gain_nats_per_masked_token": 0.014256967589598914,
+          "marginal_gain_nats_per_masked_token": 0.012243066674723298
+        },
+        "unary": {
+          "active_token_count": 19648,
+          "backbone_nll_per_masked_token": 4.9645623075457275,
+          "joint_nll_per_masked_token": 4.952507174801361,
+          "marginal_nll_per_masked_token": 4.952507174801361,
+          "dependence_gain_nats_per_masked_token": 0.0,
+          "joint_gain_nats_per_masked_token": 0.01205513274436665,
+          "marginal_gain_nats_per_masked_token": 0.01205513274436665
+        }
+      }
+    },
+    {
+      "step": 600,
+      "checkpoint_sha256": "fb4c6e765775e0ffc59881bb3faf8ef578af416f8053fe98756ad27eb73892c0",
+      "arms": {
+        "shared": {
+          "active_token_count": 19648,
+          "backbone_nll_per_masked_token": 4.9645623075457275,
+          "joint_nll_per_masked_token": 4.948952838729958,
+          "marginal_nll_per_masked_token": 4.949926722418602,
+          "dependence_gain_nats_per_masked_token": 0.0009754498725865218,
+          "joint_gain_nats_per_masked_token": 0.015609468815769358,
+          "marginal_gain_nats_per_masked_token": 0.014635585127125346
+        },
+        "directional": {
+          "active_token_count": 19648,
+          "backbone_nll_per_masked_token": 4.9645623075457275,
+          "joint_nll_per_masked_token": 4.94852625119958,
+          "marginal_nll_per_masked_token": 4.95125014143192,
+          "dependence_gain_nats_per_masked_token": 0.0027231714970368517,
+          "joint_gain_nats_per_masked_token": 0.016036056346147767,
+          "marginal_gain_nats_per_masked_token": 0.013312166113806858
+        },
+        "unary": {
+          "active_token_count": 19648,
+          "backbone_nll_per_masked_token": 4.9645623075457275,
+          "joint_nll_per_masked_token": 4.951666449199671,
+          "marginal_nll_per_masked_token": 4.951666449199671,
+          "dependence_gain_nats_per_masked_token": 0.0,
+          "joint_gain_nats_per_masked_token": 0.01289585834605686,
+          "marginal_gain_nats_per_masked_token": 0.01289585834605686
+        }
+      }
+    },
+    {
+      "step": 700,
+      "checkpoint_sha256": "7d2034953ddc7a9b14977bc186de8e685ed10c90c72995834ab964e2065432b8",
+      "arms": {
+        "shared": {
+          "active_token_count": 19648,
+          "backbone_nll_per_masked_token": 4.9645623075457275,
+          "joint_nll_per_masked_token": 4.949454005455737,
+          "marginal_nll_per_masked_token": 4.951632247831223,
+          "dependence_gain_nats_per_masked_token": 0.002177425619511594,
+          "joint_gain_nats_per_masked_token": 0.01510830208998938,
+          "marginal_gain_nats_per_masked_token": 0.012930059714503707
+        },
+        "directional": {
+          "active_token_count": 19648,
+          "backbone_nll_per_masked_token": 4.9645623075457275,
+          "joint_nll_per_masked_token": 4.948700211335471,
+          "marginal_nll_per_masked_token": 4.952947102559894,
+          "dependence_gain_nats_per_masked_token": 0.004247695990081221,
+          "joint_gain_nats_per_masked_token": 0.015862096210256072,
+          "marginal_gain_nats_per_masked_token": 0.011615204985832935
+        },
+        "unary": {
+          "active_token_count": 19648,
+          "backbone_nll_per_masked_token": 4.9645623075457275,
+          "joint_nll_per_masked_token": 4.950487896848579,
+          "marginal_nll_per_masked_token": 4.950487896848579,
+          "dependence_gain_nats_per_masked_token": 0.0,
+          "joint_gain_nats_per_masked_token": 0.014074410697147979,
+          "marginal_gain_nats_per_masked_token": 0.014074410697147979
+        }
+      }
+    },
+    {
+      "step": 800,
+      "checkpoint_sha256": "189fc6ff232ecf8f5c63ccdd8965a9bae298f97df1946b4b64c2f69158dfc8c0",
+      "arms": {
+        "shared": {
+          "active_token_count": 19648,
+          "backbone_nll_per_masked_token": 4.9645623075457275,
+          "joint_nll_per_masked_token": 4.947609530986326,
+          "marginal_nll_per_masked_token": 4.9491513963631,
+          "dependence_gain_nats_per_masked_token": 0.0015416935305168939,
+          "joint_gain_nats_per_masked_token": 0.016952776559401025,
+          "marginal_gain_nats_per_masked_token": 0.015410911182627227
+        },
+        "directional": {
+          "active_token_count": 19648,
+          "backbone_nll_per_masked_token": 4.9645623075457275,
+          "joint_nll_per_masked_token": 4.946670494172783,
+          "marginal_nll_per_masked_token": 4.950274199101746,
+          "dependence_gain_nats_per_masked_token": 0.0036040044493163845,
+          "joint_gain_nats_per_masked_token": 0.017891813372944387,
+          "marginal_gain_nats_per_masked_token": 0.014288108443980884
+        },
+        "unary": {
+          "active_token_count": 19648,
+          "backbone_nll_per_masked_token": 4.9645623075457275,
+          "joint_nll_per_masked_token": 4.949750926430529,
+          "marginal_nll_per_masked_token": 4.949750926430529,
+          "dependence_gain_nats_per_masked_token": 0.0,
+          "joint_gain_nats_per_masked_token": 0.014811381115198911,
+          "marginal_gain_nats_per_masked_token": 0.014811381115198911
+        }
+      }
+    },
+    {
+      "step": 900,
+      "checkpoint_sha256": "07fae4794ed51f3c732be82530b11820abd436cea4dbfb8a9144eb7e8fb1c1c2",
+      "arms": {
+        "shared": {
+          "active_token_count": 19648,
+          "backbone_nll_per_masked_token": 4.9645623075457275,
+          "joint_nll_per_masked_token": 4.9478348093623055,
+          "marginal_nll_per_masked_token": 4.949798403325997,
+          "dependence_gain_nats_per_masked_token": 0.001963003393515648,
+          "joint_gain_nats_per_masked_token": 0.016727498183421282,
+          "marginal_gain_nats_per_masked_token": 0.014763904219729892
+        },
+        "directional": {
+          "active_token_count": 19648,
+          "backbone_nll_per_masked_token": 4.9645623075457275,
+          "joint_nll_per_masked_token": 4.9466949479975995,
+          "marginal_nll_per_masked_token": 4.950946806696416,
+          "dependence_gain_nats_per_masked_token": 0.004252234895901143,
+          "joint_gain_nats_per_masked_token": 0.017867359548127612,
+          "marginal_gain_nats_per_masked_token": 0.01361550084931066
+        },
+        "unary": {
+          "active_token_count": 19648,
+          "backbone_nll_per_masked_token": 4.9645623075457275,
+          "joint_nll_per_masked_token": 4.948685055786702,
+          "marginal_nll_per_masked_token": 4.948685055786702,
+          "dependence_gain_nats_per_masked_token": 0.0,
+          "joint_gain_nats_per_masked_token": 0.015877251759025872,
+          "marginal_gain_nats_per_masked_token": 0.015877251759025872
+        }
+      }
+    },
+    {
+      "step": 1000,
+      "checkpoint_sha256": "4a9b9d083a8d771a8567f78c897c2ad278680c676f05bc6cec9123525a99e4d2",
+      "arms": {
+        "shared": {
+          "active_token_count": 19648,
+          "backbone_nll_per_masked_token": 4.9645623075457275,
+          "joint_nll_per_masked_token": 4.9460586390976795,
+          "marginal_nll_per_masked_token": 4.948414658490532,
+          "dependence_gain_nats_per_masked_token": 0.002357553211714828,
+          "joint_gain_nats_per_masked_token": 0.01850366844804745,
+          "marginal_gain_nats_per_masked_token": 0.016147649055195164
+        },
+        "directional": {
+          "active_token_count": 19648,
+          "backbone_nll_per_masked_token": 4.9645623075457275,
+          "joint_nll_per_masked_token": 4.9446403669612025,
+          "marginal_nll_per_masked_token": 4.94962649571585,
+          "dependence_gain_nats_per_masked_token": 0.004986446937312569,
+          "joint_gain_nats_per_masked_token": 0.019921940584524445,
+          "marginal_gain_nats_per_masked_token": 0.0149358118298776
+        },
+        "unary": {
+          "active_token_count": 19648,
+          "backbone_nll_per_masked_token": 4.9645623075457275,
+          "joint_nll_per_masked_token": 4.9474755174173985,
+          "marginal_nll_per_masked_token": 4.9474755174173985,
+          "dependence_gain_nats_per_masked_token": 0.0,
+          "joint_gain_nats_per_masked_token": 0.0170867901283289,
+          "marginal_gain_nats_per_masked_token": 0.0170867901283289
+        }
+      }
+    }
+  ],
+  "parameter_counts": {
+    "shared": {
+      "rank": 16,
+      "active_trainable_parameters": 840640,
+      "inactive_frozen_parameters": 6827
+    },
+    "directional": {
+      "rank": 8,
+      "active_trainable_parameters": 840640,
+      "inactive_frozen_parameters": 6827
+    },
+    "unary": {
+      "rank": 16,
+      "active_trainable_parameters": 827312,
+      "inactive_frozen_parameters": 0
+    }
+  },
+  "training_mask_rate_histogram": {
+    "0.25": 233,
+    "0.5": 250,
+    "0.75": 245,
+    "0.9": 272
+  }
+}

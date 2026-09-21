@@ -1,0 +1,7709 @@
+[
+  {
+    "context": 0,
+    "edge_f1": 0.0,
+    "edge_precision": 0.0,
+    "edge_recall": 0.0,
+    "invalid_rate": 0.49997985854771276,
+    "kl": 0.6931874642758976,
+    "model": "factorized",
+    "predicted_edges": [],
+    "sampled_invalid_rate": 0.49960000000000004,
+    "sampler": "independent_marginals",
+    "seed": 1,
+    "task": "ambiguous_pairs",
+    "true_edges": [
+      [
+        0,
+        1
+      ]
+    ],
+    "tv": 0.49997985854771276
+  },
+  {
+    "context": 0,
+    "edge_f1": 0.0,
+    "edge_precision": 0.0,
+    "edge_recall": 0.0,
+    "invalid_rate": 0.49997985854771276,
+    "kl": 0.6931874642758976,
+    "model": "parameter_matched_independent",
+    "predicted_edges": [],
+    "sampled_invalid_rate": 0.50415,
+    "sampler": "independent_marginals",
+    "seed": 1,
+    "task": "ambiguous_pairs",
+    "true_edges": [
+      [
+        0,
+        1
+      ]
+    ],
+    "tv": 0.49997985854771276
+  },
+  {
+    "context": 0,
+    "edge_f1": 1.0,
+    "edge_precision": 1.0,
+    "edge_recall": 1.0,
+    "invalid_rate": 0.0001220405174517942,
+    "kl": 0.0001421898229778673,
+    "model": "natural_chain",
+    "predicted_edges": [
+      [
+        0,
+        1
+      ]
+    ],
+    "sampled_invalid_rate": 0.00014999999999998348,
+    "sampler": "enumerated_joint",
+    "seed": 1,
+    "task": "ambiguous_pairs",
+    "true_edges": [
+      [
+        0,
+        1
+      ]
+    ],
+    "tv": 0.003234073712472613
+  },
+  {
+    "context": 0,
+    "edge_f1": 1.0,
+    "edge_precision": 1.0,
+    "edge_recall": 1.0,
+    "invalid_rate": 0.0001220405174517942,
+    "kl": 0.0001421898229778673,
+    "model": "static_forest",
+    "predicted_edges": [
+      [
+        0,
+        1
+      ]
+    ],
+    "sampled_invalid_rate": 9.999999999998899e-05,
+    "sampler": "enumerated_joint",
+    "seed": 1,
+    "task": "ambiguous_pairs",
+    "true_edges": [
+      [
+        0,
+        1
+      ]
+    ],
+    "tv": 0.003234073712472613
+  },
+  {
+    "context": 0,
+    "edge_f1": 1.0,
+    "edge_precision": 1.0,
+    "edge_recall": 1.0,
+    "invalid_rate": 0.0001220405174517942,
+    "kl": 0.0001421898229778673,
+    "model": "fixed_topology_dynamic_factors",
+    "predicted_edges": [
+      [
+        0,
+        1
+      ]
+    ],
+    "sampled_invalid_rate": 9.999999999998899e-05,
+    "sampler": "enumerated_joint",
+    "seed": 1,
+    "task": "ambiguous_pairs",
+    "true_edges": [
+      [
+        0,
+        1
+      ]
+    ],
+    "tv": 0.003234073712472613
+  },
+  {
+    "context": 0,
+    "edge_f1": 1.0,
+    "edge_precision": 1.0,
+    "edge_recall": 1.0,
+    "invalid_rate": 0.00012204051625180766,
+    "kl": 0.00014219965566680814,
+    "model": "dynamic_topology_fixed_factors",
+    "predicted_edges": [
+      [
+        0,
+        1
+      ]
+    ],
+    "sampled_invalid_rate": 0.0,
+    "sampler": "enumerated_joint",
+    "seed": 1,
+    "task": "ambiguous_pairs",
+    "true_edges": [
+      [
+        0,
+        1
+      ]
+    ],
+    "tv": 0.003234848194035688
+  },
+  {
+    "context": 0,
+    "edge_f1": 1.0,
+    "edge_precision": 1.0,
+    "edge_recall": 1.0,
+    "invalid_rate": 0.0001220405174517942,
+    "kl": 0.0001421898229778673,
+    "model": "contextual_forest",
+    "predicted_edges": [
+      [
+        0,
+        1
+      ]
+    ],
+    "sampled_invalid_rate": 0.00014999999999998348,
+    "sampler": "enumerated_joint",
+    "seed": 1,
+    "task": "ambiguous_pairs",
+    "true_edges": [
+      [
+        0,
+        1
+      ]
+    ],
+    "tv": 0.003234073712472613
+  },
+  {
+    "context": 0,
+    "edge_f1": 0.0,
+    "edge_precision": 0.0,
+    "edge_recall": 0.0,
+    "invalid_rate": 0.0,
+    "kl": 0.4182584451987019,
+    "model": "factorized",
+    "predicted_edges": [],
+    "sampled_invalid_rate": 0.0,
+    "sampler": "independent_marginals",
+    "seed": 1,
+    "task": "markov_025",
+    "true_edges": [
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        2
+      ],
+      [
+        2,
+        3
+      ],
+      [
+        3,
+        4
+      ],
+      [
+        4,
+        5
+      ]
+    ],
+    "tv": 0.35717193561984584
+  },
+  {
+    "context": 0,
+    "edge_f1": 0.0,
+    "edge_precision": 0.0,
+    "edge_recall": 0.0,
+    "invalid_rate": 0.0,
+    "kl": 0.4182584451987019,
+    "model": "parameter_matched_independent",
+    "predicted_edges": [],
+    "sampled_invalid_rate": 0.0,
+    "sampler": "independent_marginals",
+    "seed": 1,
+    "task": "markov_025",
+    "true_edges": [
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        2
+      ],
+      [
+        2,
+        3
+      ],
+      [
+        3,
+        4
+      ],
+      [
+        4,
+        5
+      ]
+    ],
+    "tv": 0.35717193561984584
+  },
+  {
+    "context": 0,
+    "edge_f1": 1.0,
+    "edge_precision": 1.0,
+    "edge_recall": 1.0,
+    "invalid_rate": 0.0,
+    "kl": 0.006431099992040381,
+    "model": "natural_chain",
+    "predicted_edges": [
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        2
+      ],
+      [
+        2,
+        3
+      ],
+      [
+        3,
+        4
+      ],
+      [
+        4,
+        5
+      ]
+    ],
+    "sampled_invalid_rate": 0.0,
+    "sampler": "enumerated_joint",
+    "seed": 1,
+    "task": "markov_025",
+    "true_edges": [
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        2
+      ],
+      [
+        2,
+        3
+      ],
+      [
+        3,
+        4
+      ],
+      [
+        4,
+        5
+      ]
+    ],
+    "tv": 0.045686250582416044
+  },
+  {
+    "context": 0,
+    "edge_f1": 1.0,
+    "edge_precision": 1.0,
+    "edge_recall": 1.0,
+    "invalid_rate": 0.0,
+    "kl": 0.006431099992040381,
+    "model": "static_forest",
+    "predicted_edges": [
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        2
+      ],
+      [
+        2,
+        3
+      ],
+      [
+        3,
+        4
+      ],
+      [
+        4,
+        5
+      ]
+    ],
+    "sampled_invalid_rate": 0.0,
+    "sampler": "enumerated_joint",
+    "seed": 1,
+    "task": "markov_025",
+    "true_edges": [
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        2
+      ],
+      [
+        2,
+        3
+      ],
+      [
+        3,
+        4
+      ],
+      [
+        4,
+        5
+      ]
+    ],
+    "tv": 0.045686250582416044
+  },
+  {
+    "context": 0,
+    "edge_f1": 1.0,
+    "edge_precision": 1.0,
+    "edge_recall": 1.0,
+    "invalid_rate": 0.0,
+    "kl": 0.006431099992040381,
+    "model": "fixed_topology_dynamic_factors",
+    "predicted_edges": [
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        2
+      ],
+      [
+        2,
+        3
+      ],
+      [
+        3,
+        4
+      ],
+      [
+        4,
+        5
+      ]
+    ],
+    "sampled_invalid_rate": 0.0,
+    "sampler": "enumerated_joint",
+    "seed": 1,
+    "task": "markov_025",
+    "true_edges": [
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        2
+      ],
+      [
+        2,
+        3
+      ],
+      [
+        3,
+        4
+      ],
+      [
+        4,
+        5
+      ]
+    ],
+    "tv": 0.045686250582416044
+  },
+  {
+    "context": 0,
+    "edge_f1": 1.0,
+    "edge_precision": 1.0,
+    "edge_recall": 1.0,
+    "invalid_rate": 0.0,
+    "kl": 0.003168762683887767,
+    "model": "dynamic_topology_fixed_factors",
+    "predicted_edges": [
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        2
+      ],
+      [
+        2,
+        3
+      ],
+      [
+        3,
+        4
+      ],
+      [
+        4,
+        5
+      ]
+    ],
+    "sampled_invalid_rate": 0.0,
+    "sampler": "enumerated_joint",
+    "seed": 1,
+    "task": "markov_025",
+    "true_edges": [
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        2
+      ],
+      [
+        2,
+        3
+      ],
+      [
+        3,
+        4
+      ],
+      [
+        4,
+        5
+      ]
+    ],
+    "tv": 0.03201666948937048
+  },
+  {
+    "context": 0,
+    "edge_f1": 1.0,
+    "edge_precision": 1.0,
+    "edge_recall": 1.0,
+    "invalid_rate": 0.0,
+    "kl": 0.006431099992040381,
+    "model": "contextual_forest",
+    "predicted_edges": [
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        2
+      ],
+      [
+        2,
+        3
+      ],
+      [
+        3,
+        4
+      ],
+      [
+        4,
+        5
+      ]
+    ],
+    "sampled_invalid_rate": 0.0,
+    "sampler": "enumerated_joint",
+    "seed": 1,
+    "task": "markov_025",
+    "true_edges": [
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        2
+      ],
+      [
+        2,
+        3
+      ],
+      [
+        3,
+        4
+      ],
+      [
+        4,
+        5
+      ]
+    ],
+    "tv": 0.045686250582416044
+  },
+  {
+    "context": 0,
+    "edge_f1": 0.0,
+    "edge_precision": 0.0,
+    "edge_recall": 0.0,
+    "invalid_rate": 0.0,
+    "kl": 1.5645857113055712,
+    "model": "factorized",
+    "predicted_edges": [],
+    "sampled_invalid_rate": 0.0,
+    "sampler": "independent_marginals",
+    "seed": 1,
+    "task": "markov_050",
+    "true_edges": [
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        2
+      ],
+      [
+        2,
+        3
+      ],
+      [
+        3,
+        4
+      ],
+      [
+        4,
+        5
+      ]
+    ],
+    "tv": 0.6212390573999583
+  },
+  {
+    "context": 0,
+    "edge_f1": 0.0,
+    "edge_precision": 0.0,
+    "edge_recall": 0.0,
+    "invalid_rate": 0.0,
+    "kl": 1.5645857113055712,
+    "model": "parameter_matched_independent",
+    "predicted_edges": [],
+    "sampled_invalid_rate": 0.0,
+    "sampler": "independent_marginals",
+    "seed": 1,
+    "task": "markov_050",
+    "true_edges": [
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        2
+      ],
+      [
+        2,
+        3
+      ],
+      [
+        3,
+        4
+      ],
+      [
+        4,
+        5
+      ]
+    ],
+    "tv": 0.6212390573999583
+  },
+  {
+    "context": 0,
+    "edge_f1": 1.0,
+    "edge_precision": 1.0,
+    "edge_recall": 1.0,
+    "invalid_rate": 0.0,
+    "kl": 0.004563927809450486,
+    "model": "natural_chain",
+    "predicted_edges": [
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        2
+      ],
+      [
+        2,
+        3
+      ],
+      [
+        3,
+        4
+      ],
+      [
+        4,
+        5
+      ]
+    ],
+    "sampled_invalid_rate": 0.0,
+    "sampler": "enumerated_joint",
+    "seed": 1,
+    "task": "markov_050",
+    "true_edges": [
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        2
+      ],
+      [
+        2,
+        3
+      ],
+      [
+        3,
+        4
+      ],
+      [
+        4,
+        5
+      ]
+    ],
+    "tv": 0.036784784980298704
+  },
+  {
+    "context": 0,
+    "edge_f1": 1.0,
+    "edge_precision": 1.0,
+    "edge_recall": 1.0,
+    "invalid_rate": 0.0,
+    "kl": 0.004563927809450486,
+    "model": "static_forest",
+    "predicted_edges": [
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        2
+      ],
+      [
+        2,
+        3
+      ],
+      [
+        3,
+        4
+      ],
+      [
+        4,
+        5
+      ]
+    ],
+    "sampled_invalid_rate": 0.0,
+    "sampler": "enumerated_joint",
+    "seed": 1,
+    "task": "markov_050",
+    "true_edges": [
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        2
+      ],
+      [
+        2,
+        3
+      ],
+      [
+        3,
+        4
+      ],
+      [
+        4,
+        5
+      ]
+    ],
+    "tv": 0.036784784980298704
+  },
+  {
+    "context": 0,
+    "edge_f1": 1.0,
+    "edge_precision": 1.0,
+    "edge_recall": 1.0,
+    "invalid_rate": 0.0,
+    "kl": 0.004563927809450486,
+    "model": "fixed_topology_dynamic_factors",
+    "predicted_edges": [
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        2
+      ],
+      [
+        2,
+        3
+      ],
+      [
+        3,
+        4
+      ],
+      [
+        4,
+        5
+      ]
+    ],
+    "sampled_invalid_rate": 0.0,
+    "sampler": "enumerated_joint",
+    "seed": 1,
+    "task": "markov_050",
+    "true_edges": [
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        2
+      ],
+      [
+        2,
+        3
+      ],
+      [
+        3,
+        4
+      ],
+      [
+        4,
+        5
+      ]
+    ],
+    "tv": 0.036784784980298704
+  },
+  {
+    "context": 0,
+    "edge_f1": 1.0,
+    "edge_precision": 1.0,
+    "edge_recall": 1.0,
+    "invalid_rate": 0.0,
+    "kl": 0.0011857762674706875,
+    "model": "dynamic_topology_fixed_factors",
+    "predicted_edges": [
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        2
+      ],
+      [
+        2,
+        3
+      ],
+      [
+        3,
+        4
+      ],
+      [
+        4,
+        5
+      ]
+    ],
+    "sampled_invalid_rate": 0.0,
+    "sampler": "enumerated_joint",
+    "seed": 1,
+    "task": "markov_050",
+    "true_edges": [
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        2
+      ],
+      [
+        2,
+        3
+      ],
+      [
+        3,
+        4
+      ],
+      [
+        4,
+        5
+      ]
+    ],
+    "tv": 0.019370984426568674
+  },
+  {
+    "context": 0,
+    "edge_f1": 1.0,
+    "edge_precision": 1.0,
+    "edge_recall": 1.0,
+    "invalid_rate": 0.0,
+    "kl": 0.004563927809450486,
+    "model": "contextual_forest",
+    "predicted_edges": [
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        2
+      ],
+      [
+        2,
+        3
+      ],
+      [
+        3,
+        4
+      ],
+      [
+        4,
+        5
+      ]
+    ],
+    "sampled_invalid_rate": 0.0,
+    "sampler": "enumerated_joint",
+    "seed": 1,
+    "task": "markov_050",
+    "true_edges": [
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        2
+      ],
+      [
+        2,
+        3
+      ],
+      [
+        3,
+        4
+      ],
+      [
+        4,
+        5
+      ]
+    ],
+    "tv": 0.036784784980298704
+  },
+  {
+    "context": 0,
+    "edge_f1": 0.0,
+    "edge_precision": 0.0,
+    "edge_recall": 0.0,
+    "invalid_rate": 0.0,
+    "kl": 3.4898446163774635,
+    "model": "factorized",
+    "predicted_edges": [],
+    "sampled_invalid_rate": 0.0,
+    "sampler": "independent_marginals",
+    "seed": 1,
+    "task": "markov_075",
+    "true_edges": [
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        2
+      ],
+      [
+        2,
+        3
+      ],
+      [
+        3,
+        4
+      ],
+      [
+        4,
+        5
+      ]
+    ],
+    "tv": 0.8476140962408523
+  },
+  {
+    "context": 0,
+    "edge_f1": 0.0,
+    "edge_precision": 0.0,
+    "edge_recall": 0.0,
+    "invalid_rate": 0.0,
+    "kl": 3.4898446163774635,
+    "model": "parameter_matched_independent",
+    "predicted_edges": [],
+    "sampled_invalid_rate": 0.0,
+    "sampler": "independent_marginals",
+    "seed": 1,
+    "task": "markov_075",
+    "true_edges": [
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        2
+      ],
+      [
+        2,
+        3
+      ],
+      [
+        3,
+        4
+      ],
+      [
+        4,
+        5
+      ]
+    ],
+    "tv": 0.8476140962408523
+  },
+  {
+    "context": 0,
+    "edge_f1": 1.0,
+    "edge_precision": 1.0,
+    "edge_recall": 1.0,
+    "invalid_rate": 0.0,
+    "kl": 0.004134413387368566,
+    "model": "natural_chain",
+    "predicted_edges": [
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        2
+      ],
+      [
+        2,
+        3
+      ],
+      [
+        3,
+        4
+      ],
+      [
+        4,
+        5
+      ]
+    ],
+    "sampled_invalid_rate": 0.0,
+    "sampler": "enumerated_joint",
+    "seed": 1,
+    "task": "markov_075",
+    "true_edges": [
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        2
+      ],
+      [
+        2,
+        3
+      ],
+      [
+        3,
+        4
+      ],
+      [
+        4,
+        5
+      ]
+    ],
+    "tv": 0.03251372785307876
+  },
+  {
+    "context": 0,
+    "edge_f1": 1.0,
+    "edge_precision": 1.0,
+    "edge_recall": 1.0,
+    "invalid_rate": 0.0,
+    "kl": 0.004134413387368566,
+    "model": "static_forest",
+    "predicted_edges": [
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        2
+      ],
+      [
+        2,
+        3
+      ],
+      [
+        3,
+        4
+      ],
+      [
+        4,
+        5
+      ]
+    ],
+    "sampled_invalid_rate": 0.0,
+    "sampler": "enumerated_joint",
+    "seed": 1,
+    "task": "markov_075",
+    "true_edges": [
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        2
+      ],
+      [
+        2,
+        3
+      ],
+      [
+        3,
+        4
+      ],
+      [
+        4,
+        5
+      ]
+    ],
+    "tv": 0.03251372785307876
+  },
+  {
+    "context": 0,
+    "edge_f1": 1.0,
+    "edge_precision": 1.0,
+    "edge_recall": 1.0,
+    "invalid_rate": 0.0,
+    "kl": 0.004134413387368566,
+    "model": "fixed_topology_dynamic_factors",
+    "predicted_edges": [
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        2
+      ],
+      [
+        2,
+        3
+      ],
+      [
+        3,
+        4
+      ],
+      [
+        4,
+        5
+      ]
+    ],
+    "sampled_invalid_rate": 0.0,
+    "sampler": "enumerated_joint",
+    "seed": 1,
+    "task": "markov_075",
+    "true_edges": [
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        2
+      ],
+      [
+        2,
+        3
+      ],
+      [
+        3,
+        4
+      ],
+      [
+        4,
+        5
+      ]
+    ],
+    "tv": 0.03251372785307876
+  },
+  {
+    "context": 0,
+    "edge_f1": 1.0,
+    "edge_precision": 1.0,
+    "edge_recall": 1.0,
+    "invalid_rate": 0.0,
+    "kl": 0.0017419869671610275,
+    "model": "dynamic_topology_fixed_factors",
+    "predicted_edges": [
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        2
+      ],
+      [
+        2,
+        3
+      ],
+      [
+        3,
+        4
+      ],
+      [
+        4,
+        5
+      ]
+    ],
+    "sampled_invalid_rate": 0.0,
+    "sampler": "enumerated_joint",
+    "seed": 1,
+    "task": "markov_075",
+    "true_edges": [
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        2
+      ],
+      [
+        2,
+        3
+      ],
+      [
+        3,
+        4
+      ],
+      [
+        4,
+        5
+      ]
+    ],
+    "tv": 0.021297677655812412
+  },
+  {
+    "context": 0,
+    "edge_f1": 1.0,
+    "edge_precision": 1.0,
+    "edge_recall": 1.0,
+    "invalid_rate": 0.0,
+    "kl": 0.004134413387368566,
+    "model": "contextual_forest",
+    "predicted_edges": [
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        2
+      ],
+      [
+        2,
+        3
+      ],
+      [
+        3,
+        4
+      ],
+      [
+        4,
+        5
+      ]
+    ],
+    "sampled_invalid_rate": 0.0,
+    "sampler": "enumerated_joint",
+    "seed": 1,
+    "task": "markov_075",
+    "true_edges": [
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        2
+      ],
+      [
+        2,
+        3
+      ],
+      [
+        3,
+        4
+      ],
+      [
+        4,
+        5
+      ]
+    ],
+    "tv": 0.03251372785307876
+  },
+  {
+    "context": 0,
+    "edge_f1": 0.0,
+    "edge_precision": 0.0,
+    "edge_recall": 0.0,
+    "invalid_rate": 0.0,
+    "kl": 5.18921529423092,
+    "model": "factorized",
+    "predicted_edges": [],
+    "sampled_invalid_rate": 0.0,
+    "sampler": "independent_marginals",
+    "seed": 1,
+    "task": "markov_090",
+    "true_edges": [
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        2
+      ],
+      [
+        2,
+        3
+      ],
+      [
+        3,
+        4
+      ],
+      [
+        4,
+        5
+      ]
+    ],
+    "tv": 0.9360485401841661
+  },
+  {
+    "context": 0,
+    "edge_f1": 0.0,
+    "edge_precision": 0.0,
+    "edge_recall": 0.0,
+    "invalid_rate": 0.0,
+    "kl": 5.18921529423092,
+    "model": "parameter_matched_independent",
+    "predicted_edges": [],
+    "sampled_invalid_rate": 0.0,
+    "sampler": "independent_marginals",
+    "seed": 1,
+    "task": "markov_090",
+    "true_edges": [
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        2
+      ],
+      [
+        2,
+        3
+      ],
+      [
+        3,
+        4
+      ],
+      [
+        4,
+        5
+      ]
+    ],
+    "tv": 0.9360485401841661
+  },
+  {
+    "context": 0,
+    "edge_f1": 1.0,
+    "edge_precision": 1.0,
+    "edge_recall": 1.0,
+    "invalid_rate": 0.0,
+    "kl": 0.00993408716262522,
+    "model": "natural_chain",
+    "predicted_edges": [
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        2
+      ],
+      [
+        2,
+        3
+      ],
+      [
+        3,
+        4
+      ],
+      [
+        4,
+        5
+      ]
+    ],
+    "sampled_invalid_rate": 0.0,
+    "sampler": "enumerated_joint",
+    "seed": 1,
+    "task": "markov_090",
+    "true_edges": [
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        2
+      ],
+      [
+        2,
+        3
+      ],
+      [
+        3,
+        4
+      ],
+      [
+        4,
+        5
+      ]
+    ],
+    "tv": 0.03746782781606886
+  },
+  {
+    "context": 0,
+    "edge_f1": 1.0,
+    "edge_precision": 1.0,
+    "edge_recall": 1.0,
+    "invalid_rate": 0.0,
+    "kl": 0.00993408716262522,
+    "model": "static_forest",
+    "predicted_edges": [
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        2
+      ],
+      [
+        2,
+        3
+      ],
+      [
+        3,
+        4
+      ],
+      [
+        4,
+        5
+      ]
+    ],
+    "sampled_invalid_rate": 0.0,
+    "sampler": "enumerated_joint",
+    "seed": 1,
+    "task": "markov_090",
+    "true_edges": [
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        2
+      ],
+      [
+        2,
+        3
+      ],
+      [
+        3,
+        4
+      ],
+      [
+        4,
+        5
+      ]
+    ],
+    "tv": 0.03746782781606886
+  },
+  {
+    "context": 0,
+    "edge_f1": 1.0,
+    "edge_precision": 1.0,
+    "edge_recall": 1.0,
+    "invalid_rate": 0.0,
+    "kl": 0.00993408716262522,
+    "model": "fixed_topology_dynamic_factors",
+    "predicted_edges": [
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        2
+      ],
+      [
+        2,
+        3
+      ],
+      [
+        3,
+        4
+      ],
+      [
+        4,
+        5
+      ]
+    ],
+    "sampled_invalid_rate": 0.0,
+    "sampler": "enumerated_joint",
+    "seed": 1,
+    "task": "markov_090",
+    "true_edges": [
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        2
+      ],
+      [
+        2,
+        3
+      ],
+      [
+        3,
+        4
+      ],
+      [
+        4,
+        5
+      ]
+    ],
+    "tv": 0.03746782781606886
+  },
+  {
+    "context": 0,
+    "edge_f1": 1.0,
+    "edge_precision": 1.0,
+    "edge_recall": 1.0,
+    "invalid_rate": 0.0,
+    "kl": 0.0014499724276962759,
+    "model": "dynamic_topology_fixed_factors",
+    "predicted_edges": [
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        2
+      ],
+      [
+        2,
+        3
+      ],
+      [
+        3,
+        4
+      ],
+      [
+        4,
+        5
+      ]
+    ],
+    "sampled_invalid_rate": 0.0,
+    "sampler": "enumerated_joint",
+    "seed": 1,
+    "task": "markov_090",
+    "true_edges": [
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        2
+      ],
+      [
+        2,
+        3
+      ],
+      [
+        3,
+        4
+      ],
+      [
+        4,
+        5
+      ]
+    ],
+    "tv": 0.015950633784010446
+  },
+  {
+    "context": 0,
+    "edge_f1": 1.0,
+    "edge_precision": 1.0,
+    "edge_recall": 1.0,
+    "invalid_rate": 0.0,
+    "kl": 0.00993408716262522,
+    "model": "contextual_forest",
+    "predicted_edges": [
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        2
+      ],
+      [
+        2,
+        3
+      ],
+      [
+        3,
+        4
+      ],
+      [
+        4,
+        5
+      ]
+    ],
+    "sampled_invalid_rate": 0.0,
+    "sampler": "enumerated_joint",
+    "seed": 1,
+    "task": "markov_090",
+    "true_edges": [
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        2
+      ],
+      [
+        2,
+        3
+      ],
+      [
+        3,
+        4
+      ],
+      [
+        4,
+        5
+      ]
+    ],
+    "tv": 0.03746782781606886
+  },
+  {
+    "context": 0,
+    "edge_f1": 0.0,
+    "edge_precision": 0.0,
+    "edge_recall": 0.0,
+    "invalid_rate": 0.9843637980061866,
+    "kl": 4.159596050159983,
+    "model": "factorized",
+    "predicted_edges": [],
+    "sampled_invalid_rate": 0.9863,
+    "sampler": "independent_marginals",
+    "seed": 1,
+    "task": "context_switching_matching",
+    "true_edges": [
+      [
+        0,
+        1
+      ],
+      [
+        2,
+        3
+      ],
+      [
+        4,
+        5
+      ]
+    ],
+    "tv": 0.9843637980061865
+  },
+  {
+    "context": 0,
+    "edge_f1": 0.0,
+    "edge_precision": 0.0,
+    "edge_recall": 0.0,
+    "invalid_rate": 0.9843637980061866,
+    "kl": 4.159596050159983,
+    "model": "parameter_matched_independent",
+    "predicted_edges": [],
+    "sampled_invalid_rate": 0.9843,
+    "sampler": "independent_marginals",
+    "seed": 1,
+    "task": "context_switching_matching",
+    "true_edges": [
+      [
+        0,
+        1
+      ],
+      [
+        2,
+        3
+      ],
+      [
+        4,
+        5
+      ]
+    ],
+    "tv": 0.9843637980061865
+  },
+  {
+    "context": 0,
+    "edge_f1": 0.6666666666666666,
+    "edge_precision": 0.6666666666666666,
+    "edge_recall": 0.6666666666666666,
+    "invalid_rate": 0.7502374628467976,
+    "kl": 1.3887197158590063,
+    "model": "natural_chain",
+    "predicted_edges": [
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        2
+      ],
+      [
+        2,
+        3
+      ]
+    ],
+    "sampled_invalid_rate": 0.74655,
+    "sampler": "enumerated_joint",
+    "seed": 1,
+    "task": "context_switching_matching",
+    "true_edges": [
+      [
+        0,
+        1
+      ],
+      [
+        2,
+        3
+      ],
+      [
+        4,
+        5
+      ]
+    ],
+    "tv": 0.7502374628467976
+  },
+  {
+    "context": 0,
+    "edge_f1": 0.0,
+    "edge_precision": 0.0,
+    "edge_recall": 0.0,
+    "invalid_rate": 0.9791485817540887,
+    "kl": 4.551272147597719,
+    "model": "static_forest",
+    "predicted_edges": [
+      [
+        0,
+        2
+      ],
+      [
+        0,
+        3
+      ],
+      [
+        1,
+        4
+      ]
+    ],
+    "sampled_invalid_rate": 0.9797,
+    "sampler": "enumerated_joint",
+    "seed": 1,
+    "task": "context_switching_matching",
+    "true_edges": [
+      [
+        0,
+        1
+      ],
+      [
+        2,
+        3
+      ],
+      [
+        4,
+        5
+      ]
+    ],
+    "tv": 0.9791485817540886
+  },
+  {
+    "context": 0,
+    "edge_f1": 0.3333333333333333,
+    "edge_precision": 0.3333333333333333,
+    "edge_recall": 0.3333333333333333,
+    "invalid_rate": 0.9373782432098747,
+    "kl": 2.776245141520037,
+    "model": "fixed_topology_dynamic_factors",
+    "predicted_edges": [
+      [
+        2,
+        4
+      ],
+      [
+        3,
+        5
+      ],
+      [
+        4,
+        5
+      ]
+    ],
+    "sampled_invalid_rate": 0.93895,
+    "sampler": "enumerated_joint",
+    "seed": 1,
+    "task": "context_switching_matching",
+    "true_edges": [
+      [
+        0,
+        1
+      ],
+      [
+        2,
+        3
+      ],
+      [
+        4,
+        5
+      ]
+    ],
+    "tv": 0.9373782432098748
+  },
+  {
+    "context": 0,
+    "edge_f1": 1.0,
+    "edge_precision": 1.0,
+    "edge_recall": 1.0,
+    "invalid_rate": 0.00024404553016406868,
+    "kl": 0.0013616078035658674,
+    "model": "dynamic_topology_fixed_factors",
+    "predicted_edges": [
+      [
+        0,
+        1
+      ],
+      [
+        2,
+        3
+      ],
+      [
+        4,
+        5
+      ]
+    ],
+    "sampled_invalid_rate": 9.999999999998899e-05,
+    "sampler": "enumerated_joint",
+    "seed": 1,
+    "task": "context_switching_matching",
+    "true_edges": [
+      [
+        0,
+        1
+      ],
+      [
+        2,
+        3
+      ],
+      [
+        4,
+        5
+      ]
+    ],
+    "tv": 0.019103191598388247
+  },
+  {
+    "context": 0,
+    "edge_f1": 1.0,
+    "edge_precision": 1.0,
+    "edge_recall": 1.0,
+    "invalid_rate": 0.0021935161561788146,
+    "kl": 0.0025524088367400444,
+    "model": "contextual_forest",
+    "predicted_edges": [
+      [
+        0,
+        1
+      ],
+      [
+        2,
+        3
+      ],
+      [
+        4,
+        5
+      ]
+    ],
+    "sampled_invalid_rate": 0.0027000000000000357,
+    "sampler": "enumerated_joint",
+    "seed": 1,
+    "task": "context_switching_matching",
+    "true_edges": [
+      [
+        0,
+        1
+      ],
+      [
+        2,
+        3
+      ],
+      [
+        4,
+        5
+      ]
+    ],
+    "tv": 0.012280879946786746
+  },
+  {
+    "context": 1,
+    "edge_f1": 0.0,
+    "edge_precision": 0.0,
+    "edge_recall": 0.0,
+    "invalid_rate": 0.9843299885058459,
+    "kl": 4.1617650729758235,
+    "model": "factorized",
+    "predicted_edges": [],
+    "sampled_invalid_rate": 0.98525,
+    "sampler": "independent_marginals",
+    "seed": 1,
+    "task": "context_switching_matching",
+    "true_edges": [
+      [
+        0,
+        2
+      ],
+      [
+        1,
+        4
+      ],
+      [
+        3,
+        5
+      ]
+    ],
+    "tv": 0.984329988505846
+  },
+  {
+    "context": 1,
+    "edge_f1": 0.0,
+    "edge_precision": 0.0,
+    "edge_recall": 0.0,
+    "invalid_rate": 0.9843299885058459,
+    "kl": 4.1617650729758235,
+    "model": "parameter_matched_independent",
+    "predicted_edges": [],
+    "sampled_invalid_rate": 0.98545,
+    "sampler": "independent_marginals",
+    "seed": 1,
+    "task": "context_switching_matching",
+    "true_edges": [
+      [
+        0,
+        2
+      ],
+      [
+        1,
+        4
+      ],
+      [
+        3,
+        5
+      ]
+    ],
+    "tv": 0.984329988505846
+  },
+  {
+    "context": 1,
+    "edge_f1": 0.0,
+    "edge_precision": 0.0,
+    "edge_recall": 0.0,
+    "invalid_rate": 0.984297399473981,
+    "kl": 4.164157194227261,
+    "model": "natural_chain",
+    "predicted_edges": [
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        2
+      ],
+      [
+        2,
+        3
+      ]
+    ],
+    "sampled_invalid_rate": 0.98435,
+    "sampler": "enumerated_joint",
+    "seed": 1,
+    "task": "context_switching_matching",
+    "true_edges": [
+      [
+        0,
+        2
+      ],
+      [
+        1,
+        4
+      ],
+      [
+        3,
+        5
+      ]
+    ],
+    "tv": 0.9842973994739811
+  },
+  {
+    "context": 1,
+    "edge_f1": 0.6666666666666666,
+    "edge_precision": 0.6666666666666666,
+    "edge_recall": 0.6666666666666666,
+    "invalid_rate": 0.9377200402618759,
+    "kl": 2.908496757029408,
+    "model": "static_forest",
+    "predicted_edges": [
+      [
+        0,
+        2
+      ],
+      [
+        0,
+        3
+      ],
+      [
+        1,
+        4
+      ]
+    ],
+    "sampled_invalid_rate": 0.93665,
+    "sampler": "enumerated_joint",
+    "seed": 1,
+    "task": "context_switching_matching",
+    "true_edges": [
+      [
+        0,
+        2
+      ],
+      [
+        1,
+        4
+      ],
+      [
+        3,
+        5
+      ]
+    ],
+    "tv": 0.9377200402618759
+  },
+  {
+    "context": 1,
+    "edge_f1": 0.3333333333333333,
+    "edge_precision": 0.3333333333333333,
+    "edge_recall": 0.3333333333333333,
+    "invalid_rate": 0.9373913282157372,
+    "kl": 2.7781911558371406,
+    "model": "fixed_topology_dynamic_factors",
+    "predicted_edges": [
+      [
+        2,
+        4
+      ],
+      [
+        3,
+        5
+      ],
+      [
+        4,
+        5
+      ]
+    ],
+    "sampled_invalid_rate": 0.938,
+    "sampler": "enumerated_joint",
+    "seed": 1,
+    "task": "context_switching_matching",
+    "true_edges": [
+      [
+        0,
+        2
+      ],
+      [
+        1,
+        4
+      ],
+      [
+        3,
+        5
+      ]
+    ],
+    "tv": 0.9373913282157373
+  },
+  {
+    "context": 1,
+    "edge_f1": 1.0,
+    "edge_precision": 1.0,
+    "edge_recall": 1.0,
+    "invalid_rate": 0.00024381875817940815,
+    "kl": 0.005381953788567283,
+    "model": "dynamic_topology_fixed_factors",
+    "predicted_edges": [
+      [
+        0,
+        2
+      ],
+      [
+        1,
+        4
+      ],
+      [
+        3,
+        5
+      ]
+    ],
+    "sampled_invalid_rate": 4.999999999999449e-05,
+    "sampler": "enumerated_joint",
+    "seed": 1,
+    "task": "context_switching_matching",
+    "true_edges": [
+      [
+        0,
+        2
+      ],
+      [
+        1,
+        4
+      ],
+      [
+        3,
+        5
+      ]
+    ],
+    "tv": 0.04193495838305321
+  },
+  {
+    "context": 1,
+    "edge_f1": 1.0,
+    "edge_precision": 1.0,
+    "edge_recall": 1.0,
+    "invalid_rate": 0.002193516156178816,
+    "kl": 0.0036369202446596832,
+    "model": "contextual_forest",
+    "predicted_edges": [
+      [
+        0,
+        2
+      ],
+      [
+        1,
+        4
+      ],
+      [
+        3,
+        5
+      ]
+    ],
+    "sampled_invalid_rate": 0.0022999999999999687,
+    "sampler": "enumerated_joint",
+    "seed": 1,
+    "task": "context_switching_matching",
+    "true_edges": [
+      [
+        0,
+        2
+      ],
+      [
+        1,
+        4
+      ],
+      [
+        3,
+        5
+      ]
+    ],
+    "tv": 0.023024677853538986
+  },
+  {
+    "context": 2,
+    "edge_f1": 0.0,
+    "edge_precision": 0.0,
+    "edge_recall": 0.0,
+    "invalid_rate": 0.9843549377404044,
+    "kl": 4.160153791449972,
+    "model": "factorized",
+    "predicted_edges": [],
+    "sampled_invalid_rate": 0.9855,
+    "sampler": "independent_marginals",
+    "seed": 1,
+    "task": "context_switching_matching",
+    "true_edges": [
+      [
+        0,
+        3
+      ],
+      [
+        1,
+        5
+      ],
+      [
+        2,
+        4
+      ]
+    ],
+    "tv": 0.9843549377404044
+  },
+  {
+    "context": 2,
+    "edge_f1": 0.0,
+    "edge_precision": 0.0,
+    "edge_recall": 0.0,
+    "invalid_rate": 0.9843549377404044,
+    "kl": 4.160153791449972,
+    "model": "parameter_matched_independent",
+    "predicted_edges": [],
+    "sampled_invalid_rate": 0.98395,
+    "sampler": "independent_marginals",
+    "seed": 1,
+    "task": "context_switching_matching",
+    "true_edges": [
+      [
+        0,
+        3
+      ],
+      [
+        1,
+        5
+      ],
+      [
+        2,
+        4
+      ]
+    ],
+    "tv": 0.9843549377404044
+  },
+  {
+    "context": 2,
+    "edge_f1": 0.0,
+    "edge_precision": 0.0,
+    "edge_recall": 0.0,
+    "invalid_rate": 0.9843550266987107,
+    "kl": 4.162157204413627,
+    "model": "natural_chain",
+    "predicted_edges": [
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        2
+      ],
+      [
+        2,
+        3
+      ]
+    ],
+    "sampled_invalid_rate": 0.9834,
+    "sampler": "enumerated_joint",
+    "seed": 1,
+    "task": "context_switching_matching",
+    "true_edges": [
+      [
+        0,
+        3
+      ],
+      [
+        1,
+        5
+      ],
+      [
+        2,
+        4
+      ]
+    ],
+    "tv": 0.9843550266987109
+  },
+  {
+    "context": 2,
+    "edge_f1": 0.3333333333333333,
+    "edge_precision": 0.3333333333333333,
+    "edge_recall": 0.3333333333333333,
+    "invalid_rate": 0.968708836384105,
+    "kl": 3.7256460659477306,
+    "model": "static_forest",
+    "predicted_edges": [
+      [
+        0,
+        2
+      ],
+      [
+        0,
+        3
+      ],
+      [
+        1,
+        4
+      ]
+    ],
+    "sampled_invalid_rate": 0.9704,
+    "sampler": "enumerated_joint",
+    "seed": 1,
+    "task": "context_switching_matching",
+    "true_edges": [
+      [
+        0,
+        3
+      ],
+      [
+        1,
+        5
+      ],
+      [
+        2,
+        4
+      ]
+    ],
+    "tv": 0.968708836384105
+  },
+  {
+    "context": 2,
+    "edge_f1": 0.3333333333333333,
+    "edge_precision": 0.3333333333333333,
+    "edge_recall": 0.3333333333333333,
+    "invalid_rate": 0.9375088334891248,
+    "kl": 2.77564712258014,
+    "model": "fixed_topology_dynamic_factors",
+    "predicted_edges": [
+      [
+        2,
+        4
+      ],
+      [
+        3,
+        5
+      ],
+      [
+        4,
+        5
+      ]
+    ],
+    "sampled_invalid_rate": 0.93745,
+    "sampler": "enumerated_joint",
+    "seed": 1,
+    "task": "context_switching_matching",
+    "true_edges": [
+      [
+        0,
+        3
+      ],
+      [
+        1,
+        5
+      ],
+      [
+        2,
+        4
+      ]
+    ],
+    "tv": 0.9375088334891251
+  },
+  {
+    "context": 2,
+    "edge_f1": 1.0,
+    "edge_precision": 1.0,
+    "edge_recall": 1.0,
+    "invalid_rate": 0.00024398767813274997,
+    "kl": 0.0023739794140145987,
+    "model": "dynamic_topology_fixed_factors",
+    "predicted_edges": [
+      [
+        0,
+        3
+      ],
+      [
+        1,
+        5
+      ],
+      [
+        2,
+        4
+      ]
+    ],
+    "sampled_invalid_rate": 0.00024999999999997247,
+    "sampler": "enumerated_joint",
+    "seed": 1,
+    "task": "context_switching_matching",
+    "true_edges": [
+      [
+        0,
+        3
+      ],
+      [
+        1,
+        5
+      ],
+      [
+        2,
+        4
+      ]
+    ],
+    "tv": 0.026631105488017927
+  },
+  {
+    "context": 2,
+    "edge_f1": 1.0,
+    "edge_precision": 1.0,
+    "edge_recall": 1.0,
+    "invalid_rate": 0.002193516156178814,
+    "kl": 0.0028312794817352688,
+    "model": "contextual_forest",
+    "predicted_edges": [
+      [
+        0,
+        3
+      ],
+      [
+        1,
+        5
+      ],
+      [
+        2,
+        4
+      ]
+    ],
+    "sampled_invalid_rate": 0.0023999999999999577,
+    "sampler": "enumerated_joint",
+    "seed": 1,
+    "task": "context_switching_matching",
+    "true_edges": [
+      [
+        0,
+        3
+      ],
+      [
+        1,
+        5
+      ],
+      [
+        2,
+        4
+      ]
+    ],
+    "tv": 0.01594480845551443
+  },
+  {
+    "context": 0,
+    "edge_f1": 1.0,
+    "edge_precision": 1.0,
+    "edge_recall": 1.0,
+    "invalid_rate": 0.5000000816936352,
+    "kl": 0.6931941383486397,
+    "model": "factorized",
+    "predicted_edges": [],
+    "sampled_invalid_rate": 0.5038,
+    "sampler": "independent_marginals",
+    "seed": 1,
+    "task": "cyclic_xor",
+    "true_edges": [],
+    "tv": 0.5000000816936352
+  },
+  {
+    "context": 0,
+    "edge_f1": 1.0,
+    "edge_precision": 1.0,
+    "edge_recall": 1.0,
+    "invalid_rate": 0.5000000816936352,
+    "kl": 0.6931941383486397,
+    "model": "parameter_matched_independent",
+    "predicted_edges": [],
+    "sampled_invalid_rate": 0.49924999999999997,
+    "sampler": "independent_marginals",
+    "seed": 1,
+    "task": "cyclic_xor",
+    "true_edges": [],
+    "tv": 0.5000000816936352
+  },
+  {
+    "context": 0,
+    "edge_f1": 0.0,
+    "edge_precision": 0.0,
+    "edge_recall": 0.0,
+    "invalid_rate": 0.49999034758265487,
+    "kl": 0.6932041115260428,
+    "model": "natural_chain",
+    "predicted_edges": [
+      [
+        0,
+        1
+      ]
+    ],
+    "sampled_invalid_rate": 0.50005,
+    "sampler": "enumerated_joint",
+    "seed": 1,
+    "task": "cyclic_xor",
+    "true_edges": [],
+    "tv": 0.49999034758265487
+  },
+  {
+    "context": 0,
+    "edge_f1": 0.0,
+    "edge_precision": 0.0,
+    "edge_recall": 0.0,
+    "invalid_rate": 0.49997986100578606,
+    "kl": 0.6932145996953509,
+    "model": "static_forest",
+    "predicted_edges": [
+      [
+        1,
+        2
+      ]
+    ],
+    "sampled_invalid_rate": 0.50395,
+    "sampler": "enumerated_joint",
+    "seed": 1,
+    "task": "cyclic_xor",
+    "true_edges": [],
+    "tv": 0.499979861005786
+  },
+  {
+    "context": 0,
+    "edge_f1": 0.0,
+    "edge_precision": 0.0,
+    "edge_recall": 0.0,
+    "invalid_rate": 0.49997986100578606,
+    "kl": 0.6932145996953509,
+    "model": "fixed_topology_dynamic_factors",
+    "predicted_edges": [
+      [
+        1,
+        2
+      ]
+    ],
+    "sampled_invalid_rate": 0.5028,
+    "sampler": "enumerated_joint",
+    "seed": 1,
+    "task": "cyclic_xor",
+    "true_edges": [],
+    "tv": 0.499979861005786
+  },
+  {
+    "context": 0,
+    "edge_f1": 0.0,
+    "edge_precision": 0.0,
+    "edge_recall": 0.0,
+    "invalid_rate": 0.499979861025857,
+    "kl": 0.693214606240304,
+    "model": "dynamic_topology_fixed_factors",
+    "predicted_edges": [
+      [
+        1,
+        2
+      ]
+    ],
+    "sampled_invalid_rate": 0.5009,
+    "sampler": "enumerated_joint",
+    "seed": 1,
+    "task": "cyclic_xor",
+    "true_edges": [],
+    "tv": 0.499979861025857
+  },
+  {
+    "context": 0,
+    "edge_f1": 0.0,
+    "edge_precision": 0.0,
+    "edge_recall": 0.0,
+    "invalid_rate": 0.49997986100578606,
+    "kl": 0.6932145996953509,
+    "model": "contextual_forest",
+    "predicted_edges": [
+      [
+        1,
+        2
+      ]
+    ],
+    "sampled_invalid_rate": 0.50295,
+    "sampler": "enumerated_joint",
+    "seed": 1,
+    "task": "cyclic_xor",
+    "true_edges": [],
+    "tv": 0.499979861005786
+  },
+  {
+    "context": 0,
+    "edge_f1": 0.0,
+    "edge_precision": 0.0,
+    "edge_recall": 0.0,
+    "invalid_rate": 0.4999694898710915,
+    "kl": 0.6932082026795737,
+    "model": "factorized",
+    "predicted_edges": [],
+    "sampled_invalid_rate": 0.50115,
+    "sampler": "independent_marginals",
+    "seed": 2,
+    "task": "ambiguous_pairs",
+    "true_edges": [
+      [
+        0,
+        1
+      ]
+    ],
+    "tv": 0.4999694898710916
+  },
+  {
+    "context": 0,
+    "edge_f1": 0.0,
+    "edge_precision": 0.0,
+    "edge_recall": 0.0,
+    "invalid_rate": 0.4999694898710915,
+    "kl": 0.6932082026795737,
+    "model": "parameter_matched_independent",
+    "predicted_edges": [],
+    "sampled_invalid_rate": 0.5017,
+    "sampler": "independent_marginals",
+    "seed": 2,
+    "task": "ambiguous_pairs",
+    "true_edges": [
+      [
+        0,
+        1
+      ]
+    ],
+    "tv": 0.4999694898710916
+  },
+  {
+    "context": 0,
+    "edge_f1": 1.0,
+    "edge_precision": 1.0,
+    "edge_recall": 1.0,
+    "invalid_rate": 0.00012204051745179394,
+    "kl": 0.00015255902481592365,
+    "model": "natural_chain",
+    "predicted_edges": [
+      [
+        0,
+        1
+      ]
+    ],
+    "sampled_invalid_rate": 0.00019999999999997797,
+    "sampler": "enumerated_joint",
+    "seed": 2,
+    "task": "ambiguous_pairs",
+    "true_edges": [
+      [
+        0,
+        1
+      ]
+    ],
+    "tv": 0.003966316817183374
+  },
+  {
+    "context": 0,
+    "edge_f1": 1.0,
+    "edge_precision": 1.0,
+    "edge_recall": 1.0,
+    "invalid_rate": 0.00012204051745179394,
+    "kl": 0.00015255902481592365,
+    "model": "static_forest",
+    "predicted_edges": [
+      [
+        0,
+        1
+      ]
+    ],
+    "sampled_invalid_rate": 9.999999999998899e-05,
+    "sampler": "enumerated_joint",
+    "seed": 2,
+    "task": "ambiguous_pairs",
+    "true_edges": [
+      [
+        0,
+        1
+      ]
+    ],
+    "tv": 0.003966316817183374
+  },
+  {
+    "context": 0,
+    "edge_f1": 1.0,
+    "edge_precision": 1.0,
+    "edge_recall": 1.0,
+    "invalid_rate": 0.00012204051745179394,
+    "kl": 0.00015255902481592365,
+    "model": "fixed_topology_dynamic_factors",
+    "predicted_edges": [
+      [
+        0,
+        1
+      ]
+    ],
+    "sampled_invalid_rate": 9.999999999998899e-05,
+    "sampler": "enumerated_joint",
+    "seed": 2,
+    "task": "ambiguous_pairs",
+    "true_edges": [
+      [
+        0,
+        1
+      ]
+    ],
+    "tv": 0.003966316817183374
+  },
+  {
+    "context": 0,
+    "edge_f1": 1.0,
+    "edge_precision": 1.0,
+    "edge_recall": 1.0,
+    "invalid_rate": 0.00012204051563402551,
+    "kl": 0.00015257391961237543,
+    "model": "dynamic_topology_fixed_factors",
+    "predicted_edges": [
+      [
+        0,
+        1
+      ]
+    ],
+    "sampled_invalid_rate": 9.999999999998899e-05,
+    "sampler": "enumerated_joint",
+    "seed": 2,
+    "task": "ambiguous_pairs",
+    "true_edges": [
+      [
+        0,
+        1
+      ]
+    ],
+    "tv": 0.003967270025085873
+  },
+  {
+    "context": 0,
+    "edge_f1": 1.0,
+    "edge_precision": 1.0,
+    "edge_recall": 1.0,
+    "invalid_rate": 0.00012204051745179394,
+    "kl": 0.00015255902481592365,
+    "model": "contextual_forest",
+    "predicted_edges": [
+      [
+        0,
+        1
+      ]
+    ],
+    "sampled_invalid_rate": 0.00014999999999998348,
+    "sampler": "enumerated_joint",
+    "seed": 2,
+    "task": "ambiguous_pairs",
+    "true_edges": [
+      [
+        0,
+        1
+      ]
+    ],
+    "tv": 0.003966316817183374
+  },
+  {
+    "context": 0,
+    "edge_f1": 0.0,
+    "edge_precision": 0.0,
+    "edge_recall": 0.0,
+    "invalid_rate": 0.0,
+    "kl": 0.4172550572935214,
+    "model": "factorized",
+    "predicted_edges": [],
+    "sampled_invalid_rate": 0.0,
+    "sampler": "independent_marginals",
+    "seed": 2,
+    "task": "markov_025",
+    "true_edges": [
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        2
+      ],
+      [
+        2,
+        3
+      ],
+      [
+        3,
+        4
+      ],
+      [
+        4,
+        5
+      ]
+    ],
+    "tv": 0.3574503206853475
+  },
+  {
+    "context": 0,
+    "edge_f1": 0.0,
+    "edge_precision": 0.0,
+    "edge_recall": 0.0,
+    "invalid_rate": 0.0,
+    "kl": 0.4172550572935214,
+    "model": "parameter_matched_independent",
+    "predicted_edges": [],
+    "sampled_invalid_rate": 0.0,
+    "sampler": "independent_marginals",
+    "seed": 2,
+    "task": "markov_025",
+    "true_edges": [
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        2
+      ],
+      [
+        2,
+        3
+      ],
+      [
+        3,
+        4
+      ],
+      [
+        4,
+        5
+      ]
+    ],
+    "tv": 0.3574503206853475
+  },
+  {
+    "context": 0,
+    "edge_f1": 1.0,
+    "edge_precision": 1.0,
+    "edge_recall": 1.0,
+    "invalid_rate": 0.0,
+    "kl": 0.008279419830367075,
+    "model": "natural_chain",
+    "predicted_edges": [
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        2
+      ],
+      [
+        2,
+        3
+      ],
+      [
+        3,
+        4
+      ],
+      [
+        4,
+        5
+      ]
+    ],
+    "sampled_invalid_rate": 0.0,
+    "sampler": "enumerated_joint",
+    "seed": 2,
+    "task": "markov_025",
+    "true_edges": [
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        2
+      ],
+      [
+        2,
+        3
+      ],
+      [
+        3,
+        4
+      ],
+      [
+        4,
+        5
+      ]
+    ],
+    "tv": 0.05126593350327229
+  },
+  {
+    "context": 0,
+    "edge_f1": 1.0,
+    "edge_precision": 1.0,
+    "edge_recall": 1.0,
+    "invalid_rate": 0.0,
+    "kl": 0.008279419830367075,
+    "model": "static_forest",
+    "predicted_edges": [
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        2
+      ],
+      [
+        2,
+        3
+      ],
+      [
+        3,
+        4
+      ],
+      [
+        4,
+        5
+      ]
+    ],
+    "sampled_invalid_rate": 0.0,
+    "sampler": "enumerated_joint",
+    "seed": 2,
+    "task": "markov_025",
+    "true_edges": [
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        2
+      ],
+      [
+        2,
+        3
+      ],
+      [
+        3,
+        4
+      ],
+      [
+        4,
+        5
+      ]
+    ],
+    "tv": 0.05126593350327229
+  },
+  {
+    "context": 0,
+    "edge_f1": 1.0,
+    "edge_precision": 1.0,
+    "edge_recall": 1.0,
+    "invalid_rate": 0.0,
+    "kl": 0.008279419830367075,
+    "model": "fixed_topology_dynamic_factors",
+    "predicted_edges": [
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        2
+      ],
+      [
+        2,
+        3
+      ],
+      [
+        3,
+        4
+      ],
+      [
+        4,
+        5
+      ]
+    ],
+    "sampled_invalid_rate": 0.0,
+    "sampler": "enumerated_joint",
+    "seed": 2,
+    "task": "markov_025",
+    "true_edges": [
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        2
+      ],
+      [
+        2,
+        3
+      ],
+      [
+        3,
+        4
+      ],
+      [
+        4,
+        5
+      ]
+    ],
+    "tv": 0.05126593350327229
+  },
+  {
+    "context": 0,
+    "edge_f1": 1.0,
+    "edge_precision": 1.0,
+    "edge_recall": 1.0,
+    "invalid_rate": 0.0,
+    "kl": 0.0033247127183788864,
+    "model": "dynamic_topology_fixed_factors",
+    "predicted_edges": [
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        2
+      ],
+      [
+        2,
+        3
+      ],
+      [
+        3,
+        4
+      ],
+      [
+        4,
+        5
+      ]
+    ],
+    "sampled_invalid_rate": 0.0,
+    "sampler": "enumerated_joint",
+    "seed": 2,
+    "task": "markov_025",
+    "true_edges": [
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        2
+      ],
+      [
+        2,
+        3
+      ],
+      [
+        3,
+        4
+      ],
+      [
+        4,
+        5
+      ]
+    ],
+    "tv": 0.032707332044049686
+  },
+  {
+    "context": 0,
+    "edge_f1": 1.0,
+    "edge_precision": 1.0,
+    "edge_recall": 1.0,
+    "invalid_rate": 0.0,
+    "kl": 0.008279419830367075,
+    "model": "contextual_forest",
+    "predicted_edges": [
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        2
+      ],
+      [
+        2,
+        3
+      ],
+      [
+        3,
+        4
+      ],
+      [
+        4,
+        5
+      ]
+    ],
+    "sampled_invalid_rate": 0.0,
+    "sampler": "enumerated_joint",
+    "seed": 2,
+    "task": "markov_025",
+    "true_edges": [
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        2
+      ],
+      [
+        2,
+        3
+      ],
+      [
+        3,
+        4
+      ],
+      [
+        4,
+        5
+      ]
+    ],
+    "tv": 0.05126593350327229
+  },
+  {
+    "context": 0,
+    "edge_f1": 0.0,
+    "edge_precision": 0.0,
+    "edge_recall": 0.0,
+    "invalid_rate": 0.0,
+    "kl": 1.5654645275552037,
+    "model": "factorized",
+    "predicted_edges": [],
+    "sampled_invalid_rate": 0.0,
+    "sampler": "independent_marginals",
+    "seed": 2,
+    "task": "markov_050",
+    "true_edges": [
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        2
+      ],
+      [
+        2,
+        3
+      ],
+      [
+        3,
+        4
+      ],
+      [
+        4,
+        5
+      ]
+    ],
+    "tv": 0.6212079699149222
+  },
+  {
+    "context": 0,
+    "edge_f1": 0.0,
+    "edge_precision": 0.0,
+    "edge_recall": 0.0,
+    "invalid_rate": 0.0,
+    "kl": 1.5654645275552037,
+    "model": "parameter_matched_independent",
+    "predicted_edges": [],
+    "sampled_invalid_rate": 0.0,
+    "sampler": "independent_marginals",
+    "seed": 2,
+    "task": "markov_050",
+    "true_edges": [
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        2
+      ],
+      [
+        2,
+        3
+      ],
+      [
+        3,
+        4
+      ],
+      [
+        4,
+        5
+      ]
+    ],
+    "tv": 0.6212079699149222
+  },
+  {
+    "context": 0,
+    "edge_f1": 1.0,
+    "edge_precision": 1.0,
+    "edge_recall": 1.0,
+    "invalid_rate": 0.0,
+    "kl": 0.007268440528793038,
+    "model": "natural_chain",
+    "predicted_edges": [
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        2
+      ],
+      [
+        2,
+        3
+      ],
+      [
+        3,
+        4
+      ],
+      [
+        4,
+        5
+      ]
+    ],
+    "sampled_invalid_rate": 0.0,
+    "sampler": "enumerated_joint",
+    "seed": 2,
+    "task": "markov_050",
+    "true_edges": [
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        2
+      ],
+      [
+        2,
+        3
+      ],
+      [
+        3,
+        4
+      ],
+      [
+        4,
+        5
+      ]
+    ],
+    "tv": 0.04632554910934521
+  },
+  {
+    "context": 0,
+    "edge_f1": 1.0,
+    "edge_precision": 1.0,
+    "edge_recall": 1.0,
+    "invalid_rate": 0.0,
+    "kl": 0.007268440528793038,
+    "model": "static_forest",
+    "predicted_edges": [
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        2
+      ],
+      [
+        2,
+        3
+      ],
+      [
+        3,
+        4
+      ],
+      [
+        4,
+        5
+      ]
+    ],
+    "sampled_invalid_rate": 0.0,
+    "sampler": "enumerated_joint",
+    "seed": 2,
+    "task": "markov_050",
+    "true_edges": [
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        2
+      ],
+      [
+        2,
+        3
+      ],
+      [
+        3,
+        4
+      ],
+      [
+        4,
+        5
+      ]
+    ],
+    "tv": 0.04632554910934521
+  },
+  {
+    "context": 0,
+    "edge_f1": 1.0,
+    "edge_precision": 1.0,
+    "edge_recall": 1.0,
+    "invalid_rate": 0.0,
+    "kl": 0.007268440528793038,
+    "model": "fixed_topology_dynamic_factors",
+    "predicted_edges": [
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        2
+      ],
+      [
+        2,
+        3
+      ],
+      [
+        3,
+        4
+      ],
+      [
+        4,
+        5
+      ]
+    ],
+    "sampled_invalid_rate": 0.0,
+    "sampler": "enumerated_joint",
+    "seed": 2,
+    "task": "markov_050",
+    "true_edges": [
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        2
+      ],
+      [
+        2,
+        3
+      ],
+      [
+        3,
+        4
+      ],
+      [
+        4,
+        5
+      ]
+    ],
+    "tv": 0.04632554910934521
+  },
+  {
+    "context": 0,
+    "edge_f1": 1.0,
+    "edge_precision": 1.0,
+    "edge_recall": 1.0,
+    "invalid_rate": 0.0,
+    "kl": 0.0019373437162024396,
+    "model": "dynamic_topology_fixed_factors",
+    "predicted_edges": [
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        2
+      ],
+      [
+        2,
+        3
+      ],
+      [
+        3,
+        4
+      ],
+      [
+        4,
+        5
+      ]
+    ],
+    "sampled_invalid_rate": 0.0,
+    "sampler": "enumerated_joint",
+    "seed": 2,
+    "task": "markov_050",
+    "true_edges": [
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        2
+      ],
+      [
+        2,
+        3
+      ],
+      [
+        3,
+        4
+      ],
+      [
+        4,
+        5
+      ]
+    ],
+    "tv": 0.02548816337381087
+  },
+  {
+    "context": 0,
+    "edge_f1": 1.0,
+    "edge_precision": 1.0,
+    "edge_recall": 1.0,
+    "invalid_rate": 0.0,
+    "kl": 0.007268440528793038,
+    "model": "contextual_forest",
+    "predicted_edges": [
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        2
+      ],
+      [
+        2,
+        3
+      ],
+      [
+        3,
+        4
+      ],
+      [
+        4,
+        5
+      ]
+    ],
+    "sampled_invalid_rate": 0.0,
+    "sampler": "enumerated_joint",
+    "seed": 2,
+    "task": "markov_050",
+    "true_edges": [
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        2
+      ],
+      [
+        2,
+        3
+      ],
+      [
+        3,
+        4
+      ],
+      [
+        4,
+        5
+      ]
+    ],
+    "tv": 0.04632554910934521
+  },
+  {
+    "context": 0,
+    "edge_f1": 0.0,
+    "edge_precision": 0.0,
+    "edge_recall": 0.0,
+    "invalid_rate": 0.0,
+    "kl": 3.490760603566238,
+    "model": "factorized",
+    "predicted_edges": [],
+    "sampled_invalid_rate": 0.0,
+    "sampler": "independent_marginals",
+    "seed": 2,
+    "task": "markov_075",
+    "true_edges": [
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        2
+      ],
+      [
+        2,
+        3
+      ],
+      [
+        3,
+        4
+      ],
+      [
+        4,
+        5
+      ]
+    ],
+    "tv": 0.8475750660459666
+  },
+  {
+    "context": 0,
+    "edge_f1": 0.0,
+    "edge_precision": 0.0,
+    "edge_recall": 0.0,
+    "invalid_rate": 0.0,
+    "kl": 3.490760603566238,
+    "model": "parameter_matched_independent",
+    "predicted_edges": [],
+    "sampled_invalid_rate": 0.0,
+    "sampler": "independent_marginals",
+    "seed": 2,
+    "task": "markov_075",
+    "true_edges": [
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        2
+      ],
+      [
+        2,
+        3
+      ],
+      [
+        3,
+        4
+      ],
+      [
+        4,
+        5
+      ]
+    ],
+    "tv": 0.8475750660459666
+  },
+  {
+    "context": 0,
+    "edge_f1": 1.0,
+    "edge_precision": 1.0,
+    "edge_recall": 1.0,
+    "invalid_rate": 0.0,
+    "kl": 0.006598762179635895,
+    "model": "natural_chain",
+    "predicted_edges": [
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        2
+      ],
+      [
+        2,
+        3
+      ],
+      [
+        3,
+        4
+      ],
+      [
+        4,
+        5
+      ]
+    ],
+    "sampled_invalid_rate": 0.0,
+    "sampler": "enumerated_joint",
+    "seed": 2,
+    "task": "markov_075",
+    "true_edges": [
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        2
+      ],
+      [
+        2,
+        3
+      ],
+      [
+        3,
+        4
+      ],
+      [
+        4,
+        5
+      ]
+    ],
+    "tv": 0.042606110564185805
+  },
+  {
+    "context": 0,
+    "edge_f1": 1.0,
+    "edge_precision": 1.0,
+    "edge_recall": 1.0,
+    "invalid_rate": 0.0,
+    "kl": 0.006598762179635895,
+    "model": "static_forest",
+    "predicted_edges": [
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        2
+      ],
+      [
+        2,
+        3
+      ],
+      [
+        3,
+        4
+      ],
+      [
+        4,
+        5
+      ]
+    ],
+    "sampled_invalid_rate": 0.0,
+    "sampler": "enumerated_joint",
+    "seed": 2,
+    "task": "markov_075",
+    "true_edges": [
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        2
+      ],
+      [
+        2,
+        3
+      ],
+      [
+        3,
+        4
+      ],
+      [
+        4,
+        5
+      ]
+    ],
+    "tv": 0.042606110564185805
+  },
+  {
+    "context": 0,
+    "edge_f1": 1.0,
+    "edge_precision": 1.0,
+    "edge_recall": 1.0,
+    "invalid_rate": 0.0,
+    "kl": 0.006598762179635895,
+    "model": "fixed_topology_dynamic_factors",
+    "predicted_edges": [
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        2
+      ],
+      [
+        2,
+        3
+      ],
+      [
+        3,
+        4
+      ],
+      [
+        4,
+        5
+      ]
+    ],
+    "sampled_invalid_rate": 0.0,
+    "sampler": "enumerated_joint",
+    "seed": 2,
+    "task": "markov_075",
+    "true_edges": [
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        2
+      ],
+      [
+        2,
+        3
+      ],
+      [
+        3,
+        4
+      ],
+      [
+        4,
+        5
+      ]
+    ],
+    "tv": 0.042606110564185805
+  },
+  {
+    "context": 0,
+    "edge_f1": 1.0,
+    "edge_precision": 1.0,
+    "edge_recall": 1.0,
+    "invalid_rate": 0.0,
+    "kl": 0.0029269691944981933,
+    "model": "dynamic_topology_fixed_factors",
+    "predicted_edges": [
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        2
+      ],
+      [
+        2,
+        3
+      ],
+      [
+        3,
+        4
+      ],
+      [
+        4,
+        5
+      ]
+    ],
+    "sampled_invalid_rate": 0.0,
+    "sampler": "enumerated_joint",
+    "seed": 2,
+    "task": "markov_075",
+    "true_edges": [
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        2
+      ],
+      [
+        2,
+        3
+      ],
+      [
+        3,
+        4
+      ],
+      [
+        4,
+        5
+      ]
+    ],
+    "tv": 0.029119063280814594
+  },
+  {
+    "context": 0,
+    "edge_f1": 1.0,
+    "edge_precision": 1.0,
+    "edge_recall": 1.0,
+    "invalid_rate": 0.0,
+    "kl": 0.006598762179635895,
+    "model": "contextual_forest",
+    "predicted_edges": [
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        2
+      ],
+      [
+        2,
+        3
+      ],
+      [
+        3,
+        4
+      ],
+      [
+        4,
+        5
+      ]
+    ],
+    "sampled_invalid_rate": 0.0,
+    "sampler": "enumerated_joint",
+    "seed": 2,
+    "task": "markov_075",
+    "true_edges": [
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        2
+      ],
+      [
+        2,
+        3
+      ],
+      [
+        3,
+        4
+      ],
+      [
+        4,
+        5
+      ]
+    ],
+    "tv": 0.042606110564185805
+  },
+  {
+    "context": 0,
+    "edge_f1": 0.0,
+    "edge_precision": 0.0,
+    "edge_recall": 0.0,
+    "invalid_rate": 0.0,
+    "kl": 5.189677485505229,
+    "model": "factorized",
+    "predicted_edges": [],
+    "sampled_invalid_rate": 0.0,
+    "sampler": "independent_marginals",
+    "seed": 2,
+    "task": "markov_090",
+    "true_edges": [
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        2
+      ],
+      [
+        2,
+        3
+      ],
+      [
+        3,
+        4
+      ],
+      [
+        4,
+        5
+      ]
+    ],
+    "tv": 0.9360385256737584
+  },
+  {
+    "context": 0,
+    "edge_f1": 0.0,
+    "edge_precision": 0.0,
+    "edge_recall": 0.0,
+    "invalid_rate": 0.0,
+    "kl": 5.189677485505229,
+    "model": "parameter_matched_independent",
+    "predicted_edges": [],
+    "sampled_invalid_rate": 0.0,
+    "sampler": "independent_marginals",
+    "seed": 2,
+    "task": "markov_090",
+    "true_edges": [
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        2
+      ],
+      [
+        2,
+        3
+      ],
+      [
+        3,
+        4
+      ],
+      [
+        4,
+        5
+      ]
+    ],
+    "tv": 0.9360385256737584
+  },
+  {
+    "context": 0,
+    "edge_f1": 1.0,
+    "edge_precision": 1.0,
+    "edge_recall": 1.0,
+    "invalid_rate": 0.0,
+    "kl": 0.009839419305241449,
+    "model": "natural_chain",
+    "predicted_edges": [
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        2
+      ],
+      [
+        2,
+        3
+      ],
+      [
+        3,
+        4
+      ],
+      [
+        4,
+        5
+      ]
+    ],
+    "sampled_invalid_rate": 0.0,
+    "sampler": "enumerated_joint",
+    "seed": 2,
+    "task": "markov_090",
+    "true_edges": [
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        2
+      ],
+      [
+        2,
+        3
+      ],
+      [
+        3,
+        4
+      ],
+      [
+        4,
+        5
+      ]
+    ],
+    "tv": 0.038182201305585944
+  },
+  {
+    "context": 0,
+    "edge_f1": 1.0,
+    "edge_precision": 1.0,
+    "edge_recall": 1.0,
+    "invalid_rate": 0.0,
+    "kl": 0.009839419305241449,
+    "model": "static_forest",
+    "predicted_edges": [
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        2
+      ],
+      [
+        2,
+        3
+      ],
+      [
+        3,
+        4
+      ],
+      [
+        4,
+        5
+      ]
+    ],
+    "sampled_invalid_rate": 0.0,
+    "sampler": "enumerated_joint",
+    "seed": 2,
+    "task": "markov_090",
+    "true_edges": [
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        2
+      ],
+      [
+        2,
+        3
+      ],
+      [
+        3,
+        4
+      ],
+      [
+        4,
+        5
+      ]
+    ],
+    "tv": 0.038182201305585944
+  },
+  {
+    "context": 0,
+    "edge_f1": 1.0,
+    "edge_precision": 1.0,
+    "edge_recall": 1.0,
+    "invalid_rate": 0.0,
+    "kl": 0.009839419305241449,
+    "model": "fixed_topology_dynamic_factors",
+    "predicted_edges": [
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        2
+      ],
+      [
+        2,
+        3
+      ],
+      [
+        3,
+        4
+      ],
+      [
+        4,
+        5
+      ]
+    ],
+    "sampled_invalid_rate": 0.0,
+    "sampler": "enumerated_joint",
+    "seed": 2,
+    "task": "markov_090",
+    "true_edges": [
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        2
+      ],
+      [
+        2,
+        3
+      ],
+      [
+        3,
+        4
+      ],
+      [
+        4,
+        5
+      ]
+    ],
+    "tv": 0.038182201305585944
+  },
+  {
+    "context": 0,
+    "edge_f1": 1.0,
+    "edge_precision": 1.0,
+    "edge_recall": 1.0,
+    "invalid_rate": 0.0,
+    "kl": 0.0019201066953549372,
+    "model": "dynamic_topology_fixed_factors",
+    "predicted_edges": [
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        2
+      ],
+      [
+        2,
+        3
+      ],
+      [
+        3,
+        4
+      ],
+      [
+        4,
+        5
+      ]
+    ],
+    "sampled_invalid_rate": 0.0,
+    "sampler": "enumerated_joint",
+    "seed": 2,
+    "task": "markov_090",
+    "true_edges": [
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        2
+      ],
+      [
+        2,
+        3
+      ],
+      [
+        3,
+        4
+      ],
+      [
+        4,
+        5
+      ]
+    ],
+    "tv": 0.02067027190610157
+  },
+  {
+    "context": 0,
+    "edge_f1": 1.0,
+    "edge_precision": 1.0,
+    "edge_recall": 1.0,
+    "invalid_rate": 0.0,
+    "kl": 0.009839419305241449,
+    "model": "contextual_forest",
+    "predicted_edges": [
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        2
+      ],
+      [
+        2,
+        3
+      ],
+      [
+        3,
+        4
+      ],
+      [
+        4,
+        5
+      ]
+    ],
+    "sampled_invalid_rate": 0.0,
+    "sampler": "enumerated_joint",
+    "seed": 2,
+    "task": "markov_090",
+    "true_edges": [
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        2
+      ],
+      [
+        2,
+        3
+      ],
+      [
+        3,
+        4
+      ],
+      [
+        4,
+        5
+      ]
+    ],
+    "tv": 0.038182201305585944
+  },
+  {
+    "context": 0,
+    "edge_f1": 0.0,
+    "edge_precision": 0.0,
+    "edge_recall": 0.0,
+    "invalid_rate": 0.9843253063120871,
+    "kl": 4.1620647925708685,
+    "model": "factorized",
+    "predicted_edges": [],
+    "sampled_invalid_rate": 0.98335,
+    "sampler": "independent_marginals",
+    "seed": 2,
+    "task": "context_switching_matching",
+    "true_edges": [
+      [
+        0,
+        1
+      ],
+      [
+        2,
+        3
+      ],
+      [
+        4,
+        5
+      ]
+    ],
+    "tv": 0.984325306312087
+  },
+  {
+    "context": 0,
+    "edge_f1": 0.0,
+    "edge_precision": 0.0,
+    "edge_recall": 0.0,
+    "invalid_rate": 0.9843253063120871,
+    "kl": 4.1620647925708685,
+    "model": "parameter_matched_independent",
+    "predicted_edges": [],
+    "sampled_invalid_rate": 0.984,
+    "sampler": "independent_marginals",
+    "seed": 2,
+    "task": "context_switching_matching",
+    "true_edges": [
+      [
+        0,
+        1
+      ],
+      [
+        2,
+        3
+      ],
+      [
+        4,
+        5
+      ]
+    ],
+    "tv": 0.984325306312087
+  },
+  {
+    "context": 0,
+    "edge_f1": 0.6666666666666666,
+    "edge_precision": 0.6666666666666666,
+    "edge_recall": 0.6666666666666666,
+    "invalid_rate": 0.7500774392974224,
+    "kl": 1.3907470221722393,
+    "model": "natural_chain",
+    "predicted_edges": [
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        2
+      ],
+      [
+        2,
+        3
+      ]
+    ],
+    "sampled_invalid_rate": 0.75295,
+    "sampler": "enumerated_joint",
+    "seed": 2,
+    "task": "context_switching_matching",
+    "true_edges": [
+      [
+        0,
+        1
+      ],
+      [
+        2,
+        3
+      ],
+      [
+        4,
+        5
+      ]
+    ],
+    "tv": 0.7500774392974225
+  },
+  {
+    "context": 0,
+    "edge_f1": 0.6666666666666666,
+    "edge_precision": 0.6666666666666666,
+    "edge_recall": 0.6666666666666666,
+    "invalid_rate": 0.937011979538724,
+    "kl": 2.8981297868808102,
+    "model": "static_forest",
+    "predicted_edges": [
+      [
+        0,
+        1
+      ],
+      [
+        3,
+        5
+      ],
+      [
+        4,
+        5
+      ]
+    ],
+    "sampled_invalid_rate": 0.93965,
+    "sampler": "enumerated_joint",
+    "seed": 2,
+    "task": "context_switching_matching",
+    "true_edges": [
+      [
+        0,
+        1
+      ],
+      [
+        2,
+        3
+      ],
+      [
+        4,
+        5
+      ]
+    ],
+    "tv": 0.9370119795387238
+  },
+  {
+    "context": 0,
+    "edge_f1": 0.3333333333333333,
+    "edge_precision": 0.3333333333333333,
+    "edge_recall": 0.3333333333333333,
+    "invalid_rate": 0.937267054148953,
+    "kl": 2.7782271162838206,
+    "model": "fixed_topology_dynamic_factors",
+    "predicted_edges": [
+      [
+        0,
+        1
+      ],
+      [
+        2,
+        4
+      ],
+      [
+        3,
+        5
+      ]
+    ],
+    "sampled_invalid_rate": 0.93795,
+    "sampler": "enumerated_joint",
+    "seed": 2,
+    "task": "context_switching_matching",
+    "true_edges": [
+      [
+        0,
+        1
+      ],
+      [
+        2,
+        3
+      ],
+      [
+        4,
+        5
+      ]
+    ],
+    "tv": 0.9372670541489532
+  },
+  {
+    "context": 0,
+    "edge_f1": 1.0,
+    "edge_precision": 1.0,
+    "edge_recall": 1.0,
+    "invalid_rate": 0.00024380306829573193,
+    "kl": 0.005628642552123933,
+    "model": "dynamic_topology_fixed_factors",
+    "predicted_edges": [
+      [
+        0,
+        1
+      ],
+      [
+        2,
+        3
+      ],
+      [
+        4,
+        5
+      ]
+    ],
+    "sampled_invalid_rate": 0.00014999999999998348,
+    "sampler": "enumerated_joint",
+    "seed": 2,
+    "task": "context_switching_matching",
+    "true_edges": [
+      [
+        0,
+        1
+      ],
+      [
+        2,
+        3
+      ],
+      [
+        4,
+        5
+      ]
+    ],
+    "tv": 0.04321413812932217
+  },
+  {
+    "context": 0,
+    "edge_f1": 1.0,
+    "edge_precision": 1.0,
+    "edge_recall": 1.0,
+    "invalid_rate": 0.0021935161561788125,
+    "kl": 0.0037867800421833575,
+    "model": "contextual_forest",
+    "predicted_edges": [
+      [
+        0,
+        1
+      ],
+      [
+        2,
+        3
+      ],
+      [
+        4,
+        5
+      ]
+    ],
+    "sampled_invalid_rate": 0.0017500000000000293,
+    "sampler": "enumerated_joint",
+    "seed": 2,
+    "task": "context_switching_matching",
+    "true_edges": [
+      [
+        0,
+        1
+      ],
+      [
+        2,
+        3
+      ],
+      [
+        4,
+        5
+      ]
+    ],
+    "tv": 0.02451692373786654
+  },
+  {
+    "context": 1,
+    "edge_f1": 0.0,
+    "edge_precision": 0.0,
+    "edge_recall": 0.0,
+    "invalid_rate": 0.9843380580919134,
+    "kl": 4.161256204729856,
+    "model": "factorized",
+    "predicted_edges": [],
+    "sampled_invalid_rate": 0.984,
+    "sampler": "independent_marginals",
+    "seed": 2,
+    "task": "context_switching_matching",
+    "true_edges": [
+      [
+        0,
+        2
+      ],
+      [
+        1,
+        4
+      ],
+      [
+        3,
+        5
+      ]
+    ],
+    "tv": 0.9843380580919134
+  },
+  {
+    "context": 1,
+    "edge_f1": 0.0,
+    "edge_precision": 0.0,
+    "edge_recall": 0.0,
+    "invalid_rate": 0.9843380580919134,
+    "kl": 4.161256204729856,
+    "model": "parameter_matched_independent",
+    "predicted_edges": [],
+    "sampled_invalid_rate": 0.98315,
+    "sampler": "independent_marginals",
+    "seed": 2,
+    "task": "context_switching_matching",
+    "true_edges": [
+      [
+        0,
+        2
+      ],
+      [
+        1,
+        4
+      ],
+      [
+        3,
+        5
+      ]
+    ],
+    "tv": 0.9843380580919134
+  },
+  {
+    "context": 1,
+    "edge_f1": 0.0,
+    "edge_precision": 0.0,
+    "edge_recall": 0.0,
+    "invalid_rate": 0.9843067363305629,
+    "kl": 4.164316182201599,
+    "model": "natural_chain",
+    "predicted_edges": [
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        2
+      ],
+      [
+        2,
+        3
+      ]
+    ],
+    "sampled_invalid_rate": 0.9842,
+    "sampler": "enumerated_joint",
+    "seed": 2,
+    "task": "context_switching_matching",
+    "true_edges": [
+      [
+        0,
+        2
+      ],
+      [
+        1,
+        4
+      ],
+      [
+        3,
+        5
+      ]
+    ],
+    "tv": 0.9843067363305629
+  },
+  {
+    "context": 1,
+    "edge_f1": 0.3333333333333333,
+    "edge_precision": 0.3333333333333333,
+    "edge_recall": 0.3333333333333333,
+    "invalid_rate": 0.9686913375066197,
+    "kl": 3.731129067984706,
+    "model": "static_forest",
+    "predicted_edges": [
+      [
+        0,
+        1
+      ],
+      [
+        3,
+        5
+      ],
+      [
+        4,
+        5
+      ]
+    ],
+    "sampled_invalid_rate": 0.9704,
+    "sampler": "enumerated_joint",
+    "seed": 2,
+    "task": "context_switching_matching",
+    "true_edges": [
+      [
+        0,
+        2
+      ],
+      [
+        1,
+        4
+      ],
+      [
+        3,
+        5
+      ]
+    ],
+    "tv": 0.9686913375066197
+  },
+  {
+    "context": 1,
+    "edge_f1": 0.3333333333333333,
+    "edge_precision": 0.3333333333333333,
+    "edge_recall": 0.3333333333333333,
+    "invalid_rate": 0.9373266179103611,
+    "kl": 2.7771194091576987,
+    "model": "fixed_topology_dynamic_factors",
+    "predicted_edges": [
+      [
+        0,
+        1
+      ],
+      [
+        2,
+        4
+      ],
+      [
+        3,
+        5
+      ]
+    ],
+    "sampled_invalid_rate": 0.9383,
+    "sampler": "enumerated_joint",
+    "seed": 2,
+    "task": "context_switching_matching",
+    "true_edges": [
+      [
+        0,
+        2
+      ],
+      [
+        1,
+        4
+      ],
+      [
+        3,
+        5
+      ]
+    ],
+    "tv": 0.9373266179103612
+  },
+  {
+    "context": 1,
+    "edge_f1": 1.0,
+    "edge_precision": 1.0,
+    "edge_recall": 1.0,
+    "invalid_rate": 0.00024386445997140701,
+    "kl": 0.004960483591226764,
+    "model": "dynamic_topology_fixed_factors",
+    "predicted_edges": [
+      [
+        0,
+        2
+      ],
+      [
+        1,
+        4
+      ],
+      [
+        3,
+        5
+      ]
+    ],
+    "sampled_invalid_rate": 0.00024999999999997247,
+    "sampler": "enumerated_joint",
+    "seed": 2,
+    "task": "context_switching_matching",
+    "true_edges": [
+      [
+        0,
+        2
+      ],
+      [
+        1,
+        4
+      ],
+      [
+        3,
+        5
+      ]
+    ],
+    "tv": 0.03937742513720858
+  },
+  {
+    "context": 1,
+    "edge_f1": 1.0,
+    "edge_precision": 1.0,
+    "edge_recall": 1.0,
+    "invalid_rate": 0.002193516156178815,
+    "kl": 0.0033824861216765756,
+    "model": "contextual_forest",
+    "predicted_edges": [
+      [
+        0,
+        2
+      ],
+      [
+        1,
+        4
+      ],
+      [
+        3,
+        5
+      ]
+    ],
+    "sampled_invalid_rate": 0.0021999999999999797,
+    "sampler": "enumerated_joint",
+    "seed": 2,
+    "task": "context_switching_matching",
+    "true_edges": [
+      [
+        0,
+        2
+      ],
+      [
+        1,
+        4
+      ],
+      [
+        3,
+        5
+      ]
+    ],
+    "tv": 0.02083872516903404
+  },
+  {
+    "context": 2,
+    "edge_f1": 0.0,
+    "edge_precision": 0.0,
+    "edge_recall": 0.0,
+    "invalid_rate": 0.9843385461931843,
+    "kl": 4.161227325835094,
+    "model": "factorized",
+    "predicted_edges": [],
+    "sampled_invalid_rate": 0.98335,
+    "sampler": "independent_marginals",
+    "seed": 2,
+    "task": "context_switching_matching",
+    "true_edges": [
+      [
+        0,
+        3
+      ],
+      [
+        1,
+        5
+      ],
+      [
+        2,
+        4
+      ]
+    ],
+    "tv": 0.9843385461931844
+  },
+  {
+    "context": 2,
+    "edge_f1": 0.0,
+    "edge_precision": 0.0,
+    "edge_recall": 0.0,
+    "invalid_rate": 0.9843385461931843,
+    "kl": 4.161227325835094,
+    "model": "parameter_matched_independent",
+    "predicted_edges": [],
+    "sampled_invalid_rate": 0.98605,
+    "sampler": "independent_marginals",
+    "seed": 2,
+    "task": "context_switching_matching",
+    "true_edges": [
+      [
+        0,
+        3
+      ],
+      [
+        1,
+        5
+      ],
+      [
+        2,
+        4
+      ]
+    ],
+    "tv": 0.9843385461931844
+  },
+  {
+    "context": 2,
+    "edge_f1": 0.0,
+    "edge_precision": 0.0,
+    "edge_recall": 0.0,
+    "invalid_rate": 0.9843380748934659,
+    "kl": 4.164542825623805,
+    "model": "natural_chain",
+    "predicted_edges": [
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        2
+      ],
+      [
+        2,
+        3
+      ]
+    ],
+    "sampled_invalid_rate": 0.98505,
+    "sampler": "enumerated_joint",
+    "seed": 2,
+    "task": "context_switching_matching",
+    "true_edges": [
+      [
+        0,
+        3
+      ],
+      [
+        1,
+        5
+      ],
+      [
+        2,
+        4
+      ]
+    ],
+    "tv": 0.9843380748934659
+  },
+  {
+    "context": 2,
+    "edge_f1": 0.0,
+    "edge_precision": 0.0,
+    "edge_recall": 0.0,
+    "invalid_rate": 0.979067006523286,
+    "kl": 4.558674007122228,
+    "model": "static_forest",
+    "predicted_edges": [
+      [
+        0,
+        1
+      ],
+      [
+        3,
+        5
+      ],
+      [
+        4,
+        5
+      ]
+    ],
+    "sampled_invalid_rate": 0.97825,
+    "sampler": "enumerated_joint",
+    "seed": 2,
+    "task": "context_switching_matching",
+    "true_edges": [
+      [
+        0,
+        3
+      ],
+      [
+        1,
+        5
+      ],
+      [
+        2,
+        4
+      ]
+    ],
+    "tv": 0.979067006523286
+  },
+  {
+    "context": 2,
+    "edge_f1": 0.3333333333333333,
+    "edge_precision": 0.3333333333333333,
+    "edge_recall": 0.3333333333333333,
+    "invalid_rate": 0.9372209249285415,
+    "kl": 2.7786575860800715,
+    "model": "fixed_topology_dynamic_factors",
+    "predicted_edges": [
+      [
+        0,
+        1
+      ],
+      [
+        2,
+        4
+      ],
+      [
+        3,
+        5
+      ]
+    ],
+    "sampled_invalid_rate": 0.9404,
+    "sampler": "enumerated_joint",
+    "seed": 2,
+    "task": "context_switching_matching",
+    "true_edges": [
+      [
+        0,
+        3
+      ],
+      [
+        1,
+        5
+      ],
+      [
+        2,
+        4
+      ]
+    ],
+    "tv": 0.9372209249285413
+  },
+  {
+    "context": 2,
+    "edge_f1": 1.0,
+    "edge_precision": 1.0,
+    "edge_recall": 1.0,
+    "invalid_rate": 0.00024388803773094163,
+    "kl": 0.00415728413628421,
+    "model": "dynamic_topology_fixed_factors",
+    "predicted_edges": [
+      [
+        0,
+        3
+      ],
+      [
+        1,
+        5
+      ],
+      [
+        2,
+        4
+      ]
+    ],
+    "sampled_invalid_rate": 0.00039999999999995595,
+    "sampler": "enumerated_joint",
+    "seed": 2,
+    "task": "context_switching_matching",
+    "true_edges": [
+      [
+        0,
+        3
+      ],
+      [
+        1,
+        5
+      ],
+      [
+        2,
+        4
+      ]
+    ],
+    "tv": 0.03724949718464818
+  },
+  {
+    "context": 2,
+    "edge_f1": 1.0,
+    "edge_precision": 1.0,
+    "edge_recall": 1.0,
+    "invalid_rate": 0.0021935161561788133,
+    "kl": 0.0033680466742956744,
+    "model": "contextual_forest",
+    "predicted_edges": [
+      [
+        0,
+        3
+      ],
+      [
+        1,
+        5
+      ],
+      [
+        2,
+        4
+      ]
+    ],
+    "sampled_invalid_rate": 0.0020499999999999963,
+    "sampler": "enumerated_joint",
+    "seed": 2,
+    "task": "context_switching_matching",
+    "true_edges": [
+      [
+        0,
+        3
+      ],
+      [
+        1,
+        5
+      ],
+      [
+        2,
+        4
+      ]
+    ],
+    "tv": 0.020999160131708754
+  },
+  {
+    "context": 0,
+    "edge_f1": 1.0,
+    "edge_precision": 1.0,
+    "edge_recall": 1.0,
+    "invalid_rate": 0.5000002234355835,
+    "kl": 0.6936088313823789,
+    "model": "factorized",
+    "predicted_edges": [],
+    "sampled_invalid_rate": 0.50205,
+    "sampler": "independent_marginals",
+    "seed": 2,
+    "task": "cyclic_xor",
+    "true_edges": [],
+    "tv": 0.5000002234355834
+  },
+  {
+    "context": 0,
+    "edge_f1": 1.0,
+    "edge_precision": 1.0,
+    "edge_recall": 1.0,
+    "invalid_rate": 0.5000002234355835,
+    "kl": 0.6936088313823789,
+    "model": "parameter_matched_independent",
+    "predicted_edges": [],
+    "sampled_invalid_rate": 0.50005,
+    "sampler": "independent_marginals",
+    "seed": 2,
+    "task": "cyclic_xor",
+    "true_edges": [],
+    "tv": 0.5000002234355834
+  },
+  {
+    "context": 0,
+    "edge_f1": 0.0,
+    "edge_precision": 0.0,
+    "edge_recall": 0.0,
+    "invalid_rate": 0.4995710036735492,
+    "kl": 0.6940389304956496,
+    "model": "natural_chain",
+    "predicted_edges": [
+      [
+        0,
+        1
+      ]
+    ],
+    "sampled_invalid_rate": 0.4968,
+    "sampler": "enumerated_joint",
+    "seed": 2,
+    "task": "cyclic_xor",
+    "true_edges": [],
+    "tv": 0.4995710036735492
+  },
+  {
+    "context": 0,
+    "edge_f1": 0.0,
+    "edge_precision": 0.0,
+    "edge_recall": 0.0,
+    "invalid_rate": 0.4995710036735492,
+    "kl": 0.6940389304956496,
+    "model": "static_forest",
+    "predicted_edges": [
+      [
+        0,
+        1
+      ]
+    ],
+    "sampled_invalid_rate": 0.49195,
+    "sampler": "enumerated_joint",
+    "seed": 2,
+    "task": "cyclic_xor",
+    "true_edges": [],
+    "tv": 0.4995710036735492
+  },
+  {
+    "context": 0,
+    "edge_f1": 0.0,
+    "edge_precision": 0.0,
+    "edge_recall": 0.0,
+    "invalid_rate": 0.4995710036735492,
+    "kl": 0.6940389304956496,
+    "model": "fixed_topology_dynamic_factors",
+    "predicted_edges": [
+      [
+        0,
+        1
+      ]
+    ],
+    "sampled_invalid_rate": 0.4979,
+    "sampler": "enumerated_joint",
+    "seed": 2,
+    "task": "cyclic_xor",
+    "true_edges": [],
+    "tv": 0.4995710036735492
+  },
+  {
+    "context": 0,
+    "edge_f1": 0.0,
+    "edge_precision": 0.0,
+    "edge_recall": 0.0,
+    "invalid_rate": 0.4995710037314781,
+    "kl": 0.6940389384079941,
+    "model": "dynamic_topology_fixed_factors",
+    "predicted_edges": [
+      [
+        0,
+        1
+      ]
+    ],
+    "sampled_invalid_rate": 0.49770000000000003,
+    "sampler": "enumerated_joint",
+    "seed": 2,
+    "task": "cyclic_xor",
+    "true_edges": [],
+    "tv": 0.4995710037314782
+  },
+  {
+    "context": 0,
+    "edge_f1": 0.0,
+    "edge_precision": 0.0,
+    "edge_recall": 0.0,
+    "invalid_rate": 0.4995710036735492,
+    "kl": 0.6940389304956496,
+    "model": "contextual_forest",
+    "predicted_edges": [
+      [
+        0,
+        1
+      ]
+    ],
+    "sampled_invalid_rate": 0.5015000000000001,
+    "sampler": "enumerated_joint",
+    "seed": 2,
+    "task": "cyclic_xor",
+    "true_edges": [],
+    "tv": 0.4995710036735492
+  },
+  {
+    "context": 0,
+    "edge_f1": 0.0,
+    "edge_precision": 0.0,
+    "edge_recall": 0.0,
+    "invalid_rate": 0.49999988081980895,
+    "kl": 0.6931474189203559,
+    "model": "factorized",
+    "predicted_edges": [],
+    "sampled_invalid_rate": 0.5035000000000001,
+    "sampler": "independent_marginals",
+    "seed": 3,
+    "task": "ambiguous_pairs",
+    "true_edges": [
+      [
+        0,
+        1
+      ]
+    ],
+    "tv": 0.49999988081980895
+  },
+  {
+    "context": 0,
+    "edge_f1": 0.0,
+    "edge_precision": 0.0,
+    "edge_recall": 0.0,
+    "invalid_rate": 0.49999988081980895,
+    "kl": 0.6931474189203559,
+    "model": "parameter_matched_independent",
+    "predicted_edges": [],
+    "sampled_invalid_rate": 0.49855000000000005,
+    "sampler": "independent_marginals",
+    "seed": 3,
+    "task": "ambiguous_pairs",
+    "true_edges": [
+      [
+        0,
+        1
+      ]
+    ],
+    "tv": 0.49999988081980895
+  },
+  {
+    "context": 0,
+    "edge_f1": 1.0,
+    "edge_precision": 1.0,
+    "edge_recall": 1.0,
+    "invalid_rate": 0.00012204051745179409,
+    "kl": 0.00012216714520696392,
+    "model": "natural_chain",
+    "predicted_edges": [
+      [
+        0,
+        1
+      ]
+    ],
+    "sampled_invalid_rate": 0.00014999999999998348,
+    "sampler": "enumerated_joint",
+    "seed": 3,
+    "task": "ambiguous_pairs",
+    "true_edges": [
+      [
+        0,
+        1
+      ]
+    ],
+    "tv": 0.0003051012936294842
+  },
+  {
+    "context": 0,
+    "edge_f1": 1.0,
+    "edge_precision": 1.0,
+    "edge_recall": 1.0,
+    "invalid_rate": 0.00012204051745179409,
+    "kl": 0.00012216714520696392,
+    "model": "static_forest",
+    "predicted_edges": [
+      [
+        0,
+        1
+      ]
+    ],
+    "sampled_invalid_rate": 0.00019999999999997797,
+    "sampler": "enumerated_joint",
+    "seed": 3,
+    "task": "ambiguous_pairs",
+    "true_edges": [
+      [
+        0,
+        1
+      ]
+    ],
+    "tv": 0.0003051012936294842
+  },
+  {
+    "context": 0,
+    "edge_f1": 1.0,
+    "edge_precision": 1.0,
+    "edge_recall": 1.0,
+    "invalid_rate": 0.00012204051745179409,
+    "kl": 0.00012216714520696392,
+    "model": "fixed_topology_dynamic_factors",
+    "predicted_edges": [
+      [
+        0,
+        1
+      ]
+    ],
+    "sampled_invalid_rate": 4.999999999999449e-05,
+    "sampler": "enumerated_joint",
+    "seed": 3,
+    "task": "ambiguous_pairs",
+    "true_edges": [
+      [
+        0,
+        1
+      ]
+    ],
+    "tv": 0.0003051012936294842
+  },
+  {
+    "context": 0,
+    "edge_f1": 1.0,
+    "edge_precision": 1.0,
+    "edge_recall": 1.0,
+    "invalid_rate": 0.00012204051744469388,
+    "kl": 0.00012216720338614762,
+    "model": "dynamic_topology_fixed_factors",
+    "predicted_edges": [
+      [
+        0,
+        1
+      ]
+    ],
+    "sampled_invalid_rate": 0.0,
+    "sampler": "enumerated_joint",
+    "seed": 3,
+    "task": "ambiguous_pairs",
+    "true_edges": [
+      [
+        0,
+        1
+      ]
+    ],
+    "tv": 0.0003051608691775094
+  },
+  {
+    "context": 0,
+    "edge_f1": 1.0,
+    "edge_precision": 1.0,
+    "edge_recall": 1.0,
+    "invalid_rate": 0.00012204051745179409,
+    "kl": 0.00012216714520696392,
+    "model": "contextual_forest",
+    "predicted_edges": [
+      [
+        0,
+        1
+      ]
+    ],
+    "sampled_invalid_rate": 4.999999999999449e-05,
+    "sampler": "enumerated_joint",
+    "seed": 3,
+    "task": "ambiguous_pairs",
+    "true_edges": [
+      [
+        0,
+        1
+      ]
+    ],
+    "tv": 0.0003051012936294842
+  },
+  {
+    "context": 0,
+    "edge_f1": 0.0,
+    "edge_precision": 0.0,
+    "edge_recall": 0.0,
+    "invalid_rate": 0.0,
+    "kl": 0.4167211888438589,
+    "model": "factorized",
+    "predicted_edges": [],
+    "sampled_invalid_rate": 0.0,
+    "sampler": "independent_marginals",
+    "seed": 3,
+    "task": "markov_025",
+    "true_edges": [
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        2
+      ],
+      [
+        2,
+        3
+      ],
+      [
+        3,
+        4
+      ],
+      [
+        4,
+        5
+      ]
+    ],
+    "tv": 0.35741228097373834
+  },
+  {
+    "context": 0,
+    "edge_f1": 0.0,
+    "edge_precision": 0.0,
+    "edge_recall": 0.0,
+    "invalid_rate": 0.0,
+    "kl": 0.4167211888438589,
+    "model": "parameter_matched_independent",
+    "predicted_edges": [],
+    "sampled_invalid_rate": 0.0,
+    "sampler": "independent_marginals",
+    "seed": 3,
+    "task": "markov_025",
+    "true_edges": [
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        2
+      ],
+      [
+        2,
+        3
+      ],
+      [
+        3,
+        4
+      ],
+      [
+        4,
+        5
+      ]
+    ],
+    "tv": 0.35741228097373834
+  },
+  {
+    "context": 0,
+    "edge_f1": 1.0,
+    "edge_precision": 1.0,
+    "edge_recall": 1.0,
+    "invalid_rate": 0.0,
+    "kl": 0.005782690618769341,
+    "model": "natural_chain",
+    "predicted_edges": [
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        2
+      ],
+      [
+        2,
+        3
+      ],
+      [
+        3,
+        4
+      ],
+      [
+        4,
+        5
+      ]
+    ],
+    "sampled_invalid_rate": 0.0,
+    "sampler": "enumerated_joint",
+    "seed": 3,
+    "task": "markov_025",
+    "true_edges": [
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        2
+      ],
+      [
+        2,
+        3
+      ],
+      [
+        3,
+        4
+      ],
+      [
+        4,
+        5
+      ]
+    ],
+    "tv": 0.04277018701736277
+  },
+  {
+    "context": 0,
+    "edge_f1": 1.0,
+    "edge_precision": 1.0,
+    "edge_recall": 1.0,
+    "invalid_rate": 0.0,
+    "kl": 0.005782690618769341,
+    "model": "static_forest",
+    "predicted_edges": [
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        2
+      ],
+      [
+        2,
+        3
+      ],
+      [
+        3,
+        4
+      ],
+      [
+        4,
+        5
+      ]
+    ],
+    "sampled_invalid_rate": 0.0,
+    "sampler": "enumerated_joint",
+    "seed": 3,
+    "task": "markov_025",
+    "true_edges": [
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        2
+      ],
+      [
+        2,
+        3
+      ],
+      [
+        3,
+        4
+      ],
+      [
+        4,
+        5
+      ]
+    ],
+    "tv": 0.04277018701736277
+  },
+  {
+    "context": 0,
+    "edge_f1": 1.0,
+    "edge_precision": 1.0,
+    "edge_recall": 1.0,
+    "invalid_rate": 0.0,
+    "kl": 0.005782690618769341,
+    "model": "fixed_topology_dynamic_factors",
+    "predicted_edges": [
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        2
+      ],
+      [
+        2,
+        3
+      ],
+      [
+        3,
+        4
+      ],
+      [
+        4,
+        5
+      ]
+    ],
+    "sampled_invalid_rate": 0.0,
+    "sampler": "enumerated_joint",
+    "seed": 3,
+    "task": "markov_025",
+    "true_edges": [
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        2
+      ],
+      [
+        2,
+        3
+      ],
+      [
+        3,
+        4
+      ],
+      [
+        4,
+        5
+      ]
+    ],
+    "tv": 0.04277018701736277
+  },
+  {
+    "context": 0,
+    "edge_f1": 1.0,
+    "edge_precision": 1.0,
+    "edge_recall": 1.0,
+    "invalid_rate": 0.0,
+    "kl": 0.002929676512969976,
+    "model": "dynamic_topology_fixed_factors",
+    "predicted_edges": [
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        2
+      ],
+      [
+        2,
+        3
+      ],
+      [
+        3,
+        4
+      ],
+      [
+        4,
+        5
+      ]
+    ],
+    "sampled_invalid_rate": 0.0,
+    "sampler": "enumerated_joint",
+    "seed": 3,
+    "task": "markov_025",
+    "true_edges": [
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        2
+      ],
+      [
+        2,
+        3
+      ],
+      [
+        3,
+        4
+      ],
+      [
+        4,
+        5
+      ]
+    ],
+    "tv": 0.031003854815313273
+  },
+  {
+    "context": 0,
+    "edge_f1": 1.0,
+    "edge_precision": 1.0,
+    "edge_recall": 1.0,
+    "invalid_rate": 0.0,
+    "kl": 0.005782690618769341,
+    "model": "contextual_forest",
+    "predicted_edges": [
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        2
+      ],
+      [
+        2,
+        3
+      ],
+      [
+        3,
+        4
+      ],
+      [
+        4,
+        5
+      ]
+    ],
+    "sampled_invalid_rate": 0.0,
+    "sampler": "enumerated_joint",
+    "seed": 3,
+    "task": "markov_025",
+    "true_edges": [
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        2
+      ],
+      [
+        2,
+        3
+      ],
+      [
+        3,
+        4
+      ],
+      [
+        4,
+        5
+      ]
+    ],
+    "tv": 0.04277018701736277
+  },
+  {
+    "context": 0,
+    "edge_f1": 0.0,
+    "edge_precision": 0.0,
+    "edge_recall": 0.0,
+    "invalid_rate": 0.0,
+    "kl": 1.5658527143565992,
+    "model": "factorized",
+    "predicted_edges": [],
+    "sampled_invalid_rate": 0.0,
+    "sampler": "independent_marginals",
+    "seed": 3,
+    "task": "markov_050",
+    "true_edges": [
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        2
+      ],
+      [
+        2,
+        3
+      ],
+      [
+        3,
+        4
+      ],
+      [
+        4,
+        5
+      ]
+    ],
+    "tv": 0.6211359861952361
+  },
+  {
+    "context": 0,
+    "edge_f1": 0.0,
+    "edge_precision": 0.0,
+    "edge_recall": 0.0,
+    "invalid_rate": 0.0,
+    "kl": 1.5658527143565992,
+    "model": "parameter_matched_independent",
+    "predicted_edges": [],
+    "sampled_invalid_rate": 0.0,
+    "sampler": "independent_marginals",
+    "seed": 3,
+    "task": "markov_050",
+    "true_edges": [
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        2
+      ],
+      [
+        2,
+        3
+      ],
+      [
+        3,
+        4
+      ],
+      [
+        4,
+        5
+      ]
+    ],
+    "tv": 0.6211359861952361
+  },
+  {
+    "context": 0,
+    "edge_f1": 1.0,
+    "edge_precision": 1.0,
+    "edge_recall": 1.0,
+    "invalid_rate": 0.0,
+    "kl": 0.0067270694524339345,
+    "model": "natural_chain",
+    "predicted_edges": [
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        2
+      ],
+      [
+        2,
+        3
+      ],
+      [
+        3,
+        4
+      ],
+      [
+        4,
+        5
+      ]
+    ],
+    "sampled_invalid_rate": 0.0,
+    "sampler": "enumerated_joint",
+    "seed": 3,
+    "task": "markov_050",
+    "true_edges": [
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        2
+      ],
+      [
+        2,
+        3
+      ],
+      [
+        3,
+        4
+      ],
+      [
+        4,
+        5
+      ]
+    ],
+    "tv": 0.04516380028891584
+  },
+  {
+    "context": 0,
+    "edge_f1": 1.0,
+    "edge_precision": 1.0,
+    "edge_recall": 1.0,
+    "invalid_rate": 0.0,
+    "kl": 0.0067270694524339345,
+    "model": "static_forest",
+    "predicted_edges": [
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        2
+      ],
+      [
+        2,
+        3
+      ],
+      [
+        3,
+        4
+      ],
+      [
+        4,
+        5
+      ]
+    ],
+    "sampled_invalid_rate": 0.0,
+    "sampler": "enumerated_joint",
+    "seed": 3,
+    "task": "markov_050",
+    "true_edges": [
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        2
+      ],
+      [
+        2,
+        3
+      ],
+      [
+        3,
+        4
+      ],
+      [
+        4,
+        5
+      ]
+    ],
+    "tv": 0.04516380028891584
+  },
+  {
+    "context": 0,
+    "edge_f1": 1.0,
+    "edge_precision": 1.0,
+    "edge_recall": 1.0,
+    "invalid_rate": 0.0,
+    "kl": 0.0067270694524339345,
+    "model": "fixed_topology_dynamic_factors",
+    "predicted_edges": [
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        2
+      ],
+      [
+        2,
+        3
+      ],
+      [
+        3,
+        4
+      ],
+      [
+        4,
+        5
+      ]
+    ],
+    "sampled_invalid_rate": 0.0,
+    "sampler": "enumerated_joint",
+    "seed": 3,
+    "task": "markov_050",
+    "true_edges": [
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        2
+      ],
+      [
+        2,
+        3
+      ],
+      [
+        3,
+        4
+      ],
+      [
+        4,
+        5
+      ]
+    ],
+    "tv": 0.04516380028891584
+  },
+  {
+    "context": 0,
+    "edge_f1": 1.0,
+    "edge_precision": 1.0,
+    "edge_recall": 1.0,
+    "invalid_rate": 0.0,
+    "kl": 0.0021996279528760402,
+    "model": "dynamic_topology_fixed_factors",
+    "predicted_edges": [
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        2
+      ],
+      [
+        2,
+        3
+      ],
+      [
+        3,
+        4
+      ],
+      [
+        4,
+        5
+      ]
+    ],
+    "sampled_invalid_rate": 0.0,
+    "sampler": "enumerated_joint",
+    "seed": 3,
+    "task": "markov_050",
+    "true_edges": [
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        2
+      ],
+      [
+        2,
+        3
+      ],
+      [
+        3,
+        4
+      ],
+      [
+        4,
+        5
+      ]
+    ],
+    "tv": 0.026651475099351566
+  },
+  {
+    "context": 0,
+    "edge_f1": 1.0,
+    "edge_precision": 1.0,
+    "edge_recall": 1.0,
+    "invalid_rate": 0.0,
+    "kl": 0.0067270694524339345,
+    "model": "contextual_forest",
+    "predicted_edges": [
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        2
+      ],
+      [
+        2,
+        3
+      ],
+      [
+        3,
+        4
+      ],
+      [
+        4,
+        5
+      ]
+    ],
+    "sampled_invalid_rate": 0.0,
+    "sampler": "enumerated_joint",
+    "seed": 3,
+    "task": "markov_050",
+    "true_edges": [
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        2
+      ],
+      [
+        2,
+        3
+      ],
+      [
+        3,
+        4
+      ],
+      [
+        4,
+        5
+      ]
+    ],
+    "tv": 0.04516380028891584
+  },
+  {
+    "context": 0,
+    "edge_f1": 0.0,
+    "edge_precision": 0.0,
+    "edge_recall": 0.0,
+    "invalid_rate": 0.0,
+    "kl": 3.490635198827871,
+    "model": "factorized",
+    "predicted_edges": [],
+    "sampled_invalid_rate": 0.0,
+    "sampler": "independent_marginals",
+    "seed": 3,
+    "task": "markov_075",
+    "true_edges": [
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        2
+      ],
+      [
+        2,
+        3
+      ],
+      [
+        3,
+        4
+      ],
+      [
+        4,
+        5
+      ]
+    ],
+    "tv": 0.8475264854492823
+  },
+  {
+    "context": 0,
+    "edge_f1": 0.0,
+    "edge_precision": 0.0,
+    "edge_recall": 0.0,
+    "invalid_rate": 0.0,
+    "kl": 3.490635198827871,
+    "model": "parameter_matched_independent",
+    "predicted_edges": [],
+    "sampled_invalid_rate": 0.0,
+    "sampler": "independent_marginals",
+    "seed": 3,
+    "task": "markov_075",
+    "true_edges": [
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        2
+      ],
+      [
+        2,
+        3
+      ],
+      [
+        3,
+        4
+      ],
+      [
+        4,
+        5
+      ]
+    ],
+    "tv": 0.8475264854492823
+  },
+  {
+    "context": 0,
+    "edge_f1": 1.0,
+    "edge_precision": 1.0,
+    "edge_recall": 1.0,
+    "invalid_rate": 0.0,
+    "kl": 0.008272384842632098,
+    "model": "natural_chain",
+    "predicted_edges": [
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        2
+      ],
+      [
+        2,
+        3
+      ],
+      [
+        3,
+        4
+      ],
+      [
+        4,
+        5
+      ]
+    ],
+    "sampled_invalid_rate": 0.0,
+    "sampler": "enumerated_joint",
+    "seed": 3,
+    "task": "markov_075",
+    "true_edges": [
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        2
+      ],
+      [
+        2,
+        3
+      ],
+      [
+        3,
+        4
+      ],
+      [
+        4,
+        5
+      ]
+    ],
+    "tv": 0.048655813896485337
+  },
+  {
+    "context": 0,
+    "edge_f1": 1.0,
+    "edge_precision": 1.0,
+    "edge_recall": 1.0,
+    "invalid_rate": 0.0,
+    "kl": 0.008272384842632098,
+    "model": "static_forest",
+    "predicted_edges": [
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        2
+      ],
+      [
+        2,
+        3
+      ],
+      [
+        3,
+        4
+      ],
+      [
+        4,
+        5
+      ]
+    ],
+    "sampled_invalid_rate": 0.0,
+    "sampler": "enumerated_joint",
+    "seed": 3,
+    "task": "markov_075",
+    "true_edges": [
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        2
+      ],
+      [
+        2,
+        3
+      ],
+      [
+        3,
+        4
+      ],
+      [
+        4,
+        5
+      ]
+    ],
+    "tv": 0.048655813896485337
+  },
+  {
+    "context": 0,
+    "edge_f1": 1.0,
+    "edge_precision": 1.0,
+    "edge_recall": 1.0,
+    "invalid_rate": 0.0,
+    "kl": 0.008272384842632098,
+    "model": "fixed_topology_dynamic_factors",
+    "predicted_edges": [
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        2
+      ],
+      [
+        2,
+        3
+      ],
+      [
+        3,
+        4
+      ],
+      [
+        4,
+        5
+      ]
+    ],
+    "sampled_invalid_rate": 0.0,
+    "sampler": "enumerated_joint",
+    "seed": 3,
+    "task": "markov_075",
+    "true_edges": [
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        2
+      ],
+      [
+        2,
+        3
+      ],
+      [
+        3,
+        4
+      ],
+      [
+        4,
+        5
+      ]
+    ],
+    "tv": 0.048655813896485337
+  },
+  {
+    "context": 0,
+    "edge_f1": 1.0,
+    "edge_precision": 1.0,
+    "edge_recall": 1.0,
+    "invalid_rate": 0.0,
+    "kl": 0.002344085633498226,
+    "model": "dynamic_topology_fixed_factors",
+    "predicted_edges": [
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        2
+      ],
+      [
+        2,
+        3
+      ],
+      [
+        3,
+        4
+      ],
+      [
+        4,
+        5
+      ]
+    ],
+    "sampled_invalid_rate": 0.0,
+    "sampler": "enumerated_joint",
+    "seed": 3,
+    "task": "markov_075",
+    "true_edges": [
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        2
+      ],
+      [
+        2,
+        3
+      ],
+      [
+        3,
+        4
+      ],
+      [
+        4,
+        5
+      ]
+    ],
+    "tv": 0.027966572130320107
+  },
+  {
+    "context": 0,
+    "edge_f1": 1.0,
+    "edge_precision": 1.0,
+    "edge_recall": 1.0,
+    "invalid_rate": 0.0,
+    "kl": 0.008272384842632098,
+    "model": "contextual_forest",
+    "predicted_edges": [
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        2
+      ],
+      [
+        2,
+        3
+      ],
+      [
+        3,
+        4
+      ],
+      [
+        4,
+        5
+      ]
+    ],
+    "sampled_invalid_rate": 0.0,
+    "sampler": "enumerated_joint",
+    "seed": 3,
+    "task": "markov_075",
+    "true_edges": [
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        2
+      ],
+      [
+        2,
+        3
+      ],
+      [
+        3,
+        4
+      ],
+      [
+        4,
+        5
+      ]
+    ],
+    "tv": 0.048655813896485337
+  },
+  {
+    "context": 0,
+    "edge_f1": 0.0,
+    "edge_precision": 0.0,
+    "edge_recall": 0.0,
+    "invalid_rate": 0.0,
+    "kl": 5.188907936483336,
+    "model": "factorized",
+    "predicted_edges": [],
+    "sampled_invalid_rate": 0.0,
+    "sampler": "independent_marginals",
+    "seed": 3,
+    "task": "markov_090",
+    "true_edges": [
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        2
+      ],
+      [
+        2,
+        3
+      ],
+      [
+        3,
+        4
+      ],
+      [
+        4,
+        5
+      ]
+    ],
+    "tv": 0.9360594145977523
+  },
+  {
+    "context": 0,
+    "edge_f1": 0.0,
+    "edge_precision": 0.0,
+    "edge_recall": 0.0,
+    "invalid_rate": 0.0,
+    "kl": 5.188907936483336,
+    "model": "parameter_matched_independent",
+    "predicted_edges": [],
+    "sampled_invalid_rate": 0.0,
+    "sampler": "independent_marginals",
+    "seed": 3,
+    "task": "markov_090",
+    "true_edges": [
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        2
+      ],
+      [
+        2,
+        3
+      ],
+      [
+        3,
+        4
+      ],
+      [
+        4,
+        5
+      ]
+    ],
+    "tv": 0.9360594145977523
+  },
+  {
+    "context": 0,
+    "edge_f1": 1.0,
+    "edge_precision": 1.0,
+    "edge_recall": 1.0,
+    "invalid_rate": 0.0,
+    "kl": 0.006560337664853629,
+    "model": "natural_chain",
+    "predicted_edges": [
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        2
+      ],
+      [
+        2,
+        3
+      ],
+      [
+        3,
+        4
+      ],
+      [
+        4,
+        5
+      ]
+    ],
+    "sampled_invalid_rate": 0.0,
+    "sampler": "enumerated_joint",
+    "seed": 3,
+    "task": "markov_090",
+    "true_edges": [
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        2
+      ],
+      [
+        2,
+        3
+      ],
+      [
+        3,
+        4
+      ],
+      [
+        4,
+        5
+      ]
+    ],
+    "tv": 0.03591304009482436
+  },
+  {
+    "context": 0,
+    "edge_f1": 1.0,
+    "edge_precision": 1.0,
+    "edge_recall": 1.0,
+    "invalid_rate": 0.0,
+    "kl": 0.006560337664853629,
+    "model": "static_forest",
+    "predicted_edges": [
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        2
+      ],
+      [
+        2,
+        3
+      ],
+      [
+        3,
+        4
+      ],
+      [
+        4,
+        5
+      ]
+    ],
+    "sampled_invalid_rate": 0.0,
+    "sampler": "enumerated_joint",
+    "seed": 3,
+    "task": "markov_090",
+    "true_edges": [
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        2
+      ],
+      [
+        2,
+        3
+      ],
+      [
+        3,
+        4
+      ],
+      [
+        4,
+        5
+      ]
+    ],
+    "tv": 0.03591304009482436
+  },
+  {
+    "context": 0,
+    "edge_f1": 1.0,
+    "edge_precision": 1.0,
+    "edge_recall": 1.0,
+    "invalid_rate": 0.0,
+    "kl": 0.006560337664853629,
+    "model": "fixed_topology_dynamic_factors",
+    "predicted_edges": [
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        2
+      ],
+      [
+        2,
+        3
+      ],
+      [
+        3,
+        4
+      ],
+      [
+        4,
+        5
+      ]
+    ],
+    "sampled_invalid_rate": 0.0,
+    "sampler": "enumerated_joint",
+    "seed": 3,
+    "task": "markov_090",
+    "true_edges": [
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        2
+      ],
+      [
+        2,
+        3
+      ],
+      [
+        3,
+        4
+      ],
+      [
+        4,
+        5
+      ]
+    ],
+    "tv": 0.03591304009482436
+  },
+  {
+    "context": 0,
+    "edge_f1": 1.0,
+    "edge_precision": 1.0,
+    "edge_recall": 1.0,
+    "invalid_rate": 0.0,
+    "kl": 0.0012861002244758703,
+    "model": "dynamic_topology_fixed_factors",
+    "predicted_edges": [
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        2
+      ],
+      [
+        2,
+        3
+      ],
+      [
+        3,
+        4
+      ],
+      [
+        4,
+        5
+      ]
+    ],
+    "sampled_invalid_rate": 0.0,
+    "sampler": "enumerated_joint",
+    "seed": 3,
+    "task": "markov_090",
+    "true_edges": [
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        2
+      ],
+      [
+        2,
+        3
+      ],
+      [
+        3,
+        4
+      ],
+      [
+        4,
+        5
+      ]
+    ],
+    "tv": 0.01973945057408389
+  },
+  {
+    "context": 0,
+    "edge_f1": 1.0,
+    "edge_precision": 1.0,
+    "edge_recall": 1.0,
+    "invalid_rate": 0.0,
+    "kl": 0.006560337664853629,
+    "model": "contextual_forest",
+    "predicted_edges": [
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        2
+      ],
+      [
+        2,
+        3
+      ],
+      [
+        3,
+        4
+      ],
+      [
+        4,
+        5
+      ]
+    ],
+    "sampled_invalid_rate": 0.0,
+    "sampler": "enumerated_joint",
+    "seed": 3,
+    "task": "markov_090",
+    "true_edges": [
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        2
+      ],
+      [
+        2,
+        3
+      ],
+      [
+        3,
+        4
+      ],
+      [
+        4,
+        5
+      ]
+    ],
+    "tv": 0.03591304009482436
+  },
+  {
+    "context": 0,
+    "edge_f1": 0.0,
+    "edge_precision": 0.0,
+    "edge_recall": 0.0,
+    "invalid_rate": 0.9843473039956184,
+    "kl": 4.160669649916754,
+    "model": "factorized",
+    "predicted_edges": [],
+    "sampled_invalid_rate": 0.98365,
+    "sampler": "independent_marginals",
+    "seed": 3,
+    "task": "context_switching_matching",
+    "true_edges": [
+      [
+        0,
+        1
+      ],
+      [
+        2,
+        3
+      ],
+      [
+        4,
+        5
+      ]
+    ],
+    "tv": 0.9843473039956185
+  },
+  {
+    "context": 0,
+    "edge_f1": 0.0,
+    "edge_precision": 0.0,
+    "edge_recall": 0.0,
+    "invalid_rate": 0.9843473039956184,
+    "kl": 4.160669649916754,
+    "model": "parameter_matched_independent",
+    "predicted_edges": [],
+    "sampled_invalid_rate": 0.9837,
+    "sampler": "independent_marginals",
+    "seed": 3,
+    "task": "context_switching_matching",
+    "true_edges": [
+      [
+        0,
+        1
+      ],
+      [
+        2,
+        3
+      ],
+      [
+        4,
+        5
+      ]
+    ],
+    "tv": 0.9843473039956185
+  },
+  {
+    "context": 0,
+    "edge_f1": 0.6666666666666666,
+    "edge_precision": 0.6666666666666666,
+    "edge_recall": 0.6666666666666666,
+    "invalid_rate": 0.7502656605088835,
+    "kl": 1.3901545386767102,
+    "model": "natural_chain",
+    "predicted_edges": [
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        2
+      ],
+      [
+        2,
+        3
+      ]
+    ],
+    "sampled_invalid_rate": 0.7448,
+    "sampler": "enumerated_joint",
+    "seed": 3,
+    "task": "context_switching_matching",
+    "true_edges": [
+      [
+        0,
+        1
+      ],
+      [
+        2,
+        3
+      ],
+      [
+        4,
+        5
+      ]
+    ],
+    "tv": 0.7502656605088837
+  },
+  {
+    "context": 0,
+    "edge_f1": 0.3333333333333333,
+    "edge_precision": 0.3333333333333333,
+    "edge_recall": 0.3333333333333333,
+    "invalid_rate": 0.9683987175642552,
+    "kl": 3.7233085701071515,
+    "model": "static_forest",
+    "predicted_edges": [
+      [
+        0,
+        1
+      ],
+      [
+        0,
+        3
+      ],
+      [
+        1,
+        5
+      ]
+    ],
+    "sampled_invalid_rate": 0.96775,
+    "sampler": "enumerated_joint",
+    "seed": 3,
+    "task": "context_switching_matching",
+    "true_edges": [
+      [
+        0,
+        1
+      ],
+      [
+        2,
+        3
+      ],
+      [
+        4,
+        5
+      ]
+    ],
+    "tv": 0.9683987175642552
+  },
+  {
+    "context": 0,
+    "edge_f1": 0.0,
+    "edge_precision": 0.0,
+    "edge_recall": 0.0,
+    "invalid_rate": 0.9843484101101706,
+    "kl": 4.1653570374020354,
+    "model": "fixed_topology_dynamic_factors",
+    "predicted_edges": [
+      [
+        0,
+        2
+      ],
+      [
+        1,
+        4
+      ],
+      [
+        2,
+        4
+      ]
+    ],
+    "sampled_invalid_rate": 0.9835,
+    "sampler": "enumerated_joint",
+    "seed": 3,
+    "task": "context_switching_matching",
+    "true_edges": [
+      [
+        0,
+        1
+      ],
+      [
+        2,
+        3
+      ],
+      [
+        4,
+        5
+      ]
+    ],
+    "tv": 0.9843484101101707
+  },
+  {
+    "context": 0,
+    "edge_f1": 1.0,
+    "edge_precision": 1.0,
+    "edge_recall": 1.0,
+    "invalid_rate": 0.00024391657087969185,
+    "kl": 0.0035327842933894626,
+    "model": "dynamic_topology_fixed_factors",
+    "predicted_edges": [
+      [
+        0,
+        1
+      ],
+      [
+        2,
+        3
+      ],
+      [
+        4,
+        5
+      ]
+    ],
+    "sampled_invalid_rate": 0.00024999999999997247,
+    "sampler": "enumerated_joint",
+    "seed": 3,
+    "task": "context_switching_matching",
+    "true_edges": [
+      [
+        0,
+        1
+      ],
+      [
+        2,
+        3
+      ],
+      [
+        4,
+        5
+      ]
+    ],
+    "tv": 0.03269736704818675
+  },
+  {
+    "context": 0,
+    "edge_f1": 1.0,
+    "edge_precision": 1.0,
+    "edge_recall": 1.0,
+    "invalid_rate": 0.0021935161561788138,
+    "kl": 0.0030892087151253023,
+    "model": "contextual_forest",
+    "predicted_edges": [
+      [
+        0,
+        1
+      ],
+      [
+        2,
+        3
+      ],
+      [
+        4,
+        5
+      ]
+    ],
+    "sampled_invalid_rate": 0.0022999999999999687,
+    "sampler": "enumerated_joint",
+    "seed": 3,
+    "task": "context_switching_matching",
+    "true_edges": [
+      [
+        0,
+        1
+      ],
+      [
+        2,
+        3
+      ],
+      [
+        4,
+        5
+      ]
+    ],
+    "tv": 0.018091080553278585
+  },
+  {
+    "context": 1,
+    "edge_f1": 0.0,
+    "edge_precision": 0.0,
+    "edge_recall": 0.0,
+    "invalid_rate": 0.9843426295674603,
+    "kl": 4.160933157322627,
+    "model": "factorized",
+    "predicted_edges": [],
+    "sampled_invalid_rate": 0.9851,
+    "sampler": "independent_marginals",
+    "seed": 3,
+    "task": "context_switching_matching",
+    "true_edges": [
+      [
+        0,
+        2
+      ],
+      [
+        1,
+        4
+      ],
+      [
+        3,
+        5
+      ]
+    ],
+    "tv": 0.9843426295674603
+  },
+  {
+    "context": 1,
+    "edge_f1": 0.0,
+    "edge_precision": 0.0,
+    "edge_recall": 0.0,
+    "invalid_rate": 0.9843426295674603,
+    "kl": 4.160933157322627,
+    "model": "parameter_matched_independent",
+    "predicted_edges": [],
+    "sampled_invalid_rate": 0.98565,
+    "sampler": "independent_marginals",
+    "seed": 3,
+    "task": "context_switching_matching",
+    "true_edges": [
+      [
+        0,
+        2
+      ],
+      [
+        1,
+        4
+      ],
+      [
+        3,
+        5
+      ]
+    ],
+    "tv": 0.9843426295674603
+  },
+  {
+    "context": 1,
+    "edge_f1": 0.0,
+    "edge_precision": 0.0,
+    "edge_recall": 0.0,
+    "invalid_rate": 0.9842930762682611,
+    "kl": 4.1649526075516,
+    "model": "natural_chain",
+    "predicted_edges": [
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        2
+      ],
+      [
+        2,
+        3
+      ]
+    ],
+    "sampled_invalid_rate": 0.984,
+    "sampler": "enumerated_joint",
+    "seed": 3,
+    "task": "context_switching_matching",
+    "true_edges": [
+      [
+        0,
+        2
+      ],
+      [
+        1,
+        4
+      ],
+      [
+        3,
+        5
+      ]
+    ],
+    "tv": 0.9842930762682611
+  },
+  {
+    "context": 1,
+    "edge_f1": 0.0,
+    "edge_precision": 0.0,
+    "edge_recall": 0.0,
+    "invalid_rate": 0.9825595572672932,
+    "kl": 4.565152343506167,
+    "model": "static_forest",
+    "predicted_edges": [
+      [
+        0,
+        1
+      ],
+      [
+        0,
+        3
+      ],
+      [
+        1,
+        5
+      ]
+    ],
+    "sampled_invalid_rate": 0.98135,
+    "sampler": "enumerated_joint",
+    "seed": 3,
+    "task": "context_switching_matching",
+    "true_edges": [
+      [
+        0,
+        2
+      ],
+      [
+        1,
+        4
+      ],
+      [
+        3,
+        5
+      ]
+    ],
+    "tv": 0.9825595572672932
+  },
+  {
+    "context": 1,
+    "edge_f1": 0.6666666666666666,
+    "edge_precision": 0.6666666666666666,
+    "edge_recall": 0.6666666666666666,
+    "invalid_rate": 0.7501961780521116,
+    "kl": 1.3907218417451062,
+    "model": "fixed_topology_dynamic_factors",
+    "predicted_edges": [
+      [
+        0,
+        2
+      ],
+      [
+        1,
+        4
+      ],
+      [
+        2,
+        4
+      ]
+    ],
+    "sampled_invalid_rate": 0.7456,
+    "sampler": "enumerated_joint",
+    "seed": 3,
+    "task": "context_switching_matching",
+    "true_edges": [
+      [
+        0,
+        2
+      ],
+      [
+        1,
+        4
+      ],
+      [
+        3,
+        5
+      ]
+    ],
+    "tv": 0.7501961780521116
+  },
+  {
+    "context": 1,
+    "edge_f1": 1.0,
+    "edge_precision": 1.0,
+    "edge_recall": 1.0,
+    "invalid_rate": 0.0002438855357821683,
+    "kl": 0.0040808934129947655,
+    "model": "dynamic_topology_fixed_factors",
+    "predicted_edges": [
+      [
+        0,
+        2
+      ],
+      [
+        1,
+        4
+      ],
+      [
+        3,
+        5
+      ]
+    ],
+    "sampled_invalid_rate": 0.00034999999999996145,
+    "sampler": "enumerated_joint",
+    "seed": 3,
+    "task": "context_switching_matching",
+    "true_edges": [
+      [
+        0,
+        2
+      ],
+      [
+        1,
+        4
+      ],
+      [
+        3,
+        5
+      ]
+    ],
+    "tv": 0.03622418881508199
+  },
+  {
+    "context": 1,
+    "edge_f1": 1.0,
+    "edge_precision": 1.0,
+    "edge_recall": 1.0,
+    "invalid_rate": 0.0021935161561788116,
+    "kl": 0.0032209624180620927,
+    "model": "contextual_forest",
+    "predicted_edges": [
+      [
+        0,
+        2
+      ],
+      [
+        1,
+        4
+      ],
+      [
+        3,
+        5
+      ]
+    ],
+    "sampled_invalid_rate": 0.0020499999999999963,
+    "sampler": "enumerated_joint",
+    "seed": 3,
+    "task": "context_switching_matching",
+    "true_edges": [
+      [
+        0,
+        2
+      ],
+      [
+        1,
+        4
+      ],
+      [
+        3,
+        5
+      ]
+    ],
+    "tv": 0.01971639049962997
+  },
+  {
+    "context": 2,
+    "edge_f1": 0.0,
+    "edge_precision": 0.0,
+    "edge_recall": 0.0,
+    "invalid_rate": 0.9843216399472449,
+    "kl": 4.162399516577288,
+    "model": "factorized",
+    "predicted_edges": [],
+    "sampled_invalid_rate": 0.9835,
+    "sampler": "independent_marginals",
+    "seed": 3,
+    "task": "context_switching_matching",
+    "true_edges": [
+      [
+        0,
+        3
+      ],
+      [
+        1,
+        5
+      ],
+      [
+        2,
+        4
+      ]
+    ],
+    "tv": 0.984321639947245
+  },
+  {
+    "context": 2,
+    "edge_f1": 0.0,
+    "edge_precision": 0.0,
+    "edge_recall": 0.0,
+    "invalid_rate": 0.9843216399472449,
+    "kl": 4.162399516577288,
+    "model": "parameter_matched_independent",
+    "predicted_edges": [],
+    "sampled_invalid_rate": 0.9857,
+    "sampler": "independent_marginals",
+    "seed": 3,
+    "task": "context_switching_matching",
+    "true_edges": [
+      [
+        0,
+        3
+      ],
+      [
+        1,
+        5
+      ],
+      [
+        2,
+        4
+      ]
+    ],
+    "tv": 0.984321639947245
+  },
+  {
+    "context": 2,
+    "edge_f1": 0.0,
+    "edge_precision": 0.0,
+    "edge_recall": 0.0,
+    "invalid_rate": 0.9843228031565164,
+    "kl": 4.166920531475068,
+    "model": "natural_chain",
+    "predicted_edges": [
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        2
+      ],
+      [
+        2,
+        3
+      ]
+    ],
+    "sampled_invalid_rate": 0.9838,
+    "sampler": "enumerated_joint",
+    "seed": 3,
+    "task": "context_switching_matching",
+    "true_edges": [
+      [
+        0,
+        3
+      ],
+      [
+        1,
+        5
+      ],
+      [
+        2,
+        4
+      ]
+    ],
+    "tv": 0.9843228031565164
+  },
+  {
+    "context": 2,
+    "edge_f1": 0.6666666666666666,
+    "edge_precision": 0.6666666666666666,
+    "edge_recall": 0.6666666666666666,
+    "invalid_rate": 0.9367757997819828,
+    "kl": 2.899932899411739,
+    "model": "static_forest",
+    "predicted_edges": [
+      [
+        0,
+        1
+      ],
+      [
+        0,
+        3
+      ],
+      [
+        1,
+        5
+      ]
+    ],
+    "sampled_invalid_rate": 0.93715,
+    "sampler": "enumerated_joint",
+    "seed": 3,
+    "task": "context_switching_matching",
+    "true_edges": [
+      [
+        0,
+        3
+      ],
+      [
+        1,
+        5
+      ],
+      [
+        2,
+        4
+      ]
+    ],
+    "tv": 0.9367757997819829
+  },
+  {
+    "context": 2,
+    "edge_f1": 0.3333333333333333,
+    "edge_precision": 0.3333333333333333,
+    "edge_recall": 0.3333333333333333,
+    "invalid_rate": 0.9373548092983593,
+    "kl": 2.7799958525990762,
+    "model": "fixed_topology_dynamic_factors",
+    "predicted_edges": [
+      [
+        0,
+        2
+      ],
+      [
+        1,
+        4
+      ],
+      [
+        2,
+        4
+      ]
+    ],
+    "sampled_invalid_rate": 0.93665,
+    "sampler": "enumerated_joint",
+    "seed": 3,
+    "task": "context_switching_matching",
+    "true_edges": [
+      [
+        0,
+        3
+      ],
+      [
+        1,
+        5
+      ],
+      [
+        2,
+        4
+      ]
+    ],
+    "tv": 0.9373548092983593
+  },
+  {
+    "context": 2,
+    "edge_f1": 1.0,
+    "edge_precision": 1.0,
+    "edge_recall": 1.0,
+    "invalid_rate": 0.00024373097466435088,
+    "kl": 0.007230789966718595,
+    "model": "dynamic_topology_fixed_factors",
+    "predicted_edges": [
+      [
+        0,
+        3
+      ],
+      [
+        1,
+        5
+      ],
+      [
+        2,
+        4
+      ]
+    ],
+    "sampled_invalid_rate": 0.00019999999999997797,
+    "sampler": "enumerated_joint",
+    "seed": 3,
+    "task": "context_switching_matching",
+    "true_edges": [
+      [
+        0,
+        3
+      ],
+      [
+        1,
+        5
+      ],
+      [
+        2,
+        4
+      ]
+    ],
+    "tv": 0.0471861951143882
+  },
+  {
+    "context": 2,
+    "edge_f1": 1.0,
+    "edge_precision": 1.0,
+    "edge_recall": 1.0,
+    "invalid_rate": 0.0021935161561788125,
+    "kl": 0.003954142045392545,
+    "model": "contextual_forest",
+    "predicted_edges": [
+      [
+        0,
+        3
+      ],
+      [
+        1,
+        5
+      ],
+      [
+        2,
+        4
+      ]
+    ],
+    "sampled_invalid_rate": 0.0012999999999999678,
+    "sampler": "enumerated_joint",
+    "seed": 3,
+    "task": "context_switching_matching",
+    "true_edges": [
+      [
+        0,
+        3
+      ],
+      [
+        1,
+        5
+      ],
+      [
+        2,
+        4
+      ]
+    ],
+    "tv": 0.02478966007163086
+  },
+  {
+    "context": 0,
+    "edge_f1": 1.0,
+    "edge_precision": 1.0,
+    "edge_recall": 1.0,
+    "invalid_rate": 0.5000000691253836,
+    "kl": 0.6934315852054838,
+    "model": "factorized",
+    "predicted_edges": [],
+    "sampled_invalid_rate": 0.49824999999999997,
+    "sampler": "independent_marginals",
+    "seed": 3,
+    "task": "cyclic_xor",
+    "true_edges": [],
+    "tv": 0.5000000691253836
+  },
+  {
+    "context": 0,
+    "edge_f1": 1.0,
+    "edge_precision": 1.0,
+    "edge_recall": 1.0,
+    "invalid_rate": 0.5000000691253836,
+    "kl": 0.6934315852054838,
+    "model": "parameter_matched_independent",
+    "predicted_edges": [],
+    "sampled_invalid_rate": 0.49575,
+    "sampler": "independent_marginals",
+    "seed": 3,
+    "task": "cyclic_xor",
+    "true_edges": [],
+    "tv": 0.5000000691253836
+  },
+  {
+    "context": 0,
+    "edge_f1": 0.0,
+    "edge_precision": 0.0,
+    "edge_recall": 0.0,
+    "invalid_rate": 0.4998702286112486,
+    "kl": 0.6935617171111883,
+    "model": "natural_chain",
+    "predicted_edges": [
+      [
+        0,
+        1
+      ]
+    ],
+    "sampled_invalid_rate": 0.5041,
+    "sampler": "enumerated_joint",
+    "seed": 3,
+    "task": "cyclic_xor",
+    "true_edges": [],
+    "tv": 0.4998702286112485
+  },
+  {
+    "context": 0,
+    "edge_f1": 0.0,
+    "edge_precision": 0.0,
+    "edge_recall": 0.0,
+    "invalid_rate": 0.4998455613224777,
+    "kl": 0.6935863944251377,
+    "model": "static_forest",
+    "predicted_edges": [
+      [
+        0,
+        2
+      ]
+    ],
+    "sampled_invalid_rate": 0.4991,
+    "sampler": "enumerated_joint",
+    "seed": 3,
+    "task": "cyclic_xor",
+    "true_edges": [],
+    "tv": 0.4998455613224777
+  },
+  {
+    "context": 0,
+    "edge_f1": 0.0,
+    "edge_precision": 0.0,
+    "edge_recall": 0.0,
+    "invalid_rate": 0.4998455613224777,
+    "kl": 0.6935863944251377,
+    "model": "fixed_topology_dynamic_factors",
+    "predicted_edges": [
+      [
+        0,
+        2
+      ]
+    ],
+    "sampled_invalid_rate": 0.49565000000000003,
+    "sampler": "enumerated_joint",
+    "seed": 3,
+    "task": "cyclic_xor",
+    "true_edges": [],
+    "tv": 0.4998455613224777
+  },
+  {
+    "context": 0,
+    "edge_f1": 0.0,
+    "edge_precision": 0.0,
+    "edge_recall": 0.0,
+    "invalid_rate": 0.4998455613442486,
+    "kl": 0.6935864261391149,
+    "model": "dynamic_topology_fixed_factors",
+    "predicted_edges": [
+      [
+        0,
+        2
+      ]
+    ],
+    "sampled_invalid_rate": 0.50385,
+    "sampler": "enumerated_joint",
+    "seed": 3,
+    "task": "cyclic_xor",
+    "true_edges": [],
+    "tv": 0.4998455613442486
+  },
+  {
+    "context": 0,
+    "edge_f1": 0.0,
+    "edge_precision": 0.0,
+    "edge_recall": 0.0,
+    "invalid_rate": 0.4998455613224777,
+    "kl": 0.6935863944251377,
+    "model": "contextual_forest",
+    "predicted_edges": [
+      [
+        0,
+        2
+      ]
+    ],
+    "sampled_invalid_rate": 0.5004500000000001,
+    "sampler": "enumerated_joint",
+    "seed": 3,
+    "task": "cyclic_xor",
+    "true_edges": [],
+    "tv": 0.4998455613224777
+  }
+]

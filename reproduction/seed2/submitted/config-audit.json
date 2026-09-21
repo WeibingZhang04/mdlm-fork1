@@ -1,0 +1,117 @@
+{
+  "historical_phases_verified": [
+    {
+      "arm": "static_static",
+      "phase": 1000,
+      "original_source": "/u401/n23zhang/mdlm_data/tree_mdlm_cache/runs/stale/four_arm_s001_k128_job1541029/static_static/.hydra/config.yaml",
+      "differences_from_6k_phase_preserved": {}
+    },
+    {
+      "arm": "static_static",
+      "phase": 3000,
+      "original_source": "/u401/n23zhang/mdlm_data/tree_mdlm_cache/runs/four_arm_continue_s001_k128_to3k_job1542157/static_static/hydra/.hydra/config.yaml",
+      "differences_from_6k_phase_preserved": {}
+    },
+    {
+      "arm": "static_static",
+      "phase": 6000,
+      "original_source": "/u401/n23zhang/mdlm_data/tree_mdlm_cache/runs/four_arm_continue_s001_k128_3k_to6k_job1542808/static_static/hydra/.hydra/config.yaml",
+      "differences_from_6k_phase_preserved": {}
+    },
+    {
+      "arm": "static_static",
+      "phase": 8000,
+      "original_source": "/u401/n23zhang/mdlm_data/tree_mdlm_cache/runs/four_arm_continue_s001_k128_6k_to10k_job1542883/static_static/hydra/.hydra/config.yaml",
+      "differences_from_6k_phase_preserved": {}
+    },
+    {
+      "arm": "fixed_dynamic",
+      "phase": 1000,
+      "original_source": "/u401/n23zhang/mdlm_data/tree_mdlm_cache/runs/stale/four_arm_s001_k128_job1541029/fixed_dynamic/.hydra/config.yaml",
+      "differences_from_6k_phase_preserved": {}
+    },
+    {
+      "arm": "fixed_dynamic",
+      "phase": 3000,
+      "original_source": "/u401/n23zhang/mdlm_data/tree_mdlm_cache/runs/four_arm_continue_s001_k128_to3k_job1542157/fixed_dynamic/hydra/.hydra/config.yaml",
+      "differences_from_6k_phase_preserved": {}
+    },
+    {
+      "arm": "fixed_dynamic",
+      "phase": 6000,
+      "original_source": "/u401/n23zhang/mdlm_data/tree_mdlm_cache/runs/four_arm_continue_s001_k128_3k_to6k_job1542808/fixed_dynamic/hydra/.hydra/config.yaml",
+      "differences_from_6k_phase_preserved": {}
+    },
+    {
+      "arm": "fixed_dynamic",
+      "phase": 8000,
+      "original_source": "/u401/n23zhang/mdlm_data/tree_mdlm_cache/runs/four_arm_continue_s001_k128_6k_to10k_job1542883/fixed_dynamic/hydra/.hydra/config.yaml",
+      "differences_from_6k_phase_preserved": {}
+    },
+    {
+      "arm": "dynamic_fixed",
+      "phase": 1000,
+      "original_source": "/u401/n23zhang/mdlm_data/tree_mdlm_cache/runs/stale/four_arm_s001_k128_job1541029/dynamic_fixed/.hydra/config.yaml",
+      "differences_from_6k_phase_preserved": {}
+    },
+    {
+      "arm": "dynamic_fixed",
+      "phase": 3000,
+      "original_source": "/u401/n23zhang/mdlm_data/tree_mdlm_cache/runs/four_arm_continue_s001_k128_to3k_job1542157/dynamic_fixed/hydra/.hydra/config.yaml",
+      "differences_from_6k_phase_preserved": {}
+    },
+    {
+      "arm": "dynamic_fixed",
+      "phase": 6000,
+      "original_source": "/u401/n23zhang/mdlm_data/tree_mdlm_cache/runs/four_arm_continue_s001_k128_3k_to6k_job1542808/dynamic_fixed/hydra/.hydra/config.yaml",
+      "differences_from_6k_phase_preserved": {}
+    },
+    {
+      "arm": "dynamic_fixed",
+      "phase": 8000,
+      "original_source": "/u401/n23zhang/mdlm_data/tree_mdlm_cache/runs/four_arm_continue_s001_k128_6k_to10k_job1542883/dynamic_fixed/hydra/.hydra/config.yaml",
+      "differences_from_6k_phase_preserved": {}
+    },
+    {
+      "arm": "dynamic_dynamic",
+      "phase": 1000,
+      "original_source": "/u401/n23zhang/mdlm_data/tree_mdlm_cache/runs/stale/four_arm_s001_k128_job1541029/dynamic_dynamic/.hydra/config.yaml",
+      "differences_from_6k_phase_preserved": {
+        "strategy.find_unused_parameters": [
+          true,
+          false
+        ]
+      }
+    },
+    {
+      "arm": "dynamic_dynamic",
+      "phase": 3000,
+      "original_source": "/u401/n23zhang/mdlm_data/tree_mdlm_cache/runs/four_arm_continue_s001_k128_to3k_job1542157/dynamic_dynamic/hydra/.hydra/config.yaml",
+      "differences_from_6k_phase_preserved": {}
+    },
+    {
+      "arm": "dynamic_dynamic",
+      "phase": 6000,
+      "original_source": "/u401/n23zhang/mdlm_data/tree_mdlm_cache/runs/four_arm_continue_s001_k128_3k_to6k_job1542808/dynamic_dynamic/hydra/.hydra/config.yaml",
+      "differences_from_6k_phase_preserved": {}
+    },
+    {
+      "arm": "dynamic_dynamic",
+      "phase": 8000,
+      "original_source": "/u401/n23zhang/mdlm_data/tree_mdlm_cache/runs/four_arm_continue_s001_k128_6k_to10k_job1542883/dynamic_dynamic/hydra/.hydra/config.yaml",
+      "differences_from_6k_phase_preserved": {}
+    }
+  ],
+  "intentional_scientific_changes": {
+    "seed": [
+      1,
+      2
+    ]
+  },
+  "operational_changes": [
+    "output paths",
+    "final horizon 8000",
+    "passive callback with gated exact-state invariance checks"
+  ],
+  "generation_seed_unchanged": 100001
+}

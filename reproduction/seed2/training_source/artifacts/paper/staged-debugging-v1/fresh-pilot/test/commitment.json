@@ -1,0 +1,77 @@
+{
+  "artifact": "fresh_pair_test_commitment",
+  "backbone_batch_size": 1,
+  "backbone_provenance": {
+    "attestation_type": "authenticated_released_backbone_wrapper_v1",
+    "backbone_parameter_count": 169627250,
+    "backbone_tensor_bytes": 678509000,
+    "backbone_tensor_content_sha256": "1bbf3736b36125b2f47e9e970101bb84a803d7059d4e93509a8f093ecb192901",
+    "backbone_tensor_count": 131,
+    "backbone_tensor_schema_sha256": "d5aeee0343134374ce4c596e7831c7b31938e7b5b25d669b090e9b5da5ab2150",
+    "backbone_wrapper_metadata_sha256": "5a71bdf6388cb0a56ae587468617469c02092293633dce5316e69d1779b2f2ea",
+    "backbone_wrapper_sha256": "94046f5e3952580f5b69697a78f72398160b19c268eeefa15cf558d8cf688a01",
+    "backbone_wrapper_size_bytes": 678553556,
+    "production_expectations_file_sha256": "a978c17befc2788b0b773eee7cd608ac0200379947a63a0ba8699a0b9818c956",
+    "production_expectations_identity_sha256": "6282b0d1fc4ad5cadae11c315c511d9fe6e8367ff58d1ba4e0facd7c5d8c8f6e",
+    "released_backbone": {
+      "repository": "kuleshov-group/mdlm-owt",
+      "revision": "d0958fa851335ece6c15260ce0025f030673c0fb",
+      "source_sha256": "47149e73f7552f39ea9776dbe74d925d25237bcf2ed2e2ec03cdff9d51c82aa4",
+      "source_size_bytes": 678522728,
+      "tensor_count": 131
+    },
+    "released_backbone_identity_sha256": "b63bc497859f9f8401eee5b9606b19565f5ddb165fe25e865e4c9b4078539091"
+  },
+  "bootstrap_replicates": 5000,
+  "bootstrap_seed": 1701,
+  "created_utc": "2026-09-08T02:53:09.650710+00:00",
+  "data_manifest_file_sha256": "70d989988c6318a52960791667804fde30e794f324628186df8d010438439753",
+  "forest_inference_dtype": "float64",
+  "head_forward_dtype": "float32",
+  "interpretation": "conditional likelihood on a source-order pilot; not generation quality",
+  "residual_normalization_dtype": "float64",
+  "schema_version": 1,
+  "seed_mapping": "training seed + offset + training rate-list index",
+  "selected": [
+    {
+      "arm": "unary",
+      "checkpoint_sha256": "2cdd03bcd6985a6c7c89b7bffcff391c6b43c3eff4284df67fefd5236bfe8701",
+      "checkpoint_step": 1000,
+      "dev_active_tokens": 19648,
+      "dev_nll_per_masked_token": 4.938392387636322,
+      "dev_nll_sum": 97029.53363227844,
+      "training_seed": 1
+    },
+    {
+      "arm": "shared",
+      "checkpoint_sha256": "5fb6045fa085c27e1622dc42cd5d1ee08d72deb124441aaa9503db9866463113",
+      "checkpoint_step": 900,
+      "dev_active_tokens": 19648,
+      "dev_nll_per_masked_token": 4.933843661791339,
+      "dev_nll_sum": 96940.16026687622,
+      "training_seed": 1
+    },
+    {
+      "arm": "directional",
+      "checkpoint_sha256": "5fb6045fa085c27e1622dc42cd5d1ee08d72deb124441aaa9503db9866463113",
+      "checkpoint_step": 900,
+      "dev_active_tokens": 19648,
+      "dev_nll_per_masked_token": 4.931845002725769,
+      "dev_nll_sum": 96900.89061355591,
+      "training_seed": 1
+    }
+  ],
+  "selection_file_sha256": "f05a08df0de9bd81e7b782eae44bd2672f8290288137fe6de77b9fe6f6f68ad0",
+  "selection_sha256": "c0ffd54ac2360e8f2787d8b5cf03e605b63c9ccbdd70637c5f72e11a49b95662",
+  "source_sha256": {
+    "evaluation/fresh_pair_statistics.py": "0657a63d30fa8c06c3012c810a0d4746c3c2e05be53b00ce4518ce5214667729",
+    "scripts/evaluate_staged_fresh_selected.py": "b08d823cc60891f8670965ae525a764c59456aabf2ce4332277fec70ab70f5af"
+  },
+  "test_examples": 128,
+  "test_file_sha256": "2e22dae402fe61c6febf2a0d48c8161c1c8bb44a757061730c11205d2b6bffbb",
+  "test_seed_offset": 1900000,
+  "test_tokens_read": false,
+  "training_identity_sha256_by_seed": {
+    "1": "6e71f942eb779ff806993a42a3ce4f1fd92a73b0f9db774b3c5307b9d1798bfc"
+  }
+}

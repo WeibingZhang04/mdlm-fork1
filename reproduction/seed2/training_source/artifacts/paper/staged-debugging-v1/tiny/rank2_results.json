@@ -1,0 +1,3406 @@
+{
+  "protocol": "two_token_full_vocabulary_staged_debugging_v1",
+  "created_utc": "2026-09-07T23:55:28.569977+00:00",
+  "git_head": "85b987bff0bb883849ac51953323d2c2ea808dd7",
+  "source_sha256": {
+    "synthetic/tiny_joint_debug.py": "8067d16f268c4aaeb24270dd9b5f708c85c015029ab01cc724ecdf8b833b1f8f",
+    "models/directional_forest.py": "5c81101e1c44e2cb30c3567eb2e27dce2129014157be63d1dc5686c663cb94e1",
+    "models/structured_decoder.py": "b90fd02618d5162f8908f266fef1bdb2418a4bc172ede0863cd60ddeaa0f257a",
+    "structured_objective.py": "57f54eef2c1bbc6d1efb313a4ec3b936c7175c5a93294a1f850ddfd567a787c9",
+    "structured_utils.py": "9c26e3ecd764945fcdf171d205e22f5f331f2822baa1e7418358908a1dda9226",
+    "scripts/run_tiny_joint_debug.py": "46c286939db18229bfaa816c02b7c64e2d29c3cb34c964dfc8800d2a1b84a0c6"
+  },
+  "torch_version": "2.13.0",
+  "device": "cpu",
+  "training": "exact expectation over all four outcomes; frozen uniform unaries",
+  "metric_precision": "enumerated FP32 probabilities renormalized in FP64; raw normalization error recorded separately",
+  "same_visible_context_for_all_targets": true,
+  "full_vocabulary": 2,
+  "rank": "per variant_config.rank (table and oracle use rank 2)",
+  "time": 0.5,
+  "fixed_edge": [
+    0,
+    1
+  ],
+  "target_criterion": {
+    "kl_max": 0.01,
+    "invalid_max": 0.01,
+    "max_marginal_error": 0.02
+  },
+  "shared_head_bound": {
+    "premises": "two tokens, uniform unaries, full vocabulary, one edge",
+    "formula": "F_AA+F_BB-F_AB-F_BA=sum_r (u_A-u_B)(v_A-v_B)>=0",
+    "reason": "shared token factors and positive contextual scale preserve order",
+    "opposite_invalid_mass_lower_bound": 0.5,
+    "opposite_kl_lower_bound": 0.6931471805599453
+  },
+  "oracles": [
+    {
+      "task": "opposite",
+      "variant": "oracle_positive_floor",
+      "target": {
+        "AA": 0.0,
+        "AB": 0.5,
+        "BA": 0.5,
+        "BB": 0.0
+      },
+      "factor_epsilon": 1e-12,
+      "probabilities": {
+        "AA": 1.4999999999929981e-12,
+        "AB": 0.4999999999985,
+        "BA": 0.4999999999985,
+        "BB": 1.4999999999929981e-12
+      },
+      "normalization_error": 0.0,
+      "kl_target_to_model": 3.000044657142098e-12,
+      "total_variation": 3.000022328564047e-12,
+      "invalid_mass": 2.9999999999859962e-12,
+      "marginals": [
+        [
+          0.5,
+          0.5
+        ],
+        [
+          0.5,
+          0.5
+        ]
+      ],
+      "max_marginal_error": 0.0,
+      "independent_marginal_probabilities": {
+        "AA": 0.25,
+        "AB": 0.25,
+        "BA": 0.25,
+        "BB": 0.25
+      },
+      "independent_marginal_invalid_mass": 0.5,
+      "mutual_information": 0.693147180477348,
+      "max_dense_low_rank_probability_error": 0.0,
+      "max_enumerated_inference_marginal_error": 0.0,
+      "joint_sample_frequencies": {
+        "AA": 0.0,
+        "AB": 0.5075,
+        "BA": 0.4925,
+        "BB": 0.0
+      },
+      "joint_sample_invalid_rate": 0.0,
+      "marginal_sample_frequencies": {
+        "AA": 0.24655,
+        "AB": 0.2503,
+        "BA": 0.2519,
+        "BB": 0.25125
+      },
+      "marginal_sample_invalid_rate": 0.49779999999999996,
+      "samples_per_sampler": 20000
+    },
+    {
+      "task": "independent",
+      "variant": "oracle_positive_floor",
+      "target": {
+        "AA": 0.25,
+        "AB": 0.25,
+        "BA": 0.25,
+        "BB": 0.25
+      },
+      "factor_epsilon": 1e-12,
+      "probabilities": {
+        "AA": 0.25,
+        "AB": 0.25,
+        "BA": 0.25,
+        "BB": 0.25
+      },
+      "normalization_error": 0.0,
+      "kl_target_to_model": 0.0,
+      "total_variation": 0.0,
+      "invalid_mass": 0.0,
+      "marginals": [
+        [
+          0.5,
+          0.5
+        ],
+        [
+          0.5,
+          0.5
+        ]
+      ],
+      "max_marginal_error": 0.0,
+      "independent_marginal_probabilities": {
+        "AA": 0.25,
+        "AB": 0.25,
+        "BA": 0.25,
+        "BB": 0.25
+      },
+      "independent_marginal_invalid_mass": 0.0,
+      "mutual_information": 0.0,
+      "max_dense_low_rank_probability_error": 0.0,
+      "max_enumerated_inference_marginal_error": 0.0,
+      "joint_sample_frequencies": {
+        "AA": 0.25155,
+        "AB": 0.25595,
+        "BA": 0.24745,
+        "BB": 0.24505
+      },
+      "joint_sample_invalid_rate": 0.0,
+      "marginal_sample_frequencies": {
+        "AA": 0.24655,
+        "AB": 0.2503,
+        "BA": 0.2519,
+        "BB": 0.25125
+      },
+      "marginal_sample_invalid_rate": 0.0,
+      "samples_per_sampler": 20000
+    },
+    {
+      "task": "equal",
+      "variant": "oracle_positive_floor",
+      "target": {
+        "AA": 0.5,
+        "AB": 0.0,
+        "BA": 0.0,
+        "BB": 0.5
+      },
+      "factor_epsilon": 1e-12,
+      "probabilities": {
+        "AA": 0.4999999999985,
+        "AB": 1.4999999999929981e-12,
+        "BA": 1.4999999999929981e-12,
+        "BB": 0.4999999999985
+      },
+      "normalization_error": 0.0,
+      "kl_target_to_model": 3.000044657142098e-12,
+      "total_variation": 3.000022328564047e-12,
+      "invalid_mass": 2.9999999999859962e-12,
+      "marginals": [
+        [
+          0.5,
+          0.5
+        ],
+        [
+          0.5,
+          0.5
+        ]
+      ],
+      "max_marginal_error": 0.0,
+      "independent_marginal_probabilities": {
+        "AA": 0.25,
+        "AB": 0.25,
+        "BA": 0.25,
+        "BB": 0.25
+      },
+      "independent_marginal_invalid_mass": 0.5,
+      "mutual_information": 0.693147180477348,
+      "max_dense_low_rank_probability_error": 0.0,
+      "max_enumerated_inference_marginal_error": 0.0,
+      "joint_sample_frequencies": {
+        "AA": 0.5075,
+        "AB": 0.0,
+        "BA": 0.0,
+        "BB": 0.4925
+      },
+      "joint_sample_invalid_rate": 0.0,
+      "marginal_sample_frequencies": {
+        "AA": 0.24655,
+        "AB": 0.2503,
+        "BA": 0.2519,
+        "BB": 0.25125
+      },
+      "marginal_sample_invalid_rate": 0.5022,
+      "samples_per_sampler": 20000
+    }
+  ],
+  "runs": [
+    {
+      "task": "opposite",
+      "variant": "directional_contextual_rank2_wide",
+      "seed": 1,
+      "variant_config": {
+        "name": "directional_contextual_rank2_wide",
+        "kind": "directional",
+        "factor_mode": "dynamic",
+        "init_std": 0.25,
+        "warmup_steps": 0,
+        "rank": 2
+      },
+      "max_steps": 600,
+      "steps_run": 150,
+      "stop_reason": "distribution_target_reached",
+      "learning_rate": 0.03,
+      "seconds": 0.9626428750052582,
+      "parameter_count": 549,
+      "pair_factor_rank": 2,
+      "gradient_active_parameter_count": 274,
+      "active_parameter_names": [
+        "head.factor_hidden_projection.bias",
+        "head.factor_hidden_projection.weight",
+        "head.factor_time_projection.weight",
+        "head.hidden_norm.bias",
+        "head.hidden_norm.weight",
+        "head.right_factor_hidden_projection.bias",
+        "head.right_factor_hidden_projection.weight",
+        "head.right_factor_time_projection.weight",
+        "head.right_token_factor_embedding.weight",
+        "head.time_embedding.mlp.0.bias",
+        "head.time_embedding.mlp.0.weight",
+        "head.time_embedding.mlp.2.bias",
+        "head.time_embedding.mlp.2.weight",
+        "head.token_factor_embedding.weight"
+      ],
+      "history": [
+        {
+          "step": 1,
+          "nll_before_update": 1.3859477043151855,
+          "gradient_norm": 0.04111120104789734,
+          "kl": 0.6913754944852271,
+          "invalid_mass": 0.4980120884465483,
+          "probabilities": {
+            "AA": 0.24697833167242525,
+            "AB": 0.26761058161744367,
+            "BA": 0.23437732993600802,
+            "BB": 0.25103375677412304
+          }
+        },
+        {
+          "step": 25,
+          "nll_before_update": 0.8171336650848389,
+          "gradient_norm": 1.369638442993164,
+          "kl": 0.11024611096282616,
+          "invalid_mass": 0.09764759613740653,
+          "probabilities": {
+            "AA": 0.044803932916517374,
+            "AB": 0.5062125148076075,
+            "BA": 0.39613988905498587,
+            "BB": 0.05284366322088915
+          }
+        },
+        {
+          "step": 50,
+          "nll_before_update": 0.7203431129455566,
+          "gradient_norm": 0.10062621533870697,
+          "kl": 0.027579935315615478,
+          "invalid_mass": 0.02591252649360338,
+          "probabilities": {
+            "AA": 0.012013626416488093,
+            "AB": 0.5121064639185686,
+            "BA": 0.461981009587828,
+            "BB": 0.013898900077115285
+          }
+        },
+        {
+          "step": 75,
+          "nll_before_update": 0.7078092098236084,
+          "gradient_norm": 0.042983528226614,
+          "kl": 0.014500178840885114,
+          "invalid_mass": 0.014299217591135352,
+          "probabilities": {
+            "AA": 0.006576130874428174,
+            "AB": 0.4997408816213327,
+            "BA": 0.485959900787532,
+            "BB": 0.007723086716707177
+          }
+        },
+        {
+          "step": 100,
+          "nll_before_update": 0.7033171653747559,
+          "gradient_norm": 0.0777420848608017,
+          "kl": 0.010052865488813567,
+          "invalid_mass": 0.009962866263257405,
+          "probabilities": {
+            "AA": 0.004556335139968929,
+            "AB": 0.49058898572959503,
+            "BA": 0.49944814800714754,
+            "BB": 0.005406531123288476
+          }
+        },
+        {
+          "step": 125,
+          "nll_before_update": 0.7551987171173096,
+          "gradient_norm": 3.1257588863372803,
+          "kl": 0.018788151987513546,
+          "invalid_mass": 0.007586970084400105,
+          "probabilities": {
+            "AA": 0.0034259299013374785,
+            "AB": 0.422445588675138,
+            "BA": 0.569967441240462,
+            "BB": 0.004161040183062626
+          }
+        },
+        {
+          "step": 150,
+          "nll_before_update": 0.7018322348594666,
+          "gradient_norm": 0.021125027909874916,
+          "kl": 0.008749533009818011,
+          "invalid_mass": 0.008453720912622063,
+          "probabilities": {
+            "AA": 0.003800586129983936,
+            "AB": 0.4844719213722941,
+            "BA": 0.5070743577150838,
+            "BB": 0.004653134782638127
+          }
+        }
+      ],
+      "probabilities": {
+        "AA": 0.003800586129983936,
+        "AB": 0.4844719213722941,
+        "BA": 0.5070743577150838,
+        "BB": 0.004653134782638127
+      },
+      "normalization_error": 1.1431984603404999e-07,
+      "kl_target_to_model": 0.008749533009818011,
+      "total_variation": 0.015528078627705876,
+      "invalid_mass": 0.008453720912622063,
+      "marginals": [
+        [
+          0.4882725075022781,
+          0.511727492497722
+        ],
+        [
+          0.5108749438450677,
+          0.48912505615493224
+        ]
+      ],
+      "max_marginal_error": 0.01172749249772198,
+      "independent_marginal_probabilities": {
+        "AA": 0.24944618985131672,
+        "AB": 0.23882631765096132,
+        "BA": 0.26142875399375104,
+        "BB": 0.25029873850397094
+      },
+      "independent_marginal_invalid_mass": 0.49974492835528767,
+      "mutual_information": 0.6441674842073577,
+      "max_dense_low_rank_probability_error": 5.960464477539063e-08,
+      "max_enumerated_inference_marginal_error": 7.640579768875e-08,
+      "joint_sample_frequencies": {
+        "AA": 0.00375,
+        "AB": 0.47765,
+        "BA": 0.51425,
+        "BB": 0.00435
+      },
+      "joint_sample_invalid_rate": 0.0081,
+      "marginal_sample_frequencies": {
+        "AA": 0.2484,
+        "AB": 0.24175,
+        "BA": 0.26195,
+        "BB": 0.2479
+      },
+      "marginal_sample_invalid_rate": 0.4963,
+      "samples_per_sampler": 20000
+    },
+    {
+      "task": "opposite",
+      "variant": "directional_contextual_rank2_wide",
+      "seed": 2,
+      "variant_config": {
+        "name": "directional_contextual_rank2_wide",
+        "kind": "directional",
+        "factor_mode": "dynamic",
+        "init_std": 0.25,
+        "warmup_steps": 0,
+        "rank": 2
+      },
+      "max_steps": 600,
+      "steps_run": 100,
+      "stop_reason": "distribution_target_reached",
+      "learning_rate": 0.03,
+      "seconds": 0.4167924579815008,
+      "parameter_count": 549,
+      "pair_factor_rank": 2,
+      "gradient_active_parameter_count": 274,
+      "active_parameter_names": [
+        "head.factor_hidden_projection.bias",
+        "head.factor_hidden_projection.weight",
+        "head.factor_time_projection.weight",
+        "head.hidden_norm.bias",
+        "head.hidden_norm.weight",
+        "head.right_factor_hidden_projection.bias",
+        "head.right_factor_hidden_projection.weight",
+        "head.right_factor_time_projection.weight",
+        "head.right_token_factor_embedding.weight",
+        "head.time_embedding.mlp.0.bias",
+        "head.time_embedding.mlp.0.weight",
+        "head.time_embedding.mlp.2.bias",
+        "head.time_embedding.mlp.2.weight",
+        "head.token_factor_embedding.weight"
+      ],
+      "history": [
+        {
+          "step": 1,
+          "nll_before_update": 1.4026062488555908,
+          "gradient_norm": 0.07737650722265244,
+          "kl": 0.7001857954819376,
+          "invalid_mass": 0.49978680908044604,
+          "probabilities": {
+            "AA": 0.23606348741243743,
+            "AB": 0.2805528128311876,
+            "BA": 0.21966037808836633,
+            "BB": 0.2637233216680086
+          }
+        },
+        {
+          "step": 25,
+          "nll_before_update": 1.2325187921524048,
+          "gradient_norm": 0.38571351766586304,
+          "kl": 0.5456112138001975,
+          "invalid_mass": 0.3442005930275697,
+          "probabilities": {
+            "AA": 0.10085749789226765,
+            "AB": 0.4814144565993402,
+            "BA": 0.17438495037309013,
+            "BB": 0.24334309513530206
+          }
+        },
+        {
+          "step": 50,
+          "nll_before_update": 0.8992290496826172,
+          "gradient_norm": 0.552422046661377,
+          "kl": 0.18873940646473825,
+          "invalid_mass": 0.17195708798399606,
+          "probabilities": {
+            "AA": 0.0182939037542834,
+            "AB": 0.40991849628347765,
+            "BA": 0.41812441573252634,
+            "BB": 0.15366318422971265
+          }
+        },
+        {
+          "step": 75,
+          "nll_before_update": 0.7113120555877686,
+          "gradient_norm": 0.08873990178108215,
+          "kl": 0.020421073887535834,
+          "invalid_mass": 0.01688584863900973,
+          "probabilities": {
+            "AA": 0.006894414557276943,
+            "AB": 0.5319698878070701,
+            "BA": 0.4511442635539201,
+            "BB": 0.009991434081732784
+          }
+        },
+        {
+          "step": 100,
+          "nll_before_update": 0.7032902240753174,
+          "gradient_norm": 0.2541801631450653,
+          "kl": 0.009730417688111503,
+          "invalid_mass": 0.009682273033603108,
+          "probabilities": {
+            "AA": 0.00400660800684493,
+            "AB": 0.49584735666927504,
+            "BA": 0.4944703702971219,
+            "BB": 0.005675665026758178
+          }
+        }
+      ],
+      "probabilities": {
+        "AA": 0.00400660800684493,
+        "AB": 0.49584735666927504,
+        "BA": 0.4944703702971219,
+        "BB": 0.005675665026758178
+      },
+      "normalization_error": 9.546056389808655e-08,
+      "kl_target_to_model": 0.009730417688111503,
+      "total_variation": 0.009682273033603096,
+      "invalid_mass": 0.009682273033603108,
+      "marginals": [
+        [
+          0.49985396467612,
+          0.50014603532388
+        ],
+        [
+          0.4984769783039668,
+          0.5015230216960332
+        ]
+      ],
+      "max_marginal_error": 0.0015230216960332443,
+      "independent_marginal_probabilities": {
+        "AA": 0.24916569390501006,
+        "AB": 0.25068827077110994,
+        "BA": 0.24931128439895675,
+        "BB": 0.2508347509249233
+      },
+      "independent_marginal_invalid_mass": 0.5000004448299333,
+      "mutual_information": 0.6387516474029243,
+      "max_dense_low_rank_probability_error": 2.384185791015625e-07,
+      "max_enumerated_inference_marginal_error": 1.7500120186308976e-07,
+      "joint_sample_frequencies": {
+        "AA": 0.00375,
+        "AB": 0.50205,
+        "BA": 0.4887,
+        "BB": 0.0055
+      },
+      "joint_sample_invalid_rate": 0.00925,
+      "marginal_sample_frequencies": {
+        "AA": 0.25395,
+        "AB": 0.24455,
+        "BA": 0.2461,
+        "BB": 0.2554
+      },
+      "marginal_sample_invalid_rate": 0.50935,
+      "samples_per_sampler": 20000
+    },
+    {
+      "task": "opposite",
+      "variant": "directional_contextual_rank2_wide",
+      "seed": 3,
+      "variant_config": {
+        "name": "directional_contextual_rank2_wide",
+        "kind": "directional",
+        "factor_mode": "dynamic",
+        "init_std": 0.25,
+        "warmup_steps": 0,
+        "rank": 2
+      },
+      "max_steps": 600,
+      "steps_run": 125,
+      "stop_reason": "distribution_target_reached",
+      "learning_rate": 0.03,
+      "seconds": 0.5800909999816213,
+      "parameter_count": 549,
+      "pair_factor_rank": 2,
+      "gradient_active_parameter_count": 274,
+      "active_parameter_names": [
+        "head.factor_hidden_projection.bias",
+        "head.factor_hidden_projection.weight",
+        "head.factor_time_projection.weight",
+        "head.hidden_norm.bias",
+        "head.hidden_norm.weight",
+        "head.right_factor_hidden_projection.bias",
+        "head.right_factor_hidden_projection.weight",
+        "head.right_factor_time_projection.weight",
+        "head.right_token_factor_embedding.weight",
+        "head.time_embedding.mlp.0.bias",
+        "head.time_embedding.mlp.0.weight",
+        "head.time_embedding.mlp.2.bias",
+        "head.time_embedding.mlp.2.weight",
+        "head.token_factor_embedding.weight"
+      ],
+      "history": [
+        {
+          "step": 1,
+          "nll_before_update": 1.3882246017456055,
+          "gradient_norm": 0.026491224765777588,
+          "kl": 0.6933418391724747,
+          "invalid_mass": 0.500089392068666,
+          "probabilities": {
+            "AA": 0.23811561578856755,
+            "AB": 0.2485476210280544,
+            "BA": 0.25136298690327963,
+            "BB": 0.26197377628009844
+          }
+        },
+        {
+          "step": 25,
+          "nll_before_update": 0.9249048233032227,
+          "gradient_norm": 2.533369541168213,
+          "kl": 0.17960727356382894,
+          "invalid_mass": 0.16438706352245774,
+          "probabilities": {
+            "AA": 0.0892180694620892,
+            "AB": 0.4202786330825632,
+            "BA": 0.41533430339497907,
+            "BB": 0.07516899406036856
+          }
+        },
+        {
+          "step": 50,
+          "nll_before_update": 0.7267580032348633,
+          "gradient_norm": 0.38589414954185486,
+          "kl": 0.033063513546260415,
+          "invalid_mass": 0.030899039948462673,
+          "probabilities": {
+            "AA": 0.016428806496473616,
+            "AB": 0.4565116100825389,
+            "BA": 0.5125893499689984,
+            "BB": 0.014470233451989058
+          }
+        },
+        {
+          "step": 75,
+          "nll_before_update": 0.7091469764709473,
+          "gradient_norm": 0.04401334002614021,
+          "kl": 0.015939670261129912,
+          "invalid_mass": 0.01557731079495425,
+          "probabilities": {
+            "AA": 0.00831558982879564,
+            "AB": 0.48143425787038385,
+            "BA": 0.5029884313346619,
+            "BB": 0.007261720966158611
+          }
+        },
+        {
+          "step": 100,
+          "nll_before_update": 0.7040848731994629,
+          "gradient_norm": 0.047929100692272186,
+          "kl": 0.0107929823795343,
+          "invalid_mass": 0.01073275589065062,
+          "probabilities": {
+            "AA": 0.005742846617118315,
+            "AB": 0.4935925377627994,
+            "BA": 0.49567470634655003,
+            "BB": 0.004989909273532305
+          }
+        },
+        {
+          "step": 125,
+          "nll_before_update": 0.701385498046875,
+          "gradient_norm": 0.019203558564186096,
+          "kl": 0.008154616599775844,
+          "invalid_mass": 0.008118616203858797,
+          "probabilities": {
+            "AA": 0.004349618628416639,
+            "AB": 0.4971278373385683,
+            "BA": 0.4947535464575729,
+            "BB": 0.0037689975754421584
+          }
+        }
+      ],
+      "probabilities": {
+        "AA": 0.004349618628416639,
+        "AB": 0.4971278373385683,
+        "BA": 0.4947535464575729,
+        "BB": 0.0037689975754421584
+      },
+      "normalization_error": 2.270098775625229e-07,
+      "kl_target_to_model": 0.008154616599775844,
+      "total_variation": 0.008118616203858791,
+      "invalid_mass": 0.008118616203858797,
+      "marginals": [
+        [
+          0.5014774559669849,
+          0.49852254403301505
+        ],
+        [
+          0.49910316508598956,
+          0.5008968349140105
+        ]
+      ],
+      "max_marginal_error": 0.001477455966984953,
+      "independent_marginal_probabilities": {
+        "AA": 0.25028898549239215,
+        "AB": 0.2511884704745928,
+        "BA": 0.24881417959359742,
+        "BB": 0.24970836443941766
+      },
+      "independent_marginal_invalid_mass": 0.4999973499318098,
+      "mutual_information": 0.6459995222380024,
+      "max_dense_low_rank_probability_error": 0.0,
+      "max_enumerated_inference_marginal_error": 4.704635557239989e-07,
+      "joint_sample_frequencies": {
+        "AA": 0.00345,
+        "AB": 0.4982,
+        "BA": 0.4938,
+        "BB": 0.00455
+      },
+      "joint_sample_invalid_rate": 0.008,
+      "marginal_sample_frequencies": {
+        "AA": 0.25175,
+        "AB": 0.25305,
+        "BA": 0.2484,
+        "BB": 0.2468
+      },
+      "marginal_sample_invalid_rate": 0.49854999999999994,
+      "samples_per_sampler": 20000
+    },
+    {
+      "task": "opposite",
+      "variant": "directional_contextual_rank2_warmup",
+      "seed": 1,
+      "variant_config": {
+        "name": "directional_contextual_rank2_warmup",
+        "kind": "directional",
+        "factor_mode": "dynamic",
+        "init_std": 0.25,
+        "warmup_steps": 100,
+        "rank": 2
+      },
+      "max_steps": 600,
+      "steps_run": 150,
+      "stop_reason": "distribution_target_reached",
+      "learning_rate": 0.03,
+      "seconds": 0.5582727500004694,
+      "parameter_count": 549,
+      "pair_factor_rank": 2,
+      "gradient_active_parameter_count": 274,
+      "active_parameter_names": [
+        "head.factor_hidden_projection.bias",
+        "head.factor_hidden_projection.weight",
+        "head.factor_time_projection.weight",
+        "head.hidden_norm.bias",
+        "head.hidden_norm.weight",
+        "head.right_factor_hidden_projection.bias",
+        "head.right_factor_hidden_projection.weight",
+        "head.right_factor_time_projection.weight",
+        "head.right_token_factor_embedding.weight",
+        "head.time_embedding.mlp.0.bias",
+        "head.time_embedding.mlp.0.weight",
+        "head.time_embedding.mlp.2.bias",
+        "head.time_embedding.mlp.2.weight",
+        "head.token_factor_embedding.weight"
+      ],
+      "history": [
+        {
+          "step": 1,
+          "nll_before_update": 1.3859552145004272,
+          "gradient_norm": 0.0391862653195858,
+          "kl": 0.6899908678835655,
+          "invalid_mass": 0.4984112458571611,
+          "probabilities": {
+            "AA": 0.23717276551492678,
+            "AB": 0.24936869376423593,
+            "BA": 0.252220060378603,
+            "BB": 0.26123848034223435
+          }
+        },
+        {
+          "step": 25,
+          "nll_before_update": 1.178473949432373,
+          "gradient_norm": 0.1412852257490158,
+          "kl": 0.47188144246163477,
+          "invalid_mass": 0.37465007414296825,
+          "probabilities": {
+            "AA": 0.18286020926089655,
+            "AB": 0.33447989333271183,
+            "BA": 0.2908700325243199,
+            "BB": 0.19178986488207167
+          }
+        },
+        {
+          "step": 50,
+          "nll_before_update": 0.9090756177902222,
+          "gradient_norm": 0.09260670840740204,
+          "kl": 0.2087894397932556,
+          "invalid_mass": 0.1878406452370363,
+          "probabilities": {
+            "AA": 0.09061227193900799,
+            "AB": 0.42159806119183346,
+            "BA": 0.3905612935711303,
+            "BB": 0.0972283732980283
+          }
+        },
+        {
+          "step": 75,
+          "nll_before_update": 0.8008061051368713,
+          "gradient_norm": 0.051029060035943985,
+          "kl": 0.10504794674627949,
+          "invalid_mass": 0.09958073716275084,
+          "probabilities": {
+            "AA": 0.04792262332882064,
+            "AB": 0.45808885958161333,
+            "BA": 0.44233040325563583,
+            "BB": 0.051658113833930194
+          }
+        },
+        {
+          "step": 100,
+          "nll_before_update": 0.7597798109054565,
+          "gradient_norm": 0.03277592360973358,
+          "kl": 0.06543843583973807,
+          "invalid_mass": 0.06327974098384187,
+          "probabilities": {
+            "AA": 0.030514385778564107,
+            "AB": 0.4738156830803728,
+            "BA": 0.46290457593578527,
+            "BB": 0.03276535520527776
+          }
+        },
+        {
+          "step": 125,
+          "nll_before_update": 0.693832278251648,
+          "gradient_norm": 0.036633823066949844,
+          "kl": 0.0008285766148405371,
+          "invalid_mass": 0.00031621011272920475,
+          "probabilities": {
+            "AA": 0.00014936717677160947,
+            "AB": 0.483846108992348,
+            "BA": 0.5158376808949228,
+            "BB": 0.00016684293595759528
+          }
+        },
+        {
+          "step": 150,
+          "nll_before_update": 0.6934182047843933,
+          "gradient_norm": 0.0035496691707521677,
+          "kl": 0.0002858692353446268,
+          "invalid_mass": 0.00026205213407490627,
+          "probabilities": {
+            "AA": 0.00012513273764698618,
+            "AB": 0.5033164172814923,
+            "BA": 0.4964215305844328,
+            "BB": 0.0001369193964279201
+          }
+        }
+      ],
+      "probabilities": {
+        "AA": 0.00012513273764698618,
+        "AB": 0.5033164172814923,
+        "BA": 0.4964215305844328,
+        "BB": 0.0001369193964279201
+      },
+      "normalization_error": 2.949673216789961e-08,
+      "kl_target_to_model": 0.0002858692353446268,
+      "total_variation": 0.003578469415567236,
+      "invalid_mass": 0.00026205213407490627,
+      "marginals": [
+        [
+          0.5034415500191394,
+          0.4965584499808607
+        ],
+        [
+          0.49654666332207975,
+          0.5034533366779202
+        ]
+      ],
+      "max_marginal_error": 0.003453336677920249,
+      "independent_marginal_probabilities": {
+        "AA": 0.24998222183969956,
+        "AB": 0.2534593281794398,
+        "BA": 0.24656444148238021,
+        "BB": 0.24999400849848047
+      },
+      "independent_marginal_invalid_mass": 0.49997623033818006,
+      "mutual_information": 0.690700528772725,
+      "max_dense_low_rank_probability_error": 0.0,
+      "max_enumerated_inference_marginal_error": 5.217589083006402e-08,
+      "joint_sample_frequencies": {
+        "AA": 0.00025,
+        "AB": 0.49555,
+        "BA": 0.5042,
+        "BB": 0.0
+      },
+      "joint_sample_invalid_rate": 0.00025,
+      "marginal_sample_frequencies": {
+        "AA": 0.24825,
+        "AB": 0.25705,
+        "BA": 0.24655,
+        "BB": 0.24815
+      },
+      "marginal_sample_invalid_rate": 0.4964,
+      "samples_per_sampler": 20000
+    },
+    {
+      "task": "opposite",
+      "variant": "directional_contextual_rank2_warmup",
+      "seed": 2,
+      "variant_config": {
+        "name": "directional_contextual_rank2_warmup",
+        "kind": "directional",
+        "factor_mode": "dynamic",
+        "init_std": 0.25,
+        "warmup_steps": 100,
+        "rank": 2
+      },
+      "max_steps": 600,
+      "steps_run": 150,
+      "stop_reason": "distribution_target_reached",
+      "learning_rate": 0.03,
+      "seconds": 1.324957832985092,
+      "parameter_count": 549,
+      "pair_factor_rank": 2,
+      "gradient_active_parameter_count": 274,
+      "active_parameter_names": [
+        "head.factor_hidden_projection.bias",
+        "head.factor_hidden_projection.weight",
+        "head.factor_time_projection.weight",
+        "head.hidden_norm.bias",
+        "head.hidden_norm.weight",
+        "head.right_factor_hidden_projection.bias",
+        "head.right_factor_hidden_projection.weight",
+        "head.right_factor_time_projection.weight",
+        "head.right_token_factor_embedding.weight",
+        "head.time_embedding.mlp.0.bias",
+        "head.time_embedding.mlp.0.weight",
+        "head.time_embedding.mlp.2.bias",
+        "head.time_embedding.mlp.2.weight",
+        "head.token_factor_embedding.weight"
+      ],
+      "history": [
+        {
+          "step": 1,
+          "nll_before_update": 1.4025201797485352,
+          "gradient_norm": 0.057414934039115906,
+          "kl": 0.7058886430670752,
+          "invalid_mass": 0.498616590972238,
+          "probabilities": {
+            "AA": 0.24148850811915173,
+            "AB": 0.2944968606081778,
+            "BA": 0.2068865484195842,
+            "BB": 0.25712808285308625
+          }
+        },
+        {
+          "step": 25,
+          "nll_before_update": 1.2555654048919678,
+          "gradient_norm": 0.13246454298496246,
+          "kl": 0.5498410615828125,
+          "invalid_mass": 0.4228855927488688,
+          "probabilities": {
+            "AA": 0.17293549301018596,
+            "AB": 0.2839711777580748,
+            "BA": 0.29314322949305643,
+            "BB": 0.24995009973868282
+          }
+        },
+        {
+          "step": 50,
+          "nll_before_update": 0.9495490789413452,
+          "gradient_norm": 0.10518280416727066,
+          "kl": 0.24770941932298768,
+          "invalid_mass": 0.21939867879440478,
+          "probabilities": {
+            "AA": 0.08399908870451814,
+            "AB": 0.3879145672853714,
+            "BA": 0.39268675392022384,
+            "BB": 0.13539959008988664
+          }
+        },
+        {
+          "step": 75,
+          "nll_before_update": 0.8130875825881958,
+          "gradient_norm": 0.05690015107393265,
+          "kl": 0.11696882130766034,
+          "invalid_mass": 0.11038707029795405,
+          "probabilities": {
+            "AA": 0.04115122260807497,
+            "AB": 0.4448052727581053,
+            "BA": 0.4448076569439407,
+            "BB": 0.06923584768987909
+          }
+        },
+        {
+          "step": 100,
+          "nll_before_update": 0.7643776535987854,
+          "gradient_norm": 0.03549487888813019,
+          "kl": 0.07000904397571572,
+          "invalid_mass": 0.06761434500592639,
+          "probabilities": {
+            "AA": 0.02521135103928177,
+            "AB": 0.46583962527260114,
+            "BA": 0.46654602972147247,
+            "BB": 0.04240299396664462
+          }
+        },
+        {
+          "step": 125,
+          "nll_before_update": 0.6940475702285767,
+          "gradient_norm": 0.022575275972485542,
+          "kl": 0.0006596638903463292,
+          "invalid_mass": 0.0006468662427365664,
+          "probabilities": {
+            "AA": 0.0001810834626898525,
+            "AB": 0.5021837466126885,
+            "BA": 0.4971693871445749,
+            "BB": 0.0004657827800467139
+          }
+        },
+        {
+          "step": 150,
+          "nll_before_update": 0.6938101053237915,
+          "gradient_norm": 0.010869696736335754,
+          "kl": 0.0006489958509048321,
+          "invalid_mass": 0.0005773357813288912,
+          "probabilities": {
+            "AA": 0.0001663932480819874,
+            "AB": 0.5056865189030928,
+            "BA": 0.49373614531557825,
+            "BB": 0.00041094253324690385
+          }
+        }
+      ],
+      "probabilities": {
+        "AA": 0.0001663932480819874,
+        "AB": 0.5056865189030928,
+        "BA": 0.49373614531557825,
+        "BB": 0.00041094253324690385
+      },
+      "normalization_error": 5.195033736526966e-09,
+      "kl_target_to_model": 0.0006489958509048321,
+      "total_variation": 0.006263854684421722,
+      "invalid_mass": 0.0005773357813288912,
+      "marginals": [
+        [
+          0.5058529121511748,
+          0.49414708784882516
+        ],
+        [
+          0.49390253856366023,
+          0.5060974614363397
+        ]
+      ],
+      "max_marginal_error": 0.006097461436339768,
+      "independent_marginal_probabilities": {
+        "AA": 0.24984203745128544,
+        "AB": 0.2560108746998893,
+        "BA": 0.24406050111237476,
+        "BB": 0.25008658673645034
+      },
+      "independent_marginal_invalid_mass": 0.49992862418773576,
+      "mutual_information": 0.6882468080256183,
+      "max_dense_low_rank_probability_error": 0.0,
+      "max_enumerated_inference_marginal_error": 6.38597777435912e-08,
+      "joint_sample_frequencies": {
+        "AA": 0.00015,
+        "AB": 0.5121,
+        "BA": 0.48735,
+        "BB": 0.0004
+      },
+      "joint_sample_invalid_rate": 0.00055,
+      "marginal_sample_frequencies": {
+        "AA": 0.2546,
+        "AB": 0.2508,
+        "BA": 0.24015,
+        "BB": 0.25445
+      },
+      "marginal_sample_invalid_rate": 0.50905,
+      "samples_per_sampler": 20000
+    },
+    {
+      "task": "opposite",
+      "variant": "directional_contextual_rank2_warmup",
+      "seed": 3,
+      "variant_config": {
+        "name": "directional_contextual_rank2_warmup",
+        "kind": "directional",
+        "factor_mode": "dynamic",
+        "init_std": 0.25,
+        "warmup_steps": 100,
+        "rank": 2
+      },
+      "max_steps": 600,
+      "steps_run": 150,
+      "stop_reason": "distribution_target_reached",
+      "learning_rate": 0.03,
+      "seconds": 0.5685642500175163,
+      "parameter_count": 549,
+      "pair_factor_rank": 2,
+      "gradient_active_parameter_count": 274,
+      "active_parameter_names": [
+        "head.factor_hidden_projection.bias",
+        "head.factor_hidden_projection.weight",
+        "head.factor_time_projection.weight",
+        "head.hidden_norm.bias",
+        "head.hidden_norm.weight",
+        "head.right_factor_hidden_projection.bias",
+        "head.right_factor_hidden_projection.weight",
+        "head.right_factor_time_projection.weight",
+        "head.right_token_factor_embedding.weight",
+        "head.time_embedding.mlp.0.bias",
+        "head.time_embedding.mlp.0.weight",
+        "head.time_embedding.mlp.2.bias",
+        "head.time_embedding.mlp.2.weight",
+        "head.token_factor_embedding.weight"
+      ],
+      "history": [
+        {
+          "step": 1,
+          "nll_before_update": 1.3882300853729248,
+          "gradient_norm": 0.026076285168528557,
+          "kl": 0.6934972860698001,
+          "invalid_mass": 0.5001530573022906,
+          "probabilities": {
+            "AA": 0.2343854990339352,
+            "AB": 0.24758052413740406,
+            "BA": 0.2522664185603053,
+            "BB": 0.26576755826835546
+          }
+        },
+        {
+          "step": 25,
+          "nll_before_update": 1.2227219343185425,
+          "gradient_norm": 0.13604778051376343,
+          "kl": 0.5162095888305998,
+          "invalid_mass": 0.4032054605965728,
+          "probabilities": {
+            "AA": 0.20681728781616282,
+            "AB": 0.30059846943007135,
+            "BA": 0.29619606997335585,
+            "BB": 0.19638817278041001
+          }
+        },
+        {
+          "step": 50,
+          "nll_before_update": 0.9244496822357178,
+          "gradient_norm": 0.09620093554258347,
+          "kl": 0.2237262012331892,
+          "invalid_mass": 0.20045041447286777,
+          "probabilities": {
+            "AA": 0.10294332837382893,
+            "AB": 0.4022696497761786,
+            "BA": 0.39727993575095366,
+            "BB": 0.09750708609903885
+          }
+        },
+        {
+          "step": 75,
+          "nll_before_update": 0.8033159375190735,
+          "gradient_norm": 0.05148289352655411,
+          "kl": 0.10775492014333538,
+          "invalid_mass": 0.10214625541357743,
+          "probabilities": {
+            "AA": 0.05260404121170585,
+            "AB": 0.45058586313026083,
+            "BA": 0.44726788145616175,
+            "BB": 0.049542214201871576
+          }
+        },
+        {
+          "step": 100,
+          "nll_before_update": 0.7599606513977051,
+          "gradient_norm": 0.0324694998562336,
+          "kl": 0.06586972097632843,
+          "invalid_mass": 0.06374407384491627,
+          "probabilities": {
+            "AA": 0.03288503285214599,
+            "AB": 0.4693317832945392,
+            "BA": 0.46692414286054457,
+            "BB": 0.030859040992770283
+          }
+        },
+        {
+          "step": 125,
+          "nll_before_update": 0.6938249468803406,
+          "gradient_norm": 0.020084816962480545,
+          "kl": 0.0008769666856890401,
+          "invalid_mass": 0.0005131808224069406,
+          "probabilities": {
+            "AA": 0.00027133321911914846,
+            "AB": 0.486268452827674,
+            "BA": 0.513218366349919,
+            "BB": 0.00024184760328779215
+          }
+        },
+        {
+          "step": 150,
+          "nll_before_update": 0.6935225129127502,
+          "gradient_norm": 0.011613479815423489,
+          "kl": 0.0003570980330918627,
+          "invalid_mass": 0.00032476920800022184,
+          "probabilities": {
+            "AA": 0.00017293895580899985,
+            "AB": 0.5038534636225896,
+            "BA": 0.49582176716941007,
+            "BB": 0.000151830252191222
+          }
+        }
+      ],
+      "probabilities": {
+        "AA": 0.00017293895580899985,
+        "AB": 0.5038534636225896,
+        "BA": 0.49582176716941007,
+        "BB": 0.000151830252191222
+      },
+      "normalization_error": 4.631874617189169e-08,
+      "kl_target_to_model": 0.0003570980330918627,
+      "total_variation": 0.004178232830589902,
+      "invalid_mass": 0.00032476920800022184,
+      "marginals": [
+        [
+          0.5040264025783987,
+          0.4959735974216013
+        ],
+        [
+          0.49599470612521906,
+          0.5040052938747809
+        ]
+      ],
+      "max_marginal_error": 0.004026402578398702,
+      "independent_marginal_probabilities": {
+        "AA": 0.2499944274262242,
+        "AB": 0.25403197515217446,
+        "BA": 0.24600027869899485,
+        "BB": 0.24997331872260642
+      },
+      "independent_marginal_invalid_mass": 0.49996774614883066,
+      "mutual_information": 0.6901822313739079,
+      "max_dense_low_rank_probability_error": 0.0,
+      "max_enumerated_inference_marginal_error": 1.9416853902498588e-08,
+      "joint_sample_frequencies": {
+        "AA": 0.00015,
+        "AB": 0.5042,
+        "BA": 0.49535,
+        "BB": 0.0003
+      },
+      "joint_sample_invalid_rate": 0.00045,
+      "marginal_sample_frequencies": {
+        "AA": 0.25115,
+        "AB": 0.2562,
+        "BA": 0.24645,
+        "BB": 0.2462
+      },
+      "marginal_sample_invalid_rate": 0.49734999999999996,
+      "samples_per_sampler": 20000
+    },
+    {
+      "task": "independent",
+      "variant": "directional_contextual_rank2_wide",
+      "seed": 1,
+      "variant_config": {
+        "name": "directional_contextual_rank2_wide",
+        "kind": "directional",
+        "factor_mode": "dynamic",
+        "init_std": 0.25,
+        "warmup_steps": 0,
+        "rank": 2
+      },
+      "max_steps": 600,
+      "steps_run": 50,
+      "stop_reason": "distribution_target_reached",
+      "learning_rate": 0.03,
+      "seconds": 0.3493846250057686,
+      "parameter_count": 549,
+      "pair_factor_rank": 2,
+      "gradient_active_parameter_count": 274,
+      "active_parameter_names": [
+        "head.factor_hidden_projection.bias",
+        "head.factor_hidden_projection.weight",
+        "head.factor_time_projection.weight",
+        "head.hidden_norm.bias",
+        "head.hidden_norm.weight",
+        "head.right_factor_hidden_projection.bias",
+        "head.right_factor_hidden_projection.weight",
+        "head.right_factor_time_projection.weight",
+        "head.right_token_factor_embedding.weight",
+        "head.time_embedding.mlp.0.bias",
+        "head.time_embedding.mlp.0.weight",
+        "head.time_embedding.mlp.2.bias",
+        "head.time_embedding.mlp.2.weight",
+        "head.token_factor_embedding.weight"
+      ],
+      "history": [
+        {
+          "step": 1,
+          "nll_before_update": 1.3875843286514282,
+          "gradient_norm": 0.021470775827765465,
+          "kl": 0.00044660203563573475,
+          "invalid_mass": 0.0,
+          "probabilities": {
+            "AA": 0.2549087513306177,
+            "AB": 0.2595082328089898,
+            "BA": 0.2411999224722443,
+            "BB": 0.24438309338814815
+          }
+        },
+        {
+          "step": 25,
+          "nll_before_update": 1.3863048553466797,
+          "gradient_norm": 0.0011222625616937876,
+          "kl": 1.3667074284462455e-05,
+          "invalid_mass": 0.0,
+          "probabilities": {
+            "AA": 0.2495554759965979,
+            "AB": 0.2518591061788531,
+            "BA": 0.2482482864930715,
+            "BB": 0.2503371313314775
+          }
+        },
+        {
+          "step": 50,
+          "nll_before_update": 1.3862948417663574,
+          "gradient_norm": 0.00026605877792462707,
+          "kl": 6.894304966365006e-07,
+          "invalid_mass": 0.0,
+          "probabilities": {
+            "AA": 0.24957347659985651,
+            "AB": 0.24997911602196443,
+            "BA": 0.25004730373761963,
+            "BB": 0.2504001036405594
+          }
+        }
+      ],
+      "probabilities": {
+        "AA": 0.24957347659985651,
+        "AB": 0.24997911602196443,
+        "BA": 0.25004730373761963,
+        "BB": 0.2504001036405594
+      },
+      "normalization_error": 2.9802322387695312e-08,
+      "kl_target_to_model": 6.894304966365006e-07,
+      "total_variation": 0.0004474073781790544,
+      "invalid_mass": 0.0,
+      "marginals": [
+        [
+          0.49955259262182095,
+          0.500447407378179
+        ],
+        [
+          0.49962078033747614,
+          0.5003792196625239
+        ]
+      ],
+      "max_marginal_error": 0.0004474073781790544,
+      "independent_marginal_probabilities": {
+        "AA": 0.2495868561453235,
+        "AB": 0.24996573647649745,
+        "BA": 0.25003392419215265,
+        "BB": 0.2504134831860264
+      },
+      "independent_marginal_invalid_mass": 0.0,
+      "mutual_information": 1.4320999149871954e-09,
+      "max_dense_low_rank_probability_error": 0.0,
+      "max_enumerated_inference_marginal_error": 1.4914494972373404e-08,
+      "joint_sample_frequencies": {
+        "AA": 0.2458,
+        "AB": 0.24635,
+        "BA": 0.2516,
+        "BB": 0.25625
+      },
+      "joint_sample_invalid_rate": 0.0,
+      "marginal_sample_frequencies": {
+        "AA": 0.2479,
+        "AB": 0.254,
+        "BA": 0.25,
+        "BB": 0.2481
+      },
+      "marginal_sample_invalid_rate": 0.0,
+      "samples_per_sampler": 20000
+    },
+    {
+      "task": "independent",
+      "variant": "directional_contextual_rank2_wide",
+      "seed": 2,
+      "variant_config": {
+        "name": "directional_contextual_rank2_wide",
+        "kind": "directional",
+        "factor_mode": "dynamic",
+        "init_std": 0.25,
+        "warmup_steps": 0,
+        "rank": 2
+      },
+      "max_steps": 600,
+      "steps_run": 50,
+      "stop_reason": "distribution_target_reached",
+      "learning_rate": 0.03,
+      "seconds": 0.4728500829951372,
+      "parameter_count": 549,
+      "pair_factor_rank": 2,
+      "gradient_active_parameter_count": 274,
+      "active_parameter_names": [
+        "head.factor_hidden_projection.bias",
+        "head.factor_hidden_projection.weight",
+        "head.factor_time_projection.weight",
+        "head.hidden_norm.bias",
+        "head.hidden_norm.weight",
+        "head.right_factor_hidden_projection.bias",
+        "head.right_factor_hidden_projection.weight",
+        "head.right_factor_time_projection.weight",
+        "head.right_token_factor_embedding.weight",
+        "head.time_embedding.mlp.0.bias",
+        "head.time_embedding.mlp.0.weight",
+        "head.time_embedding.mlp.2.bias",
+        "head.time_embedding.mlp.2.weight",
+        "head.token_factor_embedding.weight"
+      ],
+      "history": [
+        {
+          "step": 1,
+          "nll_before_update": 1.3968983888626099,
+          "gradient_norm": 0.054470986127853394,
+          "kl": 0.003975186096920658,
+          "invalid_mass": 0.0,
+          "probabilities": {
+            "AA": 0.23803650268749135,
+            "AB": 0.2789234096293117,
+            "BA": 0.22088948394852204,
+            "BB": 0.26215060373467486
+          }
+        },
+        {
+          "step": 25,
+          "nll_before_update": 1.386296033859253,
+          "gradient_norm": 3.2881911465665326e-05,
+          "kl": 1.2787005069792023e-06,
+          "invalid_mass": 0.0,
+          "probabilities": {
+            "AA": 0.25050142780693513,
+            "AB": 0.2502614595034936,
+            "BA": 0.24973805620876038,
+            "BB": 0.2494990564808109
+          }
+        },
+        {
+          "step": 50,
+          "nll_before_update": 1.3862944841384888,
+          "gradient_norm": 1.7091045947381645e-06,
+          "kl": 7.089149495209668e-08,
+          "invalid_mass": 0.0,
+          "probabilities": {
+            "AA": 0.2501213252544403,
+            "AB": 0.25005483627319336,
+            "BA": 0.24994510412216187,
+            "BB": 0.24987873435020447
+          }
+        }
+      ],
+      "probabilities": {
+        "AA": 0.2501213252544403,
+        "AB": 0.25005483627319336,
+        "BA": 0.24994510412216187,
+        "BB": 0.24987873435020447
+      },
+      "normalization_error": 0.0,
+      "kl_target_to_model": 7.089149495209668e-08,
+      "total_variation": 0.000176161527633667,
+      "invalid_mass": 0.0,
+      "marginals": [
+        [
+          0.5001761615276337,
+          0.49982383847236633
+        ],
+        [
+          0.5000664293766022,
+          0.4999335706233978
+        ]
+      ],
+      "max_marginal_error": 0.000176161527633667,
+      "independent_marginal_probabilities": {
+        "AA": 0.2501213071544184,
+        "AB": 0.2500548543732153,
+        "BA": 0.2499451222221838,
+        "BB": 0.24987871625018254
+      },
+      "independent_marginal_invalid_mass": 0.0,
+      "mutual_information": 2.6299387542351454e-15,
+      "max_dense_low_rank_probability_error": 0.0,
+      "max_enumerated_inference_marginal_error": 2.9802322387695312e-08,
+      "joint_sample_frequencies": {
+        "AA": 0.25815,
+        "AB": 0.24805,
+        "BA": 0.24415,
+        "BB": 0.24965
+      },
+      "joint_sample_invalid_rate": 0.0,
+      "marginal_sample_frequencies": {
+        "AA": 0.25485,
+        "AB": 0.24405,
+        "BA": 0.2467,
+        "BB": 0.2544
+      },
+      "marginal_sample_invalid_rate": 0.0,
+      "samples_per_sampler": 20000
+    },
+    {
+      "task": "independent",
+      "variant": "directional_contextual_rank2_wide",
+      "seed": 3,
+      "variant_config": {
+        "name": "directional_contextual_rank2_wide",
+        "kind": "directional",
+        "factor_mode": "dynamic",
+        "init_std": 0.25,
+        "warmup_steps": 0,
+        "rank": 2
+      },
+      "max_steps": 600,
+      "steps_run": 50,
+      "stop_reason": "distribution_target_reached",
+      "learning_rate": 0.03,
+      "seconds": 0.36548549999133684,
+      "parameter_count": 549,
+      "pair_factor_rank": 2,
+      "gradient_active_parameter_count": 274,
+      "active_parameter_names": [
+        "head.factor_hidden_projection.bias",
+        "head.factor_hidden_projection.weight",
+        "head.factor_time_projection.weight",
+        "head.hidden_norm.bias",
+        "head.hidden_norm.weight",
+        "head.right_factor_hidden_projection.bias",
+        "head.right_factor_hidden_projection.weight",
+        "head.right_factor_time_projection.weight",
+        "head.right_token_factor_embedding.weight",
+        "head.time_embedding.mlp.0.bias",
+        "head.time_embedding.mlp.0.weight",
+        "head.time_embedding.mlp.2.bias",
+        "head.time_embedding.mlp.2.weight",
+        "head.token_factor_embedding.weight"
+      ],
+      "history": [
+        {
+          "step": 1,
+          "nll_before_update": 1.3888882398605347,
+          "gradient_norm": 0.024318082258105278,
+          "kl": 0.0005548461488946166,
+          "invalid_mass": 0.0,
+          "probabilities": {
+            "AA": 0.2382736014548064,
+            "AB": 0.24984192474969885,
+            "BA": 0.2500658445089688,
+            "BB": 0.26181862928652594
+          }
+        },
+        {
+          "step": 25,
+          "nll_before_update": 1.3862943649291992,
+          "gradient_norm": 8.975672471933649e-08,
+          "kl": 6.394884621840902e-14,
+          "invalid_mass": 0.0,
+          "probabilities": {
+            "AA": 0.2500000894069352,
+            "AB": 0.2499999105930648,
+            "BA": 0.2500000894069352,
+            "BB": 0.2499999105930648
+          }
+        },
+        {
+          "step": 50,
+          "nll_before_update": 1.3862943649291992,
+          "gradient_norm": 1.0427082486330619e-07,
+          "kl": 0.0,
+          "invalid_mass": 0.0,
+          "probabilities": {
+            "AA": 0.25,
+            "AB": 0.25,
+            "BA": 0.25,
+            "BB": 0.25
+          }
+        }
+      ],
+      "probabilities": {
+        "AA": 0.25,
+        "AB": 0.25,
+        "BA": 0.25,
+        "BB": 0.25
+      },
+      "normalization_error": 0.0,
+      "kl_target_to_model": 0.0,
+      "total_variation": 0.0,
+      "invalid_mass": 0.0,
+      "marginals": [
+        [
+          0.5,
+          0.5
+        ],
+        [
+          0.5,
+          0.5
+        ]
+      ],
+      "max_marginal_error": 0.0,
+      "independent_marginal_probabilities": {
+        "AA": 0.25,
+        "AB": 0.25,
+        "BA": 0.25,
+        "BB": 0.25
+      },
+      "independent_marginal_invalid_mass": 0.0,
+      "mutual_information": 0.0,
+      "max_dense_low_rank_probability_error": 0.0,
+      "max_enumerated_inference_marginal_error": 0.0,
+      "joint_sample_frequencies": {
+        "AA": 0.25045,
+        "AB": 0.24975,
+        "BA": 0.2478,
+        "BB": 0.252
+      },
+      "joint_sample_invalid_rate": 0.0,
+      "marginal_sample_frequencies": {
+        "AA": 0.25105,
+        "AB": 0.2522,
+        "BA": 0.24965,
+        "BB": 0.2471
+      },
+      "marginal_sample_invalid_rate": 0.0,
+      "samples_per_sampler": 20000
+    },
+    {
+      "task": "independent",
+      "variant": "directional_contextual_rank2_warmup",
+      "seed": 1,
+      "variant_config": {
+        "name": "directional_contextual_rank2_warmup",
+        "kind": "directional",
+        "factor_mode": "dynamic",
+        "init_std": 0.25,
+        "warmup_steps": 100,
+        "rank": 2
+      },
+      "max_steps": 600,
+      "steps_run": 150,
+      "stop_reason": "distribution_target_reached",
+      "learning_rate": 0.03,
+      "seconds": 1.3316254160017706,
+      "parameter_count": 549,
+      "pair_factor_rank": 2,
+      "gradient_active_parameter_count": 274,
+      "active_parameter_names": [
+        "head.factor_hidden_projection.bias",
+        "head.factor_hidden_projection.weight",
+        "head.factor_time_projection.weight",
+        "head.hidden_norm.bias",
+        "head.hidden_norm.weight",
+        "head.right_factor_hidden_projection.bias",
+        "head.right_factor_hidden_projection.weight",
+        "head.right_factor_time_projection.weight",
+        "head.right_token_factor_embedding.weight",
+        "head.time_embedding.mlp.0.bias",
+        "head.time_embedding.mlp.0.weight",
+        "head.time_embedding.mlp.2.bias",
+        "head.time_embedding.mlp.2.weight",
+        "head.token_factor_embedding.weight"
+      ],
+      "history": [
+        {
+          "step": 1,
+          "nll_before_update": 1.3875951766967773,
+          "gradient_norm": 0.016846541315317154,
+          "kl": 0.00036539768163795783,
+          "invalid_mass": 0.0,
+          "probabilities": {
+            "AA": 0.2425924060797389,
+            "AB": 0.24392977029608412,
+            "BA": 0.2568777906240679,
+            "BB": 0.25660003300010914
+          }
+        },
+        {
+          "step": 25,
+          "nll_before_update": 1.3863415718078613,
+          "gradient_norm": 0.0032123851124197245,
+          "kl": 3.3395064250762996e-05,
+          "invalid_mass": 0.0,
+          "probabilities": {
+            "AA": 0.2525285036878886,
+            "AB": 0.25112770504520565,
+            "BA": 0.24925076957051573,
+            "BB": 0.24709302169639002
+          }
+        },
+        {
+          "step": 50,
+          "nll_before_update": 1.3862966299057007,
+          "gradient_norm": 0.0007144297705963254,
+          "kl": 3.924817774114686e-07,
+          "invalid_mass": 0.0,
+          "probabilities": {
+            "AA": 0.2496946156024933,
+            "AB": 0.24988603591918945,
+            "BA": 0.2501777410507202,
+            "BB": 0.25024160742759705
+          }
+        },
+        {
+          "step": 75,
+          "nll_before_update": 1.3862943649291992,
+          "gradient_norm": 0.00019734384841285646,
+          "kl": 1.5372769590626945e-07,
+          "invalid_mass": 0.0,
+          "probabilities": {
+            "AA": 0.24995004012212935,
+            "AB": 0.24980402361530524,
+            "BA": 0.2501764186068392,
+            "BB": 0.2500695176557262
+          }
+        },
+        {
+          "step": 100,
+          "nll_before_update": 1.3862943649291992,
+          "gradient_norm": 2.7098269129055552e-05,
+          "kl": 3.895472888704177e-09,
+          "invalid_mass": 0.0,
+          "probabilities": {
+            "AA": 0.25003015249877714,
+            "AB": 0.25001182407105493,
+            "BA": 0.24998199194723392,
+            "BB": 0.249976031482934
+          }
+        },
+        {
+          "step": 125,
+          "nll_before_update": 1.386311650276184,
+          "gradient_norm": 0.0013336159754544497,
+          "kl": 9.119636795396069e-06,
+          "invalid_mass": 0.0,
+          "probabilities": {
+            "AA": 0.24892115970308365,
+            "AB": 0.24894361575199891,
+            "BA": 0.2510545439546759,
+            "BB": 0.2510806805902415
+          }
+        },
+        {
+          "step": 150,
+          "nll_before_update": 1.3862946033477783,
+          "gradient_norm": 0.00014502741396427155,
+          "kl": 3.955820959689049e-08,
+          "invalid_mass": 0.0,
+          "probabilities": {
+            "AA": 0.2499296963340587,
+            "AB": 0.24992966653174165,
+            "BA": 0.25006993113697806,
+            "BB": 0.2500707059972216
+          }
+        }
+      ],
+      "probabilities": {
+        "AA": 0.2499296963340587,
+        "AB": 0.24992966653174165,
+        "BA": 0.25006993113697806,
+        "BB": 0.2500707059972216
+      },
+      "normalization_error": 1.7881393432617188e-07,
+      "kl_target_to_model": 3.955820959689049e-08,
+      "total_variation": 0.0001406371341996504,
+      "invalid_mass": 0.0,
+      "marginals": [
+        [
+          0.49985936286580035,
+          0.5001406371341997
+        ],
+        [
+          0.49999962747103677,
+          0.5000003725289632
+        ]
+      ],
+      "max_marginal_error": 0.0001406371341996504,
+      "independent_marginal_probabilities": {
+        "AA": 0.24992949522080996,
+        "AB": 0.2499298676449904,
+        "BA": 0.2500701322502268,
+        "BB": 0.25007050488397287
+      },
+      "independent_marginal_invalid_mass": 0.0,
+      "mutual_information": 3.236236959623504e-13,
+      "max_dense_low_rank_probability_error": 0.0,
+      "max_enumerated_inference_marginal_error": 2.9777174503919923e-08,
+      "joint_sample_frequencies": {
+        "AA": 0.2459,
+        "AB": 0.24635,
+        "BA": 0.25185,
+        "BB": 0.2559
+      },
+      "joint_sample_invalid_rate": 0.0,
+      "marginal_sample_frequencies": {
+        "AA": 0.24825,
+        "AB": 0.25385,
+        "BA": 0.25035,
+        "BB": 0.24755
+      },
+      "marginal_sample_invalid_rate": 0.0,
+      "samples_per_sampler": 20000
+    },
+    {
+      "task": "independent",
+      "variant": "directional_contextual_rank2_warmup",
+      "seed": 2,
+      "variant_config": {
+        "name": "directional_contextual_rank2_warmup",
+        "kind": "directional",
+        "factor_mode": "dynamic",
+        "init_std": 0.25,
+        "warmup_steps": 100,
+        "rank": 2
+      },
+      "max_steps": 600,
+      "steps_run": 150,
+      "stop_reason": "distribution_target_reached",
+      "learning_rate": 0.03,
+      "seconds": 0.863454542006366,
+      "parameter_count": 549,
+      "pair_factor_rank": 2,
+      "gradient_active_parameter_count": 274,
+      "active_parameter_names": [
+        "head.factor_hidden_projection.bias",
+        "head.factor_hidden_projection.weight",
+        "head.factor_time_projection.weight",
+        "head.hidden_norm.bias",
+        "head.hidden_norm.weight",
+        "head.right_factor_hidden_projection.bias",
+        "head.right_factor_hidden_projection.weight",
+        "head.right_factor_time_projection.weight",
+        "head.right_token_factor_embedding.weight",
+        "head.time_embedding.mlp.0.bias",
+        "head.time_embedding.mlp.0.weight",
+        "head.time_embedding.mlp.2.bias",
+        "head.time_embedding.mlp.2.weight",
+        "head.token_factor_embedding.weight"
+      ],
+      "history": [
+        {
+          "step": 1,
+          "nll_before_update": 1.3968563079833984,
+          "gradient_norm": 0.045114681124687195,
+          "kl": 0.0071473673044089026,
+          "invalid_mass": 0.0,
+          "probabilities": {
+            "AA": 0.24448928204114925,
+            "AB": 0.2919861252299622,
+            "BA": 0.20858865729502782,
+            "BB": 0.2549359354338607
+          }
+        },
+        {
+          "step": 25,
+          "nll_before_update": 1.3865811824798584,
+          "gradient_norm": 0.007269537076354027,
+          "kl": 0.0003218791801977705,
+          "invalid_mass": 0.0,
+          "probabilities": {
+            "AA": 0.2515299395182711,
+            "AB": 0.2574043052615018,
+            "BA": 0.23995826363439154,
+            "BB": 0.25110749158583556
+          }
+        },
+        {
+          "step": 50,
+          "nll_before_update": 1.386318325996399,
+          "gradient_norm": 0.0015942846657708287,
+          "kl": 2.4005216014699737e-05,
+          "invalid_mass": 0.0,
+          "probabilities": {
+            "AA": 0.2516733184955513,
+            "AB": 0.25056312234887845,
+            "BA": 0.24710232755846762,
+            "BB": 0.25066123159710263
+          }
+        },
+        {
+          "step": 75,
+          "nll_before_update": 1.386301875114441,
+          "gradient_norm": 0.0002521098649594933,
+          "kl": 7.919918224352784e-06,
+          "invalid_mass": 0.0,
+          "probabilities": {
+            "AA": 0.25060749800823623,
+            "AB": 0.24937505273148575,
+            "BA": 0.2487437501175329,
+            "BB": 0.2512736991427451
+          }
+        },
+        {
+          "step": 100,
+          "nll_before_update": 1.3862993717193604,
+          "gradient_norm": 0.00022624596022069454,
+          "kl": 4.710633372484452e-06,
+          "invalid_mass": 0.0,
+          "probabilities": {
+            "AA": 0.2505674175495343,
+            "AB": 0.24940672148714055,
+            "BA": 0.2490961068051974,
+            "BB": 0.25092975415812774
+          }
+        },
+        {
+          "step": 125,
+          "nll_before_update": 1.386305809020996,
+          "gradient_norm": 0.0011531265918165445,
+          "kl": 5.005120372769678e-06,
+          "invalid_mass": 0.0,
+          "probabilities": {
+            "AA": 0.2509745248388145,
+            "AB": 0.2505817600028038,
+            "BA": 0.24926571915043289,
+            "BB": 0.24917799600794882
+          }
+        },
+        {
+          "step": 150,
+          "nll_before_update": 1.386295199394226,
+          "gradient_norm": 0.00034034388954751194,
+          "kl": 6.288245889551902e-07,
+          "invalid_mass": 0.0,
+          "probabilities": {
+            "AA": 0.24978091937998587,
+            "AB": 0.2502719722971887,
+            "BA": 0.2496644965954345,
+            "BB": 0.2502826117273909
+          }
+        }
+      ],
+      "probabilities": {
+        "AA": 0.24978091937998587,
+        "AB": 0.2502719722971887,
+        "BA": 0.2496644965954345,
+        "BB": 0.2502826117273909
+      },
+      "normalization_error": 1.043081283569336e-07,
+      "kl_target_to_model": 6.288245889551902e-07,
+      "total_variation": 0.0005545840245796407,
+      "invalid_mass": 0.0,
+      "marginals": [
+        [
+          0.5000528916771746,
+          0.4999471083228254
+        ],
+        [
+          0.49944541597542036,
+          0.5005545840245796
+        ]
+      ],
+      "max_marginal_error": 0.0005545840245796407,
+      "independent_marginal_probabilities": {
+        "AA": 0.2497491244934183,
+        "AB": 0.2503037671837563,
+        "BA": 0.24969629148200206,
+        "BB": 0.25025081684082334
+      },
+      "independent_marginal_invalid_mass": 0.0,
+      "mutual_information": 8.087328570912657e-09,
+      "max_dense_low_rank_probability_error": 2.9802322387695312e-08,
+      "max_enumerated_inference_marginal_error": 3.724738595334287e-08,
+      "joint_sample_frequencies": {
+        "AA": 0.2579,
+        "AB": 0.2481,
+        "BA": 0.24395,
+        "BB": 0.25005
+      },
+      "joint_sample_invalid_rate": 0.0,
+      "marginal_sample_frequencies": {
+        "AA": 0.2545,
+        "AB": 0.24415,
+        "BA": 0.2464,
+        "BB": 0.25495
+      },
+      "marginal_sample_invalid_rate": 0.0,
+      "samples_per_sampler": 20000
+    },
+    {
+      "task": "independent",
+      "variant": "directional_contextual_rank2_warmup",
+      "seed": 3,
+      "variant_config": {
+        "name": "directional_contextual_rank2_warmup",
+        "kind": "directional",
+        "factor_mode": "dynamic",
+        "init_std": 0.25,
+        "warmup_steps": 100,
+        "rank": 2
+      },
+      "max_steps": 600,
+      "steps_run": 150,
+      "stop_reason": "distribution_target_reached",
+      "learning_rate": 0.03,
+      "seconds": 0.6203097079996951,
+      "parameter_count": 549,
+      "pair_factor_rank": 2,
+      "gradient_active_parameter_count": 274,
+      "active_parameter_names": [
+        "head.factor_hidden_projection.bias",
+        "head.factor_hidden_projection.weight",
+        "head.factor_time_projection.weight",
+        "head.hidden_norm.bias",
+        "head.hidden_norm.weight",
+        "head.right_factor_hidden_projection.bias",
+        "head.right_factor_hidden_projection.weight",
+        "head.right_factor_time_projection.weight",
+        "head.right_token_factor_embedding.weight",
+        "head.time_embedding.mlp.0.bias",
+        "head.time_embedding.mlp.0.weight",
+        "head.time_embedding.mlp.2.bias",
+        "head.time_embedding.mlp.2.weight",
+        "head.token_factor_embedding.weight"
+      ],
+      "history": [
+        {
+          "step": 1,
+          "nll_before_update": 1.3888976573944092,
+          "gradient_norm": 0.023326512426137924,
+          "kl": 0.0010081921295130858,
+          "invalid_mass": 0.0,
+          "probabilities": {
+            "AA": 0.23438550089532886,
+            "AB": 0.24758052442582806,
+            "BA": 0.25226641829012714,
+            "BB": 0.26576755638871596
+          }
+        },
+        {
+          "step": 25,
+          "nll_before_update": 1.386378526687622,
+          "gradient_norm": 0.004159458447247744,
+          "kl": 8.491887379585839e-05,
+          "invalid_mass": 0.0,
+          "probabilities": {
+            "AA": 0.2544127811183943,
+            "AB": 0.2508036605415001,
+            "BA": 0.24947541583512606,
+            "BB": 0.24530814250497948
+          }
+        },
+        {
+          "step": 50,
+          "nll_before_update": 1.3862982988357544,
+          "gradient_norm": 0.0008707050001248717,
+          "kl": 3.985295376318643e-06,
+          "invalid_mass": 0.0,
+          "probabilities": {
+            "AA": 0.24887587878477935,
+            "AB": 0.2500802800035393,
+            "BA": 0.25022574513477847,
+            "BB": 0.25081809607690286
+          }
+        },
+        {
+          "step": 75,
+          "nll_before_update": 1.3862948417663574,
+          "gradient_norm": 0.0002642461913637817,
+          "kl": 7.200595062428761e-07,
+          "invalid_mass": 0.0,
+          "probabilities": {
+            "AA": 0.2499767243862152,
+            "AB": 0.2504960000514984,
+            "BA": 0.24979516863822937,
+            "BB": 0.249732106924057
+          }
+        },
+        {
+          "step": 100,
+          "nll_before_update": 1.3862946033477783,
+          "gradient_norm": 5.801528095616959e-05,
+          "kl": 1.4911503237735602e-07,
+          "invalid_mass": 0.0,
+          "probabilities": {
+            "AA": 0.24986486880763192,
+            "AB": 0.2501430735119945,
+            "BA": 0.25012981147734625,
+            "BB": 0.24986224620302733
+          }
+        },
+        {
+          "step": 125,
+          "nll_before_update": 1.3862953186035156,
+          "gradient_norm": 0.00038489708094857633,
+          "kl": 5.662781462634214e-07,
+          "invalid_mass": 0.0,
+          "probabilities": {
+            "AA": 0.25035876404477136,
+            "AB": 0.2501059211680077,
+            "BA": 0.24990038947309962,
+            "BB": 0.2496349253141213
+          }
+        },
+        {
+          "step": 150,
+          "nll_before_update": 1.3862943649291992,
+          "gradient_norm": 6.413170922314748e-05,
+          "kl": 3.916328761288668e-09,
+          "invalid_mass": 0.0,
+          "probabilities": {
+            "AA": 0.2499963641166687,
+            "AB": 0.2499697208404541,
+            "BA": 0.2500320076942444,
+            "BB": 0.2500019073486328
+          }
+        }
+      ],
+      "probabilities": {
+        "AA": 0.2499963641166687,
+        "AB": 0.2499697208404541,
+        "BA": 0.2500320076942444,
+        "BB": 0.2500019073486328
+      },
+      "normalization_error": 0.0,
+      "kl_target_to_model": 3.916328761288668e-09,
+      "total_variation": 3.3915042877197266e-05,
+      "invalid_mass": 0.0,
+      "marginals": [
+        [
+          0.4999660849571228,
+          0.5000339150428772
+        ],
+        [
+          0.5000283718109131,
+          0.4999716281890869
+        ]
+      ],
+      "max_marginal_error": 3.3915042877197266e-05,
+      "independent_marginal_probabilities": {
+        "AA": 0.24999722742178676,
+        "AB": 0.24996885753533604,
+        "BA": 0.2500311443891263,
+        "BB": 0.25000277065375087
+      },
+      "independent_marginal_invalid_mass": 0.0,
+      "mutual_information": 5.962255041754075e-12,
+      "max_dense_low_rank_probability_error": 0.0,
+      "max_enumerated_inference_marginal_error": 5.960464477539063e-08,
+      "joint_sample_frequencies": {
+        "AA": 0.2504,
+        "AB": 0.2497,
+        "BA": 0.24785,
+        "BB": 0.25205
+      },
+      "joint_sample_invalid_rate": 0.0,
+      "marginal_sample_frequencies": {
+        "AA": 0.25105,
+        "AB": 0.2522,
+        "BA": 0.24965,
+        "BB": 0.2471
+      },
+      "marginal_sample_invalid_rate": 0.0,
+      "samples_per_sampler": 20000
+    },
+    {
+      "task": "equal",
+      "variant": "directional_contextual_rank2_wide",
+      "seed": 1,
+      "variant_config": {
+        "name": "directional_contextual_rank2_wide",
+        "kind": "directional",
+        "factor_mode": "dynamic",
+        "init_std": 0.25,
+        "warmup_steps": 0,
+        "rank": 2
+      },
+      "max_steps": 600,
+      "steps_run": 150,
+      "stop_reason": "distribution_target_reached",
+      "learning_rate": 0.03,
+      "seconds": 1.2332600420049857,
+      "parameter_count": 549,
+      "pair_factor_rank": 2,
+      "gradient_active_parameter_count": 274,
+      "active_parameter_names": [
+        "head.factor_hidden_projection.bias",
+        "head.factor_hidden_projection.weight",
+        "head.factor_time_projection.weight",
+        "head.hidden_norm.bias",
+        "head.hidden_norm.weight",
+        "head.right_factor_hidden_projection.bias",
+        "head.right_factor_hidden_projection.weight",
+        "head.right_factor_time_projection.weight",
+        "head.right_token_factor_embedding.weight",
+        "head.time_embedding.mlp.0.bias",
+        "head.time_embedding.mlp.0.weight",
+        "head.time_embedding.mlp.2.bias",
+        "head.time_embedding.mlp.2.weight",
+        "head.token_factor_embedding.weight"
+      ],
+      "history": [
+        {
+          "step": 1,
+          "nll_before_update": 1.389220952987671,
+          "gradient_norm": 0.0431232713162899,
+          "kl": 0.6931038297605183,
+          "invalid_mass": 0.499958872795105,
+          "probabilities": {
+            "AA": 0.2522258162498474,
+            "AB": 0.2590532600879669,
+            "BA": 0.24090561270713806,
+            "BB": 0.2478153109550476
+          }
+        },
+        {
+          "step": 25,
+          "nll_before_update": 0.831082820892334,
+          "gradient_norm": 1.0954599380493164,
+          "kl": 0.13045113576821987,
+          "invalid_mass": 0.11113438010449805,
+          "probabilities": {
+            "AA": 0.374208368747033,
+            "AB": 0.05481144964661129,
+            "BA": 0.05632293045788676,
+            "BB": 0.5146572511484689
+          }
+        },
+        {
+          "step": 50,
+          "nll_before_update": 0.7227132320404053,
+          "gradient_norm": 0.6532701849937439,
+          "kl": 0.027738557488033055,
+          "invalid_mass": 0.026462523240793748,
+          "probabilities": {
+            "AA": 0.5076346509448213,
+            "AB": 0.013110135609425233,
+            "BA": 0.013352387631368515,
+            "BB": 0.46590282581438497
+          }
+        },
+        {
+          "step": 75,
+          "nll_before_update": 0.707965612411499,
+          "gradient_norm": 0.12489880621433258,
+          "kl": 0.014742802976386249,
+          "invalid_mass": 0.014416605829745511,
+          "probabilities": {
+            "AA": 0.5031571866716603,
+            "AB": 0.00713300382990005,
+            "BA": 0.0072836019998454606,
+            "BB": 0.48242620749859416
+          }
+        },
+        {
+          "step": 100,
+          "nll_before_update": 0.7036011219024658,
+          "gradient_norm": 0.2615194320678711,
+          "kl": 0.010452379929394184,
+          "invalid_mass": 0.010000137900950447,
+          "probabilities": {
+            "AA": 0.4809687426378068,
+            "AB": 0.0049381397169980246,
+            "BA": 0.005061998183952423,
+            "BB": 0.5090311194612427
+          }
+        },
+        {
+          "step": 125,
+          "nll_before_update": 0.7012298107147217,
+          "gradient_norm": 0.11281843483448029,
+          "kl": 0.009373158613092847,
+          "invalid_mass": 0.007947598190807325,
+          "probabilities": {
+            "AA": 0.5221971094473592,
+            "AB": 0.003939974838332745,
+            "BA": 0.004007623352474581,
+            "BB": 0.46985529236183354
+          }
+        },
+        {
+          "step": 150,
+          "nll_before_update": 0.6996488571166992,
+          "gradient_norm": 0.13243499398231506,
+          "kl": 0.006393416144325592,
+          "invalid_mass": 0.006309825376348735,
+          "probabilities": {
+            "AA": 0.49124171268252476,
+            "AB": 0.0031212879756368815,
+            "BA": 0.003188537400711853,
+            "BB": 0.5024484619411265
+          }
+        }
+      ],
+      "probabilities": {
+        "AA": 0.49124171268252476,
+        "AB": 0.0031212879756368815,
+        "BA": 0.003188537400711853,
+        "BB": 0.5024484619411265
+      },
+      "normalization_error": 2.8172507882118225e-07,
+      "kl_target_to_model": 0.006393416144325592,
+      "total_variation": 0.008758287317475223,
+      "invalid_mass": 0.006309825376348735,
+      "marginals": [
+        [
+          0.49436300065816163,
+          0.5056369993418384
+        ],
+        [
+          0.4944302500832366,
+          0.5055697499167634
+        ]
+      ],
+      "max_marginal_error": 0.005636999341838367,
+      "independent_marginal_probabilities": {
+        "AA": 0.24442802204731412,
+        "AB": 0.2499349786108475,
+        "BA": 0.2500022280359225,
+        "BB": 0.2556347713059159
+      },
+      "independent_marginal_invalid_mass": 0.49993720664677,
+      "mutual_information": 0.6548319100923805,
+      "max_dense_low_rank_probability_error": 0.0,
+      "max_enumerated_inference_marginal_error": 1.551258849152859e-07,
+      "joint_sample_frequencies": {
+        "AA": 0.48495,
+        "AB": 0.0027,
+        "BA": 0.0037,
+        "BB": 0.50865
+      },
+      "joint_sample_invalid_rate": 0.0064,
+      "marginal_sample_frequencies": {
+        "AA": 0.2429,
+        "AB": 0.2538,
+        "BA": 0.2496,
+        "BB": 0.2537
+      },
+      "marginal_sample_invalid_rate": 0.5034000000000001,
+      "samples_per_sampler": 20000
+    },
+    {
+      "task": "equal",
+      "variant": "directional_contextual_rank2_wide",
+      "seed": 2,
+      "variant_config": {
+        "name": "directional_contextual_rank2_wide",
+        "kind": "directional",
+        "factor_mode": "dynamic",
+        "init_std": 0.25,
+        "warmup_steps": 0,
+        "rank": 2
+      },
+      "max_steps": 600,
+      "steps_run": 125,
+      "stop_reason": "distribution_target_reached",
+      "learning_rate": 0.03,
+      "seconds": 0.8530264999717474,
+      "parameter_count": 549,
+      "pair_factor_rank": 2,
+      "gradient_active_parameter_count": 274,
+      "active_parameter_names": [
+        "head.factor_hidden_projection.bias",
+        "head.factor_hidden_projection.weight",
+        "head.factor_time_projection.weight",
+        "head.hidden_norm.bias",
+        "head.hidden_norm.weight",
+        "head.right_factor_hidden_projection.bias",
+        "head.right_factor_hidden_projection.weight",
+        "head.right_factor_time_projection.weight",
+        "head.right_token_factor_embedding.weight",
+        "head.time_embedding.mlp.0.bias",
+        "head.time_embedding.mlp.0.weight",
+        "head.time_embedding.mlp.2.bias",
+        "head.time_embedding.mlp.2.weight",
+        "head.token_factor_embedding.weight"
+      ],
+      "history": [
+        {
+          "step": 1,
+          "nll_before_update": 1.391190528869629,
+          "gradient_norm": 0.06085857376456261,
+          "kl": 0.693627737138551,
+          "invalid_mass": 0.49980830401467824,
+          "probabilities": {
+            "AA": 0.239704799060452,
+            "AB": 0.28012483894638956,
+            "BA": 0.21968346506828867,
+            "BB": 0.26048689692486976
+          }
+        },
+        {
+          "step": 25,
+          "nll_before_update": 0.8674778938293457,
+          "gradient_norm": 2.7526535987854004,
+          "kl": 0.11952608462606484,
+          "invalid_mass": 0.1124725372577581,
+          "probabilities": {
+            "AA": 0.4346643835508762,
+            "AB": 0.06850687730567025,
+            "BA": 0.04396565995208786,
+            "BB": 0.4528630791913657
+          }
+        },
+        {
+          "step": 50,
+          "nll_before_update": 0.7243716716766357,
+          "gradient_norm": 0.43600133061408997,
+          "kl": 0.031036627110578918,
+          "invalid_mass": 0.02831754680188593,
+          "probabilities": {
+            "AA": 0.45285353598142536,
+            "AB": 0.016389932087360264,
+            "BA": 0.011927614714525666,
+            "BB": 0.5188289172166887
+          }
+        },
+        {
+          "step": 75,
+          "nll_before_update": 0.7087182998657227,
+          "gradient_norm": 0.14756684005260468,
+          "kl": 0.015350000096540528,
+          "invalid_mass": 0.015036842505785726,
+          "probabilities": {
+            "AA": 0.4826586154785304,
+            "AB": 0.008780838601786358,
+            "BA": 0.006256003903999368,
+            "BB": 0.5023045420156839
+          }
+        },
+        {
+          "step": 100,
+          "nll_before_update": 0.7036707401275635,
+          "gradient_norm": 0.08629067987203598,
+          "kl": 0.010360805892196956,
+          "invalid_mass": 0.010302603245384512,
+          "probabilities": {
+            "AA": 0.49637608216285706,
+            "AB": 0.00605563066210954,
+            "BA": 0.004246972583274971,
+            "BB": 0.49332131459175843
+          }
+        },
+        {
+          "step": 125,
+          "nll_before_update": 0.7010254859924316,
+          "gradient_norm": 0.028618574142456055,
+          "kl": 0.007799643597430239,
+          "invalid_mass": 0.007765454842441106,
+          "probabilities": {
+            "AA": 0.49749940029739265,
+            "AB": 0.004574406535642964,
+            "BA": 0.003191048306798142,
+            "BB": 0.49473514486016623
+          }
+        }
+      ],
+      "probabilities": {
+        "AA": 0.49749940029739265,
+        "AB": 0.004574406535642964,
+        "BA": 0.003191048306798142,
+        "BB": 0.49473514486016623
+      },
+      "normalization_error": 2.2747553884983063e-07,
+      "kl_target_to_model": 0.007799643597430239,
+      "total_variation": 0.007765454842441114,
+      "invalid_mass": 0.007765454842441106,
+      "marginals": [
+        [
+          0.5020738068330356,
+          0.49792619316696435
+        ],
+        [
+          0.5006904486041908,
+          0.4993095513958092
+        ]
+      ],
+      "max_marginal_error": 0.002073806833035652,
+      "independent_marginal_probabilities": {
+        "AA": 0.2513835595756464,
+        "AB": 0.25069024725738914,
+        "BA": 0.24930688902854434,
+        "BB": 0.24861930413841998
+      },
+      "independent_marginal_invalid_mass": 0.49999713628593345,
+      "mutual_information": 0.6478050033632844,
+      "max_dense_low_rank_probability_error": 0.0,
+      "max_enumerated_inference_marginal_error": 2.5001946646341366e-07,
+      "joint_sample_frequencies": {
+        "AA": 0.5044,
+        "AB": 0.004,
+        "BA": 0.00315,
+        "BB": 0.48845
+      },
+      "joint_sample_invalid_rate": 0.00715,
+      "marginal_sample_frequencies": {
+        "AA": 0.2557,
+        "AB": 0.2447,
+        "BA": 0.24635,
+        "BB": 0.25325
+      },
+      "marginal_sample_invalid_rate": 0.49105,
+      "samples_per_sampler": 20000
+    },
+    {
+      "task": "equal",
+      "variant": "directional_contextual_rank2_wide",
+      "seed": 3,
+      "variant_config": {
+        "name": "directional_contextual_rank2_wide",
+        "kind": "directional",
+        "factor_mode": "dynamic",
+        "init_std": 0.25,
+        "warmup_steps": 0,
+        "rank": 2
+      },
+      "max_steps": 600,
+      "steps_run": 600,
+      "stop_reason": "max_steps",
+      "learning_rate": 0.03,
+      "seconds": 3.189704457996413,
+      "parameter_count": 549,
+      "pair_factor_rank": 2,
+      "gradient_active_parameter_count": 274,
+      "active_parameter_names": [
+        "head.factor_hidden_projection.bias",
+        "head.factor_hidden_projection.weight",
+        "head.factor_time_projection.weight",
+        "head.hidden_norm.bias",
+        "head.hidden_norm.weight",
+        "head.right_factor_hidden_projection.bias",
+        "head.right_factor_hidden_projection.weight",
+        "head.right_factor_time_projection.weight",
+        "head.right_token_factor_embedding.weight",
+        "head.time_embedding.mlp.0.bias",
+        "head.time_embedding.mlp.0.weight",
+        "head.time_embedding.mlp.2.bias",
+        "head.time_embedding.mlp.2.weight",
+        "head.token_factor_embedding.weight"
+      ],
+      "history": [
+        {
+          "step": 1,
+          "nll_before_update": 1.3895518779754639,
+          "gradient_norm": 0.02803424373269081,
+          "kl": 0.694071781267219,
+          "invalid_mass": 0.499907821419602,
+          "probabilities": {
+            "AA": 0.2382768470562444,
+            "AB": 0.2498436048673509,
+            "BA": 0.2500642165522511,
+            "BB": 0.2618153315241536
+          }
+        },
+        {
+          "step": 25,
+          "nll_before_update": 1.3862941265106201,
+          "gradient_norm": 4.410788889686046e-08,
+          "kl": 0.6931471805599524,
+          "invalid_mass": 0.5,
+          "probabilities": {
+            "AA": 0.25000002980231173,
+            "AB": 0.24999997019768827,
+            "BA": 0.25000002980231173,
+            "BB": 0.24999997019768827
+          }
+        },
+        {
+          "step": 50,
+          "nll_before_update": 1.3862943649291992,
+          "gradient_norm": 0.0,
+          "kl": 0.6931471805599453,
+          "invalid_mass": 0.5,
+          "probabilities": {
+            "AA": 0.25,
+            "AB": 0.25,
+            "BA": 0.25,
+            "BB": 0.25
+          }
+        },
+        {
+          "step": 75,
+          "nll_before_update": 1.3862946033477783,
+          "gradient_norm": 3.304068627585366e-07,
+          "kl": 0.6931471805599453,
+          "invalid_mass": 0.5,
+          "probabilities": {
+            "AA": 0.25,
+            "AB": 0.25,
+            "BA": 0.25,
+            "BB": 0.25
+          }
+        },
+        {
+          "step": 100,
+          "nll_before_update": 1.3862943649291992,
+          "gradient_norm": 0.0,
+          "kl": 0.6931471805599453,
+          "invalid_mass": 0.5,
+          "probabilities": {
+            "AA": 0.25,
+            "AB": 0.25,
+            "BA": 0.25,
+            "BB": 0.25
+          }
+        },
+        {
+          "step": 125,
+          "nll_before_update": 1.3862946033477783,
+          "gradient_norm": 4.6496410277541145e-07,
+          "kl": 0.6931471805599453,
+          "invalid_mass": 0.5,
+          "probabilities": {
+            "AA": 0.25,
+            "AB": 0.25,
+            "BA": 0.25,
+            "BB": 0.25
+          }
+        },
+        {
+          "step": 150,
+          "nll_before_update": 1.3862943649291992,
+          "gradient_norm": 5.176881145985135e-08,
+          "kl": 0.6931471805599453,
+          "invalid_mass": 0.5,
+          "probabilities": {
+            "AA": 0.25,
+            "AB": 0.25,
+            "BA": 0.25,
+            "BB": 0.25
+          }
+        },
+        {
+          "step": 175,
+          "nll_before_update": 1.3862942457199097,
+          "gradient_norm": 1.0347211087946562e-07,
+          "kl": 0.6931471805599453,
+          "invalid_mass": 0.5,
+          "probabilities": {
+            "AA": 0.25,
+            "AB": 0.25,
+            "BA": 0.25,
+            "BB": 0.25
+          }
+        },
+        {
+          "step": 200,
+          "nll_before_update": 1.3862944841384888,
+          "gradient_norm": 1.0275509509938274e-07,
+          "kl": 0.6931471805599524,
+          "invalid_mass": 0.5,
+          "probabilities": {
+            "AA": 0.25000002980232594,
+            "AB": 0.24999997019767406,
+            "BA": 0.25000002980232594,
+            "BB": 0.24999997019767406
+          }
+        },
+        {
+          "step": 225,
+          "nll_before_update": 1.3862946033477783,
+          "gradient_norm": 2.063704016563861e-07,
+          "kl": 0.6931471805599453,
+          "invalid_mass": 0.5,
+          "probabilities": {
+            "AA": 0.25,
+            "AB": 0.25,
+            "BA": 0.25,
+            "BB": 0.25
+          }
+        },
+        {
+          "step": 250,
+          "nll_before_update": 1.3862942457199097,
+          "gradient_norm": 1.0333937439099827e-07,
+          "kl": 0.6931471805599524,
+          "invalid_mass": 0.5,
+          "probabilities": {
+            "AA": 0.25000002980232594,
+            "AB": 0.24999997019767406,
+            "BA": 0.25000002980232594,
+            "BB": 0.24999997019767406
+          }
+        },
+        {
+          "step": 275,
+          "nll_before_update": 1.3862943649291992,
+          "gradient_norm": 1.0190211696681217e-07,
+          "kl": 0.6931471805599453,
+          "invalid_mass": 0.5,
+          "probabilities": {
+            "AA": 0.25,
+            "AB": 0.25,
+            "BA": 0.25,
+            "BB": 0.25
+          }
+        },
+        {
+          "step": 300,
+          "nll_before_update": 1.3862941265106201,
+          "gradient_norm": 3.5891173411073396e-07,
+          "kl": 0.6931471805599524,
+          "invalid_mass": 0.5,
+          "probabilities": {
+            "AA": 0.25000002980231883,
+            "AB": 0.24999997019768117,
+            "BA": 0.25000002980231883,
+            "BB": 0.24999997019768117
+          }
+        },
+        {
+          "step": 325,
+          "nll_before_update": 1.3862941265106201,
+          "gradient_norm": 6.162097498929597e-10,
+          "kl": 0.6931471805599453,
+          "invalid_mass": 0.5,
+          "probabilities": {
+            "AA": 0.25,
+            "AB": 0.25,
+            "BA": 0.25,
+            "BB": 0.25
+          }
+        },
+        {
+          "step": 350,
+          "nll_before_update": 1.3862948417663574,
+          "gradient_norm": 4.16748321185878e-07,
+          "kl": 0.6931471805599453,
+          "invalid_mass": 0.5,
+          "probabilities": {
+            "AA": 0.25,
+            "AB": 0.25,
+            "BA": 0.25,
+            "BB": 0.25
+          }
+        },
+        {
+          "step": 375,
+          "nll_before_update": 1.3862941265106201,
+          "gradient_norm": 5.80262621951988e-07,
+          "kl": 0.6931471805599453,
+          "invalid_mass": 0.5,
+          "probabilities": {
+            "AA": 0.25,
+            "AB": 0.25,
+            "BA": 0.25,
+            "BB": 0.25
+          }
+        },
+        {
+          "step": 400,
+          "nll_before_update": 1.3862941265106201,
+          "gradient_norm": 3.5434467804407177e-07,
+          "kl": 0.6931471805599453,
+          "invalid_mass": 0.5,
+          "probabilities": {
+            "AA": 0.25,
+            "AB": 0.25,
+            "BA": 0.25,
+            "BB": 0.25
+          }
+        },
+        {
+          "step": 425,
+          "nll_before_update": 1.3862943649291992,
+          "gradient_norm": 4.1652830873317725e-07,
+          "kl": 0.6931471805599453,
+          "invalid_mass": 0.5,
+          "probabilities": {
+            "AA": 0.25,
+            "AB": 0.25,
+            "BA": 0.25,
+            "BB": 0.25
+          }
+        },
+        {
+          "step": 450,
+          "nll_before_update": 1.3862941265106201,
+          "gradient_norm": 3.262958045979758e-07,
+          "kl": 0.6931471805599453,
+          "invalid_mass": 0.5,
+          "probabilities": {
+            "AA": 0.25,
+            "AB": 0.25,
+            "BA": 0.25,
+            "BB": 0.25
+          }
+        },
+        {
+          "step": 475,
+          "nll_before_update": 1.3862941265106201,
+          "gradient_norm": 4.897543135484739e-07,
+          "kl": 0.6931471805599453,
+          "invalid_mass": 0.5,
+          "probabilities": {
+            "AA": 0.25,
+            "AB": 0.25,
+            "BA": 0.25,
+            "BB": 0.25
+          }
+        },
+        {
+          "step": 500,
+          "nll_before_update": 1.3862941265106201,
+          "gradient_norm": 4.808100015907257e-07,
+          "kl": 0.6931471805599453,
+          "invalid_mass": 0.5,
+          "probabilities": {
+            "AA": 0.25,
+            "AB": 0.25,
+            "BA": 0.25,
+            "BB": 0.25
+          }
+        },
+        {
+          "step": 525,
+          "nll_before_update": 1.3862941265106201,
+          "gradient_norm": 0.0,
+          "kl": 0.6931471805599453,
+          "invalid_mass": 0.5,
+          "probabilities": {
+            "AA": 0.25,
+            "AB": 0.25,
+            "BA": 0.25,
+            "BB": 0.25
+          }
+        },
+        {
+          "step": 550,
+          "nll_before_update": 1.3862946033477783,
+          "gradient_norm": 9.633826891786157e-08,
+          "kl": 0.6931471805599453,
+          "invalid_mass": 0.5,
+          "probabilities": {
+            "AA": 0.25,
+            "AB": 0.25,
+            "BA": 0.25,
+            "BB": 0.25
+          }
+        },
+        {
+          "step": 575,
+          "nll_before_update": 1.3862944841384888,
+          "gradient_norm": 9.680164936298752e-08,
+          "kl": 0.6931471805599524,
+          "invalid_mass": 0.5,
+          "probabilities": {
+            "AA": 0.25000002980233305,
+            "AB": 0.24999997019766695,
+            "BA": 0.25000002980233305,
+            "BB": 0.24999997019766695
+          }
+        },
+        {
+          "step": 600,
+          "nll_before_update": 1.3862946033477783,
+          "gradient_norm": 1.9438206777522282e-07,
+          "kl": 0.6931471805599453,
+          "invalid_mass": 0.5,
+          "probabilities": {
+            "AA": 0.25,
+            "AB": 0.25,
+            "BA": 0.25,
+            "BB": 0.25
+          }
+        }
+      ],
+      "probabilities": {
+        "AA": 0.25,
+        "AB": 0.25,
+        "BA": 0.25,
+        "BB": 0.25
+      },
+      "normalization_error": 0.0,
+      "kl_target_to_model": 0.6931471805599453,
+      "total_variation": 0.5,
+      "invalid_mass": 0.5,
+      "marginals": [
+        [
+          0.5,
+          0.5
+        ],
+        [
+          0.5,
+          0.5
+        ]
+      ],
+      "max_marginal_error": 0.0,
+      "independent_marginal_probabilities": {
+        "AA": 0.25,
+        "AB": 0.25,
+        "BA": 0.25,
+        "BB": 0.25
+      },
+      "independent_marginal_invalid_mass": 0.5,
+      "mutual_information": 0.0,
+      "max_dense_low_rank_probability_error": 0.0,
+      "max_enumerated_inference_marginal_error": 0.0,
+      "joint_sample_frequencies": {
+        "AA": 0.25045,
+        "AB": 0.24975,
+        "BA": 0.2478,
+        "BB": 0.252
+      },
+      "joint_sample_invalid_rate": 0.49755,
+      "marginal_sample_frequencies": {
+        "AA": 0.25105,
+        "AB": 0.2522,
+        "BA": 0.24965,
+        "BB": 0.2471
+      },
+      "marginal_sample_invalid_rate": 0.50185,
+      "samples_per_sampler": 20000
+    },
+    {
+      "task": "equal",
+      "variant": "directional_contextual_rank2_warmup",
+      "seed": 1,
+      "variant_config": {
+        "name": "directional_contextual_rank2_warmup",
+        "kind": "directional",
+        "factor_mode": "dynamic",
+        "init_std": 0.25,
+        "warmup_steps": 100,
+        "rank": 2
+      },
+      "max_steps": 600,
+      "steps_run": 150,
+      "stop_reason": "distribution_target_reached",
+      "learning_rate": 0.03,
+      "seconds": 0.7403190830082167,
+      "parameter_count": 549,
+      "pair_factor_rank": 2,
+      "gradient_active_parameter_count": 274,
+      "active_parameter_names": [
+        "head.factor_hidden_projection.bias",
+        "head.factor_hidden_projection.weight",
+        "head.factor_time_projection.weight",
+        "head.hidden_norm.bias",
+        "head.hidden_norm.weight",
+        "head.right_factor_hidden_projection.bias",
+        "head.right_factor_hidden_projection.weight",
+        "head.right_factor_time_projection.weight",
+        "head.right_token_factor_embedding.weight",
+        "head.time_embedding.mlp.0.bias",
+        "head.time_embedding.mlp.0.weight",
+        "head.time_embedding.mlp.2.bias",
+        "head.time_embedding.mlp.2.weight",
+        "head.token_factor_embedding.weight"
+      ],
+      "history": [
+        {
+          "step": 1,
+          "nll_before_update": 1.389235258102417,
+          "gradient_norm": 0.04007210209965706,
+          "kl": 0.6931790095486717,
+          "invalid_mass": 0.4995084330952312,
+          "probabilities": {
+            "AA": 0.23897943388140147,
+            "AB": 0.24754022460011285,
+            "BA": 0.2519682084951183,
+            "BB": 0.26151213302336734
+          }
+        },
+        {
+          "step": 25,
+          "nll_before_update": 1.1963112354278564,
+          "gradient_norm": 0.14067628979682922,
+          "kl": 0.48960375425001035,
+          "invalid_mass": 0.3859972357749939,
+          "probabilities": {
+            "AA": 0.3256477415561676,
+            "AB": 0.2022801637649536,
+            "BA": 0.18371707201004028,
+            "BB": 0.2883550226688385
+          }
+        },
+        {
+          "step": 50,
+          "nll_before_update": 0.9158198237419128,
+          "gradient_norm": 0.09492713958024979,
+          "kl": 0.2151871769301404,
+          "invalid_mass": 0.19314265801224056,
+          "probabilities": {
+            "AA": 0.4171504658039972,
+            "AB": 0.10151236439951718,
+            "BA": 0.09163029361272337,
+            "BB": 0.3897068761837623
+          }
+        },
+        {
+          "step": 75,
+          "nll_before_update": 0.8022811412811279,
+          "gradient_norm": 0.05171429365873337,
+          "kl": 0.1064716393065423,
+          "invalid_mass": 0.10090078598073152,
+          "probabilities": {
+            "AA": 0.45620953186956176,
+            "AB": 0.05324964871165066,
+            "BA": 0.04765113726908085,
+            "BB": 0.44288968214970675
+          }
+        },
+        {
+          "step": 100,
+          "nll_before_update": 0.7601339221000671,
+          "gradient_norm": 0.032981026917696,
+          "kl": 0.06580161374395055,
+          "invalid_mass": 0.06363657511433993,
+          "probabilities": {
+            "AA": 0.47286389613585716,
+            "AB": 0.033685642575093516,
+            "BA": 0.029950932539246407,
+            "BB": 0.46349952874980294
+          }
+        },
+        {
+          "step": 125,
+          "nll_before_update": 0.693630576133728,
+          "gradient_norm": 0.022391511127352715,
+          "kl": 0.0009148431943425406,
+          "invalid_mass": 0.0003468717070758988,
+          "probabilities": {
+            "AA": 0.4829862075677201,
+            "AB": 0.00019174756488593968,
+            "BA": 0.0001551241421899591,
+            "BB": 0.516666920725204
+          }
+        },
+        {
+          "step": 150,
+          "nll_before_update": 0.6934734582901001,
+          "gradient_norm": 0.011208596639335155,
+          "kl": 0.0003351092740901396,
+          "invalid_mass": 0.00028325066230517715,
+          "probabilities": {
+            "AA": 0.4947698358750423,
+            "AB": 0.00015831512928326258,
+            "BA": 0.00012493553302191457,
+            "BB": 0.5049469134626525
+          }
+        }
+      ],
+      "probabilities": {
+        "AA": 0.4947698358750423,
+        "AB": 0.00015831512928326258,
+        "BA": 0.00012493553302191457,
+        "BB": 0.5049469134626525
+      },
+      "normalization_error": 1.6947160474956036e-07,
+      "kl_target_to_model": 0.0003351092740901396,
+      "total_variation": 0.005230164124957698,
+      "invalid_mass": 0.00028325066230517715,
+      "marginals": [
+        [
+          0.4949281510043256,
+          0.5050718489956745
+        ],
+        [
+          0.4948947714080642,
+          0.5051052285919357
+        ]
+      ],
+      "max_marginal_error": 0.005105228591935795,
+      "independent_marginal_probabilities": {
+        "AA": 0.24493735415470158,
+        "AB": 0.24999079684962397,
+        "BA": 0.24995741725336265,
+        "BB": 0.2551144317423118
+      },
+      "independent_marginal_invalid_mass": 0.4999482141029866,
+      "mutual_information": 0.6905002424408078,
+      "max_dense_low_rank_probability_error": 0.0,
+      "max_enumerated_inference_marginal_error": 3.11622788129462e-08,
+      "joint_sample_frequencies": {
+        "AA": 0.48805,
+        "AB": 0.00025,
+        "BA": 5e-05,
+        "BB": 0.51165
+      },
+      "joint_sample_invalid_rate": 0.00030000000000000003,
+      "marginal_sample_frequencies": {
+        "AA": 0.24315,
+        "AB": 0.2541,
+        "BA": 0.2498,
+        "BB": 0.25295
+      },
+      "marginal_sample_invalid_rate": 0.5039,
+      "samples_per_sampler": 20000
+    },
+    {
+      "task": "equal",
+      "variant": "directional_contextual_rank2_warmup",
+      "seed": 2,
+      "variant_config": {
+        "name": "directional_contextual_rank2_warmup",
+        "kind": "directional",
+        "factor_mode": "dynamic",
+        "init_std": 0.25,
+        "warmup_steps": 100,
+        "rank": 2
+      },
+      "max_steps": 600,
+      "steps_run": 150,
+      "stop_reason": "distribution_target_reached",
+      "learning_rate": 0.03,
+      "seconds": 0.8209361249755602,
+      "parameter_count": 549,
+      "pair_factor_rank": 2,
+      "gradient_active_parameter_count": 274,
+      "active_parameter_names": [
+        "head.factor_hidden_projection.bias",
+        "head.factor_hidden_projection.weight",
+        "head.factor_time_projection.weight",
+        "head.hidden_norm.bias",
+        "head.hidden_norm.weight",
+        "head.right_factor_hidden_projection.bias",
+        "head.right_factor_hidden_projection.weight",
+        "head.right_factor_time_projection.weight",
+        "head.right_token_factor_embedding.weight",
+        "head.time_embedding.mlp.0.bias",
+        "head.time_embedding.mlp.0.weight",
+        "head.time_embedding.mlp.2.bias",
+        "head.time_embedding.mlp.2.weight",
+        "head.token_factor_embedding.weight"
+      ],
+      "history": [
+        {
+          "step": 1,
+          "nll_before_update": 1.3911924362182617,
+          "gradient_norm": 0.05861371383070946,
+          "kl": 0.6945161939124794,
+          "invalid_mass": 0.5005747676066985,
+          "probabilities": {
+            "AA": 0.24448927475480065,
+            "AB": 0.2919861165280973,
+            "BA": 0.20858865107860122,
+            "BB": 0.25493595763850085
+          }
+        },
+        {
+          "step": 25,
+          "nll_before_update": 1.2020188570022583,
+          "gradient_norm": 0.13780473172664642,
+          "kl": 0.4960963283755424,
+          "invalid_mass": 0.389441654872771,
+          "probabilities": {
+            "AA": 0.28281448164474354,
+            "AB": 0.20840284165718842,
+            "BA": 0.18103881321558257,
+            "BB": 0.32774386348248546
+          }
+        },
+        {
+          "step": 50,
+          "nll_before_update": 0.9237861037254333,
+          "gradient_norm": 0.09643619507551193,
+          "kl": 0.22346329023007966,
+          "invalid_mass": 0.1994450092522424,
+          "probabilities": {
+            "AA": 0.38226758009688633,
+            "AB": 0.10797620162456477,
+            "BA": 0.09146880762767763,
+            "BB": 0.41828741065087127
+          }
+        },
+        {
+          "step": 75,
+          "nll_before_update": 0.8062599301338196,
+          "gradient_norm": 0.052951011806726456,
+          "kl": 0.11070275304210248,
+          "invalid_mass": 0.10462701806377933,
+          "probabilities": {
+            "AA": 0.4390099194026186,
+            "AB": 0.05725819742484154,
+            "BA": 0.0473688206389378,
+            "BB": 0.4563630625336021
+          }
+        },
+        {
+          "step": 100,
+          "nll_before_update": 0.762177050113678,
+          "gradient_norm": 0.03369171544909477,
+          "kl": 0.06807782174678084,
+          "invalid_mass": 0.06573998733337683,
+          "probabilities": {
+            "AA": 0.461320951245418,
+            "AB": 0.03616293589717754,
+            "BA": 0.029577051436199292,
+            "BB": 0.4729390614212052
+          }
+        },
+        {
+          "step": 125,
+          "nll_before_update": 0.6934979557991028,
+          "gradient_norm": 0.015049826353788376,
+          "kl": 0.0005885109765982333,
+          "invalid_mass": 0.00029923761021230836,
+          "probabilities": {
+            "AA": 0.4878301497363203,
+            "AB": 0.00017514564630721427,
+            "BA": 0.00012409196390509406,
+            "BB": 0.5118706126534674
+          }
+        },
+        {
+          "step": 150,
+          "nll_before_update": 0.6934159398078918,
+          "gradient_norm": 0.010629486292600632,
+          "kl": 0.00023947669940482808,
+          "invalid_mass": 0.00023906653347334028,
+          "probabilities": {
+            "AA": 0.49944377324788414,
+            "AB": 0.00014174855076231482,
+            "BA": 9.731798271102545e-05,
+            "BB": 0.5003171602186425
+          }
+        }
+      ],
+      "probabilities": {
+        "AA": 0.49944377324788414,
+        "AB": 0.00014174855076231482,
+        "BA": 9.731798271102545e-05,
+        "BB": 0.5003171602186425
+      },
+      "normalization_error": 1.2693635653704405e-07,
+      "kl_target_to_model": 0.00023947669940482808,
+      "total_variation": 0.0005562267521158394,
+      "invalid_mass": 0.00023906653347334028,
+      "marginals": [
+        [
+          0.49958552179864646,
+          0.5004144782013535
+        ],
+        [
+          0.49954109123059515,
+          0.5004589087694048
+        ]
+      ],
+      "max_marginal_error": 0.00045890876940485326,
+      "independent_marginal_probabilities": {
+        "AA": 0.24956349672230213,
+        "AB": 0.2500220250763443,
+        "BA": 0.24997759450829302,
+        "BB": 0.2504368836930605
+      },
+      "independent_marginal_invalid_mass": 0.49999961958463734,
+      "mutual_information": 0.6909183916202404,
+      "max_dense_low_rank_probability_error": 0.0,
+      "max_enumerated_inference_marginal_error": 1.067108750252288e-07,
+      "joint_sample_frequencies": {
+        "AA": 0.5055,
+        "AB": 0.00015,
+        "BA": 0.0001,
+        "BB": 0.49425
+      },
+      "joint_sample_invalid_rate": 0.00025,
+      "marginal_sample_frequencies": {
+        "AA": 0.2543,
+        "AB": 0.244,
+        "BA": 0.24665,
+        "BB": 0.25505
+      },
+      "marginal_sample_invalid_rate": 0.49065000000000003,
+      "samples_per_sampler": 20000
+    },
+    {
+      "task": "equal",
+      "variant": "directional_contextual_rank2_warmup",
+      "seed": 3,
+      "variant_config": {
+        "name": "directional_contextual_rank2_warmup",
+        "kind": "directional",
+        "factor_mode": "dynamic",
+        "init_std": 0.25,
+        "warmup_steps": 100,
+        "rank": 2
+      },
+      "max_steps": 600,
+      "steps_run": 150,
+      "stop_reason": "distribution_target_reached",
+      "learning_rate": 0.03,
+      "seconds": 0.8927197500015609,
+      "parameter_count": 549,
+      "pair_factor_rank": 2,
+      "gradient_active_parameter_count": 274,
+      "active_parameter_names": [
+        "head.factor_hidden_projection.bias",
+        "head.factor_hidden_projection.weight",
+        "head.factor_time_projection.weight",
+        "head.hidden_norm.bias",
+        "head.hidden_norm.weight",
+        "head.right_factor_hidden_projection.bias",
+        "head.right_factor_hidden_projection.weight",
+        "head.right_factor_time_projection.weight",
+        "head.right_token_factor_embedding.weight",
+        "head.time_embedding.mlp.0.bias",
+        "head.time_embedding.mlp.0.weight",
+        "head.time_embedding.mlp.2.bias",
+        "head.time_embedding.mlp.2.weight",
+        "head.token_factor_embedding.weight"
+      ],
+      "history": [
+        {
+          "step": 1,
+          "nll_before_update": 1.3895652294158936,
+          "gradient_norm": 0.02631739340722561,
+          "kl": 0.6948134589215523,
+          "invalid_mass": 0.49984694273420105,
+          "probabilities": {
+            "AA": 0.23438550275672207,
+            "AB": 0.24758052471425201,
+            "BA": 0.25226641801994903,
+            "BB": 0.2657675545090769
+          }
+        },
+        {
+          "step": 25,
+          "nll_before_update": 1.2730270624160767,
+          "gradient_norm": 0.12666724622249603,
+          "kl": 0.5671622423472498,
+          "invalid_mass": 0.43269865859595924,
+          "probabilities": {
+            "AA": 0.2905696971799388,
+            "AB": 0.225152674692164,
+            "BA": 0.20754598390379525,
+            "BB": 0.27673164422410196
+          }
+        },
+        {
+          "step": 50,
+          "nll_before_update": 0.9476706385612488,
+          "gradient_norm": 0.10370687395334244,
+          "kl": 0.2456329659432343,
+          "invalid_mass": 0.2176660960217147,
+          "probabilities": {
+            "AA": 0.3981489955827294,
+            "AB": 0.11388811808491105,
+            "BA": 0.10377797793680364,
+            "BB": 0.38418490839555586
+          }
+        },
+        {
+          "step": 75,
+          "nll_before_update": 0.8078646063804626,
+          "gradient_norm": 0.053565479815006256,
+          "kl": 0.11204122795395205,
+          "invalid_mass": 0.10595761730474551,
+          "probabilities": {
+            "AA": 0.4509757211540906,
+            "AB": 0.05576353955004595,
+            "BA": 0.05019407775469956,
+            "BB": 0.44306666154116386
+          }
+        },
+        {
+          "step": 100,
+          "nll_before_update": 0.7608128786087036,
+          "gradient_norm": 0.03296414390206337,
+          "kl": 0.06668570430427068,
+          "invalid_mass": 0.06449689848582134,
+          "probabilities": {
+            "AA": 0.47030379145422785,
+            "AB": 0.03402830885663381,
+            "BA": 0.03046858962918753,
+            "BB": 0.46519931005995085
+          }
+        },
+        {
+          "step": 125,
+          "nll_before_update": 0.6938395500183105,
+          "gradient_norm": 0.026659628376364708,
+          "kl": 0.00046980006876323754,
+          "invalid_mass": 0.00044287766975479865,
+          "probabilities": {
+            "AA": 0.4961179719823649,
+            "AB": 0.0002452223960362154,
+            "BA": 0.00019765527371858323,
+            "BB": 0.5034391503478803
+          }
+        },
+        {
+          "step": 150,
+          "nll_before_update": 0.6934798359870911,
+          "gradient_norm": 0.012721017934381962,
+          "kl": 0.00029024196683957726,
+          "invalid_mass": 0.0002845320617953287,
+          "probabilities": {
+            "AA": 0.49817455837075436,
+            "AB": 0.00015861403115043917,
+            "BA": 0.00012591803064488955,
+            "BB": 0.5015409095674503
+          }
+        }
+      ],
+      "probabilities": {
+        "AA": 0.49817455837075436,
+        "AB": 0.00015861403115043917,
+        "BA": 0.00012591803064488955,
+        "BB": 0.5015409095674503
+      },
+      "normalization_error": 2.051820047199726e-08,
+      "kl_target_to_model": 0.00029024196683957726,
+      "total_variation": 0.0018254416292456555,
+      "invalid_mass": 0.0002845320617953287,
+      "marginals": [
+        [
+          0.4983331724019048,
+          0.5016668275980952
+        ],
+        [
+          0.49830047640139924,
+          0.5016995235986008
+        ]
+      ],
+      "max_marginal_error": 0.0016995235986008161,
+      "independent_marginal_probabilities": {
+        "AA": 0.24831965721448976,
+        "AB": 0.25001351518741505,
+        "BA": 0.24998081918690948,
+        "BB": 0.25168600841118577
+      },
+      "independent_marginal_invalid_mass": 0.4999943343743245,
+      "mutual_information": 0.6905357972262816,
+      "max_dense_low_rank_probability_error": 0.0,
+      "max_enumerated_inference_marginal_error": 7.596676482313214e-08,
+      "joint_sample_frequencies": {
+        "AA": 0.4983,
+        "AB": 0.00015,
+        "BA": 5e-05,
+        "BB": 0.5015
+      },
+      "joint_sample_invalid_rate": 0.00019999999999999998,
+      "marginal_sample_frequencies": {
+        "AA": 0.2493,
+        "AB": 0.25195,
+        "BA": 0.2502,
+        "BB": 0.24855
+      },
+      "marginal_sample_invalid_rate": 0.50215,
+      "samples_per_sampler": 20000
+    }
+  ]
+}

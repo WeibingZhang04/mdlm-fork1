@@ -1,0 +1,135 @@
+{
+  "design": "single frozen-backbone adapter with paired validation-corruption replications",
+  "scientific_scope": "conditional denoising NLL per masked token only; not a diffusion ELBO, data likelihood, perplexity, generation-quality result, or independent-training-seed study",
+  "training": {
+    "experiment_git_sha": "6ca04eb95d02dc229f3fceec8625fe6cf67a023f",
+    "seed": 1,
+    "dataset": {
+      "repository": "openwebtext",
+      "revision": "79d93d786212f7344586290adb811d4ae6a1762c",
+      "config": "plain_text",
+      "split": "train",
+      "data_glob": "plain_text/train-*",
+      "total_examples": 8013769,
+      "descriptor_sha256": "f474535918192336b269db8941c299c608c53a32b74316a55a0c2502acf34daa",
+      "streaming": true,
+      "shuffle": false,
+      "wrap": true
+    },
+    "tokenizer": {
+      "repository": "gpt2",
+      "revision": "607a30d783dfa663caf39e06633721c8d4cfcd7e",
+      "config_sha256": "0daed7749b4f02b8f76240d5444551d7b08712dab4d0adb8239c56ba823bb7b4",
+      "tokenizer_config_sha256": "5e04eb606e3a1583530a42e36c2a6b6615c86f34fe77e44d9ddeb43ff940931f",
+      "vocab_sha256": "196139668be63f3b5d6574427317ae82f612a97c5d1cdaf36ed2256dbf636783",
+      "tokenizer_json_sha256": "8414cab924d8b9b33013f0d221c5862f365ee9be39c5c2bfae8a5a9e970478a6",
+      "merges_sha256": "1ce1664773c50f3e0cc8842619a93edc4624525b728b188a9e0be33b7726adc5"
+    },
+    "sequence_length": 1024,
+    "batch_size": 4,
+    "updates": 1000,
+    "processed_sequence_slots": 4000,
+    "processed_token_slots": 4096000,
+    "head_learning_rate": 0.0003,
+    "warmup_updates": 50,
+    "topology_supervision_weight": 0.1,
+    "backbone_mode": "frozen",
+    "ema_used": false,
+    "checkpoint_selection": "final step-1000 checkpoint, not validation-selected best",
+    "final_validation_conditional_nll_per_masked_token": 5.91806,
+    "checkpoint": {
+      "label": "owt-frozen-1000-last",
+      "global_step": 1000,
+      "size_bytes": 691932032,
+      "sha256": "ff01fc9b069034b0fac90ca0ba00a520dce853c44756b20515d4b321d0ce7655"
+    },
+    "portable_adapter": {
+      "format": "safetensors",
+      "tensor_count": 21,
+      "parameter_count": 984417,
+      "size_bytes": 3939804,
+      "sha256": "3e1cdc200dba3a46290578e7b62404c0a7d39a63f580693e26ef35855cf64573",
+      "strict_rehydration_verified": true,
+      "seed_201_metrics_byte_identical_to_full_checkpoint": true,
+      "seed_201_pairing_digest_byte_identical_to_full_checkpoint": true
+    },
+    "frozen_backbone_verification": {
+      "checkpoint_tensors_compared": 131,
+      "released_tensors_compared": 131,
+      "missing_tensors": 0,
+      "extra_tensors": 0,
+      "max_absolute_difference": 0.0,
+      "all_tensors_bitwise_equal": true
+    }
+  },
+  "released_backbone": {
+    "repository": "kuleshov-group/mdlm-owt",
+    "revision": "d0958fa851335ece6c15260ce0025f030673c0fb",
+    "source_file": "model.safetensors",
+    "source_size_bytes": 678522728,
+    "source_sha256": "47149e73f7552f39ea9776dbe74d925d25237bcf2ed2e2ec03cdff9d51c82aa4",
+    "wrapper_size_bytes": 678551282,
+    "wrapper_sha256": "1b7c724d0228b1a2c825185c96642ffd706bd828b237f84512f0e1c7b5765573",
+    "weight_kind": "raw backbone weights",
+    "ema_available": false,
+    "ema_used": false
+  },
+  "evaluation": {
+    "experiment_git_sha": "9999a7a8a670fbe323335bd73076db6cefb601cf",
+    "dataset": {
+      "repository": "wikitext",
+      "revision": "b08601e04326c79dfdd32d625aee71d232d685c3",
+      "config": "wikitext-103-raw-v1",
+      "split": "validation",
+      "processed_fingerprint": "866bd647e4df8268",
+      "processed_arrow_size_bytes": 1886864,
+      "processed_arrow_sha256": "1b0b203628c2f78f545d71e8279aec02a66b7d5c19b58b810f37a9243af31d7c",
+      "dataset_contents_redistributed": false
+    },
+    "validation_corruption_seeds": [201, 202, 203, 204, 205],
+    "configured_batches_per_seed_arm": 32,
+    "batch_size": 4,
+    "sequence_length": 1024,
+    "precision": "bf16",
+    "top_k": 64,
+    "rank": 16,
+    "component_size_cap": 32,
+    "arms": {
+      "structured": "dynamic topology and dynamic factors",
+      "independent": "same instantiated head with pair factors neutralized",
+      "fixed": "natural-order fixed topology and dynamic factors"
+    },
+    "topology_teacher_on_paired_validation": false,
+    "pairing_commitment": {
+      "algorithm": "SHA-256",
+      "required_exact_match": true,
+      "ordered_fields": [
+        "clean_input_ids",
+        "attention_mask",
+        "sampled_times",
+        "corrupted_input_ids",
+        "active_mask"
+      ]
+    },
+    "paired_bootstrap": {
+      "unit": "validation-corruption seed",
+      "resamples": 20000,
+      "rng_seed": 1701,
+      "confidence_level": 0.95,
+      "method": "percentile"
+    }
+  },
+  "environment": {
+    "gpu": "NVIDIA L4",
+    "gpu_memory_mib": 23034,
+    "compute_capability": "8.9",
+    "driver": "580.173.02",
+    "python": "3.10.12",
+    "torch": "2.5.1+cu121",
+    "cuda": "12.1",
+    "datasets": "2.18.0",
+    "lightning": "2.2.1",
+    "numpy": "1.26.4",
+    "transformers": "4.38.2"
+  }
+}

@@ -1,0 +1,4 @@
+_target_: lr_schedules.linear_decay_continuation
+decay_start_step: 6000
+decay_end_step: 10000
+final_lr_ratio: 0.1

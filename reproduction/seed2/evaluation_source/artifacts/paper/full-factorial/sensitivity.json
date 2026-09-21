@@ -1,0 +1,76 @@
+{
+  "schema_version": 1,
+  "artifact": "factorial_partition_source_sensitivity",
+  "primary_selection": "base_then_a100_then_l4_first_success",
+  "alternate_selection": "base_then_reverse_l4_then_a100_first_success",
+  "primary_analysis_sha256": "4023c56860fd0d33df43c4aedb7787a715d4ba3c30f650e39890a1d85d735d82",
+  "alternate_analysis_sha256": "9823018b5f6645f44431b88cdb12bbe7bebc70b44ea9621561dc774a5b5fdebf",
+  "max_absolute_pooled_contrast_estimate_delta": 0.00009694306261427438,
+  "max_absolute_pooled_contrast_estimate_delta_name": "topology_by_factor_interaction",
+  "max_absolute_primary_condition_estimate_delta": 0.0000867092411579954,
+  "max_absolute_primary_condition_estimate_delta_name": "wikitext103-pinned|mask=0.750000|adapter_k=128",
+  "all_pooled_contrast_signs_preserved": true,
+  "all_pooled_interval_zero_exclusion_decisions_preserved": true,
+  "all_primary_condition_signs_preserved": true,
+  "all_primary_condition_interval_zero_exclusion_decisions_preserved": true,
+  "all_technical_gates_passed_both_selections": true,
+  "contrasts": {
+    "contextual_factor_gain_dynamic_topology": {
+      "primary": 0.008506667431629722,
+      "alternate": 0.008467388182070204,
+      "delta": -0.000039279249559518586
+    },
+    "contextual_factor_gain_fixed_topology": {
+      "primary": 0.01152785853907099,
+      "alternate": 0.011585522352125744,
+      "delta": 0.00005766381305475493
+    },
+    "contextual_joint_vs_static_joint": {
+      "primary": 0.008567808046677807,
+      "alternate": 0.008552370944486005,
+      "delta": -0.000015437102191801985
+    },
+    "contextual_topology_gain_dynamic_factors": {
+      "primary": -0.002960050492393183,
+      "alternate": -0.0030331514076397405,
+      "delta": -0.00007310091524655735
+    },
+    "contextual_topology_gain_fixed_factors": {
+      "primary": 0.00006114061504808396,
+      "alternate": 0.00008498276241580095,
+      "delta": 0.000023842147367716994
+    },
+    "factorized_backbone_vs_contextual_joint": {
+      "primary": 0.011987747425314043,
+      "alternate": 0.011985703725249399,
+      "delta": -0.0000020437000646435916
+    },
+    "matched_permuted_topology_vs_contextual_joint": {
+      "primary": 0.010089051065280113,
+      "alternate": 0.010085868559506175,
+      "delta": -0.0000031825057739374996
+    },
+    "parameter_matched_no_edge_vs_contextual_joint": {
+      "primary": 0.011987747425314043,
+      "alternate": 0.011985703725249399,
+      "delta": -0.0000020437000646435916
+    },
+    "singleton_product_vs_contextual_joint": {
+      "primary": -0.0002975478853352858,
+      "alternate": -0.00029745495415057496,
+      "delta": 9.293118471086735e-08
+    },
+    "topology_by_factor_interaction": {
+      "primary": -0.0030211911074412667,
+      "alternate": -0.003118134170055541,
+      "delta": -0.00009694306261427438
+    }
+  },
+  "file_sha256": {
+    "analysis.json": "ca027caea9ab99a31ae09ce51dda08c1bc0710cda9e386642193dddb468dff7d",
+    "analysis-alt.json": "b30d886955f9d9e7d8cd7ae342d56886417d015735bde0e6d2436f5232a619f3",
+    "selection.json": "4b0ccdb84b1bc7d9e4aff542c2f82bb291724eb538820ac40ba921133f790658",
+    "selection-alt.json": "ecfd1925fe773b077b35556d00682fc98876a79f0370c78b64e5e44875e7d12f",
+    "consolidation.json": "6fe0051c23999727a3c8679265dfb06b14fda187660126532d1cef48fdff8c9b"
+  }
+}

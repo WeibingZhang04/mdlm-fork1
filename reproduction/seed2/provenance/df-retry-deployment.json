@@ -1,0 +1,29 @@
+{
+  "root": "/u401/n23zhang/mdlm_data/tree_mdlm_cache/runs/ccf_replication15k_20260921.wmjngfco/legacy_bf16_seed2/study_qv4ipesi/retries/df_s0mbz8j7",
+  "study_root": "/u401/n23zhang/mdlm_data/tree_mdlm_cache/runs/ccf_replication15k_20260921.wmjngfco/legacy_bf16_seed2/study_qv4ipesi",
+  "job": "1557538",
+  "command": [
+    "sbatch",
+    "--parsable",
+    "--partition=ALL",
+    "--job-name=ccf-oldbf16-df-retry",
+    "--time=24:00:00",
+    "--mem=40G",
+    "--cpus-per-task=4",
+    "--gres=gpu:1",
+    "--no-requeue",
+    "--exclude=watgpu1008,watgpu1109,watgpu608,watgpu908",
+    "--mail-user=n23zhang@uwaterloo.ca",
+    "--mail-type=ALL,TIME_LIMIT,TIME_LIMIT_90,TIME_LIMIT_80,TIME_LIMIT_50",
+    "--output=/u401/n23zhang/mdlm_data/tree_mdlm_cache/runs/ccf_replication15k_20260921.wmjngfco/legacy_bf16_seed2/study_qv4ipesi/retries/df_s0mbz8j7/job-%j.out",
+    "--error=/u401/n23zhang/mdlm_data/tree_mdlm_cache/runs/ccf_replication15k_20260921.wmjngfco/legacy_bf16_seed2/study_qv4ipesi/retries/df_s0mbz8j7/job-%j.err",
+    "/u401/n23zhang/mdlm_data/tree_mdlm_cache/runs/ccf_replication15k_20260921.wmjngfco/legacy_bf16_seed2/study_qv4ipesi/retries/df_s0mbz8j7/run.sh"
+  ],
+  "prior_failed_job": "1557403_2",
+  "evaluation_job": "1557404_2",
+  "source_step": 1000,
+  "source_checkpoint": "/u401/n23zhang/mdlm_data/tree_mdlm_cache/runs/ccf_replication15k_20260921.wmjngfco/legacy_bf16_seed2/study_qv4ipesi/training/dynamic_fixed/to1000/checkpoints/0-1000.ckpt",
+  "created_utc": "2026-09-21T16:59:24.193903+00:00",
+  "helper_sha256": "1f2299360293fc125bd9274b9395eff0e45ef07cc5265e61ff7cd1bfb097d53d",
+  "dependency_repaired": true
+}

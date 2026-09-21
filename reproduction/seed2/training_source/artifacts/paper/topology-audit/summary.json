@@ -1,0 +1,45 @@
+{
+  "artifact": "contextual_forest_topology_audit_paper_summary",
+  "schema_version": 1,
+  "analysis": {
+    "analysis_sha256": "11215d4863770b90c11143e3815720c88deecbec411bfa725c1ade35f863010c",
+    "downloaded_file_sha256": "83539c5e0a70259b10a1d0f9edaec384d129515ac48ec9f29429ed52a86452bf",
+    "num_records": 14400,
+    "num_unperturbed_forests": 2880,
+    "num_source_units": 192,
+    "source_repository_sha": "7f161d3da3f059c5b310d165fa7fa5668d217616"
+  },
+  "learned_topology": {
+    "pooled_nonlocal_edge_fraction": 0.2807115008167306,
+    "edge_distance_mean": 37.228885951693684,
+    "edge_distance_median": 1.0,
+    "edge_distance_q90": 31.0,
+    "pooled_natural_chain_precision": 0.8594166298231278,
+    "pooled_natural_chain_recall": 0.7557417392844276,
+    "across_training_seeds_edge_jaccard_mean": 0.5357246595403935,
+    "across_training_seeds_edge_jaccard_median": 0.6217789448480782
+  },
+  "paired_interventions": {
+    "fixed_time": {
+      "mean_edge_jaccard": 0.8203434087979538,
+      "pooled_learned_edge_retention": 0.9509707018636272,
+      "pooled_edge_set_changed_fraction": 0.0490292981363728
+    },
+    "zero_time": {
+      "mean_edge_jaccard": 0.8481902259928442,
+      "pooled_learned_edge_retention": 0.9371877461862115,
+      "pooled_edge_set_changed_fraction": 0.06281225381378852
+    },
+    "timestep_shuffled": {
+      "mean_edge_jaccard": 0.7638427536488873,
+      "pooled_learned_edge_retention": 0.9256863893409134,
+      "pooled_edge_set_changed_fraction": 0.07431361065908659
+    },
+    "matched_permuted": {
+      "mean_edge_jaccard": 0.0027877810751602288,
+      "pooled_learned_edge_retention": 0.003014611645953268,
+      "pooled_edge_set_changed_fraction": 0.9969853883540467
+    }
+  },
+  "scope": "Descriptive topology evidence only; no conditional-NLL or generation-quality effect is identified."
+}

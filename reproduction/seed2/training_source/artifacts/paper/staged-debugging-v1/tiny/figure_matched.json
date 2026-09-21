@@ -1,0 +1,74 @@
+{
+  "source": "artifacts/paper/staged-debugging-v1/tiny/results.json",
+  "seed": 1,
+  "task": "opposite",
+  "directional_source": "artifacts/paper/staged-debugging-v1/tiny/rank2_results.json",
+  "shared_variant": "shared_contextual_warmup",
+  "directional_variant": "directional_contextual_rank2_warmup",
+  "shared_config": {
+    "name": "shared_contextual_warmup",
+    "kind": "shared",
+    "factor_mode": "dynamic",
+    "init_std": 0.25,
+    "warmup_steps": 100
+  },
+  "directional_config": {
+    "name": "directional_contextual_rank2_warmup",
+    "kind": "directional",
+    "factor_mode": "dynamic",
+    "init_std": 0.25,
+    "warmup_steps": 100,
+    "rank": 2
+  },
+  "shared_gradient_active_parameter_count": 274,
+  "directional_gradient_active_parameter_count": 274,
+  "panel_order": [
+    "Target",
+    "Shared factors",
+    "Separate factors",
+    "Independent draws\nfrom the same marginals"
+  ],
+  "panels": [
+    [
+      [
+        0.0,
+        0.5
+      ],
+      [
+        0.5,
+        0.0
+      ]
+    ],
+    [
+      [
+        0.24999982863668202,
+        0.2500000372528952
+      ],
+      [
+        0.2499999478459467,
+        0.25000018626447607
+      ]
+    ],
+    [
+      [
+        0.00012513273764698618,
+        0.5033164172814923
+      ],
+      [
+        0.4964215305844328,
+        0.0001369193964279201
+      ]
+    ],
+    [
+      [
+        0.24998222183969956,
+        0.2534593281794398
+      ],
+      [
+        0.24656444148238021,
+        0.24999400849848047
+      ]
+    ]
+  ],
+  "caption_details": "AA and BB are invalid. Both learned models use Gaussian factor initialization std=0.25, uniform frozen unaries, full vocabulary, one fixed edge, and exact likelihood training. The final panel is the exact distribution of independent draws from the directional model marginals. The seed was fixed to 1 before plotting; no examples selected."
+}

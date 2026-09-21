@@ -1,0 +1,200 @@
+{
+  "artifact_role": "contextual_forest_structured_adapter",
+  "schema_version": 4,
+  "format": "safetensors",
+  "adapter_file": "adapter.safetensors",
+  "adapter_sha256": "35a4882518637d540b64e4f690b9f387c377e96662b73fff54a9adbbac691bf4",
+  "adapter_size_bytes": 3940324,
+  "adapter_tensor_count": 21,
+  "adapter_parameter_count": 984417,
+  "adapter_tensor_bytes": 3937668,
+  "adapter_namespace_in_source": "structured_head.*",
+  "adapter_namespace_in_file": "prefix-stripped",
+  "structured_decoder_identity": {
+    "control_identity": "dynamic_fixed",
+    "topology_mode": "dynamic",
+    "factor_mode": "fixed",
+    "candidate_top_k": 128,
+    "independent_mode": false,
+    "topology_weight": 0.1,
+    "head_semantics": {
+      "rank": 16,
+      "time_embed_dim": 64,
+      "topology_dim": 128,
+      "local_window": 2,
+      "num_anchor_slots": 16,
+      "contextual_neighbors": 4,
+      "component_size_cap": 32,
+      "min_edge_score": null,
+      "fixed_edges": null,
+      "fixed_edge_path": null
+    },
+    "training_semantics": {
+      "objective_name": "conditional_denoising_nll_not_diffusion_elbo",
+      "factorized_aux_weight": 0.0,
+      "topology_strategy": "gold_reveal_influence",
+      "topology_temperature": 0.25,
+      "topology_minimum_choices": 2,
+      "topology_edge_weight": 1.0,
+      "topology_anchor_weight": 0.25,
+      "topology_slot_weight": 0.25,
+      "topology_on_validation": false
+    }
+  },
+  "structured_decoder_identity_sha256": "deb73fc4a6deb95d02a4de6708f11c27f29d26010b2ad887c9091918bfef2ab1",
+  "tensor_schema": {
+    "edge_proposer.anchor_projection.bias": {
+      "shape": [
+        16
+      ],
+      "dtype": "torch.float32"
+    },
+    "edge_proposer.anchor_projection.weight": {
+      "shape": [
+        16,
+        128
+      ],
+      "dtype": "torch.float32"
+    },
+    "edge_proposer.edge_scorer.0.bias": {
+      "shape": [
+        128
+      ],
+      "dtype": "torch.float32"
+    },
+    "edge_proposer.edge_scorer.0.weight": {
+      "shape": [
+        128,
+        256
+      ],
+      "dtype": "torch.float32"
+    },
+    "edge_proposer.edge_scorer.2.bias": {
+      "shape": [
+        1
+      ],
+      "dtype": "torch.float32"
+    },
+    "edge_proposer.edge_scorer.2.weight": {
+      "shape": [
+        1,
+        128
+      ],
+      "dtype": "torch.float32"
+    },
+    "edge_proposer.slot_projection.bias": {
+      "shape": [
+        16
+      ],
+      "dtype": "torch.float32"
+    },
+    "edge_proposer.slot_projection.weight": {
+      "shape": [
+        16,
+        128
+      ],
+      "dtype": "torch.float32"
+    },
+    "factor_hidden_projection.bias": {
+      "shape": [
+        32
+      ],
+      "dtype": "torch.float32"
+    },
+    "factor_hidden_projection.weight": {
+      "shape": [
+        32,
+        768
+      ],
+      "dtype": "torch.float32"
+    },
+    "factor_time_projection.weight": {
+      "shape": [
+        32,
+        64
+      ],
+      "dtype": "torch.float32"
+    },
+    "hidden_norm.bias": {
+      "shape": [
+        768
+      ],
+      "dtype": "torch.float32"
+    },
+    "hidden_norm.weight": {
+      "shape": [
+        768
+      ],
+      "dtype": "torch.float32"
+    },
+    "time_embedding.mlp.0.bias": {
+      "shape": [
+        64
+      ],
+      "dtype": "torch.float32"
+    },
+    "time_embedding.mlp.0.weight": {
+      "shape": [
+        64,
+        64
+      ],
+      "dtype": "torch.float32"
+    },
+    "time_embedding.mlp.2.bias": {
+      "shape": [
+        64
+      ],
+      "dtype": "torch.float32"
+    },
+    "time_embedding.mlp.2.weight": {
+      "shape": [
+        64,
+        64
+      ],
+      "dtype": "torch.float32"
+    },
+    "token_factor_embedding.weight": {
+      "shape": [
+        50258,
+        16
+      ],
+      "dtype": "torch.float32"
+    },
+    "topology_hidden_projection.bias": {
+      "shape": [
+        128
+      ],
+      "dtype": "torch.float32"
+    },
+    "topology_hidden_projection.weight": {
+      "shape": [
+        128,
+        768
+      ],
+      "dtype": "torch.float32"
+    },
+    "topology_time_projection.weight": {
+      "shape": [
+        128,
+        64
+      ],
+      "dtype": "torch.float32"
+    }
+  },
+  "source_checkpoint_sha256": "78c69d014f67014134ad89116608b7272a84dabc06f6c878ef7c8093150a82ce",
+  "source_checkpoint_size_bytes": 691723538,
+  "source_checkpoint_global_step": 3,
+  "source_state_dict_tensor_count": 152,
+  "omitted_frozen_backbone_tensor_count": 131,
+  "ema_available": false,
+  "ema_used": false,
+  "required_loader": "manifest_validated_strict_structured_head_loader_v2",
+  "required_loader_strict": true,
+  "released_backbone": {
+    "repository": "kuleshov-group/mdlm-owt",
+    "revision": "d0958fa851335ece6c15260ce0025f030673c0fb",
+    "source_sha256": "47149e73f7552f39ea9776dbe74d925d25237bcf2ed2e2ec03cdff9d51c82aa4",
+    "source_size_bytes": 678522728,
+    "tensor_count": 131
+  }
+}

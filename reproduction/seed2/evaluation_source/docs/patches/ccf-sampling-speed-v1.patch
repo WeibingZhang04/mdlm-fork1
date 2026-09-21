@@ -1,0 +1,162 @@
+diff --git a/evaluation/generation_harness.py b/evaluation/generation_harness.py
+index 2582da9..675a36c 100644
+--- a/evaluation/generation_harness.py
++++ b/evaluation/generation_harness.py
+@@ -398,6 +398,9 @@ def _sample_from_initial_state(
+   x = initial_tokens.clone().to(model.device)
+   observed = initial_tokens.ne(model.mask_index).to(model.device)
+   observed_values = initial_tokens.to(model.device)
++  # Unconditional runs have no evidence to check. Determine this once, not
++  # with GPU boolean indexing/equality after each of the ~1000 updates.
++  has_observed = bool(observed.any().item())
+   timesteps = torch.linspace(1, eps, num_steps + 1, device=model.device)
+   dt = (1 - eps) / num_steps
+   measured_nfe = 0
+@@ -447,7 +450,7 @@ def _sample_from_initial_state(
+           'trajectory capture requires at most one model call per sampler '
+           'state transition')
+       # Fail closed if a future core sampler starts modifying evidence.
+-      if not torch.equal(x[observed], observed_values[observed]):
++      if has_observed and not torch.equal(x[observed], observed_values[observed]):
+         raise AssertionError('sampling kernel modified observed prompt tokens')
+       if trajectory_recorder is not None:
+         is_final_state = not final_call and index == num_steps - 1
+@@ -479,7 +482,7 @@ def _sample_from_initial_state(
+           timestep=t,
+           stage='final',
+           force=True)
+-    if not torch.equal(x[observed], observed_values[observed]):
++    if has_observed and not torch.equal(x[observed], observed_values[observed]):
+       raise AssertionError('final denoiser modified observed prompt tokens')
+   finally:
+     if handle is not None:
+diff --git a/structured_objective.py b/structured_objective.py
+index b467a40..40a3a76 100644
+--- a/structured_objective.py
++++ b/structured_objective.py
+@@ -51,19 +51,17 @@ def compressed_states_for_tokens(
+   return states
+ 
+ 
+-def infer_structured_distribution(
+-    output: StructuredDecoderOutput,
+-    active_mask: torch.Tensor,
+-    backend: str = 'auto') -> StructuredInference:
+-  """Run exact sum-product, cancelling nodes outside the masked set."""
+-  active_mask = _validate_active_mask(output, active_mask)
++def _structured_clamped_states(active_mask: torch.Tensor) -> torch.Tensor:
+   # Forest edges already connect active nodes only.  Clamping every inactive
+   # isolated node to an arbitrary valid candidate makes its unary cancel
+   # exactly between the assignment score and partition function.
+-  clamped_states = torch.where(
++  return torch.where(
+     active_mask,
+     torch.full_like(active_mask, -1, dtype=torch.long),
+     torch.zeros_like(active_mask, dtype=torch.long))
++
++
++def _structured_backend(output: StructuredDecoderOutput, backend: str) -> str:
+   if backend == 'auto':
+     # Tiny synthetic lattices are faster with dense kernels; realistic top-K
+     # heads use the endpoint path to avoid K-squared time and memory.
+@@ -71,6 +69,17 @@ def infer_structured_distribution(
+       'dense' if output.candidate_ids.shape[-1] <= 16 else 'low_rank')
+   if backend not in {'dense', 'low_rank'}:
+     raise ValueError("backend must be 'auto', 'dense', or 'low_rank'")
++  return backend
++
++
++def infer_structured_distribution(
++    output: StructuredDecoderOutput,
++    active_mask: torch.Tensor,
++    backend: str = 'auto') -> StructuredInference:
++  """Run exact sum-product, cancelling nodes outside the masked set."""
++  active_mask = _validate_active_mask(output, active_mask)
++  clamped_states = _structured_clamped_states(active_mask)
++  backend = _structured_backend(output, backend)
+   log_pair_factors = None
+   if backend == 'dense':
+     log_pair_factors = structured_utils.positive_pair_factors_to_log(
+@@ -274,16 +283,28 @@ def sample_structured_tokens(
+     inference: Optional[StructuredInference] = None) -> torch.Tensor:
+   """Jointly sample full-vocabulary tokens; output shape is [B,S,L]."""
+   active_mask = _validate_active_mask(output, active_mask)
+-  inference = inference or infer_structured_distribution(output, active_mask)
+-  if inference.backend == 'dense':
++  if inference is None:
++    # Both joint samplers compute their own messages and marginals. The old
++    # prepass's marginal tensors were never consumed here. Prepare only the
++    # same backend/clamps/factors; preserve every subsequent random draw.
++    backend = _structured_backend(output, 'auto')
++    clamped_states = _structured_clamped_states(active_mask)
++    log_pair_factors = (
++      structured_utils.positive_pair_factors_to_log(
++        output.materialize_pair_factors()) if backend == 'dense' else None)
++  else:
++    backend = inference.backend
++    clamped_states = inference.clamped_states
++    log_pair_factors = inference.log_pair_factors
++  if backend == 'dense':
+     states = structured_utils.sample_forest(
+       output.unary_log_potentials,
+-      inference.log_pair_factors,
++      log_pair_factors,
+       output.edge_index,
+       num_samples=num_samples,
+       edge_mask=output.edge_mask,
+       state_mask=output.candidate_state_mask,
+-      clamped_states=inference.clamped_states,
++      clamped_states=clamped_states,
+       generator=generator)
+   else:
+     states = structured_utils.sample_forest_low_rank(
+@@ -294,7 +315,7 @@ def sample_structured_tokens(
+       num_samples=num_samples,
+       edge_mask=output.edge_mask,
+       state_mask=output.candidate_state_mask,
+-      clamped_states=inference.clamped_states,
++      clamped_states=clamped_states,
+       generator=generator)
+   batch_size, _, sequence_length = states.shape
+   explicit_states = states.clamp_max(output.candidate_ids.shape[-1] - 1)
+diff --git a/structured_utils.py b/structured_utils.py
+index 96a2351..d8d0593 100644
+--- a/structured_utils.py
++++ b/structured_utils.py
+@@ -108,6 +108,8 @@ class _ForestTopology:
+   order: Tuple[int, ...]
+   component: Tuple[int, ...]
+   active_edges: Tuple[int, ...]
++  # Already transferred by _build_topology; avoid per-edge GPU .item() calls.
++  edge_left: Tuple[int, ...]
+ 
+ 
+ @dataclass(frozen=True)
+@@ -272,7 +274,8 @@ def _build_topology(edge_index: torch.Tensor,
+       parent_edge=tuple(parent_edge),
+       order=tuple(order),
+       component=tuple(component),
+-      active_edges=tuple(active_edges)))
++      active_edges=tuple(active_edges),
++      edge_left=tuple(edge[0] for edge in host_edges[batch_index])))
+   return topologies
+ 
+ 
+@@ -1039,7 +1042,7 @@ def _single_low_rank_sum_product(
+       if neighbor != parent:
+         local = local + messages[(neighbor, node)]
+     edge_id = topology.parent_edge[node]
+-    left = int(edge_index[edge_id, 0].item())
++    left = topology.edge_left[edge_id]
+     if left == node:
+       source, target = (
+         left_log_factors[edge_id], right_log_factors[edge_id])
+@@ -1231,7 +1234,7 @@ def sample_forest_low_rank(
+       for neighbor, _, _ in topology.adjacency[node]:
+         if neighbor != parent:
+           local = local + messages[(neighbor, node)]
+-      left = int(edge_index[batch_index, edge_id, 0].item())
++      left = topology.edge_left[edge_id]
+       if left == parent:
+         source, target = (
+           left_log_factors[batch_index, edge_id],

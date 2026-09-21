@@ -1,0 +1,39 @@
+{
+  "artifact": "pinned_text_dataset_provenance",
+  "manifest_sha256": "7a49c993eb00bb4d817cfd9a005a453849bd5f9190cc4b46842a8ab118d21457",
+  "observed": {
+    "document_num_rows_after_boundary_recovery": 60,
+    "processed_fingerprint": "5d4caa0e2f5c833b",
+    "processed_num_sequences": 197,
+    "raw_fingerprint": "ea37ea707fafbf9f",
+    "source_num_rows": 3760,
+    "window_fingerprint": "f0b528d99d3fd416",
+    "window_num_rows": 3760
+  },
+  "schema_version": 1,
+  "specification": {
+    "block_size": 1024,
+    "dataset_config_name": "wikitext-103-raw-v1",
+    "dataset_name_or_path": "Salesforce/wikitext",
+    "datasets_version": "2.18.0",
+    "detokenizer": "wikitext_v1",
+    "disjoint_window_proof": null,
+    "document_boundary_mode": "wikitext_articles",
+    "document_remainder_policy": "drop_incomplete_tail_and_documents_shorter_than_payload",
+    "logical_dataset_name": "wikitext103-pinned",
+    "processed_cache_schema_version": 2,
+    "source_num_rows": 3760,
+    "source_revision": "b08601e04326c79dfdd32d625aee71d232d685c3",
+    "source_split": "validation",
+    "source_window": null,
+    "text_field": "text",
+    "tokenizer_class": "GPT2TokenizerFast",
+    "tokenizer_name_or_path": "openai-community/gpt2",
+    "tokenizer_revision": "607a30d783dfa663caf39e06633721c8d4cfcd7e",
+    "tokenizer_vocab_size": 50257,
+    "transformers_version": "4.38.2",
+    "trust_remote_code": false,
+    "wrap": true
+  },
+  "specification_sha256": "551d63e90d550859f50be2fae13b300c9374d8b6569712e787a9e6eed94627cb"
+}

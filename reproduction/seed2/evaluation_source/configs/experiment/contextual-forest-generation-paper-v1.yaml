@@ -1,0 +1,460 @@
+schema_version: 1
+protocol_id: contextual-forest-generation-paper-v1
+protocol_status: frozen_before_paper_scale_generation
+scientific_scope: >-
+  Paired document-local infilling generation quality and descriptive runtime
+  for the frozen contextual-forest adapter. This protocol does not estimate
+  a diffusion ELBO or data likelihood.
+
+parameters:
+  candidate_top_k:
+    allowed_values: [64, 128, 256]
+  dataset_configs:
+    - eval_wikitext103_pinned
+    - eval_scientific_papers_arxiv_pinned
+    - eval_scientific_papers_pubmed_pinned
+
+# These are the only resolved-Hydra-config fields omitted before the complete
+# normalized config is compared with resolved_config_projection. The four
+# adapter fields remain cryptographically bound to the generation manifest;
+# the three control fields remain exactly bound to one of the two named arms.
+normalization:
+  adapter_manifest_bound_paths:
+    - [eval, adapter_checkpoint]
+    - [eval, adapter_sha256]
+    - [eval, adapter_manifest]
+    - [eval, adapter_manifest_sha256]
+  arm_manifest_bound_paths:
+    - [model, structured_decoder, topology_mode]
+    - [model, structured_decoder, factor_mode]
+    - [model, structured_decoder, training, topology_weight]
+
+artifacts:
+  backbone_checkpoint:
+    path: /mnt/contextual-forest/checkpoints/mdlm-owt-backbone.pt
+    sha256: 1b7c724d0228b1a2c825185c96642ffd706bd828b237f84512f0e1c7b5765573
+
+arms:
+  dynamic_dynamic:
+    topology_mode: dynamic
+    factor_mode: dynamic
+    topology_weight: 0.1
+    sampling_modes: [factorized, structured_marginal, structured_joint]
+  static_static:
+    topology_mode: fixed
+    factor_mode: fixed
+    topology_weight: 0.0
+    sampling_modes: [structured_joint]
+
+generation:
+  sequence_length: 256
+  span_length: 32
+  selection_seed: 31001
+  nfe_budgets: [8, 16, 32, 64]
+  num_shards: 16
+  batch_size: 8
+  prompt_policy:
+    policy_id: document-local-contiguous-span-v1
+    record_selection: first_n_in_pinned_validation_order
+    boundary_policy: never_mask_first_or_last_token
+  repository:
+    require_clean: true
+    prompt_builder_same_git_sha: true
+  host:
+    device: cuda
+    precision_policy: checkpoint dtype; DIT-managed bf16 autocast on CUDA
+    parameter_dtypes: [torch.float32]
+    critical_packages:
+      numpy: 1.26.4
+      safetensors: 0.4.2
+      tokenizers: 0.15.2
+      transformers: 4.38.2
+  reference_lm:
+    model_name_or_path: gpt2-large
+    revision: 32b71b12589c2f8d625668d2335a01cac3249519
+    sequence_policy: retokenize_decoded_text_score_through_first_nonleading_eos_v1
+    runtime_configuration:
+      model_name_or_path: gpt2-large
+      model_revision: 32b71b12589c2f8d625668d2335a01cac3249519
+      model_class: transformers.models.gpt2.modeling_gpt2.GPT2LMHeadModel
+      model_config_class: transformers.models.gpt2.configuration_gpt2.GPT2Config
+      tokenizer_name_or_path: gpt2-large
+      tokenizer_revision: 32b71b12589c2f8d625668d2335a01cac3249519
+      tokenizer_class: transformers.models.gpt2.tokenization_gpt2_fast.GPT2TokenizerFast
+      tokenizer_vocab_size: 50257
+      tokenizer_bos_token_id: 50256
+      tokenizer_eos_token_id: 50256
+      tokenizer_pad_token_id: 50256
+      tokenizer_padding_side: right
+      tokenizer_truncation_side: right
+      tokenization_policy: fast_tokenizer_right_padding_right_truncation_add_special_tokens_v1
+      sequence_policy: retokenize_decoded_text_score_through_first_nonleading_eos_v1
+      add_special_tokens: true
+      batch_size: 8
+      max_length: 256
+      requested_dtype: float32
+      parameter_dtypes: [torch.float32]
+      precision_policy: explicit_checkpoint_dtype_no_autocast_float32_cross_entropy_v1
+      device: cuda
+
+datasets:
+  eval_wikitext103_pinned:
+    logical_validation_dataset: wikitext103-pinned
+    data_config_path: configs/data/eval_wikitext103_pinned.yaml
+    data_config_sha256: 07b2be9c3211bb9e9c7e99664b6990e86f9fd8560050d8362bbeac0082b2ce54
+    dataset_revision: b08601e04326c79dfdd32d625aee71d232d685c3
+    tokenizer_name_or_path: openai-community/gpt2
+    tokenizer_revision: 607a30d783dfa663caf39e06633721c8d4cfcd7e
+    document_boundary_mode: wikitext_articles
+    num_prompts: 197
+    global_num_samples: 788
+    base_seed: 91001
+    runtime_specification_sha256: d3e2f1872d78c4745de803216acd88d93f0208817f56b78194ceef8d031d496b
+    runtime_specification:
+      logical_dataset_name: wikitext103-pinned
+      dataset_name_or_path: Salesforce/wikitext
+      dataset_config_name: wikitext-103-raw-v1
+      source_split: validation
+      source_revision: b08601e04326c79dfdd32d625aee71d232d685c3
+      source_num_rows: 3760
+      source_window: null
+      text_field: text
+      trust_remote_code: false
+      tokenizer_name_or_path: openai-community/gpt2
+      tokenizer_revision: 607a30d783dfa663caf39e06633721c8d4cfcd7e
+      tokenizer_class: GPT2TokenizerFast
+      tokenizer_vocab_size: 50257
+      block_size: 256
+      wrap: true
+      document_boundary_mode: wikitext_articles
+      processed_cache_schema_version: 2
+      document_remainder_policy: drop_incomplete_tail_and_documents_shorter_than_payload
+      detokenizer: wikitext_v1
+      datasets_version: 2.18.0
+      transformers_version: 4.38.2
+      disjoint_window_proof: null
+    resolved_data:
+      train: openwebtext-train-pinned
+      valid: wikitext103-pinned
+      tokenizer_name_or_path: openai-community/gpt2
+      tokenizer_revision: 607a30d783dfa663caf39e06633721c8d4cfcd7e
+      cache_dir: /mnt/contextual-forest/huggingface
+      wrap: true
+      streaming: true
+      shuffle_validation: false
+      require_pinned_provenance: true
+      require_disjoint_train_valid_windows: false
+      train_dataset_name_or_path: Skylion007/openwebtext
+      train_dataset_config_name: plain_text
+      train_source_split: train
+      train_revision: 79d93d786212f7344586290adb811d4ae6a1762c
+      train_expected_source_num_rows: 8013769
+      train_source_window: [0, 7913769]
+      train_text_field: text
+      train_document_boundary_mode: concatenate
+      train_trust_remote_code: false
+      valid_dataset_name_or_path: Salesforce/wikitext
+      valid_dataset_config_name: wikitext-103-raw-v1
+      valid_source_split: validation
+      valid_revision: b08601e04326c79dfdd32d625aee71d232d685c3
+      valid_expected_source_num_rows: 3760
+      valid_source_window: null
+      valid_text_field: text
+      valid_document_boundary_mode: wikitext_articles
+      valid_trust_remote_code: false
+
+  eval_scientific_papers_arxiv_pinned:
+    logical_validation_dataset: scientific-papers-arxiv-pinned
+    data_config_path: configs/data/eval_scientific_papers_arxiv_pinned.yaml
+    data_config_sha256: 651bc0b9be186244abdb6a0547b2ccb507fe84b28807fe9914f047de85f69046
+    dataset_revision: 0c23eb103b9f78874e0ac93d01bbd935fb8f59b1
+    tokenizer_name_or_path: openai-community/gpt2
+    tokenizer_revision: 607a30d783dfa663caf39e06633721c8d4cfcd7e
+    document_boundary_mode: source_document
+    num_prompts: 256
+    global_num_samples: 1024
+    base_seed: 92001
+    runtime_specification_sha256: 4c660805cca2b31bff8bae4dc3ac78089c72224007546279cc10eb20173ed2c7
+    runtime_specification:
+      logical_dataset_name: scientific-papers-arxiv-pinned
+      dataset_name_or_path: armanc/scientific_papers
+      dataset_config_name: arxiv
+      source_split: validation
+      source_revision: 0c23eb103b9f78874e0ac93d01bbd935fb8f59b1
+      source_num_rows: 6436
+      source_window: null
+      text_field: article
+      trust_remote_code: true
+      tokenizer_name_or_path: openai-community/gpt2
+      tokenizer_revision: 607a30d783dfa663caf39e06633721c8d4cfcd7e
+      tokenizer_class: GPT2TokenizerFast
+      tokenizer_vocab_size: 50257
+      block_size: 256
+      wrap: true
+      document_boundary_mode: source_document
+      processed_cache_schema_version: 2
+      document_remainder_policy: drop_incomplete_tail_and_documents_shorter_than_payload
+      detokenizer: scientific_papers_v1
+      datasets_version: 2.18.0
+      transformers_version: 4.38.2
+      disjoint_window_proof: null
+    resolved_data:
+      train: openwebtext-train-pinned
+      valid: scientific-papers-arxiv-pinned
+      tokenizer_name_or_path: openai-community/gpt2
+      tokenizer_revision: 607a30d783dfa663caf39e06633721c8d4cfcd7e
+      cache_dir: /mnt/contextual-forest/huggingface
+      wrap: true
+      streaming: true
+      shuffle_validation: false
+      require_pinned_provenance: true
+      require_disjoint_train_valid_windows: false
+      train_dataset_name_or_path: Skylion007/openwebtext
+      train_dataset_config_name: plain_text
+      train_source_split: train
+      train_revision: 79d93d786212f7344586290adb811d4ae6a1762c
+      train_expected_source_num_rows: 8013769
+      train_source_window: [0, 7913769]
+      train_text_field: text
+      train_document_boundary_mode: concatenate
+      train_trust_remote_code: false
+      valid_dataset_name_or_path: armanc/scientific_papers
+      valid_dataset_config_name: arxiv
+      valid_source_split: validation
+      valid_revision: 0c23eb103b9f78874e0ac93d01bbd935fb8f59b1
+      valid_expected_source_num_rows: 6436
+      valid_source_window: null
+      valid_text_field: article
+      valid_document_boundary_mode: source_document
+      valid_trust_remote_code: true
+
+  eval_scientific_papers_pubmed_pinned:
+    logical_validation_dataset: scientific-papers-pubmed-pinned
+    data_config_path: configs/data/eval_scientific_papers_pubmed_pinned.yaml
+    data_config_sha256: e006d73ab8555e8bfebbb83b6bce912110c77adf944b4c1029b219427f4cfbe8
+    dataset_revision: 0c23eb103b9f78874e0ac93d01bbd935fb8f59b1
+    tokenizer_name_or_path: openai-community/gpt2
+    tokenizer_revision: 607a30d783dfa663caf39e06633721c8d4cfcd7e
+    document_boundary_mode: source_document
+    num_prompts: 256
+    global_num_samples: 1024
+    base_seed: 93001
+    runtime_specification_sha256: d5c64dc21006e0989c865598e4446dce7f182a07c838d14a8aec591728f08752
+    runtime_specification:
+      logical_dataset_name: scientific-papers-pubmed-pinned
+      dataset_name_or_path: armanc/scientific_papers
+      dataset_config_name: pubmed
+      source_split: validation
+      source_revision: 0c23eb103b9f78874e0ac93d01bbd935fb8f59b1
+      source_num_rows: 6633
+      source_window: null
+      text_field: article
+      trust_remote_code: true
+      tokenizer_name_or_path: openai-community/gpt2
+      tokenizer_revision: 607a30d783dfa663caf39e06633721c8d4cfcd7e
+      tokenizer_class: GPT2TokenizerFast
+      tokenizer_vocab_size: 50257
+      block_size: 256
+      wrap: true
+      document_boundary_mode: source_document
+      processed_cache_schema_version: 2
+      document_remainder_policy: drop_incomplete_tail_and_documents_shorter_than_payload
+      detokenizer: scientific_papers_v1
+      datasets_version: 2.18.0
+      transformers_version: 4.38.2
+      disjoint_window_proof: null
+    resolved_data:
+      train: openwebtext-train-pinned
+      valid: scientific-papers-pubmed-pinned
+      tokenizer_name_or_path: openai-community/gpt2
+      tokenizer_revision: 607a30d783dfa663caf39e06633721c8d4cfcd7e
+      cache_dir: /mnt/contextual-forest/huggingface
+      wrap: true
+      streaming: true
+      shuffle_validation: false
+      require_pinned_provenance: true
+      require_disjoint_train_valid_windows: false
+      train_dataset_name_or_path: Skylion007/openwebtext
+      train_dataset_config_name: plain_text
+      train_source_split: train
+      train_revision: 79d93d786212f7344586290adb811d4ae6a1762c
+      train_expected_source_num_rows: 8013769
+      train_source_window: [0, 7913769]
+      train_text_field: text
+      train_document_boundary_mode: concatenate
+      train_trust_remote_code: false
+      valid_dataset_name_or_path: armanc/scientific_papers
+      valid_dataset_config_name: pubmed
+      valid_source_split: validation
+      valid_revision: 0c23eb103b9f78874e0ac93d01bbd935fb8f59b1
+      valid_expected_source_num_rows: 6633
+      valid_source_window: null
+      valid_text_field: article
+      valid_document_boundary_mode: source_document
+      valid_trust_remote_code: true
+
+# Exact resolved Hydra config after the seven manifest-bound paths above are
+# removed. __DATA_CONFIG__, __VALID_DATASET__, and __CANDIDATE_TOP_K__ are
+# materialized solely from the two declared protocol parameters.
+resolved_config_projection:
+  mode: sample_eval
+  diffusion: absorbing_state
+  backbone: dit
+  parameterization: subs
+  time_conditioning: false
+  T: 0
+  subs_masking: false
+  seed: 1
+  loader:
+    global_batch_size: 512
+    eval_global_batch_size: 8
+    batch_size: 512
+    eval_batch_size: 8
+    num_workers: 8
+    pin_memory: true
+  sampling:
+    predictor: ddpm
+    crf_reveal: gated
+    steps: 128
+    noise_removal: true
+    num_sample_batches: 2
+    num_sample_log: 2
+    semi_ar: false
+    stride_length: 1
+    num_strides: 1
+  training:
+    ema: 0.0
+    antithetic_sampling: true
+    importance_sampling: false
+    sampling_eps: 0.001
+    change_of_variables: false
+  eval:
+    checkpoint_path: ''
+    disable_ema: true
+    compute_generative_perplexity: false
+    perplexity_batch_size: 8
+    compute_perplexity_on_sanity: false
+    gen_ppl_eval_model_name_or_path: gpt2-large
+    generate_samples: false
+    structured_mask_rate: null
+    corruption_seed: null
+    conditional_records:
+      enabled: false
+      schema_version: 1
+      support_candidate_ks: []
+      protocol_id: null
+      job_id: null
+      arm: null
+      train_seed: null
+  optim:
+    weight_decay: 0
+    lr: 0.0003
+    beta1: 0.9
+    beta2: 0.999
+    eps: 1.0e-08
+  trainer:
+    _target_: lightning.Trainer
+    accelerator: cuda
+    num_nodes: 1
+    devices: 1
+    accumulate_grad_batches: 1
+    gradient_clip_val: 1.0
+    precision: bf16
+    num_sanity_val_steps: 2
+    max_steps: 1000000
+    log_every_n_steps: 10
+    limit_train_batches: 1.0
+    limit_val_batches: 1.0
+    val_check_interval: 10000
+  wandb:
+    project: text-diffusion
+    notes: Mulan for text
+    group: null
+    job_type: null
+    name: null
+    id: None_1
+    tags: [loglinear, openwebtext-train-pinned, __VALID_DATASET__]
+  checkpointing:
+    save_dir: /mnt/contextual-forest/mdlm-generation-paper-v1
+    resume_from_ckpt: false
+    resume_ckpt_path: /mnt/contextual-forest/mdlm-generation-paper-v1/checkpoints/last.ckpt
+  callbacks:
+    checkpoint_every_n_steps:
+      _target_: lightning.pytorch.callbacks.ModelCheckpoint
+      save_top_k: -1
+      save_last: true
+      dirpath: /mnt/contextual-forest/mdlm-generation-paper-v1/checkpoints
+      verbose: true
+      auto_insert_metric_name: false
+      every_n_train_steps: 500
+    checkpoint_monitor:
+      _target_: lightning.pytorch.callbacks.ModelCheckpoint
+      monitor: val/structured/conditional_nll_per_masked_token
+      mode: min
+      save_top_k: 1
+      save_last: false
+      dirpath: /mnt/contextual-forest/mdlm-generation-paper-v1/checkpoints
+      filename: best
+      auto_insert_metric_name: false
+      verbose: true
+    learning_rate_monitor:
+      _target_: lightning.pytorch.callbacks.LearningRateMonitor
+      logging_interval: step
+  data: __DATA_CONFIG__
+  model:
+    name: contextual-forest-small
+    type: ddit
+    monitor_metric: val/structured/conditional_nll_per_masked_token
+    hidden_size: 768
+    cond_dim: 128
+    length: 256
+    n_blocks: 12
+    n_heads: 12
+    scale_by_sigma: true
+    dropout: 0.1
+    tie_word_embeddings: false
+    structured_decoder:
+      enabled: true
+      top_k: __CANDIDATE_TOP_K__
+      rank: 16
+      time_embed_dim: 64
+      topology_dim: 128
+      local_window: 2
+      num_anchor_slots: 16
+      contextual_neighbors: 4
+      component_size_cap: 32
+      independent_mode: false
+      min_edge_score: null
+      fixed_edges: null
+      fixed_edge_path: null
+      training:
+        objective_name: conditional_denoising_nll_not_diffusion_elbo
+        backbone_mode: frozen
+        backbone_checkpoint: /mnt/contextual-forest/checkpoints/mdlm-owt-backbone.pt
+        require_pretrained_backbone: true
+        strict_backbone_checkpoint: true
+        use_ema_backbone: false
+        deterministic_backbone: true
+        head_lr: 0.0003
+        backbone_lr_multiplier: 0.0
+        structured_nll_weight: 1.0
+        factorized_aux_weight: 0.0
+        topology_strategy: gold_reveal_influence
+        topology_temperature: 0.25
+        topology_minimum_choices: 2
+        topology_edge_weight: 1.0
+        topology_anchor_weight: 0.25
+        topology_slot_weight: 0.25
+        topology_on_validation: false
+      sampling:
+        mode: factorized
+  strategy:
+    _target_: lightning.pytorch.strategies.DDPStrategy
+    find_unused_parameters: false
+  noise:
+    type: loglinear
+    sigma_min: 0.0001
+    sigma_max: 20
+  lr_scheduler:
+    _target_: transformers.get_constant_schedule_with_warmup
+    num_warmup_steps: 2500

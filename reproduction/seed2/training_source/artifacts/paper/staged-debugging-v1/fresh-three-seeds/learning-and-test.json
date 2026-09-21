@@ -1,0 +1,717 @@
+{
+  "artifact": "fresh_multiseed_training_and_selected_test_figure",
+  "source_sha256": {
+    "selection": "05deaa0a7287d6d722e67d0e45b53ba6bd7148ce153afd354296d1b0d0d1954e",
+    "test_results": "4aefe030903e42746c79ae9baa67e04758d5bb3bb7247bd7fd67fe88e049be7f",
+    "training_results_seed1": "71a01979a0a0809a282d6ad18004842c3d5950737dbf09f4a6294530ae4c7be6",
+    "training_protocol_seed1": "3287222e1c7043a58718da25588f8bf38f84d259a2ed49cce37ca0da0195fbdf",
+    "training_results_seed2": "3735bc8df6fc02e975b5f4d2b1fddf19f8c551f5cbac7e7d9ba0be7b6bc92066",
+    "training_protocol_seed2": "aef99696e3a5cedca87143588c491f50a14c58dd7c911d5ce2f6772f10d468c9",
+    "training_results_seed3": "54aef0b38719b85eb8b35d7049c09bfa49664bfc42a86f86765e048e67d4048f",
+    "training_protocol_seed3": "77ab7778a7fd2be63b2638126a4c948c8041d72569c2576b7809fefdd0dd7c62",
+    "plot_script": "9c17b8c7ffa2741795964edbd41df62300e088c9462f637e787a50fe4fab278e"
+  },
+  "selection_sha256": "c0f1525b1722c3f02bb0b8be5c4cce744f07c3ed5d0009e6f5ef660db0f02107",
+  "training_seeds": [
+    1,
+    2,
+    3
+  ],
+  "selected_checkpoints": [
+    {
+      "arm": "unary",
+      "checkpoint_sha256": "2cdd03bcd6985a6c7c89b7bffcff391c6b43c3eff4284df67fefd5236bfe8701",
+      "checkpoint_step": 1000,
+      "dev_active_tokens": 19648,
+      "dev_nll_per_masked_token": 4.938392387636322,
+      "dev_nll_sum": 97029.53363227844,
+      "training_seed": 1
+    },
+    {
+      "arm": "shared",
+      "checkpoint_sha256": "5fb6045fa085c27e1622dc42cd5d1ee08d72deb124441aaa9503db9866463113",
+      "checkpoint_step": 900,
+      "dev_active_tokens": 19648,
+      "dev_nll_per_masked_token": 4.933843661791339,
+      "dev_nll_sum": 96940.16026687622,
+      "training_seed": 1
+    },
+    {
+      "arm": "directional",
+      "checkpoint_sha256": "5fb6045fa085c27e1622dc42cd5d1ee08d72deb124441aaa9503db9866463113",
+      "checkpoint_step": 900,
+      "dev_active_tokens": 19648,
+      "dev_nll_per_masked_token": 4.931845002725769,
+      "dev_nll_sum": 96900.89061355591,
+      "training_seed": 1
+    },
+    {
+      "arm": "unary",
+      "checkpoint_sha256": "4a9b9d083a8d771a8567f78c897c2ad278680c676f05bc6cec9123525a99e4d2",
+      "checkpoint_step": 1000,
+      "dev_active_tokens": 19648,
+      "dev_nll_per_masked_token": 4.9474755174173985,
+      "dev_nll_sum": 97207.99896621704,
+      "training_seed": 2
+    },
+    {
+      "arm": "shared",
+      "checkpoint_sha256": "4a9b9d083a8d771a8567f78c897c2ad278680c676f05bc6cec9123525a99e4d2",
+      "checkpoint_step": 1000,
+      "dev_active_tokens": 19648,
+      "dev_nll_per_masked_token": 4.9460586390976795,
+      "dev_nll_sum": 97180.16014099121,
+      "training_seed": 2
+    },
+    {
+      "arm": "directional",
+      "checkpoint_sha256": "4a9b9d083a8d771a8567f78c897c2ad278680c676f05bc6cec9123525a99e4d2",
+      "checkpoint_step": 1000,
+      "dev_active_tokens": 19648,
+      "dev_nll_per_masked_token": 4.9446403669612025,
+      "dev_nll_sum": 97152.29393005371,
+      "training_seed": 2
+    },
+    {
+      "arm": "unary",
+      "checkpoint_sha256": "2c9d722e942bf0c4f6448efed2ca11a7b7eb896d343ca2ced121a8c6b4e1068b",
+      "checkpoint_step": 1000,
+      "dev_active_tokens": 19648,
+      "dev_nll_per_masked_token": 4.986600667529463,
+      "dev_nll_sum": 97976.7299156189,
+      "training_seed": 3
+    },
+    {
+      "arm": "shared",
+      "checkpoint_sha256": "2c9d722e942bf0c4f6448efed2ca11a7b7eb896d343ca2ced121a8c6b4e1068b",
+      "checkpoint_step": 1000,
+      "dev_active_tokens": 19648,
+      "dev_nll_per_masked_token": 4.98673892652173,
+      "dev_nll_sum": 97979.44642829895,
+      "training_seed": 3
+    },
+    {
+      "arm": "directional",
+      "checkpoint_sha256": "2c9d722e942bf0c4f6448efed2ca11a7b7eb896d343ca2ced121a8c6b4e1068b",
+      "checkpoint_step": 1000,
+      "dev_active_tokens": 19648,
+      "dev_nll_per_masked_token": 4.984414464196475,
+      "dev_nll_sum": 97933.77539253235,
+      "training_seed": 3
+    }
+  ],
+  "test_overall": {
+    "active_tokens_per_arm": 117888,
+    "documents": 128,
+    "metrics_nats_per_masked_token": {
+      "backbone_nll": {
+        "ci95": [
+          4.7947311389549805,
+          4.9678103330066365
+        ],
+        "estimate": 4.881483019836621
+      },
+      "directional_dependence_gain": {
+        "ci95": [
+          0.0027259355913949474,
+          0.005279704553425387
+        ],
+        "estimate": 0.00401778244643638
+      },
+      "directional_joint_gain": {
+        "ci95": [
+          0.01304534725874398,
+          0.018294714170115665
+        ],
+        "estimate": 0.015608141400242456
+      },
+      "directional_nll": {
+        "ci95": [
+          4.780081486322946,
+          4.9501057450228485
+        ],
+        "estimate": 4.86587487843638
+      },
+      "directional_singleton_gain": {
+        "ci95": [
+          0.00900419218585688,
+          0.014294636698913081
+        ],
+        "estimate": 0.01159035895380609
+      },
+      "directional_vs_shared": {
+        "ci95": [
+          0.0022749430679719247,
+          0.00411525999293913
+        ],
+        "estimate": 0.003175187262565367
+      },
+      "directional_vs_unary": {
+        "ci95": [
+          -0.0008970064165359306,
+          0.0035408019877078366
+        ],
+        "estimate": 0.0013856477026532963
+      },
+      "shared_dependence_gain": {
+        "ci95": [
+          0.00033552535926755314,
+          0.0019806304116280473
+        ],
+        "estimate": 0.0011487621652670156
+      },
+      "shared_joint_gain": {
+        "ci95": [
+          0.010044351272980263,
+          0.014928829398343153
+        ],
+        "estimate": 0.012432954137677091
+      },
+      "shared_nll": {
+        "ci95": [
+          4.783010084990848,
+          4.953734434179583
+        ],
+        "estimate": 4.869050065698945
+      },
+      "shared_singleton_gain": {
+        "ci95": [
+          0.008798382045968589,
+          0.013879831154262922
+        ],
+        "estimate": 0.011284191972410079
+      },
+      "shared_vs_unary": {
+        "ci95": [
+          -0.0038539740942531006,
+          0.0001118761401424869
+        ],
+        "estimate": -0.0017895395599120687
+      },
+      "unary_dependence_gain": {
+        "ci95": [
+          0.0,
+          0.0
+        ],
+        "estimate": 0.0
+      },
+      "unary_joint_gain": {
+        "ci95": [
+          0.011623946044895991,
+          0.016793387032465412
+        ],
+        "estimate": 0.01422249369758918
+      },
+      "unary_nll": {
+        "ci95": [
+          4.780890395737789,
+          4.952019899724927
+        ],
+        "estimate": 4.867260526139029
+      },
+      "unary_singleton_gain": {
+        "ci95": [
+          0.011623946044895991,
+          0.016793387032465412
+        ],
+        "estimate": 0.01422249369758918
+      }
+    },
+    "paired_observations": 1536,
+    "training_seeds": 3
+  },
+  "test_by_mask_rate": {
+    "0.25": {
+      "active_tokens_per_arm": 12288,
+      "documents": 128,
+      "metrics_nats_per_masked_token": {
+        "backbone_nll": {
+          "ci95": [
+            1.7424022979834264,
+            1.953791970186267
+          ],
+          "estimate": 1.8469823544288644
+        },
+        "directional_dependence_gain": {
+          "ci95": [
+            -0.0005803712332414913,
+            0.000515519764111007
+          ],
+          "estimate": 1.2758932909494891e-05
+        },
+        "directional_joint_gain": {
+          "ci95": [
+            -0.002001203633272359,
+            0.005552538839866625
+          ],
+          "estimate": 0.0017116473138058374
+        },
+        "directional_nll": {
+          "ci95": [
+            1.7414964089082832,
+            1.9507160848472467
+          ],
+          "estimate": 1.845270707115058
+        },
+        "directional_singleton_gain": {
+          "ci95": [
+            -0.0020415319905644188,
+            0.005646247635487331
+          ],
+          "estimate": 0.0016988883808963424
+        },
+        "directional_vs_shared": {
+          "ci95": [
+            -0.0013240377922566382,
+            0.003978850796922225
+          ],
+          "estimate": 0.0014016211301362356
+        },
+        "directional_vs_unary": {
+          "ci95": [
+            -0.017468095914694226,
+            -0.0052442886034304035
+          ],
+          "estimate": -0.010933375837172507
+        },
+        "shared_dependence_gain": {
+          "ci95": [
+            -0.0007258131192457245,
+            0.00033321494401699703
+          ],
+          "estimate": -0.00017919640305032818
+        },
+        "shared_joint_gain": {
+          "ci95": [
+            -0.001958843445300192,
+            0.0028418210003063127
+          ],
+          "estimate": 0.0003100261836696018
+        },
+        "shared_nll": {
+          "ci95": [
+            1.7429953721278264,
+            1.9533447600758687
+          ],
+          "estimate": 1.8466723282451964
+        },
+        "shared_singleton_gain": {
+          "ci95": [
+            -0.0018516454993746105,
+            0.003169942623162913
+          ],
+          "estimate": 0.00048922258671993
+        },
+        "shared_vs_unary": {
+          "ci95": [
+            -0.019818380691002935,
+            -0.005899090098569317
+          ],
+          "estimate": -0.012334996967308734
+        },
+        "unary_dependence_gain": {
+          "ci95": [
+            0.0,
+            0.0
+          ],
+          "estimate": 0.0
+        },
+        "unary_joint_gain": {
+          "ci95": [
+            0.005905215440377857,
+            0.02050047835801671
+          ],
+          "estimate": 0.012645023150978332
+        },
+        "unary_nll": {
+          "ci95": [
+            1.731231212616078,
+            1.9398112853581793
+          ],
+          "estimate": 1.8343373312778877
+        },
+        "unary_singleton_gain": {
+          "ci95": [
+            0.005905215440377857,
+            0.02050047835801671
+          ],
+          "estimate": 0.012645023150978332
+        }
+      },
+      "paired_observations": 384,
+      "training_seeds": 3
+    },
+    "0.5": {
+      "active_tokens_per_arm": 24576,
+      "documents": 128,
+      "metrics_nats_per_masked_token": {
+        "backbone_nll": {
+          "ci95": [
+            2.8867930844977256,
+            3.138611891169059
+          ],
+          "estimate": 3.0127133280491845
+        },
+        "directional_dependence_gain": {
+          "ci95": [
+            -0.0005911616351787044,
+            0.0013457222024178637
+          ],
+          "estimate": 0.00034108128371140276
+        },
+        "directional_joint_gain": {
+          "ci95": [
+            4.09483102357898e-05,
+            0.004216627446229586
+          ],
+          "estimate": 0.0020798795746027996
+        },
+        "directional_nll": {
+          "ci95": [
+            2.884990433103167,
+            3.136266824392588
+          ],
+          "estimate": 3.0106334484745827
+        },
+        "directional_singleton_gain": {
+          "ci95": [
+            -7.259079748771972e-05,
+            0.003645408648032887
+          ],
+          "estimate": 0.0017387982908913969
+        },
+        "directional_vs_shared": {
+          "ci95": [
+            -0.0004872225218228559,
+            0.002491497820238521
+          ],
+          "estimate": 0.0010040164378823755
+        },
+        "directional_vs_unary": {
+          "ci95": [
+            -0.010046567147740725,
+            -0.002826219840617758
+          ],
+          "estimate": -0.006423060233819079
+        },
+        "shared_dependence_gain": {
+          "ci95": [
+            -0.0010977614399745946,
+            0.0006008595239575898
+          ],
+          "estimate": -0.00028417241155936565
+        },
+        "shared_joint_gain": {
+          "ci95": [
+            -0.0011315049963224078,
+            0.0033156406847666105
+          ],
+          "estimate": 0.001075863136720424
+        },
+        "shared_nll": {
+          "ci95": [
+            2.8860754777336077,
+            3.1366142460316633
+          ],
+          "estimate": 3.01163746491247
+        },
+        "shared_singleton_gain": {
+          "ci95": [
+            -0.0006574274611039416,
+            0.003372958010641836
+          ],
+          "estimate": 0.0013600355482797897
+        },
+        "shared_vs_unary": {
+          "ci95": [
+            -0.010947539451015197,
+            -0.00397228149809521
+          ],
+          "estimate": -0.007427076671701455
+        },
+        "unary_dependence_gain": {
+          "ci95": [
+            0.0,
+            0.0
+          ],
+          "estimate": 0.0
+        },
+        "unary_joint_gain": {
+          "ci95": [
+            0.00473085598186781,
+            0.012228228605729809
+          ],
+          "estimate": 0.008502939808421877
+        },
+        "unary_nll": {
+          "ci95": [
+            2.8795096740155137,
+            3.1298820738298754
+          ],
+          "estimate": 3.004210388240765
+        },
+        "unary_singleton_gain": {
+          "ci95": [
+            0.00473085598186781,
+            0.012228228605729809
+          ],
+          "estimate": 0.008502939808421877
+        }
+      },
+      "paired_observations": 384,
+      "training_seeds": 3
+    },
+    "0.75": {
+      "active_tokens_per_arm": 36864,
+      "documents": 128,
+      "metrics_nats_per_masked_token": {
+        "backbone_nll": {
+          "ci95": [
+            4.909767202430048,
+            5.120465952240099
+          ],
+          "estimate": 5.016358794458228
+        },
+        "directional_dependence_gain": {
+          "ci95": [
+            0.001057138412762284,
+            0.00392533505030382
+          ],
+          "estimate": 0.002523270281544319
+        },
+        "directional_joint_gain": {
+          "ci95": [
+            0.009036570119644205,
+            0.01627459246838805
+          ],
+          "estimate": 0.01263006543699565
+        },
+        "directional_nll": {
+          "ci95": [
+            4.898049849007406,
+            5.107133066320282
+          ],
+          "estimate": 5.003728729021234
+        },
+        "directional_singleton_gain": {
+          "ci95": [
+            0.006760452507063,
+            0.013713148171640491
+          ],
+          "estimate": 0.010106795155451332
+        },
+        "directional_vs_shared": {
+          "ci95": [
+            0.0014926790742103189,
+            0.004009330250275643
+          ],
+          "estimate": 0.002749397418749764
+        },
+        "directional_vs_unary": {
+          "ci95": [
+            -0.002381223118337421,
+            0.004227599801568304
+          ],
+          "estimate": 0.001001434623203048
+        },
+        "shared_dependence_gain": {
+          "ci95": [
+            -0.0014286173073719236,
+            0.0012247163653358144
+          ],
+          "estimate": -3.0175048439343155e-05
+        },
+        "shared_joint_gain": {
+          "ci95": [
+            0.006396494030339354,
+            0.0132623300275326
+          ],
+          "estimate": 0.009880668018245888
+        },
+        "shared_nll": {
+          "ci95": [
+            4.900689186649609,
+            5.109864805794924
+          ],
+          "estimate": 5.006478126439989
+        },
+        "shared_singleton_gain": {
+          "ci95": [
+            0.006581744366969294,
+            0.013455372632231372
+          ],
+          "estimate": 0.009910843066685231
+        },
+        "shared_vs_unary": {
+          "ci95": [
+            -0.0050085605159529145,
+            0.0013745835144363331
+          ],
+          "estimate": -0.001747962795546716
+        },
+        "unary_dependence_gain": {
+          "ci95": [
+            0.0,
+            0.0
+          ],
+          "estimate": 0.0
+        },
+        "unary_joint_gain": {
+          "ci95": [
+            0.008119554177248663,
+            0.01530400208922934
+          ],
+          "estimate": 0.011628630813792604
+        },
+        "unary_nll": {
+          "ci95": [
+            4.898998186973438,
+            5.108623668216329
+          ],
+          "estimate": 5.00473016364444
+        },
+        "unary_singleton_gain": {
+          "ci95": [
+            0.008119554177248663,
+            0.01530400208922934
+          ],
+          "estimate": 0.011628630813792604
+        }
+      },
+      "paired_observations": 384,
+      "training_seeds": 3
+    },
+    "0.9": {
+      "active_tokens_per_arm": 44160,
+      "documents": 128,
+      "metrics_nats_per_masked_token": {
+        "backbone_nll": {
+          "ci95": [
+            6.556391276545454,
+            6.7560590346154665
+          ],
+          "estimate": 6.653284821608529
+        },
+        "directional_dependence_gain": {
+          "ci95": [
+            0.0058093743420544845,
+            0.011077295762611735
+          ],
+          "estimate": 0.008425980661018085
+        },
+        "directional_joint_gain": {
+          "ci95": [
+            0.0250940918521704,
+            0.03420098059085674
+          ],
+          "estimate": 0.02948980974875208
+        },
+        "directional_nll": {
+          "ci95": [
+            6.5303429850530685,
+            6.723650977383488
+          ],
+          "estimate": 6.623795011859776
+        },
+        "directional_singleton_gain": {
+          "ci95": [
+            0.01575407663456852,
+            0.026530358450562813
+          ],
+          "estimate": 0.021063829087733982
+        },
+        "directional_vs_shared": {
+          "ci95": [
+            0.0037913694323462015,
+            0.0067269904595826996
+          ],
+          "estimate": 0.005232447036684859
+        },
+        "directional_vs_unary": {
+          "ci95": [
+            0.006373555309995133,
+            0.0123877416688585
+          ],
+          "estimate": 0.00948000002296531
+        },
+        "shared_dependence_gain": {
+          "ci95": [
+            0.0012667761019711406,
+            0.0051911290328235105
+          ],
+          "estimate": 0.0032998965967353092
+        },
+        "shared_joint_gain": {
+          "ci95": [
+            0.01990593499142487,
+            0.02885189830985046
+          ],
+          "estimate": 0.024257362712067222
+        },
+        "shared_nll": {
+          "ci95": [
+            6.535570030315766,
+            6.728889857788362
+          ],
+          "estimate": 6.6290274588964575
+        },
+        "shared_singleton_gain": {
+          "ci95": [
+            0.015746083028847353,
+            0.02645333878091394
+          ],
+          "estimate": 0.0209574661153319
+        },
+        "shared_vs_unary": {
+          "ci95": [
+            0.0012996442601909942,
+            0.007033217536777902
+          ],
+          "estimate": 0.004247552986280451
+        },
+        "unary_dependence_gain": {
+          "ci95": [
+            0.0,
+            0.0
+          ],
+          "estimate": 0.0
+        },
+        "unary_joint_gain": {
+          "ci95": [
+            0.015621245217729651,
+            0.024514425087863844
+          ],
+          "estimate": 0.020009809725786757
+        },
+        "unary_nll": {
+          "ci95": [
+            6.538836342732024,
+            6.733125462769578
+          ],
+          "estimate": 6.633275011882745
+        },
+        "unary_singleton_gain": {
+          "ci95": [
+            0.015621245217729651,
+            0.024514425087863844
+          ],
+          "estimate": 0.020009809725786757
+        }
+      },
+      "paired_observations": 384,
+      "training_seeds": 3
+    }
+  },
+  "bootstrap": {
+    "intervals": "95% percentile intervals; secondary contrasts unadjusted",
+    "masks_kept_with_document": true,
+    "replicates": 5000,
+    "seed": 1701,
+    "training_seed_uncertainty_estimated": true,
+    "unit": "crossed training seeds and source documents; documents stratified by dataset"
+  },
+  "layout_inches": [
+    6.6,
+    6.3
+  ]
+}

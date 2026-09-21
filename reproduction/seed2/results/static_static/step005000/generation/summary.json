@@ -1,0 +1,271 @@
+{
+  "experiment": "paired_contextual_forest_generation_pilot",
+  "global_num_paired_samples": 100,
+  "global_pairing_digest": "98419fb2e6586b64d77b8c54494d8402f660c8a73d099fae8e0a53fabb1fc80f",
+  "groups": [
+    {
+      "active_tokens_per_second": 7459.144991584048,
+      "distinct_n": {
+        "1": 0.17349609375,
+        "2": 0.7721994134897361,
+        "4": 0.9941332027424093
+      },
+      "input_pairing_digest": "98419fb2e6586b64d77b8c54494d8402f660c8a73d099fae8e0a53fabb1fc80f",
+      "mean_repetition_rate": {
+        "1": 0.40236328125,
+        "2": 0.05101661779081129,
+        "4": 0.0009108716944172457
+      },
+      "measured_nfe_values": [
+        9
+      ],
+      "num_batches": 100,
+      "num_sequences": 100,
+      "num_tokens": 102400,
+      "pairing_digest": "98419fb2e6586b64d77b8c54494d8402f660c8a73d099fae8e0a53fabb1fc80f",
+      "peak_memory_bytes": 1517660160,
+      "reference": null,
+      "reference_lm": {
+        "mean_nll_nats": 6.721841962771449,
+        "model_name_or_path": "gpt2-large",
+        "num_scored_sequences": 100,
+        "num_scored_tokens": 58045,
+        "perplexity": 830.3455693627722,
+        "revision": "32b71b12589c2f8d625668d2335a01cac3249519",
+        "sequence_policy": "retokenize_decoded_text_score_through_first_nonleading_eos_v1"
+      },
+      "requested_nfe_budget": 9,
+      "sampling_mode": "factorized",
+      "unresolved_mask_tokens": 0,
+      "wall_clock_seconds": 13.728114967001602
+    },
+    {
+      "active_tokens_per_second": 4087.1338792862925,
+      "distinct_n": {
+        "1": 0.16390625,
+        "2": 0.7167839687194526,
+        "4": 0.9837806072477963
+      },
+      "input_pairing_digest": "98419fb2e6586b64d77b8c54494d8402f660c8a73d099fae8e0a53fabb1fc80f",
+      "mean_repetition_rate": {
+        "1": 0.43978515625,
+        "2": 0.07572825024437922,
+        "4": 0.002869735553379048
+      },
+      "measured_nfe_values": [
+        17
+      ],
+      "num_batches": 100,
+      "num_sequences": 100,
+      "num_tokens": 102400,
+      "pairing_digest": "98419fb2e6586b64d77b8c54494d8402f660c8a73d099fae8e0a53fabb1fc80f",
+      "peak_memory_bytes": 1517660160,
+      "reference": null,
+      "reference_lm": {
+        "mean_nll_nats": 5.755295869903017,
+        "model_name_or_path": "gpt2-large",
+        "num_scored_sequences": 100,
+        "num_scored_tokens": 41473,
+        "perplexity": 315.8589868683904,
+        "revision": "32b71b12589c2f8d625668d2335a01cac3249519",
+        "sequence_policy": "retokenize_decoded_text_score_through_first_nonleading_eos_v1"
+      },
+      "requested_nfe_budget": 17,
+      "sampling_mode": "factorized",
+      "unresolved_mask_tokens": 0,
+      "wall_clock_seconds": 25.054231895599514
+    },
+    {
+      "active_tokens_per_second": 2048.652383289178,
+      "distinct_n": {
+        "1": 0.15513671875,
+        "2": 0.682336265884653,
+        "4": 0.977179236043095
+      },
+      "input_pairing_digest": "98419fb2e6586b64d77b8c54494d8402f660c8a73d099fae8e0a53fabb1fc80f",
+      "mean_repetition_rate": {
+        "1": 0.462333984375,
+        "2": 0.08986314760508307,
+        "4": 0.004622918707149863
+      },
+      "measured_nfe_values": [
+        33
+      ],
+      "num_batches": 100,
+      "num_sequences": 100,
+      "num_tokens": 102400,
+      "pairing_digest": "98419fb2e6586b64d77b8c54494d8402f660c8a73d099fae8e0a53fabb1fc80f",
+      "peak_memory_bytes": 1517660160,
+      "reference": null,
+      "reference_lm": {
+        "mean_nll_nats": 5.085386744857556,
+        "model_name_or_path": "gpt2-large",
+        "num_scored_sequences": 100,
+        "num_scored_tokens": 46091,
+        "perplexity": 161.642441533626,
+        "revision": "32b71b12589c2f8d625668d2335a01cac3249519",
+        "sequence_policy": "retokenize_decoded_text_score_through_first_nonleading_eos_v1"
+      },
+      "requested_nfe_budget": 33,
+      "sampling_mode": "factorized",
+      "unresolved_mask_tokens": 0,
+      "wall_clock_seconds": 49.98407774558291
+    },
+    {
+      "active_tokens_per_second": 2244.4246305112424,
+      "distinct_n": {
+        "1": 0.17900390625,
+        "2": 0.7820625610948192,
+        "4": 0.9930950048971596
+      },
+      "input_pairing_digest": "98419fb2e6586b64d77b8c54494d8402f660c8a73d099fae8e0a53fabb1fc80f",
+      "mean_repetition_rate": {
+        "1": 0.390791015625,
+        "2": 0.05035190615835774,
+        "4": 0.0008129285014691568
+      },
+      "measured_nfe_values": [
+        8,
+        9
+      ],
+      "num_batches": 100,
+      "num_sequences": 100,
+      "num_tokens": 102400,
+      "pairing_digest": "98419fb2e6586b64d77b8c54494d8402f660c8a73d099fae8e0a53fabb1fc80f",
+      "peak_memory_bytes": 1330598400,
+      "reference": null,
+      "reference_lm": {
+        "mean_nll_nats": 6.796773813444287,
+        "model_name_or_path": "gpt2-large",
+        "num_scored_sequences": 100,
+        "num_scored_tokens": 70073,
+        "perplexity": 894.955336291118,
+        "revision": "32b71b12589c2f8d625668d2335a01cac3249519",
+        "sequence_policy": "retokenize_decoded_text_score_through_first_nonleading_eos_v1"
+      },
+      "requested_nfe_budget": 9,
+      "sampling_mode": "structured_joint",
+      "unresolved_mask_tokens": 0,
+      "wall_clock_seconds": 45.62416514591314
+    },
+    {
+      "active_tokens_per_second": 1083.7162814246656,
+      "distinct_n": {
+        "1": 0.17109375,
+        "2": 0.7271358748778104,
+        "4": 0.9826346718903036
+      },
+      "input_pairing_digest": "98419fb2e6586b64d77b8c54494d8402f660c8a73d099fae8e0a53fabb1fc80f",
+      "mean_repetition_rate": {
+        "1": 0.424931640625,
+        "2": 0.07433040078201364,
+        "4": 0.0034280117531831655
+      },
+      "measured_nfe_values": [
+        16
+      ],
+      "num_batches": 100,
+      "num_sequences": 100,
+      "num_tokens": 102400,
+      "pairing_digest": "98419fb2e6586b64d77b8c54494d8402f660c8a73d099fae8e0a53fabb1fc80f",
+      "peak_memory_bytes": 1330598400,
+      "reference": null,
+      "reference_lm": {
+        "mean_nll_nats": 5.78938124157474,
+        "model_name_or_path": "gpt2-large",
+        "num_scored_sequences": 100,
+        "num_scored_tokens": 56817,
+        "perplexity": 326.81074489948764,
+        "revision": "32b71b12589c2f8d625668d2335a01cac3249519",
+        "sequence_policy": "retokenize_decoded_text_score_through_first_nonleading_eos_v1"
+      },
+      "requested_nfe_budget": 17,
+      "sampling_mode": "structured_joint",
+      "unresolved_mask_tokens": 0,
+      "wall_clock_seconds": 94.48967571603134
+    },
+    {
+      "active_tokens_per_second": 547.0843755028336,
+      "distinct_n": {
+        "1": 0.167353515625,
+        "2": 0.6989931573802541,
+        "4": 0.973898139079334
+      },
+      "input_pairing_digest": "98419fb2e6586b64d77b8c54494d8402f660c8a73d099fae8e0a53fabb1fc80f",
+      "mean_repetition_rate": {
+        "1": 0.44462890625,
+        "2": 0.08992179863147604,
+        "4": 0.005817825661116561
+      },
+      "measured_nfe_values": [
+        32,
+        33
+      ],
+      "num_batches": 100,
+      "num_sequences": 100,
+      "num_tokens": 102400,
+      "pairing_digest": "98419fb2e6586b64d77b8c54494d8402f660c8a73d099fae8e0a53fabb1fc80f",
+      "peak_memory_bytes": 1330598400,
+      "reference": null,
+      "reference_lm": {
+        "mean_nll_nats": 5.304928883900854,
+        "model_name_or_path": "gpt2-large",
+        "num_scored_sequences": 100,
+        "num_scored_tokens": 51136,
+        "perplexity": 201.32668433613537,
+        "revision": "32b71b12589c2f8d625668d2335a01cac3249519",
+        "sequence_policy": "retokenize_decoded_text_score_through_first_nonleading_eos_v1"
+      },
+      "requested_nfe_budget": 33,
+      "sampling_mode": "structured_joint",
+      "unresolved_mask_tokens": 0,
+      "wall_clock_seconds": 187.17405319039244
+    }
+  ],
+  "input_pairing_digest": "98419fb2e6586b64d77b8c54494d8402f660c8a73d099fae8e0a53fabb1fc80f",
+  "num_paired_samples": 100,
+  "num_shards": 1,
+  "reference_lm": {
+    "mean_nll_nats": 5.993565935816503,
+    "model_name_or_path": "gpt2-large",
+    "num_scored_sequences": 600,
+    "num_scored_tokens": 323635,
+    "perplexity": 400.84143926926,
+    "revision": "32b71b12589c2f8d625668d2335a01cac3249519",
+    "runtime_identity": {
+      "add_special_tokens": true,
+      "batch_size": 1,
+      "cuda_runtime": "12.1",
+      "device": "cuda",
+      "max_length": 1024,
+      "model_class": "transformers.models.gpt2.modeling_gpt2.GPT2LMHeadModel",
+      "model_config_class": "transformers.models.gpt2.configuration_gpt2.GPT2Config",
+      "model_name_or_path": "gpt2-large",
+      "model_revision": "32b71b12589c2f8d625668d2335a01cac3249519",
+      "parameter_dtypes": [
+        "torch.float32"
+      ],
+      "precision_policy": "explicit_checkpoint_dtype_no_autocast_float32_cross_entropy_v1",
+      "python": "3.9.25",
+      "requested_dtype": "float32",
+      "schema_version": 1,
+      "sequence_policy": "retokenize_decoded_text_score_through_first_nonleading_eos_v1",
+      "tokenization_policy": "fast_tokenizer_right_padding_right_truncation_add_special_tokens_v1",
+      "tokenizer_bos_token_id": 50256,
+      "tokenizer_class": "transformers.models.gpt2.tokenization_gpt2_fast.GPT2TokenizerFast",
+      "tokenizer_eos_token_id": 50256,
+      "tokenizer_name_or_path": "gpt2-large",
+      "tokenizer_pad_token_id": 50256,
+      "tokenizer_padding_side": "right",
+      "tokenizer_revision": "32b71b12589c2f8d625668d2335a01cac3249519",
+      "tokenizer_truncation_side": "right",
+      "tokenizer_vocab_size": 50257,
+      "tokenizers": "0.15.2",
+      "torch": "2.2.2+cu121",
+      "transformers": "4.38.2"
+    },
+    "sequence_policy": "retokenize_decoded_text_score_through_first_nonleading_eos_v1"
+  },
+  "schema_version": 1,
+  "shard_index": 0
+}

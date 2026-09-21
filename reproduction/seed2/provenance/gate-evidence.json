@@ -1,0 +1,182 @@
+{
+  "gate/passed.json": {
+    "status": "passed",
+    "arms": [
+      {
+        "arm": "static_static",
+        "training_cache": "torch.bfloat16",
+        "cold_start": true,
+        "original_training_callbacks_only": true,
+        "export_and_generation_smoke": true
+      },
+      {
+        "arm": "fixed_dynamic",
+        "training_cache": "torch.bfloat16",
+        "cold_start": true,
+        "original_training_callbacks_only": true,
+        "export_and_generation_smoke": true
+      },
+      {
+        "arm": "dynamic_fixed",
+        "training_cache": "torch.bfloat16",
+        "cold_start": true,
+        "original_training_callbacks_only": true,
+        "export_and_generation_smoke": true
+      },
+      {
+        "arm": "dynamic_dynamic",
+        "training_cache": "torch.bfloat16",
+        "cold_start": true,
+        "original_training_callbacks_only": true,
+        "export_and_generation_smoke": true
+      }
+    ],
+    "original_resume_smoke": true,
+    "added_production_training_callbacks": false,
+    "training_cache": "BF16",
+    "generation_cache": "FP32",
+    "scope": "Original-path runtime smoke, not proof of bitwise determinism or replication efficacy",
+    "prior_failed_gate_preserved": "/u401/n23zhang/mdlm_data/tree_mdlm_cache/runs/ccf_replication15k_20260921.wmjngfco/legacy_bf16_seed2/study_zw0v21df"
+  },
+  "gate/progress.json": [
+    {
+      "arm": "static_static",
+      "training_cache": "torch.bfloat16",
+      "cold_start": true,
+      "original_training_callbacks_only": true,
+      "export_and_generation_smoke": true
+    },
+    {
+      "arm": "fixed_dynamic",
+      "training_cache": "torch.bfloat16",
+      "cold_start": true,
+      "original_training_callbacks_only": true,
+      "export_and_generation_smoke": true
+    },
+    {
+      "arm": "dynamic_fixed",
+      "training_cache": "torch.bfloat16",
+      "cold_start": true,
+      "original_training_callbacks_only": true,
+      "export_and_generation_smoke": true
+    },
+    {
+      "arm": "dynamic_dynamic",
+      "training_cache": "torch.bfloat16",
+      "cold_start": true,
+      "original_training_callbacks_only": true,
+      "export_and_generation_smoke": true
+    }
+  ],
+  "gate/plain-repeat-differences.json": {
+    "differences": [
+      {
+        "name": "structured_head.hidden_norm.weight",
+        "max_abs": 2.384185791015625e-07,
+        "different_elements": 72
+      },
+      {
+        "name": "structured_head.hidden_norm.bias",
+        "max_abs": 3.7771769711980596e-07,
+        "different_elements": 731
+      },
+      {
+        "name": "structured_head.time_embedding.mlp.0.weight",
+        "max_abs": 4.3213367462158203e-07,
+        "different_elements": 2370
+      },
+      {
+        "name": "structured_head.time_embedding.mlp.0.bias",
+        "max_abs": 4.2654573917388916e-07,
+        "different_elements": 34
+      },
+      {
+        "name": "structured_head.time_embedding.mlp.2.weight",
+        "max_abs": 4.991888999938965e-07,
+        "different_elements": 2618
+      },
+      {
+        "name": "structured_head.time_embedding.mlp.2.bias",
+        "max_abs": 1.955777406692505e-07,
+        "different_elements": 43
+      },
+      {
+        "name": "structured_head.topology_hidden_projection.weight",
+        "max_abs": 6.143003702163696e-06,
+        "different_elements": 11670
+      },
+      {
+        "name": "structured_head.topology_hidden_projection.bias",
+        "max_abs": 1.564621925354004e-07,
+        "different_elements": 23
+      },
+      {
+        "name": "structured_head.topology_time_projection.weight",
+        "max_abs": 2.1606683731079102e-07,
+        "different_elements": 1197
+      },
+      {
+        "name": "structured_head.edge_proposer.anchor_projection.weight",
+        "max_abs": 7.450580596923828e-09,
+        "different_elements": 1
+      }
+    ],
+    "conclusion": "Measured repeatability of two original training calls on this allocation; no deterministic-algorithm setting changed."
+  },
+  "gate/first-attempt-differences.json": {
+    "source": "/u401/n23zhang/mdlm_data/tree_mdlm_cache/runs/ccf_replication15k_20260921.wmjngfco/legacy_bf16_seed2/study_zw0v21df",
+    "differences": [
+      {
+        "name": "structured_head.hidden_norm.weight",
+        "max_abs": 2.384185791015625e-07,
+        "different_elements": 85
+      },
+      {
+        "name": "structured_head.hidden_norm.bias",
+        "max_abs": 7.721528163529001e-07,
+        "different_elements": 765
+      },
+      {
+        "name": "structured_head.time_embedding.mlp.0.weight",
+        "max_abs": 3.129243850708008e-07,
+        "different_elements": 2818
+      },
+      {
+        "name": "structured_head.time_embedding.mlp.0.bias",
+        "max_abs": 1.564621925354004e-07,
+        "different_elements": 44
+      },
+      {
+        "name": "structured_head.time_embedding.mlp.2.weight",
+        "max_abs": 7.301568984985352e-07,
+        "different_elements": 2939
+      },
+      {
+        "name": "structured_head.time_embedding.mlp.2.bias",
+        "max_abs": 1.7136335372924805e-07,
+        "different_elements": 43
+      },
+      {
+        "name": "structured_head.topology_hidden_projection.weight",
+        "max_abs": 1.344829797744751e-06,
+        "different_elements": 23681
+      },
+      {
+        "name": "structured_head.topology_hidden_projection.bias",
+        "max_abs": 8.489005267620087e-07,
+        "different_elements": 42
+      },
+      {
+        "name": "structured_head.topology_time_projection.weight",
+        "max_abs": 1.0188668966293335e-06,
+        "different_elements": 2718
+      },
+      {
+        "name": "structured_head.edge_proposer.anchor_projection.weight",
+        "max_abs": 1.6763806343078613e-08,
+        "different_elements": 7
+      }
+    ],
+    "conclusion": "Strict equality failed. The added observer is excluded from all production runs."
+  }
+}

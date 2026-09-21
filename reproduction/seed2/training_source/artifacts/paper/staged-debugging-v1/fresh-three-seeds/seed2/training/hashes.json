@@ -1,0 +1,23 @@
+{
+  "checkpoints/step-000000.pt": "bf77d7547653db8c77c5028ec821260c374bf4659dd398bcb3a67547be6067b5",
+  "checkpoints/step-000100.pt": "fe449b8fe743fee95d791661ee1efc0d984ba3c81546e5f4a5ea563db146147b",
+  "checkpoints/step-000200.pt": "9953ee2ac342773174066912478a8b5042e7a4e9981708849e3cc36f9fdf6922",
+  "checkpoints/step-000300.pt": "0a3a17ba63ad88c2d512081b60a44b70da528bd086bfa828bca5fd3bd89ffc34",
+  "checkpoints/step-000400.pt": "32b89e704a0c9810c70a86656ccb00f80cebfe70d2d7f03432ce1373bcd64fbe",
+  "checkpoints/step-000500.pt": "47be718ce733f645514073423bda3cf318b743aa9e7902d3ff7d3d7d9ce1b957",
+  "checkpoints/step-000600.pt": "fb4c6e765775e0ffc59881bb3faf8ef578af416f8053fe98756ad27eb73892c0",
+  "checkpoints/step-000700.pt": "7d2034953ddc7a9b14977bc186de8e685ed10c90c72995834ab964e2065432b8",
+  "checkpoints/step-000800.pt": "189fc6ff232ecf8f5c63ccdd8965a9bae298f97df1946b4b64c2f69158dfc8c0",
+  "checkpoints/step-000900.pt": "07fae4794ed51f3c732be82530b11820abd436cea4dbfb8a9144eb7e8fb1c1c2",
+  "checkpoints/step-001000.pt": "4a9b9d083a8d771a8567f78c897c2ad278680c676f05bc6cec9123525a99e4d2",
+  "dev-records.jsonl": "c254111dec43776a16fbfcc996674afe3aa8286ee8dfb192238b0134deea483c",
+  "directional-curve.jsonl": "34f92e61a3ca1677bc39e1d8c42486eb12030e0ca252f33a3bc42e1194291e06",
+  "final-directional-head.safetensors": "bd89a789a8c10616b2fe16a444a3c40e70f23ff8e510ae204e615a90687aa901",
+  "final-shared-head.safetensors": "7fea0d9452ce235ee108bd56434de4bf08d4db5bc2ae3f2b40d4917b119fdd39",
+  "final-unary-head.safetensors": "dd500728cbf9bf5897be020c323311fc53200ee6869579b166e64a2ef9806156",
+  "protocol.json": "aef99696e3a5cedca87143588c491f50a14c58dd7c911d5ce2f6772f10d468c9",
+  "results.json": "3735bc8df6fc02e975b5f4d2b1fddf19f8c551f5cbac7e7d9ba0be7b6bc92066",
+  "shared-curve.jsonl": "bc966f1b3162be1028285233772f3594d14729b13760d0f909fb103c25f1ea02",
+  "training-steps.jsonl": "3177d739f2038285b53e099ac561c1a45dbe59b78ff62b5c27d2b095bdab2dd2",
+  "unary-curve.jsonl": "7f9e9f6126c683b53960aaab10e374471068406e5ba0317647899fd1fa62dc79"
+}

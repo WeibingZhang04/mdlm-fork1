@@ -1,0 +1,23 @@
+{
+  "arm": "dynamic_dynamic",
+  "historical_phase": 3000,
+  "target_step": 6,
+  "train_seed": 2,
+  "args": [
+    "--config-path",
+    "/u401/n23zhang/mdlm_data/tree_mdlm_cache/runs/ccf_replication15k_20260921.wmjngfco/legacy_bf16_seed2/study_qv4ipesi/configs",
+    "--config-name",
+    "3000_dynamic_dynamic",
+    "seed=2",
+    "trainer.max_steps=6",
+    "checkpointing.save_dir=/u401/n23zhang/mdlm_data/tree_mdlm_cache/runs/ccf_replication15k_20260921.wmjngfco/legacy_bf16_seed2/study_qv4ipesi/gate/dynamic_dynamic/resume_plain",
+    "hydra.run.dir=/u401/n23zhang/mdlm_data/tree_mdlm_cache/runs/ccf_replication15k_20260921.wmjngfco/legacy_bf16_seed2/study_qv4ipesi/gate/dynamic_dynamic/resume_plain/hydra",
+    "checkpointing.resume_from_ckpt=true",
+    "checkpointing.resume_ckpt_path=/u401/n23zhang/mdlm_data/tree_mdlm_cache/runs/ccf_replication15k_20260921.wmjngfco/legacy_bf16_seed2/study_qv4ipesi/gate/dynamic_dynamic/plain/checkpoints/last.ckpt",
+    "callbacks.checkpoint_every_n_steps.every_n_train_steps=3"
+  ],
+  "source": "/u401/n23zhang/mdlm_data/tree_mdlm_cache/runs/ccf_replication15k_20260921.wmjngfco/legacy_bf16_seed2/study_qv4ipesi/training_code",
+  "resume": "/u401/n23zhang/mdlm_data/tree_mdlm_cache/runs/ccf_replication15k_20260921.wmjngfco/legacy_bf16_seed2/study_qv4ipesi/gate/dynamic_dynamic/plain/checkpoints/last.ckpt",
+  "resume_sha256": "f76e36987570e5eacb6eba117ab14685c44beb0af4cd35a06720099fa73ffa66",
+  "gate": true
+}

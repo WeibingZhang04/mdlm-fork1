@@ -1,0 +1,76 @@
+schema_version: 1
+artifact: candidate_k_promotion_policy_template
+policy_id: contextual-forest-expansion-v1-k128-routing-v1
+policy_status: frozen_template_before_k128_plan_or_results
+template_frozen_utc: '2026-08-30T15:55:00Z'
+
+protocol_id: contextual-forest-expansion-v1
+source_manifest_sha256: aa9f7269a202f88985793f4f48e58d7289bc80da5c370a1f209e469b7fb02b93
+source_suite: candidate_k_128_pilot
+
+analysis_contract:
+  analysis_schema_version: 2
+  analysis_artifact: hierarchical_conditional_denoising_analysis
+  objective: conditional_denoising_nll_per_masked_token
+  comparison: contextual_vs_static
+  baseline_arm: static_static
+  treatment_arm: dynamic_dynamic
+  candidate_k: 128
+  train_seeds: [1]
+  corruption_seeds: [201, 202]
+  datasets:
+    wikitext103-pinned:
+      revision: b08601e04326c79dfdd32d625aee71d232d685c3
+    scientific-papers-arxiv-pinned:
+      revision: 0c23eb103b9f78874e0ac93d01bbd935fb8f59b1
+  mask_rates: [0.50, 0.90]
+  expected_num_strata: 4
+  bootstrap:
+    method: hierarchical_paired_percentile_bootstrap
+    num_resamples: 20000
+    rng_seed: 1829
+    confidence_level: 0.95
+
+# Improvement is static NLL minus dynamic NLL. This diagnostic has only one
+# adapter-training seed, so these gates authorize a larger confirmation; they
+# are not themselves a final multi-seed claim.
+confirmation_gates:
+  pooled:
+    min_mean_improvement: 0.005
+    ci_lower_strictly_above: 0.0
+  corpus_breadth:
+    min_positive_dataset_means: 2
+  high_mask_robustness:
+    mask_rates: [0.90]
+    min_pooled_mean_improvement: 0.005
+    min_positive_dataset_means: 2
+    min_worst_dataset_mean_improvement: -0.005
+
+# Preserve the original absolute support target at K=128. Quality promotion
+# and support diagnosis are independent: a positive but support-limited pilot
+# launches both K=128 confirmation and the prespecified K=256 diagnostic.
+k128_support_sufficiency:
+  arm: dynamic_dynamic
+  aggregation: equal_weight_analysis_strata
+  min_overall_candidate_recall: 0.99
+  min_high_mask_dataset_candidate_recall: 0.98
+  min_overall_retained_unary_mass: 0.95
+  min_high_mask_dataset_retained_unary_mass: 0.90
+
+routing:
+  allow_parallel_routes: true
+  confirmation:
+    target_suite: candidate_k_128_confirmation
+    requires:
+      - integrity_complete
+      - pooled_mean
+      - pooled_ci
+      - corpus_breadth
+      - high_mask_pooled
+      - high_mask_breadth
+      - high_mask_no_material_regression
+  k256:
+    target_suite: candidate_k_256_pilot
+    requires:
+      - integrity_complete
+      - k128_support_limited

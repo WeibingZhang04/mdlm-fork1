@@ -1,0 +1,290 @@
+{
+  "artifact": "frozen_generation_queue_completion",
+  "completed_utc": "2026-09-01T08:43:57.977714+00:00",
+  "dataset_slug": "pubmed",
+  "immutable_runner_git_sha": "09f89c00bbf8c65f679cd40b92609754608817b8",
+  "launch_authorization": {
+    "artifact": "reviewed_wikitext_cross_domain_generation_gate",
+    "controller_repository": {
+      "clean": true,
+      "git_sha": "446cb8abe1a19db74f16efa658d17882812a0e76",
+      "root": "/mnt/contextual-forest/mdlm-controller-446cb8a-v2",
+      "source_sha256": {
+        "evaluation/generation_adapter_comparison.py": "f5133b399744d69d5a8f6b1ce9dd8d2e069b5438b0e98338e136d7e7d289004c",
+        "evaluation/generation_analysis_artifacts.py": "b0b69c3e799dd136d17171d45e780f73c17f2336f0617a4c7493adb8017ea1cf",
+        "evaluation/generation_protocol.py": "ce1927b543cec3b04fcebca3ada4b8aa8a2d9d2c1cbb0019c3b0289403852ced",
+        "evaluation/generation_queue_artifacts.py": "ad6d08bd52cfe5f728795e8db028b4f212e64f3d7592131cf8e845311d0bb11b",
+        "evaluation/generation_shard_aggregation.py": "ba7cc0ade743d169a064417d13feeb0d57ae71d70048a1f77b619a0496166fbe",
+        "scripts/compile_wikitext_cross_domain_gate.py": "b1f765ed9495b8eab3d9062e5bbb491c206293e4e9618300bda740882c746945",
+        "scripts/run_cross_domain_generation_post.py": "4044c5b2652cfb00e19ea45771fe5f20ba79570ead8fb3fdee070bb1aea8b319",
+        "scripts/run_cross_domain_generation_queue.py": "92c92c48427a1e85ee52e6c895fff27a90309d4ac913cdd4243be7e1ae09e34e",
+        "scripts/run_wikitext_generation_queue.py": "1c8a2aa7dc5bfb45cbb8385502c7b55b195c8d447c047d573d060e796591557d"
+      }
+    },
+    "decision": "proceed",
+    "path": "/mnt/contextual-forest/experiments/contextual-forest-generation-paper-v1/wikitext/reviewed-cross-domain-gate-446cb8a-v2.json",
+    "sha256": "a33ae2b0ea1834ced45047fe50ecffaef69b9571e9cd67199054edbe02b7ee86"
+  },
+  "launch_plan_sha256": "9acc56ab7a36ced0ebc3dd3363224567d74c02ad14c9a6212c682d66767f8bd2",
+  "logical_dataset": "scientific-papers-pubmed-pinned",
+  "num_tasks": 32,
+  "schema_version": 1,
+  "tasks": [
+    {
+      "arm": "dynamic_dynamic",
+      "dataset_slug": "pubmed",
+      "manifest_sha256": "ddfa32f04e2daedf3cb0f10f42643476f646b75a248fabcdc19dd5a7ab518b0f",
+      "output_dir": "/mnt/contextual-forest/experiments/contextual-forest-generation-paper-v1/pubmed/dynamic_dynamic/shard-00",
+      "shard_index": 0,
+      "task_id": "pubmed-dynamic_dynamic-shard-00"
+    },
+    {
+      "arm": "dynamic_dynamic",
+      "dataset_slug": "pubmed",
+      "manifest_sha256": "f6d1a183a43f87ce3badbc9093d3bd878d1661e4a5ed036ceeec0d8f63b2bac6",
+      "output_dir": "/mnt/contextual-forest/experiments/contextual-forest-generation-paper-v1/pubmed/dynamic_dynamic/shard-01",
+      "shard_index": 1,
+      "task_id": "pubmed-dynamic_dynamic-shard-01"
+    },
+    {
+      "arm": "dynamic_dynamic",
+      "dataset_slug": "pubmed",
+      "manifest_sha256": "70d91143c19b9fae937527227be613e3cb7a139a5ed3ee12a0fcc2a12369ae72",
+      "output_dir": "/mnt/contextual-forest/experiments/contextual-forest-generation-paper-v1/pubmed/dynamic_dynamic/shard-02",
+      "shard_index": 2,
+      "task_id": "pubmed-dynamic_dynamic-shard-02"
+    },
+    {
+      "arm": "dynamic_dynamic",
+      "dataset_slug": "pubmed",
+      "manifest_sha256": "2eed34e9681a90323b5f23843b082e091dee53a91ea5ae1e86b6e2165fb37c3f",
+      "output_dir": "/mnt/contextual-forest/experiments/contextual-forest-generation-paper-v1/pubmed/dynamic_dynamic/shard-03",
+      "shard_index": 3,
+      "task_id": "pubmed-dynamic_dynamic-shard-03"
+    },
+    {
+      "arm": "dynamic_dynamic",
+      "dataset_slug": "pubmed",
+      "manifest_sha256": "aff30af46bb497051dc757bc5633b2d5061e2c7ac2b7449a228577114c502ca7",
+      "output_dir": "/mnt/contextual-forest/experiments/contextual-forest-generation-paper-v1/pubmed/dynamic_dynamic/shard-04",
+      "shard_index": 4,
+      "task_id": "pubmed-dynamic_dynamic-shard-04"
+    },
+    {
+      "arm": "dynamic_dynamic",
+      "dataset_slug": "pubmed",
+      "manifest_sha256": "44cdf79aa2ffbea3d03e73473f18d068a587ab5d5d88ba4535e4ea4c91217d88",
+      "output_dir": "/mnt/contextual-forest/experiments/contextual-forest-generation-paper-v1/pubmed/dynamic_dynamic/shard-05",
+      "shard_index": 5,
+      "task_id": "pubmed-dynamic_dynamic-shard-05"
+    },
+    {
+      "arm": "dynamic_dynamic",
+      "dataset_slug": "pubmed",
+      "manifest_sha256": "bfec747c13cdf316d3294c63ffb35a70d360531aa9faa2ba9b6d1ee97cdf2f11",
+      "output_dir": "/mnt/contextual-forest/experiments/contextual-forest-generation-paper-v1/pubmed/dynamic_dynamic/shard-06",
+      "shard_index": 6,
+      "task_id": "pubmed-dynamic_dynamic-shard-06"
+    },
+    {
+      "arm": "dynamic_dynamic",
+      "dataset_slug": "pubmed",
+      "manifest_sha256": "49d179845a480c0e299b59141d21b5572801ffa2b98f1a6118fd7828fa870cf2",
+      "output_dir": "/mnt/contextual-forest/experiments/contextual-forest-generation-paper-v1/pubmed/dynamic_dynamic/shard-07",
+      "shard_index": 7,
+      "task_id": "pubmed-dynamic_dynamic-shard-07"
+    },
+    {
+      "arm": "dynamic_dynamic",
+      "dataset_slug": "pubmed",
+      "manifest_sha256": "2ce2370c3b63f173b318ef74a5c027716b3b21af7f836eb3e7d49831d12cceb0",
+      "output_dir": "/mnt/contextual-forest/experiments/contextual-forest-generation-paper-v1/pubmed/dynamic_dynamic/shard-08",
+      "shard_index": 8,
+      "task_id": "pubmed-dynamic_dynamic-shard-08"
+    },
+    {
+      "arm": "dynamic_dynamic",
+      "dataset_slug": "pubmed",
+      "manifest_sha256": "46e2109ee9c7708518288d0bc99b9a8b10e30592e32027840000e149777da6dd",
+      "output_dir": "/mnt/contextual-forest/experiments/contextual-forest-generation-paper-v1/pubmed/dynamic_dynamic/shard-09",
+      "shard_index": 9,
+      "task_id": "pubmed-dynamic_dynamic-shard-09"
+    },
+    {
+      "arm": "dynamic_dynamic",
+      "dataset_slug": "pubmed",
+      "manifest_sha256": "fbf7b852c864d1592c12c6f5855e2d46592dec7ae5f2c198bb54368167f2b7f3",
+      "output_dir": "/mnt/contextual-forest/experiments/contextual-forest-generation-paper-v1/pubmed/dynamic_dynamic/shard-10",
+      "shard_index": 10,
+      "task_id": "pubmed-dynamic_dynamic-shard-10"
+    },
+    {
+      "arm": "dynamic_dynamic",
+      "dataset_slug": "pubmed",
+      "manifest_sha256": "d0e266a5cc02a39cc5a0291063c158474036b1c94ceebb62550abb38914cbcce",
+      "output_dir": "/mnt/contextual-forest/experiments/contextual-forest-generation-paper-v1/pubmed/dynamic_dynamic/shard-11",
+      "shard_index": 11,
+      "task_id": "pubmed-dynamic_dynamic-shard-11"
+    },
+    {
+      "arm": "dynamic_dynamic",
+      "dataset_slug": "pubmed",
+      "manifest_sha256": "0c3fd2592420ac47c51b45793511ec6b6eebc829ca7bfa8ef03e0cd223b634d4",
+      "output_dir": "/mnt/contextual-forest/experiments/contextual-forest-generation-paper-v1/pubmed/dynamic_dynamic/shard-12",
+      "shard_index": 12,
+      "task_id": "pubmed-dynamic_dynamic-shard-12"
+    },
+    {
+      "arm": "dynamic_dynamic",
+      "dataset_slug": "pubmed",
+      "manifest_sha256": "cad77d57fa7bf48d0e0880d8578d52ed68425292930abc2b610fe02cf041d47b",
+      "output_dir": "/mnt/contextual-forest/experiments/contextual-forest-generation-paper-v1/pubmed/dynamic_dynamic/shard-13",
+      "shard_index": 13,
+      "task_id": "pubmed-dynamic_dynamic-shard-13"
+    },
+    {
+      "arm": "dynamic_dynamic",
+      "dataset_slug": "pubmed",
+      "manifest_sha256": "fe113d58dca4ddc021c12a2496c3ff7125f291ca5ffcb4506d66205a8777ec71",
+      "output_dir": "/mnt/contextual-forest/experiments/contextual-forest-generation-paper-v1/pubmed/dynamic_dynamic/shard-14",
+      "shard_index": 14,
+      "task_id": "pubmed-dynamic_dynamic-shard-14"
+    },
+    {
+      "arm": "dynamic_dynamic",
+      "dataset_slug": "pubmed",
+      "manifest_sha256": "64013fc4157cf2c98e05189f25a31bf20806eec47c78c5d2cb0b1e2b8d26d5f8",
+      "output_dir": "/mnt/contextual-forest/experiments/contextual-forest-generation-paper-v1/pubmed/dynamic_dynamic/shard-15",
+      "shard_index": 15,
+      "task_id": "pubmed-dynamic_dynamic-shard-15"
+    },
+    {
+      "arm": "static_static",
+      "dataset_slug": "pubmed",
+      "manifest_sha256": "8d1aa88ecc9f61c9c85ca45f376cce84ab35a35468bea99a366cee4e963e39ea",
+      "output_dir": "/mnt/contextual-forest/experiments/contextual-forest-generation-paper-v1/pubmed/static_static/shard-00",
+      "shard_index": 0,
+      "task_id": "pubmed-static_static-shard-00"
+    },
+    {
+      "arm": "static_static",
+      "dataset_slug": "pubmed",
+      "manifest_sha256": "9886f373589f30c281428ab5416efdbb85dbc36183a9caa6d9e97633e6438b6c",
+      "output_dir": "/mnt/contextual-forest/experiments/contextual-forest-generation-paper-v1/pubmed/static_static/shard-01",
+      "shard_index": 1,
+      "task_id": "pubmed-static_static-shard-01"
+    },
+    {
+      "arm": "static_static",
+      "dataset_slug": "pubmed",
+      "manifest_sha256": "607be85cc7821ce0ac241a91ae6a23d438663473fcb4708b50961cdec906c6b7",
+      "output_dir": "/mnt/contextual-forest/experiments/contextual-forest-generation-paper-v1/pubmed/static_static/shard-02",
+      "shard_index": 2,
+      "task_id": "pubmed-static_static-shard-02"
+    },
+    {
+      "arm": "static_static",
+      "dataset_slug": "pubmed",
+      "manifest_sha256": "77ca23b6f54c8cdfee4a130f88a119062ec848352e75790f1daae2fa21bc795b",
+      "output_dir": "/mnt/contextual-forest/experiments/contextual-forest-generation-paper-v1/pubmed/static_static/shard-03",
+      "shard_index": 3,
+      "task_id": "pubmed-static_static-shard-03"
+    },
+    {
+      "arm": "static_static",
+      "dataset_slug": "pubmed",
+      "manifest_sha256": "6c300e04f4f6d1f8d8bf9d98213820f9ad12519ec461dfe5f445b6ee6a82cc2f",
+      "output_dir": "/mnt/contextual-forest/experiments/contextual-forest-generation-paper-v1/pubmed/static_static/shard-04",
+      "shard_index": 4,
+      "task_id": "pubmed-static_static-shard-04"
+    },
+    {
+      "arm": "static_static",
+      "dataset_slug": "pubmed",
+      "manifest_sha256": "2ef32bddddb38ebff03739625ee7d803943c5a6ab3620fd5dda3bd2d0c27c044",
+      "output_dir": "/mnt/contextual-forest/experiments/contextual-forest-generation-paper-v1/pubmed/static_static/shard-05",
+      "shard_index": 5,
+      "task_id": "pubmed-static_static-shard-05"
+    },
+    {
+      "arm": "static_static",
+      "dataset_slug": "pubmed",
+      "manifest_sha256": "fba176d8a639c6f5ea063dd27b80cff3f4a3443f565566cf523e0edb9612c593",
+      "output_dir": "/mnt/contextual-forest/experiments/contextual-forest-generation-paper-v1/pubmed/static_static/shard-06",
+      "shard_index": 6,
+      "task_id": "pubmed-static_static-shard-06"
+    },
+    {
+      "arm": "static_static",
+      "dataset_slug": "pubmed",
+      "manifest_sha256": "e0f59e606dfef1450e7cccec5cc68aa37d421a48c9b7909dd702abfc6ca2ae80",
+      "output_dir": "/mnt/contextual-forest/experiments/contextual-forest-generation-paper-v1/pubmed/static_static/shard-07",
+      "shard_index": 7,
+      "task_id": "pubmed-static_static-shard-07"
+    },
+    {
+      "arm": "static_static",
+      "dataset_slug": "pubmed",
+      "manifest_sha256": "1b4ab761585465132d9a18b5ef9b04e7b98cb1c215315da38b4dce01d9978e0a",
+      "output_dir": "/mnt/contextual-forest/experiments/contextual-forest-generation-paper-v1/pubmed/static_static/shard-08",
+      "shard_index": 8,
+      "task_id": "pubmed-static_static-shard-08"
+    },
+    {
+      "arm": "static_static",
+      "dataset_slug": "pubmed",
+      "manifest_sha256": "d787a768fdf6326b6fe03a8d4b71c84221d90c26f3dbcbd5d90d7735f3c233fc",
+      "output_dir": "/mnt/contextual-forest/experiments/contextual-forest-generation-paper-v1/pubmed/static_static/shard-09",
+      "shard_index": 9,
+      "task_id": "pubmed-static_static-shard-09"
+    },
+    {
+      "arm": "static_static",
+      "dataset_slug": "pubmed",
+      "manifest_sha256": "e249cf42bca9377e2ee3e946a940dd2586de04c8f3775b072b4d4fa1c918c9cd",
+      "output_dir": "/mnt/contextual-forest/experiments/contextual-forest-generation-paper-v1/pubmed/static_static/shard-10",
+      "shard_index": 10,
+      "task_id": "pubmed-static_static-shard-10"
+    },
+    {
+      "arm": "static_static",
+      "dataset_slug": "pubmed",
+      "manifest_sha256": "e1896a408c63712f41158ad0505e90a7c6778c66edc4ca75f0cc79748be914c8",
+      "output_dir": "/mnt/contextual-forest/experiments/contextual-forest-generation-paper-v1/pubmed/static_static/shard-11",
+      "shard_index": 11,
+      "task_id": "pubmed-static_static-shard-11"
+    },
+    {
+      "arm": "static_static",
+      "dataset_slug": "pubmed",
+      "manifest_sha256": "3ac189d473009f158fff4ef95072eb21e5716e13a0da7cf483adb83a649b1e36",
+      "output_dir": "/mnt/contextual-forest/experiments/contextual-forest-generation-paper-v1/pubmed/static_static/shard-12",
+      "shard_index": 12,
+      "task_id": "pubmed-static_static-shard-12"
+    },
+    {
+      "arm": "static_static",
+      "dataset_slug": "pubmed",
+      "manifest_sha256": "5a413b2fc48f1368f4e8faeee88e03d6a31a1767b2c92a243881031dfbb633a9",
+      "output_dir": "/mnt/contextual-forest/experiments/contextual-forest-generation-paper-v1/pubmed/static_static/shard-13",
+      "shard_index": 13,
+      "task_id": "pubmed-static_static-shard-13"
+    },
+    {
+      "arm": "static_static",
+      "dataset_slug": "pubmed",
+      "manifest_sha256": "471c6652884caf65f256fd5aaf53f8b9b5b3bf4c9e9098ecab90cd164f70fc81",
+      "output_dir": "/mnt/contextual-forest/experiments/contextual-forest-generation-paper-v1/pubmed/static_static/shard-14",
+      "shard_index": 14,
+      "task_id": "pubmed-static_static-shard-14"
+    },
+    {
+      "arm": "static_static",
+      "dataset_slug": "pubmed",
+      "manifest_sha256": "0d9a22b0f265e0e7a3b2efc1edf6aca95a0c45d2188787a81dbd3b23d42c6b74",
+      "output_dir": "/mnt/contextual-forest/experiments/contextual-forest-generation-paper-v1/pubmed/static_static/shard-15",
+      "shard_index": 15,
+      "task_id": "pubmed-static_static-shard-15"
+    }
+  ]
+}

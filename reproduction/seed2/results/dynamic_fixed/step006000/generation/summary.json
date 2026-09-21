@@ -1,0 +1,163 @@
+{
+  "experiment": "paired_contextual_forest_generation_pilot",
+  "global_num_paired_samples": 100,
+  "global_pairing_digest": "98419fb2e6586b64d77b8c54494d8402f660c8a73d099fae8e0a53fabb1fc80f",
+  "groups": [
+    {
+      "active_tokens_per_second": 1806.6173279746406,
+      "distinct_n": {
+        "1": 0.180283203125,
+        "2": 0.7800879765395894,
+        "4": 0.9930852105778648
+      },
+      "input_pairing_digest": "98419fb2e6586b64d77b8c54494d8402f660c8a73d099fae8e0a53fabb1fc80f",
+      "mean_repetition_rate": {
+        "1": 0.39056640625,
+        "2": 0.05286412512218959,
+        "4": 0.0009010773751224366
+      },
+      "measured_nfe_values": [
+        8,
+        9
+      ],
+      "num_batches": 100,
+      "num_sequences": 100,
+      "num_tokens": 102400,
+      "pairing_digest": "98419fb2e6586b64d77b8c54494d8402f660c8a73d099fae8e0a53fabb1fc80f",
+      "peak_memory_bytes": 1330598400,
+      "reference": null,
+      "reference_lm": {
+        "mean_nll_nats": 6.7879950816094725,
+        "model_name_or_path": "gpt2-large",
+        "num_scored_sequences": 100,
+        "num_scored_tokens": 77436,
+        "perplexity": 887.1331480714713,
+        "revision": "32b71b12589c2f8d625668d2335a01cac3249519",
+        "sequence_policy": "retokenize_decoded_text_score_through_first_nonleading_eos_v1"
+      },
+      "requested_nfe_budget": 9,
+      "sampling_mode": "structured_joint",
+      "unresolved_mask_tokens": 0,
+      "wall_clock_seconds": 56.68051469139755
+    },
+    {
+      "active_tokens_per_second": 911.1796478490285,
+      "distinct_n": {
+        "1": 0.1728125,
+        "2": 0.7271358748778104,
+        "4": 0.9835161606268364
+      },
+      "input_pairing_digest": "98419fb2e6586b64d77b8c54494d8402f660c8a73d099fae8e0a53fabb1fc80f",
+      "mean_repetition_rate": {
+        "1": 0.424453125,
+        "2": 0.07425219941348969,
+        "4": 0.00305582761998042
+      },
+      "measured_nfe_values": [
+        16
+      ],
+      "num_batches": 100,
+      "num_sequences": 100,
+      "num_tokens": 102400,
+      "pairing_digest": "98419fb2e6586b64d77b8c54494d8402f660c8a73d099fae8e0a53fabb1fc80f",
+      "peak_memory_bytes": 1330598400,
+      "reference": null,
+      "reference_lm": {
+        "mean_nll_nats": 5.829696073334093,
+        "model_name_or_path": "gpt2-large",
+        "num_scored_sequences": 100,
+        "num_scored_tokens": 58662,
+        "perplexity": 340.2552507113204,
+        "revision": "32b71b12589c2f8d625668d2335a01cac3249519",
+        "sequence_policy": "retokenize_decoded_text_score_through_first_nonleading_eos_v1"
+      },
+      "requested_nfe_budget": 17,
+      "sampling_mode": "structured_joint",
+      "unresolved_mask_tokens": 0,
+      "wall_clock_seconds": 112.38179017906077
+    },
+    {
+      "active_tokens_per_second": 436.7135073815818,
+      "distinct_n": {
+        "1": 0.167392578125,
+        "2": 0.7013978494623656,
+        "4": 0.9741919686581783
+      },
+      "input_pairing_digest": "98419fb2e6586b64d77b8c54494d8402f660c8a73d099fae8e0a53fabb1fc80f",
+      "mean_repetition_rate": {
+        "1": 0.445029296875,
+        "2": 0.09009775171065491,
+        "4": 0.005759059745347704
+      },
+      "measured_nfe_values": [
+        32,
+        33
+      ],
+      "num_batches": 100,
+      "num_sequences": 100,
+      "num_tokens": 102400,
+      "pairing_digest": "98419fb2e6586b64d77b8c54494d8402f660c8a73d099fae8e0a53fabb1fc80f",
+      "peak_memory_bytes": 1330598400,
+      "reference": null,
+      "reference_lm": {
+        "mean_nll_nats": 5.233808612189264,
+        "model_name_or_path": "gpt2-large",
+        "num_scored_sequences": 100,
+        "num_scored_tokens": 47667,
+        "perplexity": 187.50558135409383,
+        "revision": "32b71b12589c2f8d625668d2335a01cac3249519",
+        "sequence_policy": "retokenize_decoded_text_score_through_first_nonleading_eos_v1"
+      },
+      "requested_nfe_budget": 33,
+      "sampling_mode": "structured_joint",
+      "unresolved_mask_tokens": 0,
+      "wall_clock_seconds": 234.4786645459244
+    }
+  ],
+  "input_pairing_digest": "98419fb2e6586b64d77b8c54494d8402f660c8a73d099fae8e0a53fabb1fc80f",
+  "num_paired_samples": 100,
+  "num_shards": 1,
+  "reference_lm": {
+    "mean_nll_nats": 6.078941981937047,
+    "model_name_or_path": "gpt2-large",
+    "num_scored_sequences": 300,
+    "num_scored_tokens": 183765,
+    "perplexity": 436.56705445582423,
+    "revision": "32b71b12589c2f8d625668d2335a01cac3249519",
+    "runtime_identity": {
+      "add_special_tokens": true,
+      "batch_size": 1,
+      "cuda_runtime": "12.1",
+      "device": "cuda",
+      "max_length": 1024,
+      "model_class": "transformers.models.gpt2.modeling_gpt2.GPT2LMHeadModel",
+      "model_config_class": "transformers.models.gpt2.configuration_gpt2.GPT2Config",
+      "model_name_or_path": "gpt2-large",
+      "model_revision": "32b71b12589c2f8d625668d2335a01cac3249519",
+      "parameter_dtypes": [
+        "torch.float32"
+      ],
+      "precision_policy": "explicit_checkpoint_dtype_no_autocast_float32_cross_entropy_v1",
+      "python": "3.9.25",
+      "requested_dtype": "float32",
+      "schema_version": 1,
+      "sequence_policy": "retokenize_decoded_text_score_through_first_nonleading_eos_v1",
+      "tokenization_policy": "fast_tokenizer_right_padding_right_truncation_add_special_tokens_v1",
+      "tokenizer_bos_token_id": 50256,
+      "tokenizer_class": "transformers.models.gpt2.tokenization_gpt2_fast.GPT2TokenizerFast",
+      "tokenizer_eos_token_id": 50256,
+      "tokenizer_name_or_path": "gpt2-large",
+      "tokenizer_pad_token_id": 50256,
+      "tokenizer_padding_side": "right",
+      "tokenizer_revision": "32b71b12589c2f8d625668d2335a01cac3249519",
+      "tokenizer_truncation_side": "right",
+      "tokenizer_vocab_size": 50257,
+      "tokenizers": "0.15.2",
+      "torch": "2.2.2+cu121",
+      "transformers": "4.38.2"
+    },
+    "sequence_policy": "retokenize_decoded_text_score_through_first_nonleading_eos_v1"
+  },
+  "schema_version": 1,
+  "shard_index": 0
+}

@@ -1,0 +1,185 @@
+schema_version: 1
+protocol_id: contextual-forest-expansion-v1
+protocol_status: frozen_before_primary_results
+scientific_scope: >-
+  Frozen-backbone conditional denoising NLL per masked token. This protocol
+  does not estimate a diffusion ELBO, data likelihood, perplexity, or
+  generation quality.
+
+# This is a dedicated persistent-disk path. The compiler refuses a relative
+# artifact root, a filesystem root, or a path outside --allowed-artifact-root.
+artifact_root: /mnt/contextual-forest/experiments/contextual-forest-expansion-v1
+
+backbone:
+  wrapper_path: /mnt/contextual-forest/checkpoints/mdlm-owt-backbone.pt
+  wrapper_sha256: 1b7c724d0228b1a2c825185c96642ffd706bd828b237f84512f0e1c7b5765573
+  source_repository: kuleshov-group/mdlm-owt
+  source_revision: d0958fa851335ece6c15260ce0025f030673c0fb
+  source_sha256: 47149e73f7552f39ea9776dbe74d925d25237bcf2ed2e2ec03cdff9d51c82aa4
+  ema_available: false
+  ema_used: false
+
+training:
+  data_config: train_openwebtext_pinned
+  train_seeds: [1, 2, 3]
+  updates: 1000
+  batch_size: 4
+  validation_batches: 32
+  validation_interval: 500
+  checkpoint_interval: 500
+  head_learning_rate: 0.0003
+  warmup_updates: 50
+  topology_weight: 0.1
+  factorized_aux_weight: 0.0
+  precision: bf16
+  # Streaming OWT has no restorable cursor. A preempted fit is retried from
+  # row zero in a fresh attempt directory; checkpoints are never resumed.
+  preemption_policy: full_attempt_restart_no_stream_cursor
+  # All four controls receive the same corruption sequence for a matching
+  # (train seed, epoch, rank).  Dynamic topology consumes a separate teacher
+  # stream, so it cannot advance or perturb the paired corruption stream.
+  corruption_rng_policy: paired_private_torch_generator_v1_seeded_by_train_seed_epoch_rank
+  topology_teacher_rng_policy: domain_separated_private_torch_generator_v1_offset_4294967291
+  cross_control_pairing_policy: identical_corruption_stream_for_equal_train_seed_epoch_rank
+
+# Every control is fit independently from its named training seed using the
+# same data order, update budget, optimizer, and architecture. Fixed topology
+# is the target-independent natural-order forest induced on active positions.
+controls:
+  dynamic_dynamic:
+    topology_mode: dynamic
+    factor_mode: dynamic
+    topology_weight: 0.1
+  fixed_dynamic:
+    topology_mode: fixed
+    factor_mode: dynamic
+    topology_weight: 0.0
+  dynamic_fixed:
+    topology_mode: dynamic
+    factor_mode: fixed
+    topology_weight: 0.1
+  static_static:
+    topology_mode: fixed
+    factor_mode: fixed
+    topology_weight: 0.0
+
+# Each data config pins repository/config/split/revision and preserves document
+# identities. The OpenWebText entry additionally requires a disjoint-window
+# proof before any result can be aggregated.
+datasets:
+  wikitext103:
+    data_config: eval_wikitext103_pinned
+    require_disjoint_training_proof: false
+  openwebtext_heldout:
+    data_config: eval_openwebtext_heldout_pinned
+    require_disjoint_training_proof: true
+  scientific_papers_arxiv:
+    data_config: eval_scientific_papers_arxiv_pinned
+    require_disjoint_training_proof: false
+  scientific_papers_pubmed:
+    data_config: eval_scientific_papers_pubmed_pinned
+    require_disjoint_training_proof: false
+
+evaluation:
+  corruption_seeds: [201, 202, 203, 204, 205]
+  mask_rates: [0.10, 0.25, 0.50, 0.75, 0.90]
+  candidate_ks: [64, 128, 256]
+  primary_candidate_k: 64
+  batch_size: 4
+  precision: bf16
+  require_pairing_digest: true
+  comparisons:
+    contextual_vs_static:
+      baseline: static_static
+      treatment: dynamic_dynamic
+    contextual_topology_gain:
+      baseline: fixed_dynamic
+      treatment: dynamic_dynamic
+    contextual_factor_gain:
+      baseline: dynamic_fixed
+      treatment: dynamic_dynamic
+
+# Suites are promotion stages, not alternative protocols. Jobs have canonical
+# IDs independent of suite membership, so compiling a later suite reuses any
+# already completed prerequisite with the same source-manifest digest.
+suites:
+  pilot:
+    promotion_from: null
+    controls: [dynamic_dynamic, static_static]
+    train_seeds: [1]
+    datasets:
+      - wikitext103
+      - openwebtext_heldout
+      - scientific_papers_arxiv
+      - scientific_papers_pubmed
+    corruption_seeds: [201, 202]
+    mask_rates: [0.25, 0.75, 0.90]
+    candidate_ks: [64]
+    # 128 batches x batch size 4 = 512 windows/corpus in the pilot.
+    validation_batches: 128
+  confirmation:
+    promotion_from: pilot
+    controls:
+      - dynamic_dynamic
+      - fixed_dynamic
+      - dynamic_fixed
+      - static_static
+    train_seeds: [1, 2, 3]
+    datasets:
+      - wikitext103
+      - openwebtext_heldout
+      - scientific_papers_arxiv
+      - scientific_papers_pubmed
+    corruption_seeds: [201, 202, 203, 204, 205]
+    mask_rates: [0.10, 0.25, 0.50, 0.75, 0.90]
+    candidate_ks: [64]
+    # 500 batches x batch size 4 = the frozen 2,000-window/corpus target.
+    validation_batches: 500
+  # Do not compile this suite until the K=64 pilot passes pairing, quality,
+  # candidate-recall, and retained-mass gates. K is part of training as well as
+  # evaluation; these jobs fit fresh K=128 adapters.
+  candidate_k_128_pilot:
+    promotion_from: pilot
+    controls: [dynamic_dynamic, static_static]
+    train_seeds: [1]
+    datasets: [wikitext103, scientific_papers_arxiv]
+    corruption_seeds: [201, 202]
+    mask_rates: [0.50, 0.90]
+    candidate_ks: [128]
+    validation_batches: 256
+  # Promote only after the K=128 pilot improves the quality/coverage tradeoff.
+  candidate_k_128_confirmation:
+    promotion_from: candidate_k_128_pilot
+    controls: [dynamic_dynamic, static_static]
+    train_seeds: [1, 2, 3]
+    datasets:
+      - wikitext103
+      - openwebtext_heldout
+      - scientific_papers_arxiv
+      - scientific_papers_pubmed
+    corruption_seeds: [201, 202, 203, 204, 205]
+    mask_rates: [0.50, 0.75, 0.90]
+    candidate_ks: [128]
+    validation_batches: 500
+  # Promote only after K=128 still appears support-limited.
+  candidate_k_256_pilot:
+    promotion_from: candidate_k_128_pilot
+    controls: [dynamic_dynamic, static_static]
+    train_seeds: [1]
+    datasets: [wikitext103, scientific_papers_arxiv]
+    corruption_seeds: [201, 202]
+    mask_rates: [0.50, 0.90]
+    candidate_ks: [256]
+    validation_batches: 256
+
+analysis:
+  document_record_schema_version: 1
+  primary_comparison: contextual_vs_static
+  bootstrap_unit_order: [train_seed, document]
+  average_corruptions_within_document: true
+  equal_weight_datasets: true
+  equal_weight_mask_rates: true
+  bootstrap_resamples: 20000
+  bootstrap_seed: 1701
+  confidence_level: 0.95
+  reject_incomplete_factorial_cells: true

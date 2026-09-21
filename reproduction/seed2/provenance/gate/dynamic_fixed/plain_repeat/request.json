@@ -1,0 +1,22 @@
+{
+  "arm": "dynamic_fixed",
+  "historical_phase": 1000,
+  "target_step": 3,
+  "train_seed": 2,
+  "args": [
+    "--config-path",
+    "/u401/n23zhang/mdlm_data/tree_mdlm_cache/runs/ccf_replication15k_20260921.wmjngfco/legacy_bf16_seed2/study_qv4ipesi/configs",
+    "--config-name",
+    "1000_dynamic_fixed",
+    "seed=2",
+    "trainer.max_steps=3",
+    "checkpointing.save_dir=/u401/n23zhang/mdlm_data/tree_mdlm_cache/runs/ccf_replication15k_20260921.wmjngfco/legacy_bf16_seed2/study_qv4ipesi/gate/dynamic_fixed/plain_repeat",
+    "hydra.run.dir=/u401/n23zhang/mdlm_data/tree_mdlm_cache/runs/ccf_replication15k_20260921.wmjngfco/legacy_bf16_seed2/study_qv4ipesi/gate/dynamic_fixed/plain_repeat/hydra",
+    "checkpointing.resume_from_ckpt=false",
+    "callbacks.checkpoint_every_n_steps.every_n_train_steps=3"
+  ],
+  "source": "/u401/n23zhang/mdlm_data/tree_mdlm_cache/runs/ccf_replication15k_20260921.wmjngfco/legacy_bf16_seed2/study_qv4ipesi/training_code",
+  "resume": "-",
+  "resume_sha256": null,
+  "gate": true
+}

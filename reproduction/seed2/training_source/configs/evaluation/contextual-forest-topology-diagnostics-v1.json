@@ -1,0 +1,87 @@
+{
+  "artifact": "contextual_forest_topology_diagnostics_protocol",
+  "candidate_top_k": 128,
+  "component_depth_root": "minimum_active_position",
+  "component_size_cap": 32,
+  "completeness": "exact_source_unit_x_corruption_seed_x_time_point_x_intervention_grid",
+  "corruption_policy": {
+    "active_nodes": "mask_token_and_attention_mask",
+    "active_mask_nesting": "active_sets_nondecreasing_with_time",
+    "base_noise": "sha256_uint53_per_position_v1_one_private_vector_per_source_unit_x_corruption_seed",
+    "context_commitment": "canonical_corruption_hash_bundle_v1",
+    "forward_process": "absorbing_mask_diffusion",
+    "mask_threshold": "uint53_lt_floor_requested_probability_times_2pow53",
+    "time_coupling": "reuse_identical_base_noise_across_time_grid_and_train_seeds"
+  },
+  "corruption_seeds": [
+    301,
+    302,
+    303
+  ],
+  "interventions": {
+    "fixed_time": {
+      "effective_time": 0.5
+    },
+    "learned": {
+      "effective_time": "requested"
+    },
+    "matched_permuted": {
+      "algorithm": "sha256_sort_active_nodes_v1",
+      "effective_time": "requested",
+      "minimum_pooled_edge_set_changed_fraction": 0.9,
+      "permutation_seed": 19081
+    },
+    "timestep_shuffled": {
+      "algorithm": "sha256_sort_rotate_time_grid_v1",
+      "effective_time": "deterministic_permutation_of_time_grid",
+      "shuffle_seed": 19087
+    },
+    "zero_time": {
+      "effective_time": 0.0
+    }
+  },
+  "determinism": "torch_eval_no_grad_dropout_disabled",
+  "evaluator_source_path": "evaluation/topology_diagnostics.py",
+  "intervention_locus": "structured_decoder_topology_time_input_only_reuse_backbone_hidden_unary_v1",
+  "natural_order_chain": "consecutive_active_positions",
+  "nonlocal_edge_threshold": 1,
+  "protocol_id": "contextual-forest-topology-diagnostics-v1",
+  "protocol_status": "frozen_before_topology_results",
+  "require_nonempty_learned_forest": true,
+  "schema_version": 2,
+  "scientific_scope": "Eval-only descriptive topology evidence from exact selected forests. The protocol does not estimate likelihood, generation quality, or causal treatment effects.",
+  "time_parameterization": "absorbing_mask_probability",
+  "topology_head_time_transform": "negative_log1p_one_minus_probability_v1",
+  "source_selection": {
+    "arm": "dynamic_dynamic",
+    "bundling": "one_bundle_per_dataset_x_train_seed",
+    "datasets": {
+      "scientific_papers_arxiv": {
+        "data_config_path": "configs/data/eval_scientific_papers_arxiv_pinned.yaml",
+        "dataset_revision": "0c23eb103b9f78874e0ac93d01bbd935fb8f59b1",
+        "num_source_units": 32,
+        "tokenizer_revision": "607a30d783dfa663caf39e06633721c8d4cfcd7e"
+      },
+      "wikitext103": {
+        "data_config_path": "configs/data/eval_wikitext103_pinned.yaml",
+        "dataset_revision": "b08601e04326c79dfdd32d625aee71d232d685c3",
+        "num_source_units": 32,
+        "tokenizer_revision": "607a30d783dfa663caf39e06633721c8d4cfcd7e"
+      }
+    },
+    "require_identical_source_units_across_train_seeds": true,
+    "source_unit_order": "first_n_pinned_document_local_eval_order",
+    "train_seeds": [
+      1,
+      2,
+      3
+    ]
+  },
+  "time_points": [
+    0.1,
+    0.25,
+    0.5,
+    0.75,
+    0.9
+  ]
+}

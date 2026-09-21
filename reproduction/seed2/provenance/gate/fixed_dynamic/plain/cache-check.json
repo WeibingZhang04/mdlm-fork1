@@ -1,0 +1,17 @@
+{
+  "cold_start": true,
+  "final_cache": "torch.bfloat16",
+  "global_step": 3,
+  "loss_metrics": {
+    "loss": 5.749316215515137,
+    "active_fraction": 0.49755859375,
+    "selected_edges": 493.0,
+    "factorized_aux_nll": 5.749393463134766,
+    "topology_loss": -0.0,
+    "topology_edge_loss": -0.0,
+    "topology_anchor_loss": -0.0,
+    "topology_slot_loss": -0.0,
+    "topology_valid_examples": -0.0,
+    "topology_teacher_influence": -0.0
+  }
+}

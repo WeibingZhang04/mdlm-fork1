@@ -1,0 +1,33 @@
+# Pinned training source for the three confirmation adapters.  Concatenation
+# intentionally matches the legacy MDLM/adapter training preprocessing; every
+# source row still receives EOS before fixed-length grouping.
+train: openwebtext-train-pinned
+valid: wikitext103-pinned
+tokenizer_name_or_path: openai-community/gpt2
+tokenizer_revision: 607a30d783dfa663caf39e06633721c8d4cfcd7e
+cache_dir: /mnt/contextual-forest/huggingface
+wrap: true
+streaming: true
+shuffle_validation: false
+require_pinned_provenance: true
+require_disjoint_train_valid_windows: false
+
+train_dataset_name_or_path: Skylion007/openwebtext
+train_dataset_config_name: plain_text
+train_source_split: train
+train_revision: 79d93d786212f7344586290adb811d4ae6a1762c
+train_expected_source_num_rows: 8013769
+train_source_window: [0, 7913769]
+train_text_field: text
+train_document_boundary_mode: concatenate
+train_trust_remote_code: false
+
+valid_dataset_name_or_path: Salesforce/wikitext
+valid_dataset_config_name: wikitext-103-raw-v1
+valid_source_split: validation
+valid_revision: b08601e04326c79dfdd32d625aee71d232d685c3
+valid_expected_source_num_rows: 3760
+valid_source_window: null
+valid_text_field: text
+valid_document_boundary_mode: wikitext_articles
+valid_trust_remote_code: false
