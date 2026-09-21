@@ -131,9 +131,10 @@ class Diffusion(L.LightningModule):
   def __init__(
     self,
     config,
-    tokenizer: transformers.PreTrainedTokenizer):
+    tokenizer: transformers.PreTrainedTokenizer,
+    initialize_pretrained_backbone: bool = True):
     super().__init__()
-    self.save_hyperparameters()
+    self.save_hyperparameters(ignore=['initialize_pretrained_backbone'])
     self.config = config
 
     self.tokenizer = tokenizer
@@ -173,13 +174,14 @@ class Diffusion(L.LightningModule):
 
     self.structured_head = None
     self.structured_enabled = False
+    self.structured_sampling_mode = 'factorized'
     self.structured_config = None
     self.structured_training_config = None
     self._structured_training_corruption_generator = None
     self._structured_training_topology_generator = None
     self._last_structured_topology_metrics = {}
     self._last_structured_metric_updates = {}
-    self._initialize_structured_decoder()
+    self._initialize_structured_decoder(initialize_pretrained_backbone)
 
     self.T = self.config.T
     self.subs_masking = self.config.subs_masking
@@ -227,13 +229,15 @@ class Diffusion(L.LightningModule):
 
     # generative perplexity
     self.gen_ppl_metric = Perplexity()
-    self.eval_model_tokenizer = transformers.AutoTokenizer.\
-      from_pretrained(self.gen_ppl_eval_model_name_or_path)
-    if self.eval_model_tokenizer.pad_token is None:
-      self.eval_model_tokenizer.pad_token =\
-          self.eval_model_tokenizer.eos_token
-      self.eval_model_tokenizer.pad_token_id =\
-          self.eval_model_tokenizer.eos_token_id
+    self.eval_model_tokenizer = None
+    if self.config.eval.get('compute_generative_perplexity', True):
+      self.eval_model_tokenizer = transformers.AutoTokenizer.\
+        from_pretrained(self.gen_ppl_eval_model_name_or_path)
+      if self.eval_model_tokenizer.pad_token is None:
+        self.eval_model_tokenizer.pad_token =\
+            self.eval_model_tokenizer.eos_token
+        self.eval_model_tokenizer.pad_token_id =\
+            self.eval_model_tokenizer.eos_token_id
 
     self.noise = noise_schedule.get_noise(self.config,
                                           dtype=self.dtype)
@@ -253,8 +257,8 @@ class Diffusion(L.LightningModule):
     self.fast_forward_batches = None
     self._validate_configuration()
 
-  def _initialize_structured_decoder(self):
-    """Initialize the frozen-backbone CCF training configuration."""
+  def _initialize_structured_decoder(self, initialize_pretrained_backbone=True):
+    """Initialize CCF; a full model checkpoint supplies its own backbone."""
     structured_cfg = self.config.model.get('structured_decoder', None)
     if structured_cfg is None or not bool(
         structured_cfg.get('enabled', False)):
@@ -280,14 +284,24 @@ class Diffusion(L.LightningModule):
       raise ValueError('topology_weight must be finite and non-negative')
     if training_cfg.get('topology_strategy', 'gold_reveal_influence') != 'gold_reveal_influence':
       raise ValueError('only gold_reveal_influence topology supervision is restored')
-    checkpoint_path = training_cfg.get('backbone_checkpoint', None)
-    if not checkpoint_path and bool(
+    checkpoint_path = (training_cfg.get('backbone_checkpoint', None)
+                       if initialize_pretrained_backbone else None)
+    if initialize_pretrained_backbone and not checkpoint_path and bool(
         training_cfg.get('require_pretrained_backbone', True)):
       raise ValueError(
         'set model.structured_decoder.training.backbone_checkpoint; '
         'require_pretrained_backbone=false is only for random-backbone smoke tests')
 
     from models.structured_decoder import ContextualCouplingForestHead
+    from structured_training import validate_structured_sampling_mode
+
+    self.structured_sampling_mode = validate_structured_sampling_mode(
+      str(structured_cfg.get('sampling', {}).get('mode', 'factorized')))
+    if self.structured_sampling_mode == 'structured_joint':
+      if self.sampler != 'ddpm':
+        raise ValueError('structured_joint sampling requires sampling.predictor=ddpm')
+      if self.config.sampling.get('semi_ar', False):
+        raise ValueError('structured_joint sampling does not support semi-AR strides')
 
     self.structured_config = structured_cfg
     self.structured_training_config = training_cfg
@@ -319,7 +333,7 @@ class Diffusion(L.LightningModule):
 
     if checkpoint_path:
       self._load_structured_backbone_checkpoint(str(checkpoint_path))
-    else:
+    elif initialize_pretrained_backbone:
       warnings.warn('CCF is freezing a random backbone (smoke tests only)',
                     stacklevel=2)
     self.backbone.requires_grad_(False)
@@ -739,6 +753,8 @@ class Diffusion(L.LightningModule):
         attn_mask: Attention mask for the eval model
         eval_context_size: Size of the context for the eval model
     """
+    if self.eval_model_tokenizer is None:
+      raise ValueError('set eval.compute_generative_perplexity=true before model construction')
     if 'llama2' in self.gen_ppl_eval_model_name_or_path:
       tokenizer_kwargs = {
         'text_samples': text_samples,
@@ -867,7 +883,45 @@ class Diffusion(L.LightningModule):
     copy_flag = (x != self.mask_index).to(x.dtype)
     return p_x0, copy_flag * x + (1 - copy_flag) * _x
 
+  @torch.no_grad()
+  def _structured_clean_sample(self, x, conditioning):
+    """Draw clean identities jointly from the forest, preserving revealed tokens."""
+    from structured_objective import sample_structured_tokens
+
+    active_mask = x.eq(self.mask_index)
+    if not bool(active_mask.any().item()):
+      return x
+    output, unary_logits = self._structured_head_output(
+      tokens=x, conditioning=conditioning, active_mask=active_mask)
+    clean = sample_structured_tokens(
+      output=output, unary_logits=unary_logits,
+      active_mask=active_mask, num_samples=1)[:, 0]
+    return torch.where(active_mask, clean, x)
+
+  @torch.no_grad()
+  def _structured_ddpm_update(self, x, t, dt):
+    """Sample structured token identities, then apply the reveal kernel."""
+    sigma_t, _ = self.noise(t)
+    sigma_s, _ = self.noise(t - dt)
+    if sigma_t.ndim > 1:
+      sigma_t = sigma_t.squeeze(-1)
+    if sigma_s.ndim > 1:
+      sigma_s = sigma_s.squeeze(-1)
+    move_chance_t = 1 - torch.exp(-sigma_t)
+    move_chance_s = 1 - torch.exp(-sigma_s)
+    proposed_clean = self._structured_clean_sample(x, sigma_t)
+    reveal_probability = (
+      (move_chance_t - move_chance_s)
+      / move_chance_t.clamp_min(1e-12)).clamp(0.0, 1.0)
+    reveal = (
+      torch.rand(x.shape, device=x.device)
+      < reveal_probability[:, None])
+    reveal = reveal & x.eq(self.mask_index)
+    return torch.where(reveal, proposed_clean, x)
+
   def _ddpm_update(self, x, t, dt):
+    if self.structured_sampling_mode == 'structured_joint':
+      return self._structured_ddpm_update(x, t, dt)
     sigma_t, _ = self.noise(t)
     sigma_s, _ = self.noise(t - dt)
     if sigma_t.ndim > 1:
@@ -950,6 +1004,9 @@ class Diffusion(L.LightningModule):
                                      device=self.device)
       if self.sampler == 'analytic':
         x = self._denoiser_update(x, t)
+      elif self.structured_sampling_mode == 'structured_joint':
+        unet_conditioning = self.noise(t)[0]
+        x = self._structured_clean_sample(x, unet_conditioning)
       else:
         unet_conditioning = self.noise(t)[0]
         x = self.forward(x, unet_conditioning).argmax(dim=-1)
@@ -957,6 +1014,11 @@ class Diffusion(L.LightningModule):
 
   def restore_model_and_sample(self, num_steps, eps=1e-5):
     """Generate samples from the model."""
+    # Preserve the caller's modes, including the permanently frozen backbone.
+    modules = [self.backbone, self.noise]
+    if self.structured_head is not None:
+      modules.append(self.structured_head)
+    training_modes = [module.training for module in modules]
     # Lightning auto-casting is not working in this method for some reason
     if self.ema:
       self.ema.store(itertools.chain(
@@ -965,15 +1027,17 @@ class Diffusion(L.LightningModule):
       self.ema.copy_to(itertools.chain(
         self.backbone.parameters(),
         self.noise.parameters()))
-    self.backbone.eval()
-    self.noise.eval()
-    samples = self._sample(num_steps=num_steps, eps=eps)
-    if self.ema:
-      self.ema.restore(itertools.chain(
-        self.backbone.parameters(),
-        self.noise.parameters()))
-    self.backbone.train()
-    self.noise.train()
+    for module in modules:
+      module.eval()
+    try:
+      samples = self._sample(num_steps=num_steps, eps=eps)
+    finally:
+      if self.ema:
+        self.ema.restore(itertools.chain(
+          self.backbone.parameters(),
+          self.noise.parameters()))
+      for module, training in zip(modules, training_modes):
+        module.train(training)
     return samples
 
   def get_score(self, x, sigma):
@@ -1396,6 +1460,8 @@ class Diffusion(L.LightningModule):
   def restore_model_and_semi_ar_sample(
       self, stride_length, num_strides, dt=0.001):
     """Generate samples from the model."""
+    if self.structured_sampling_mode == 'structured_joint':
+      raise ValueError('structured_joint sampling does not support semi-AR strides')
     # Lightning auto-casting is not working in this method for some reason
     if self.ema:
       self.ema.store(itertools.chain(

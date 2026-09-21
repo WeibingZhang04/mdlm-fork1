@@ -14,6 +14,11 @@ subs_masking: false
 model:
   structured_decoder:
     top_k: 128
+    sampling:
+      mode: structured_joint
+sampling:
+  predictor: ddpm
+  semi_ar: false
 training:
   ema: 0
   antithetic_sampling: true

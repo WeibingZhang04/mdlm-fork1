@@ -12,6 +12,8 @@ tie_word_embeddings: false
 
 structured_decoder:
   enabled: true
+  sampling:
+    mode: factorized
   top_k: 64
   rank: 16
   time_embed_dim: 64

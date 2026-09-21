@@ -26,11 +26,24 @@ def _load_from_checkpoint(config, tokenizer):
   if 'hf' in config.backbone:
     return diffusion.Diffusion(
       config, tokenizer=tokenizer).to('cuda')
+
+  structured = config.model.get('structured_decoder', {})
+  if structured.get('enabled', False):
+    # Check before Lightning replaces checkpoint hyperparameters with overrides.
+    with fsspec.open(config.eval.checkpoint_path, 'rb') as handle:
+      saved_config = torch.load(handle, map_location='cpu', weights_only=False)[
+        'hyper_parameters']['config']
+    saved_head = saved_config['model']['structured_decoder']
+    for name in ('topology_mode', 'factor_mode'):
+      if saved_head[name] != structured[name]:
+        raise ValueError(f'checkpoint {name} does not match the selected four-arm config')
   
   return diffusion.Diffusion.load_from_checkpoint(
     config.eval.checkpoint_path,
     tokenizer=tokenizer,
-    config=config)
+    config=config,
+    initialize_pretrained_backbone=False,
+    strict=True)
 
 
 @L.pytorch.utilities.rank_zero_only
@@ -86,7 +99,7 @@ def _print_batch(train_ds, valid_ds, tokenizer, k=64):
 def generate_samples(config, logger, tokenizer):
   logger.info('Generating samples.')
   model = _load_from_checkpoint(config=config,
-                                tokenizer=tokenizer)
+                                tokenizer=tokenizer).to('cuda')
   model.gen_ppl_metric.reset()
   if config.eval.disable_ema:
     logger.info('Disabling EMA.')
@@ -109,9 +122,10 @@ def generate_samples(config, logger, tokenizer):
       samples = model.restore_model_and_sample(
         num_steps=config.sampling.steps)
       text_samples = model.tokenizer.batch_decode(samples)
-      model.compute_generative_perplexity(text_samples)
+      if config.eval.compute_generative_perplexity:
+        model.compute_generative_perplexity(text_samples)
   print('Text samples:', text_samples)
-  if not config.sampling.semi_ar:
+  if not config.sampling.semi_ar and config.eval.compute_generative_perplexity:
     print('Generative perplexity:',
           model.gen_ppl_metric.compute())
   return text_samples
