@@ -1,0 +1,29 @@
+{
+  "root": "/u401/n23zhang/mdlm_data/tree_mdlm_cache/runs/ccf_replication15k_20260921.wmjngfco/precision_causal/study_jmsgulfe",
+  "job": "1557320",
+  "command": [
+    "sbatch",
+    "--parsable",
+    "--partition=ALL",
+    "--job-name=ccf-cache-causal",
+    "--time=04:00:00",
+    "--mem=40G",
+    "--cpus-per-task=4",
+    "--gres=gpu:1",
+    "--exclude=watgpu1008,watgpu1109,watgpu608,watgpu908",
+    "--mail-user=n23zhang@uwaterloo.ca",
+    "--mail-type=ALL,TIME_LIMIT",
+    "--output=/u401/n23zhang/mdlm_data/tree_mdlm_cache/runs/ccf_replication15k_20260921.wmjngfco/precision_causal/study_jmsgulfe/job-%j.out",
+    "--error=/u401/n23zhang/mdlm_data/tree_mdlm_cache/runs/ccf_replication15k_20260921.wmjngfco/precision_causal/study_jmsgulfe/job-%j.err",
+    "/u401/n23zhang/mdlm_data/tree_mdlm_cache/runs/ccf_replication15k_20260921.wmjngfco/precision_causal/study_jmsgulfe/run.sh"
+  ],
+  "source_head": "2051502329429a252d3b806e0ed195ff379c42b6",
+  "file_sha256": {
+    "verify_pair.py": "ba58aacdc3b64bb3d2d0d577b819868de60c7e6985a2cd9a7cb4890748c55c5f",
+    "generate.py": "24c0fa8b19ff691bfa290a86c1459fc4be929077506cd00bcb3c47479222b551",
+    "README.md": "91107f02546856f009aa8474bb811d57d25bc16a1098347caddb482abfbf93cc",
+    "train_precision.py": "f1328e1adb260717629227ead33f0784b629d1b49ac4ac8e39daafc8322293a5",
+    "evaluate.py": "033d008a0f132484fb96de7b4ff631fa5da2e9e9a9b1086cabef6e9371994b32",
+    "precision_observer.py": "eeb53bdf3de949ad1ba28ca332473b09cefae25f91ea1cd00fe936694b189f7a"
+  }
+}
