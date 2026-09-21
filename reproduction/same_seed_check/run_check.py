@@ -2,6 +2,7 @@
 import csv
 import json
 import os
+import shutil
 import subprocess
 import sys
 from pathlib import Path
@@ -47,6 +48,15 @@ execute(['nvidia-smi', '--query-gpu=name,uuid,driver_version', '--format=csv'], 
 generate('smoke-original', original_checkpoint(6000), 6000, 1, 100001,
          ('factorized', 'structured_joint'), denoising=(8,))
 for phase in [1000, 3000, 6000]:
+    if phase == 1000 and (STUDY / 'reuse-1k.json').is_file():
+        reuse = json.loads((STUDY / 'reuse-1k.json').read_text())
+        assert reuse['completed_step'] == 1000
+        from common import sha
+        assert sha(reuse['checkpoint']) == reuse['checkpoint_sha256']
+        assert (STUDY / 'training/to1000/fixed_dynamic/checkpoints/0-1000.ckpt').resolve() == Path(reuse['checkpoint']).resolve()
+        shutil.copy2(reuse['weight_comparison'], STUDY / 'weights-1000.json')
+        save(STUDY / 'progress.json', {'phase_completed': 1000, 'reused_completed_phase': reuse})
+        continue
     execute(['bash', str(STUDY / ('phase-' + str(phase) + '.sh'))], STUDY / ('phase-' + str(phase) + '.log'))
     folder = STUDY / ('training/to' + str(phase)) / 'fixed_dynamic'
     rows = []

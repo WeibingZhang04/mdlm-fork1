@@ -1,0 +1,32 @@
+{
+  "job": "1557830",
+  "root": "/u401/n23zhang/mdlm_data/tree_mdlm_cache/runs/original_table_repro_checks/fd_seed1_retry_453g2op1/study",
+  "failure": "/u401/n23zhang/mdlm_data/tree_mdlm_cache/runs/original_table_repro_checks/fd_seed1_retry_453g2op1/study/phase-3000.sh: line 20: activate: No such file or directory\n",
+  "completed_step": 1000,
+  "weights": {
+    "global_step": 1000,
+    "original": "/u401/n23zhang/mdlm_data/tree_mdlm_cache/runs/stale/four_arm_s001_k128_job1541029/fixed_dynamic/checkpoints/0-1000.ckpt",
+    "retrained": "/u401/n23zhang/mdlm_data/tree_mdlm_cache/runs/original_table_repro_checks/fd_seed1_retry_453g2op1/study/training/to1000/fixed_dynamic/checkpoints/0-1000.ckpt",
+    "parameter_comparison": {
+      "other_model_parameters": {
+        "tensors": 131,
+        "elements": 169627250,
+        "different_elements": 0,
+        "max_abs": 0.0,
+        "rmse": 0.0,
+        "exactly_equal": true
+      },
+      "head": {
+        "tensors": 21,
+        "elements": 984417,
+        "different_elements": 0,
+        "max_abs": 0.0,
+        "rmse": 0.0,
+        "exactly_equal": true
+      }
+    },
+    "scope": "Model tensors only; serialization hashes need not match."
+  },
+  "repair": "Append /opt/anaconda3/bin after active PATH so unchanged source-activate commands resolve; reuse completed1k at its original restart boundary.",
+  "environment_note": "Login-node Conda activation differs from allocated jobs; actual runtime activation must be checked in Slurm."
+}

@@ -78,6 +78,8 @@ def prepare(output):
 set -euo pipefail
 source /opt/anaconda3/etc/profile.d/conda.sh
 conda activate mdlm
+# The preserved phase scripts use `source activate mdlm`.
+export PATH="$PATH:/opt/anaconda3/bin"
 export CCF_LEGACY_STUDY=STUDY_PATH
 export CCF_CAMPAIGN_ROOT="$CCF_LEGACY_STUDY"
 export CCF_CACHE_ROOT="CACHE_PATH"
