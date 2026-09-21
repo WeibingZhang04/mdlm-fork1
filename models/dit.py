@@ -356,7 +356,8 @@ class DIT(nn.Module, huggingface_hub.PyTorchModelHubMixin):
     else:
       return  bias_dropout_add_scale_fused_inference
 
-  def forward(self, indices, sigma):
+  def encode(self, indices, sigma):
+    """Return final hidden states and timestep conditioning."""
     x = self.vocab_embed(indices)
     c = F.silu(self.sigma_map(sigma))
 
@@ -365,6 +366,13 @@ class DIT(nn.Module, huggingface_hub.PyTorchModelHubMixin):
     with torch.cuda.amp.autocast(dtype=torch.bfloat16):
       for i in range(len(self.blocks)):
         x = self.blocks[i](x, rotary_cos_sin, c, seqlens=None)
-      x = self.output_layer(x, c)
+    return x, c
 
-    return x
+  def decode(self, hidden_states, conditioning):
+    """Map encoded states to the ordinary factorized unary logits."""
+    with torch.cuda.amp.autocast(dtype=torch.bfloat16):
+      return self.output_layer(hidden_states, conditioning)
+
+  def forward(self, indices, sigma):
+    hidden_states, conditioning = self.encode(indices, sigma)
+    return self.decode(hidden_states, conditioning)

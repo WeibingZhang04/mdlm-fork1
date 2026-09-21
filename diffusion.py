@@ -2,8 +2,10 @@ import itertools
 import math
 import os
 import typing
+import warnings
 from dataclasses import dataclass
 
+import fsspec
 import hydra.utils
 import lightning as L
 import numpy as np
@@ -32,6 +34,18 @@ def _unsqueeze(x, reference):
   return x.view(
     * x.shape,
     * ((1,) * (len(reference.shape) - len(x.shape))))
+
+
+def _structured_training_rng_seeds(
+    base_seed: int, epoch: int, rank: int) -> tuple[int, int]:
+  """Domain-separate paired corruption and topologyq-teacher RNG streams."""
+  if min(base_seed, epoch, rank) < 0:
+    raise ValueError('structured RNG seed inputs must be non-negative')
+  modulus = 2 ** 63 - 1
+  corruption_seed = (
+    int(base_seed) * 1_000_003 + int(epoch) * 10_007 + int(rank)) % modulus
+  topology_seed = (corruption_seed + 4_294_967_291) % modulus
+  return corruption_seed, topology_seed
 
 
 @dataclass
@@ -109,6 +123,15 @@ class Diffusion(L.LightningModule):
       raise ValueError(
         f'Unknown backbone: {self.config.backbone}')
 
+    self.structured_head = None
+    self.structured_enabled = False
+    self.structured_config = None
+    self.structured_training_config = None
+    self._structured_training_corruption_generator = None
+    self._structured_training_topology_generator = None
+    self._last_structured_topology_metrics = {}
+    self._initialize_structured_decoder()
+
     self.T = self.config.T
     self.subs_masking = self.config.subs_masking
 
@@ -123,6 +146,15 @@ class Diffusion(L.LightningModule):
     self.train_metrics = metrics.clone(prefix='train/')
     self.valid_metrics = metrics.clone(prefix='val/')
     self.test_metrics = metrics.clone(prefix='test/')
+
+    if self.structured_enabled:
+      conditional_metrics = torchmetrics.MetricCollection({
+        'conditional_nll_per_masked_token': NLL(),
+      })
+      conditional_metrics.set_dtype(torch.float64)
+      self.structured_train_metrics = conditional_metrics.clone(prefix='train/')
+      self.structured_valid_metrics = conditional_metrics.clone(prefix='val/')
+      self.structured_test_metrics = conditional_metrics.clone(prefix='test/')
 
     # generative perplexity
     self.gen_ppl_metric = Perplexity()
@@ -151,6 +183,113 @@ class Diffusion(L.LightningModule):
     self.fast_forward_epochs = None
     self.fast_forward_batches = None
     self._validate_configuration()
+
+  def _initialize_structured_decoder(self):
+    """Initialize the frozen-backbone CCF training configuration."""
+    structured_cfg = self.config.model.get('structured_decoder', None)
+    if structured_cfg is None or not bool(
+        structured_cfg.get('enabled', False)):
+      return
+    if self.config.backbone != 'dit' or self.parameterization != 'subs':
+      raise ValueError('CCF training requires backbone=dit and parameterization=subs')
+    if (self.config.T != 0 or self.importance_sampling
+        or self.change_of_variables):
+      raise ValueError('the restored CCF path requires continuous-time uniform sampling')
+    training_cfg = structured_cfg.get('training', {})
+    if training_cfg.get('backbone_mode', 'frozen') != 'frozen':
+      raise ValueError('the restored four-arm training path requires a frozen backbone')
+    if self.config.training.ema > 0:
+      raise ValueError('set training.ema=0 for the restored four-arm training path')
+    if bool(training_cfg.get('use_ema_backbone', False)):
+      raise ValueError('the restored four-arm path loads raw checkpoint weights, not EMA')
+    if not bool(training_cfg.get('strict_backbone_checkpoint', True)):
+      raise ValueError('CCF backbone checkpoint loading must be strict')
+    if not bool(training_cfg.get('deterministic_backbone', True)):
+      raise ValueError('the frozen four-arm backbone must use evaluation mode')
+    topology_weight = float(training_cfg.get('topology_weight', 0.0))
+    if not math.isfinite(topology_weight) or topology_weight < 0:
+      raise ValueError('topology_weight must be finite and non-negative')
+    if training_cfg.get('topology_strategy', 'gold_reveal_influence') != 'gold_reveal_influence':
+      raise ValueError('only gold_reveal_influence topology supervision is restored')
+    checkpoint_path = training_cfg.get('backbone_checkpoint', None)
+    if not checkpoint_path and bool(
+        training_cfg.get('require_pretrained_backbone', True)):
+      raise ValueError(
+        'set model.structured_decoder.training.backbone_checkpoint; '
+        'require_pretrained_backbone=false is only for random-backbone smoke tests')
+
+    from models.structured_decoder import ContextualCouplingForestHead
+
+    self.structured_config = structured_cfg
+    self.structured_training_config = training_cfg
+    self.structured_head = (
+      ContextualCouplingForestHead(
+        hidden_size=self.config.model.hidden_size,
+        vocab_size=self.vocab_size,
+        top_k=int(structured_cfg.get('top_k', 64)),
+        rank=int(structured_cfg.get('rank', 16)),
+        time_embed_dim=int(structured_cfg.get('time_embed_dim', 64)),
+        topology_dim=int(structured_cfg.get('topology_dim', 128)),
+        local_window=int(structured_cfg.get('local_window', 2)),
+        num_anchor_slots=int(
+          structured_cfg.get('num_anchor_slots', 16)),
+        contextual_neighbors=int(
+          structured_cfg.get('contextual_neighbors', 4)),
+        component_size_cap=int(
+          structured_cfg.get('component_size_cap', 32)),
+        topology_mode=str(
+          structured_cfg.get('topology_mode', 'dynamic')),
+        factor_mode=str(structured_cfg.get('factor_mode', 'dynamic')),
+        factor_embedding_mode=str(
+          structured_cfg.get('factor_embedding_mode', 'shared')),
+        factor_conditioner_hidden_dim=structured_cfg.get(
+          'factor_conditioner_hidden_dim', 0),
+        independent_mode=bool(
+          structured_cfg.get('independent_mode', False)),
+        min_edge_score=structured_cfg.get('min_edge_score', None)))
+
+    if checkpoint_path:
+      self._load_structured_backbone_checkpoint(str(checkpoint_path))
+    else:
+      warnings.warn('CCF is freezing a random backbone (smoke tests only)',
+                    stacklevel=2)
+    self.backbone.requires_grad_(False)
+    self.backbone.eval()
+    self.structured_enabled = True
+
+  def _load_structured_backbone_checkpoint(self, path):
+    """Load raw backbone weights from a trusted MDLM checkpoint, strictly."""
+    with fsspec.open(path, 'rb') as handle:
+      checkpoint = torch.load(handle, map_location='cpu', weights_only=False)
+    state_dict = checkpoint.get('state_dict', checkpoint)
+    backbone_state = {
+      key[len('backbone.'):]: value
+      for key, value in state_dict.items()
+      if key.startswith('backbone.')
+    }
+    if not backbone_state:
+      # Bare DiT state dicts are also accepted. Do not drop unexpected keys.
+      backbone_state = state_dict
+    self.backbone.load_state_dict(backbone_state, strict=True)
+
+  @torch.no_grad()
+  def _structured_backbone_output(self, tokens, conditioning):
+    """Return frozen features and raw logits for the clean-token vocabulary."""
+    hidden_states, time_conditioning = self.backbone.encode(
+      tokens, self._process_sigma(conditioning))
+    unary_logits = self.backbone.decode(
+      hidden_states, time_conditioning).float().clone()
+    # The absorbing mask is never a clean-token candidate.
+    unary_logits[:, :, self.mask_index] = -torch.inf
+    return hidden_states, unary_logits
+
+  def train(self, mode=True):
+    super().train(mode)
+    if self.structured_enabled:
+      # Lightning recursively enables training after validation. Frozen CCF
+      # features must remain deterministic, including backbone dropout.
+      self.backbone.eval()
+    return self
 
   def _validate_configuration(self):
     assert not (self.change_of_variables
@@ -365,6 +504,21 @@ class Diffusion(L.LightningModule):
     losses = self._loss(batch['input_ids'], attention_mask)
     loss = losses.loss
 
+    if self.structured_enabled:
+      metrics_by_prefix = {
+        'train': self.structured_train_metrics,
+        'val': self.structured_valid_metrics,
+        'test': self.structured_test_metrics,
+      }
+      if prefix not in metrics_by_prefix:
+        raise ValueError(f'Invalid prefix: {prefix}')
+      metrics = metrics_by_prefix[prefix]
+      # distributed_nll spreads each joint NLL over its active tokens only
+      # for accounting; this metric does not imply token independence.
+      metrics.update(losses.nlls, losses.token_mask)
+      self.log_dict(metrics, on_step=False, on_epoch=True, sync_dist=True)
+      return loss
+
     if prefix == 'train':
       self.train_metrics.update(losses.nlls, losses.token_mask)
       metrics = self.train_metrics
@@ -384,8 +538,18 @@ class Diffusion(L.LightningModule):
     return loss
 
   def on_train_epoch_start(self):
-    self.backbone.train()
+    self.backbone.train(not self.structured_enabled)
+    if self.structured_enabled:
+      self.structured_head.train()
     self.noise.train()
+    if self.structured_enabled:
+      corruption_seed, topology_seed = _structured_training_rng_seeds(
+        int(self.config.get('seed', 1)), int(self.current_epoch),
+        int(self.global_rank))
+      self._structured_training_corruption_generator = torch.Generator(
+        device=self.device).manual_seed(corruption_seed)
+      self._structured_training_topology_generator = torch.Generator(
+        device=self.device).manual_seed(topology_seed)
 
   def training_step(self, batch, batch_idx):
     loss = self._compute_loss(batch, prefix='train')
@@ -451,9 +615,23 @@ class Diffusion(L.LightningModule):
     #  "Detected call of `lr_scheduler.step()` before `optimizer.step()`. "
     #  Not clear if this is a problem or not.
     #  See: https://github.com/Lightning-AI/pytorch-lightning/issues/5558
+    if self.structured_enabled:
+      configured_head_lr = self.structured_training_config.get('head_lr', None)
+      head_lr = (self.config.optim.lr if configured_head_lr is None
+                 else float(configured_head_lr))
+      if not math.isfinite(head_lr) or head_lr < 0:
+        raise ValueError('head_lr must be finite and non-negative')
+      # The restored CCF path freezes the backbone at initialization.
+      head_and_noise = [
+        parameter for module in (self.structured_head, self.noise)
+        for parameter in module.parameters() if parameter.requires_grad]
+      parameter_groups = [{
+        'params': head_and_noise, 'lr': head_lr, 'name': 'structured_head'}]
+    else:
+      parameter_groups = itertools.chain(
+        self.backbone.parameters(), self.noise.parameters())
     optimizer = torch.optim.AdamW(
-      itertools.chain(self.backbone.parameters(),
-                      self.noise.parameters()),
+      parameter_groups,
       lr=self.config.optim.lr,
       betas=(self.config.optim.beta1,
              self.config.optim.beta2),
@@ -572,7 +750,7 @@ class Diffusion(L.LightningModule):
         self.gen_ppl_metric.update(
           nlls, first_eos[..., 1:] + token_mask[..., 1:])
 
-  def q_xt(self, x, move_chance):
+  def q_xt(self, x, move_chance, generator=None):
     """Computes the noisy sample xt.
 
     Args:
@@ -581,7 +759,7 @@ class Diffusion(L.LightningModule):
       move_chance: float torch.Tensor with shape (batch_size, 1).
     """
     move_indices = torch.rand(
-      * x.shape, device=x.device) < move_chance
+      * x.shape, device=x.device, generator=generator) < move_chance
     xt = torch.where(move_indices, self.mask_index, x)
     return xt
 
@@ -797,8 +975,8 @@ class Diffusion(L.LightningModule):
                         0)[..., None]
     return edge
 
-  def _sample_t(self, n, device):
-    _eps_t = torch.rand(n, device=device)
+  def _sample_t(self, n, device, generator=None):
+    _eps_t = torch.rand(n, device=device, generator=generator)
     if self.antithetic_sampling:
       offset = torch.arange(n, device=device) / n
       _eps_t = (_eps_t / n + offset) % 1
@@ -893,10 +1071,107 @@ class Diffusion(L.LightningModule):
     return - log_p_theta * (
       dsigma / torch.expm1(sigma))[:, None]
 
+  def _structured_head_output(self, tokens, conditioning, active_mask):
+    hidden_states, unary_logits = self._structured_backbone_output(
+      tokens, conditioning)
+    # CCF receives the actual noise level even when MDLM's backbone is
+    # configured without timestep conditioning.
+    output = self.structured_head(
+      hidden_states=hidden_states,
+      unary_logits=unary_logits,
+      timestep=conditioning.squeeze(-1),
+      active_mask=active_mask)
+    return output, unary_logits
+
+  def _structured_topology_loss(
+      self, output, unary_logits, xt, x0, conditioning, active_mask):
+    """Supervise original-context proposals with a frozen gold-reveal pass."""
+    from structured_training import (
+      gold_reveal_influence_topology_loss, sample_active_sources)
+
+    cfg = self.structured_training_config
+    enabled = (
+      float(cfg.get('topology_weight', 0.0)) > 0.0
+      and output.topology_mode == 'dynamic'
+      and not output.independent_mode
+      and (self.training or bool(cfg.get('topology_on_validation', False))))
+    if not enabled:
+      return None
+    generator = self._structured_training_topology_generator if self.training else None
+    if self.training and generator is None:
+      raise RuntimeError('initialize CCF topology RNG in on_train_epoch_start')
+    sources = sample_active_sources(active_mask, generator=generator)
+    revealed_xt = xt.clone()
+    valid_sources = sources >= 0
+    batch_index = torch.arange(x0.shape[0], device=x0.device)
+    revealed_xt[batch_index[valid_sources], sources[valid_sources]] = (
+      x0[batch_index[valid_sources], sources[valid_sources]])
+    # Same frozen backbone, a second no-grad pass. Never send revealed_xt
+    # into the primary structured head or use it to choose that head's edges.
+    _, revealed_logits = self._structured_backbone_output(revealed_xt, conditioning)
+    return gold_reveal_influence_topology_loss(
+      output=output,
+      base_unary_logits=unary_logits.detach(),
+      revealed_unary_logits=revealed_logits,
+      clean_tokens=x0,
+      active_mask=active_mask,
+      source_positions=sources,
+      temperature=float(cfg.get('topology_temperature', 0.25)),
+      minimum_choices=int(cfg.get('topology_minimum_choices', 2)),
+      edge_weight=float(cfg.get('topology_edge_weight', 1.0)),
+      anchor_weight=float(cfg.get('topology_anchor_weight', 0.25)),
+      slot_weight=float(cfg.get('topology_slot_weight', 0.25)))
+
+  def _forward_pass_structured(self, x0, attention_mask):
+    """Conditional joint denoising NLL per masked token, not a diffusion ELBO."""
+    from structured_training import structured_denoising_loss
+
+    generator = None
+    if self.training:
+      generator = self._structured_training_corruption_generator
+      if generator is None:
+        raise RuntimeError('initialize CCF corruption RNG in on_train_epoch_start')
+    t = self._sample_t(x0.shape[0], x0.device, generator=generator)
+    sigma, _ = self.noise(t)
+    conditioning = sigma[:, None]
+    move_chance = 1 - torch.exp(-conditioning)
+    xt = self.q_xt(x0, move_chance, generator=generator)
+    active_mask = xt.eq(self.mask_index) & attention_mask.bool()
+    output, unary_logits = self._structured_head_output(
+      xt, conditioning, active_mask)
+    denoising = structured_denoising_loss(
+      output=output, unary_logits=unary_logits,
+      clean_tokens=x0, active_mask=active_mask)
+    # Preserve a zero-gradient connection when topology supervision is off.
+    topology_zero = torch.where(
+      torch.isfinite(output.proposal_scores), output.proposal_scores,
+      torch.zeros_like(output.proposal_scores)).sum() * 0.0
+    topology = self._structured_topology_loss(
+      output, unary_logits, xt, x0, conditioning, active_mask)
+    topology_loss = topology_zero if topology is None else topology.loss
+    # Keep detached components/coverage available for the logging connection.
+    self._last_structured_topology_metrics = {} if topology is None else {
+      name: getattr(topology, name).detach() for name in (
+        'loss', 'edge_loss', 'anchor_loss', 'slot_loss', 'valid_examples',
+        'mean_influence', 'edge_coverage_numerator', 'edge_coverage_denominator',
+        'anchor_coverage_numerator', 'anchor_coverage_denominator',
+        'slot_coverage_numerator', 'slot_coverage_denominator')
+    }
+    weight = float(self.structured_training_config.get('topology_weight', 0.0))
+    total_loss = denoising.loss + topology_zero + weight * topology_loss
+    # The reported conditional NLL excludes the auxiliary topology objective.
+    return Loss(loss=total_loss, nlls=denoising.distributed_nll,
+                token_mask=active_mask)
+
   def _loss(self, x0, attention_mask):
+    if self.structured_enabled and attention_mask is None:
+      attention_mask = torch.ones_like(x0, dtype=torch.bool)
     (input_tokens, output_tokens,
      attention_mask) = self._maybe_sub_sample(
        x0, attention_mask)
+
+    if self.structured_enabled:
+      return self._forward_pass_structured(input_tokens, attention_mask)
 
     if self.parameterization == 'ar':
       logprobs = self.backbone(input_tokens, None)
