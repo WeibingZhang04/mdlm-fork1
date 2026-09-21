@@ -1,0 +1,206 @@
+{
+  "collected_utc": "2026-09-21T14:43:13.293113+00:00",
+  "studies": {
+    "forensic": {
+      "cells": [],
+      "contrasts": [],
+      "jobs": {
+        "squeue": "1557350|RUNNING|0:35|watgpu108\n",
+        "sacct": "1557350|RUNNING|00:00:35|0:0|watgpu108\n1557354|COMPLETED|00:01:03|0:0|watgpu108\n"
+      },
+      "errors": {},
+      "conditional": [
+        {
+          "case": "FD_old6k",
+          "contexts": 64,
+          "active_tokens": 40174,
+          "backbone_nll": 4.661075943941948,
+          "joint_nll": 4.666144712061371,
+          "marginal_nll": 4.671392381069594,
+          "marginal_kl_from_backbone": 0.013205057870115014,
+          "backbone_entropy": 4.618846824753485,
+          "head_marginal_entropy": 4.488620266762678,
+          "backbone_explicit_mass": 0.7353600236949008,
+          "head_explicit_mass": 0.7598665702418357,
+          "backbone_to_joint_gain": -0.005068768119422699,
+          "dependence_gain": 0.005247669008222436,
+          "document_bootstrap_ci95": {
+            "backbone_to_joint_gain": [
+              -0.008490405777438719,
+              -0.0016976002120536915
+            ],
+            "dependence_gain": [
+              0.004240461050995245,
+              0.006316260865072651
+            ],
+            "entropy_change": [
+              -0.16383935354575488,
+              -0.09549341499554402
+            ]
+          },
+          "uncertainty_scope": "Descriptive paired bootstrap of 16 validation examples, keeping all four masks together; no multiple-comparison correction"
+        },
+        {
+          "case": "FD_fresh6k",
+          "contexts": 64,
+          "active_tokens": 40174,
+          "backbone_nll": 4.661075943941948,
+          "joint_nll": 4.661092762261749,
+          "marginal_nll": 4.665777420922843,
+          "marginal_kl_from_backbone": 0.0025912403345238594,
+          "backbone_entropy": 4.618846824753485,
+          "head_marginal_entropy": 4.592565455502937,
+          "backbone_explicit_mass": 0.7353600236949008,
+          "head_explicit_mass": 0.7423682392055982,
+          "backbone_to_joint_gain": -1.681831980105292e-05,
+          "dependence_gain": 0.004684658661093773,
+          "document_bootstrap_ci95": {
+            "backbone_to_joint_gain": [
+              -0.0012205213326370358,
+              0.00103194063611212
+            ],
+            "dependence_gain": [
+              0.004145827559836827,
+              0.005232483316246019
+            ],
+            "entropy_change": [
+              -0.04176922111252288,
+              -0.011476226490931942
+            ]
+          },
+          "uncertainty_scope": "Descriptive paired bootstrap of 16 validation examples, keeping all four masks together; no multiple-comparison correction"
+        },
+        {
+          "case": "FD_fresh15k",
+          "contexts": 64,
+          "active_tokens": 40174,
+          "backbone_nll": 4.661075943941948,
+          "joint_nll": 4.649573218954822,
+          "marginal_nll": 4.667127018921549,
+          "marginal_kl_from_backbone": 0.0029022993925405653,
+          "backbone_entropy": 4.618846824753485,
+          "head_marginal_entropy": 4.624877773202682,
+          "backbone_explicit_mass": 0.7353600236949008,
+          "head_explicit_mass": 0.7356230629002608,
+          "backbone_to_joint_gain": 0.011502724987126314,
+          "dependence_gain": 0.01755379996672677,
+          "document_bootstrap_ci95": {
+            "backbone_to_joint_gain": [
+              0.010215915310691765,
+              0.012862818479685798
+            ],
+            "dependence_gain": [
+              0.016021056100395434,
+              0.01916446885661877
+            ],
+            "entropy_change": [
+              -0.004925137520504714,
+              0.017441934963953475
+            ]
+          },
+          "uncertainty_scope": "Descriptive paired bootstrap of 16 validation examples, keeping all four masks together; no multiple-comparison correction"
+        },
+        {
+          "case": "DD_old6k",
+          "contexts": 64,
+          "active_tokens": 40174,
+          "backbone_nll": 4.661075943941948,
+          "joint_nll": 4.664865292186265,
+          "marginal_nll": 4.66931385627671,
+          "marginal_kl_from_backbone": 0.010363220352503862,
+          "backbone_entropy": 4.618846824753485,
+          "head_marginal_entropy": 4.534270492753495,
+          "backbone_explicit_mass": 0.7353600236949008,
+          "head_explicit_mass": 0.7518449571481973,
+          "backbone_to_joint_gain": -0.003789348244316909,
+          "dependence_gain": 0.004448564090444846,
+          "document_bootstrap_ci95": {
+            "backbone_to_joint_gain": [
+              -0.006368510742007896,
+              -0.0011655674793866035
+            ],
+            "dependence_gain": [
+              0.003281858270446619,
+              0.005565387583912098
+            ],
+            "entropy_change": [
+              -0.11498551515113342,
+              -0.05262032697952281
+            ]
+          },
+          "uncertainty_scope": "Descriptive paired bootstrap of 16 validation examples, keeping all four masks together; no multiple-comparison correction"
+        },
+        {
+          "case": "DD_fresh6k",
+          "contexts": 64,
+          "active_tokens": 40174,
+          "backbone_nll": 4.661075943941948,
+          "joint_nll": 4.661401186242434,
+          "marginal_nll": 4.6658591652495724,
+          "marginal_kl_from_backbone": 0.0026593988937212505,
+          "backbone_entropy": 4.618846824753485,
+          "head_marginal_entropy": 4.5860850697415465,
+          "backbone_explicit_mass": 0.7353600236949008,
+          "head_explicit_mass": 0.7434829910938443,
+          "backbone_to_joint_gain": -0.0003252423004850774,
+          "dependence_gain": 0.004457979007139257,
+          "document_bootstrap_ci95": {
+            "backbone_to_joint_gain": [
+              -0.0017433315976253887,
+              0.0008758928545052532
+            ],
+            "dependence_gain": [
+              0.003961842113565655,
+              0.004943325491838986
+            ],
+            "entropy_change": [
+              -0.051377521158180395,
+              -0.014904955855198482
+            ]
+          },
+          "uncertainty_scope": "Descriptive paired bootstrap of 16 validation examples, keeping all four masks together; no multiple-comparison correction"
+        },
+        {
+          "case": "DD_fresh15k",
+          "contexts": 64,
+          "active_tokens": 40174,
+          "backbone_nll": 4.661075943941948,
+          "joint_nll": 4.649799723892717,
+          "marginal_nll": 4.666782423399132,
+          "marginal_kl_from_backbone": 0.002865522207847401,
+          "backbone_entropy": 4.618846824753485,
+          "head_marginal_entropy": 4.638196805322628,
+          "backbone_explicit_mass": 0.7353600236949008,
+          "head_explicit_mass": 0.7326568396135259,
+          "backbone_to_joint_gain": 0.011276220049231157,
+          "dependence_gain": 0.016982699506414674,
+          "document_bootstrap_ci95": {
+            "backbone_to_joint_gain": [
+              0.009952470608437423,
+              0.012700439858134814
+            ],
+            "dependence_gain": [
+              0.015475136893791612,
+              0.01853505926248166
+            ],
+            "entropy_change": [
+              0.009058863948693596,
+              0.030757747713311738
+            ]
+          },
+          "uncertainty_scope": "Descriptive paired bootstrap of 16 validation examples, keeping all four masks together; no multiple-comparison correction"
+        }
+      ],
+      "conditional_pairing_verified": true
+    },
+    "causal": {
+      "cells": [],
+      "contrasts": [],
+      "jobs": {
+        "squeue": "1557320|RUNNING|30:36|watgpu208\n",
+        "sacct": "1557320|RUNNING|00:30:36|0:0|watgpu208\n"
+      },
+      "errors": {}
+    }
+  }
+}

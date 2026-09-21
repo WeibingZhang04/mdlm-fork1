@@ -1,0 +1,51 @@
+{
+  "root": "/u401/n23zhang/mdlm_data/tree_mdlm_cache/runs/ccf_replication15k_20260921.wmjngfco/forensic_audit/study_zo4vpm4s",
+  "jobs": {
+    "conditional": "1557349",
+    "generation": "1557350"
+  },
+  "commands": {
+    "conditional": [
+      "sbatch",
+      "--parsable",
+      "--partition=ALL",
+      "--job-name=ccf-forensic-conditional",
+      "--time=01:00:00",
+      "--mem=40G",
+      "--cpus-per-task=4",
+      "--gres=gpu:1",
+      "--exclude=watgpu1008,watgpu1109,watgpu608,watgpu908",
+      "--mail-user=n23zhang@uwaterloo.ca",
+      "--mail-type=ALL,TIME_LIMIT",
+      "--output=/u401/n23zhang/mdlm_data/tree_mdlm_cache/runs/ccf_replication15k_20260921.wmjngfco/forensic_audit/study_zo4vpm4s/conditional-%j.out",
+      "--error=/u401/n23zhang/mdlm_data/tree_mdlm_cache/runs/ccf_replication15k_20260921.wmjngfco/forensic_audit/study_zo4vpm4s/conditional-%j.err",
+      "/u401/n23zhang/mdlm_data/tree_mdlm_cache/runs/ccf_replication15k_20260921.wmjngfco/forensic_audit/study_zo4vpm4s/conditional.sh"
+    ],
+    "generation": [
+      "sbatch",
+      "--parsable",
+      "--partition=ALL",
+      "--job-name=ccf-forensic-generation",
+      "--time=04:00:00",
+      "--mem=40G",
+      "--cpus-per-task=4",
+      "--gres=gpu:1",
+      "--exclude=watgpu1008,watgpu1109,watgpu608,watgpu908",
+      "--mail-user=n23zhang@uwaterloo.ca",
+      "--mail-type=ALL,TIME_LIMIT",
+      "--output=/u401/n23zhang/mdlm_data/tree_mdlm_cache/runs/ccf_replication15k_20260921.wmjngfco/forensic_audit/study_zo4vpm4s/generation-%j.out",
+      "--error=/u401/n23zhang/mdlm_data/tree_mdlm_cache/runs/ccf_replication15k_20260921.wmjngfco/forensic_audit/study_zo4vpm4s/generation-%j.err",
+      "--dependency=afterok:1557349",
+      "/u401/n23zhang/mdlm_data/tree_mdlm_cache/runs/ccf_replication15k_20260921.wmjngfco/forensic_audit/study_zo4vpm4s/generation.sh"
+    ]
+  },
+  "source_head": "2051502329429a252d3b806e0ed195ff379c42b6",
+  "file_sha256": {
+    "rescore.py": "ffb5560356f6de7fd2ddf67bbcdbb87786ad194e6bdf34de9654ca7d615129d0",
+    "generation.py": "fe9fccfde31300dce37a7facb32adc993dd93576b4a142ff3d7e6aeb42c69e8a",
+    "run_control.py": "cff9a7149a0d2fe320e31316611d578dde48fbcfa4b1a5a0eec543531b56c493",
+    "README.md": "41805af76088cb6d3e661fda8008150ce7398914283e85d66f708a060f09037e",
+    "common.py": "9ce4c84ff917f0d45bc4d800001c3b7ad3d9038e4e8eec5bfa06c2f2aaa7fe50",
+    "conditional.py": "3b1248a0597e33a933991be9a1c0f4535a108e46aad8f7d7dd9cccbaabb2ff91"
+  }
+}
