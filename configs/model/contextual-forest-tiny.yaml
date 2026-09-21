@@ -17,6 +17,8 @@ structured_decoder:
   enabled: true
   top_k: 32
   rank: 8
+  factor_embedding_mode: shared
+  factor_conditioner_hidden_dim: 0
   time_embed_dim: 64
   topology_dim: 64
   local_window: 2

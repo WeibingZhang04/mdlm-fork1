@@ -167,5 +167,6 @@
       "name": "r16",
       "sha256": "6809560cc2cd899e1b03bce92ab69c45a3c57c6caa529e54461d99a96a6717fe"
     }
-  }
+  },
+  "execution": "Direct checkout; historical patch hashes below are provenance records only. No patch files are required."
 }

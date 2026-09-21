@@ -333,6 +333,22 @@ def structured_decoder_identity_from_config(
       'structured_decoder.training.topology_weight must be non-negative')
 
   head_semantics: dict[str, object] = {}
+  factor_embedding_mode = structured.get('factor_embedding_mode', 'shared')
+  if factor_embedding_mode not in {'shared', 'separate'}:
+    raise ValueError(
+      'structured_decoder.factor_embedding_mode must be shared or separate')
+  # Absence canonically means shared: preserve existing manifests and digests.
+  # Separate must be bound into the identity to reject architecture mismatches.
+  if factor_embedding_mode == 'separate':
+    head_semantics['factor_embedding_mode'] = factor_embedding_mode
+  conditioner_width = structured.get('factor_conditioner_hidden_dim', 0)
+  if (not isinstance(conditioner_width, int) or isinstance(conditioner_width, bool)
+      or conditioner_width < 0):
+    raise ValueError(
+      'structured_decoder.factor_conditioner_hidden_dim must be a non-negative integer')
+  # Omit the disabled default so archived shared-head identity hashes survive.
+  if conditioner_width:
+    head_semantics['factor_conditioner_hidden_dim'] = conditioner_width
   for field in HEAD_INTEGER_FIELDS:
     head_semantics[field] = _positive_int(
       structured.get(field), context=f'structured_decoder.{field}')

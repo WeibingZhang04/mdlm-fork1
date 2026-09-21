@@ -1,6 +1,6 @@
 # Original CCF table: compact reproduction
 
-This package reconstructs the original seed-1 experiment from the existing repository commit `8e1772f4687a78a48b6a330f9f095e9880540de2` plus three small patches. It adds no complete source snapshots, datasets, checkpoints, generated samples, training logs, usernames or personal storage paths to Git. The base commit already contains the existing project; this package does not rewrite that pre-existing history.
+The historical R8, R16 and evaluation changes are applied directly to the repository source on top of `8e1772f4687a78a48b6a330f9f095e9880540de2`. Slurm jobs run this checkout directly; no patch application or source reconstruction happens at runtime. It adds no complete source snapshots, datasets, checkpoints, generated samples, training logs, usernames or personal storage paths to Git. The base commit already contains the existing project; this package does not rewrite that pre-existing history.
 
 ## What is preserved
 
@@ -13,7 +13,7 @@ This package reconstructs the original seed-1 experiment from the existing repos
 - Confirmation: the original three checkpoint selections for each FD/DD model/budget, MDLM, 4/8/16/32 steps, 100 samples, seed block 100001. Total: 76 cells / 7,600 samples. FF/DF were not in the historical 100-sample table.
 - GPT-2-large revision, FP32 scoring, length 1024 and first-non-leading-EOS scoring policy. Budget passed to the sampler is S+1; actual NFE is retained in results.
 
-`protocol.json` holds the shared overrides, phase differences and frozen checkpoint selections. The three patches reconstruct R8, R16 and evaluation revisions in sequence. `provenance.json` records content hashes; runtime source reconstruction checks every included file. Large immutable historical runs remain outside Git. The old exploratory 500/1000-step generation screens are outside this compact table reproduction.
+`protocol.json` holds the shared overrides, phase differences and frozen checkpoint selections. `provenance.json` records historical content hashes; preparation checks that the combined source matches the applied revisions. Shared mode preserves Basic initialization; separate mode enables the historical R8/R16 heads. The optional conditioner remains disabled. `historical_reference.py` retains only the three earlier sampling functions required by the R8-DD first-sample gate. Large immutable historical runs remain outside Git. The old exploratory 500/1000-step generation screens are outside this compact table reproduction.
 
 `report.md` preserves the historical report wording and table; only its audit link points to this README. `expected-table.csv` is the 28-cell historical reference, not a replacement for freshly scored output. The report is historical and does not incorporate subsequent regression findings.
 
@@ -31,7 +31,9 @@ export CCF_MAIL_USER="your-notification-email"
 python experiments/original_table/run.py prepare --cache "$CCF_CACHE_ROOT" --study "$CCF_STUDY"
 ```
 
-Preparation creates a new directory outside the repository. Only the required runtime source/configuration files are reconstructed there. Runtime copies, all checkpoints, resolved configurations, local paths and logs stay in that external directory. Preparation checks source and backbone identity without importing a model. `--source-only` is available for CPU source validation and deliberately prevents training/generation from that validation directory.
+Preparation creates only study metadata, evaluation-cell lists and a logs directory outside the repository. Checkpoints, resolved configurations, generated samples and logs are written there by jobs. Source code runs directly from this checkout and is hash-checked before each job; do not edit it while the study is running. Preparation checks source and backbone identity without importing a model. `--source-only` validates source without requiring the backbone and deliberately prevents training/generation from that validation directory.
+
+`run.py` is a command helper, not a scheduler: it expands the eight-arm protocol, preserves phase resumes, invokes training/evaluation, and collects results. The Slurm files schedule those commands. Keeping this logic in Python avoids duplicating settings in shell scripts. It no longer archives Git trees, applies patches, copies source, or creates runtime Git repositories. Submit from the repository root so `SLURM_SUBMIT_DIR` points to this checkout.
 
 ## Submit yourself
 
@@ -58,14 +60,14 @@ The fixed historical confirmation selection allows both evaluation arrays to dep
 After the arrays finish:
 
 ```bash
-python "$CCF_STUDY/suite/run.py" collect --study "$CCF_STUDY"
+python experiments/original_table/run.py collect --study "$CCF_STUDY"
 ```
 
 The collector writes the complete cell results and a readable best-of-selected-checkpoints table outside Git. Missing cells remain marked pending; they are not silently dropped. Keep all scored checkpoints, including negative results.
 
 ## Comparability
 
-Matching source and arguments does not guarantee identical PPL across GPU models, software environments or nondeterministic kernels. A separate existing seed-1 verification matched the original FD 1k model tensors exactly; that is not proof of the final table. No new GPU job was submitted to validate this compact wrapper. Review `validation.json` for the checks actually performed.
+Matching source and arguments does not guarantee identical PPL across GPU models, software environments or nondeterministic kernels. A separate existing seed-1 verification matched the original FD 1k model tensors exactly; that is not proof of the final table. No new GPU job was submitted to validate this launcher. CPU synthetic comparisons of the combined source are documented in `validation.json`; they do not establish full training or PPL reproduction. Review `validation.json` for the checks actually performed.
 
 Historical CCF and MDLM reverse-step schedules match, but probability-calculation precision and final cleanup differ. CCF often executes S calls and MDLM S+1. The old table measures pipeline performance, not an isolated causal gain from the head. Historical training builds a BF16 rotary cache; evaluation builds an FP32 cache. Preserve this asymmetry when replicating; do not introduce an FP32 startup training probe. A scientifically matched alternative should be reported separately.
 
@@ -73,4 +75,4 @@ The table reports minima over three selected checkpoints and is exploratory. Rep
 
 ## Attribution
 
-The patches come from the project's preserved historical R8, R16 and confirmation runtime versions, identified by hashes in `provenance.json`. Historical sampler functions originate in `audit_ccf_sampling_v3.py` and `audit_ccf_sampling_v4.py`; their comments retain the PyTorch exponential-race attribution. The numerical architecture, objective and scoring routines were not newly designed for this package. New code handles reconstruction, paths, scheduling arguments and collection.
+The applied changes come from the project's preserved historical R8, R16 and confirmation runtime versions, identified by hashes in `provenance.json`. Historical sampler functions originate in `audit_ccf_sampling_v3.py` and `audit_ccf_sampling_v4.py`; their comments retain the PyTorch exponential-race attribution. The numerical architecture, objective and scoring routines were not newly designed for this package. New code handles reconstruction, paths, scheduling arguments and collection.

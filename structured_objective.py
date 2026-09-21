@@ -51,19 +51,17 @@ def compressed_states_for_tokens(
   return states
 
 
-def infer_structured_distribution(
-    output: StructuredDecoderOutput,
-    active_mask: torch.Tensor,
-    backend: str = 'auto') -> StructuredInference:
-  """Run exact sum-product, cancelling nodes outside the masked set."""
-  active_mask = _validate_active_mask(output, active_mask)
+def _structured_clamped_states(active_mask: torch.Tensor) -> torch.Tensor:
   # Forest edges already connect active nodes only.  Clamping every inactive
   # isolated node to an arbitrary valid candidate makes its unary cancel
   # exactly between the assignment score and partition function.
-  clamped_states = torch.where(
+  return torch.where(
     active_mask,
     torch.full_like(active_mask, -1, dtype=torch.long),
     torch.zeros_like(active_mask, dtype=torch.long))
+
+
+def _structured_backend(output: StructuredDecoderOutput, backend: str) -> str:
   if backend == 'auto':
     # Tiny synthetic lattices are faster with dense kernels; realistic top-K
     # heads use the endpoint path to avoid K-squared time and memory.
@@ -71,6 +69,17 @@ def infer_structured_distribution(
       'dense' if output.candidate_ids.shape[-1] <= 16 else 'low_rank')
   if backend not in {'dense', 'low_rank'}:
     raise ValueError("backend must be 'auto', 'dense', or 'low_rank'")
+  return backend
+
+
+def infer_structured_distribution(
+    output: StructuredDecoderOutput,
+    active_mask: torch.Tensor,
+    backend: str = 'auto') -> StructuredInference:
+  """Run exact sum-product, cancelling nodes outside the masked set."""
+  active_mask = _validate_active_mask(output, active_mask)
+  clamped_states = _structured_clamped_states(active_mask)
+  backend = _structured_backend(output, backend)
   log_pair_factors = None
   if backend == 'dense':
     log_pair_factors = structured_utils.positive_pair_factors_to_log(
@@ -274,16 +283,28 @@ def sample_structured_tokens(
     inference: Optional[StructuredInference] = None) -> torch.Tensor:
   """Jointly sample full-vocabulary tokens; output shape is [B,S,L]."""
   active_mask = _validate_active_mask(output, active_mask)
-  inference = inference or infer_structured_distribution(output, active_mask)
-  if inference.backend == 'dense':
+  if inference is None:
+    # Both joint samplers compute their own messages and marginals. The old
+    # prepass's marginal tensors were never consumed here. Prepare only the
+    # same backend/clamps/factors; preserve every subsequent random draw.
+    backend = _structured_backend(output, 'auto')
+    clamped_states = _structured_clamped_states(active_mask)
+    log_pair_factors = (
+      structured_utils.positive_pair_factors_to_log(
+        output.materialize_pair_factors()) if backend == 'dense' else None)
+  else:
+    backend = inference.backend
+    clamped_states = inference.clamped_states
+    log_pair_factors = inference.log_pair_factors
+  if backend == 'dense':
     states = structured_utils.sample_forest(
       output.unary_log_potentials,
-      inference.log_pair_factors,
+      log_pair_factors,
       output.edge_index,
       num_samples=num_samples,
       edge_mask=output.edge_mask,
       state_mask=output.candidate_state_mask,
-      clamped_states=inference.clamped_states,
+      clamped_states=clamped_states,
       generator=generator)
   else:
     states = structured_utils.sample_forest_low_rank(
@@ -294,7 +315,7 @@ def sample_structured_tokens(
       num_samples=num_samples,
       edge_mask=output.edge_mask,
       state_mask=output.candidate_state_mask,
-      clamped_states=inference.clamped_states,
+      clamped_states=clamped_states,
       generator=generator)
   batch_size, _, sequence_length = states.shape
   explicit_states = states.clamp_max(output.candidate_ids.shape[-1] - 1)

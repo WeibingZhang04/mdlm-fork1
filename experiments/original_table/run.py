@@ -1,16 +1,16 @@
 #!/usr/bin/env python3
-"""Prepare and run the historical protocol. This program never calls sbatch."""
+"""Configure, run, and collect the historical protocol from this checkout.
+
+Slurm schedules the jobs; this helper supplies their Python commands.
+It never applies patches, copies source trees, or calls sbatch."""
 import argparse
 import csv
 import hashlib
-import io
 import json
 import os
 from pathlib import Path
-import shutil
 import subprocess
 import sys
-import tarfile
 
 HERE = Path(__file__).resolve().parent
 ARMS = {'static_static': ('fixed', 'fixed', 0.0), 'fixed_dynamic': ('fixed', 'dynamic', 0.0),
@@ -35,7 +35,7 @@ def call(args, cwd=None, log=None):
         with Path(log).open('x') as f:
             subprocess.run(args, cwd=cwd, check=True, stdout=f, stderr=subprocess.STDOUT)
 
-def protocol(study): return read(study/'suite/protocol.json')
+def protocol(study): return read(HERE/'protocol.json')
 def require_allocation():
     if not os.environ.get('SLURM_JOB_ID'):
         raise RuntimeError('Training and generation require a Slurm allocation')
@@ -49,42 +49,22 @@ def prepare(options):
     backbone = cache/'checkpoints/mdlm-owt-backbone.pt'
     if not options.source_only and sha(backbone) != cfg['backbone_sha256']:
         raise ValueError('Pinned backbone hash mismatch')
-    commit = provenance['base_commit']
-    files = list(provenance['base_runtime_sha256'])
-    blob = subprocess.check_output(['git','-C',str(repo),'archive',commit,'--',*files])
+    # Execute the checked-out source directly; no patches, archives, or runtime copies.
+    if repo != HERE.parents[1]:raise ValueError('Use this checked-out repository as --repo')
+    expected = dict(provenance['base_runtime_sha256'])
+    for variant in ['r8','r16','eval']:
+        expected.update(provenance['variants'][variant]['changed_sha256'])
+    for name,digest in expected.items():
+        if sha(repo/name)!=digest:raise ValueError('Applied historical source mismatch: '+name)
+    files = set(expected)
+    files.update(str(p.relative_to(repo)) for p in HERE.rglob('*')
+                 if p.is_file() and '__pycache__' not in p.parts and p.suffix != '.pyc')
+    identities = {name: sha(repo/name) for name in sorted(files)}
     dest.mkdir(parents=True)
-    shutil.copytree(HERE,dest/'suite',ignore=shutil.ignore_patterns('__pycache__','*.pyc'))
-    identities = {}
-    for variant, patches in [('basic',[]),('r8',['r8']),('r16',['r8','r16']),('eval',['r8','r16','eval'])]:
-        runtime=dest/'runtime'/variant; runtime.mkdir(parents=True)
-        with tarfile.open(fileobj=io.BytesIO(blob)) as tar:
-            for item in tar.getmembers():
-                if item.name.startswith('/') or '..' in Path(item.name).parts or item.issym() or item.islnk():
-                    raise ValueError('Unsafe archive member')
-            tar.extractall(runtime)
-        expected=dict(provenance['base_runtime_sha256'])
-        for name in patches:
-            patch=HERE/'patches'/f'{name}.patch'
-            assert sha(patch)==provenance['variants'][name]['patch_sha256']
-            call(['git','apply','--check',str(patch)],cwd=runtime)
-            call(['git','apply',str(patch)],cwd=runtime)
-            expected.update(provenance['variants'][name]['changed_sha256'])
-        for name,digest in expected.items():
-            if sha(runtime/name)!=digest: raise ValueError('Runtime source mismatch: '+variant+'/'+name)
-        if variant=='eval':
-            for name in ['historical_sampler.py','historical_gate.py']:
-                shutil.copy2(HERE/name,runtime/'scripts'/name)
-                expected['scripts/'+name]=sha(runtime/'scripts'/name)
-        # Runtime provenance only, outside the source repository; no remote or push.
-        call(['git','init','-q'],cwd=runtime)
-        call(['git','add','.'],cwd=runtime)
-        env=dict(os.environ,GIT_AUTHOR_NAME='Anonymous Researcher',GIT_AUTHOR_EMAIL='anonymous@example.invalid',
-                 GIT_COMMITTER_NAME='Anonymous Researcher',GIT_COMMITTER_EMAIL='anonymous@example.invalid')
-        subprocess.run(['git','commit','-q','-m','Reconstructed historical runtime'],cwd=runtime,env=env,check=True)
-        identities[variant]=expected
+    commit = subprocess.check_output(['git','-C',str(repo),'rev-parse','HEAD'],text=True).strip()
     (dest/'logs').mkdir()
-    state={'cache':str(cache),'backbone':str(backbone),'base_commit':commit,'source_only':options.source_only,
-           'source_identities':identities,'protocol_sha256':sha(dest/'suite/protocol.json')}
+    state={'cache':str(cache),'backbone':str(backbone),'source_commit':commit,'repo':str(repo),'source_only':options.source_only,
+           'source_identities':identities,'protocol_sha256':sha(HERE/'protocol.json')}
     write(dest/'study.json',state)
     cells=make_cells(cfg)
     write(dest/'pilot-cells.json',cells['pilot']);write(dest/'confirmation-cells.json',cells['confirmation'])
@@ -113,9 +93,10 @@ def make_cells(cfg):
 def check_state(study,variant):
     state=read(study/'study.json')
     if state['source_only']:raise RuntimeError('Source-only validation study cannot run models')
-    assert sha(study/'suite/protocol.json')==state['protocol_sha256']
-    for name,digest in state['source_identities'][variant].items():
-        if sha(study/'runtime'/variant/name)!=digest:raise ValueError('Runtime was modified: '+name)
+    assert sha(HERE/'protocol.json')==state['protocol_sha256']
+    if HERE.parents[1] != Path(state['repo']):raise ValueError('Run from the prepared checkout')
+    for name,digest in state['source_identities'].items():
+        if sha(Path(state['repo'])/name)!=digest:raise ValueError('Checkout changed after preparation: '+name)
     os.environ['HF_HUB_CACHE']=str(Path(state['cache'])/'huggingface')
     os.environ['TOKENIZERS_PARALLELISM']='false'
     return state
@@ -137,7 +118,7 @@ def overrides(cfg,arm,phase,study,state):
 def train(options):
     require_allocation();study=options.study.resolve();cfg=protocol(study)
     arm=cfg['arms'][options.index];state=check_state(study,arm['runtime'])
-    runtime=study/'runtime'/arm['runtime']
+    runtime=Path(state['repo'])
     for phase in arm['phases']:
         args,run,resume=overrides(cfg,arm,phase,study,state)
         if run.exists():raise FileExistsError('Existing phase is preserved; inspect it before retrying: '+str(run))
@@ -163,7 +144,7 @@ def evaluate(options):
     if not ckpt.is_file():raise FileNotFoundError(ckpt)
     out=study/'evaluation'/options.suite/f'{options.index:03d}'
     out.mkdir(parents=True,exist_ok=False)
-    runtime=study/'runtime/eval';topo,factor,weight=ARMS[cell['arm']]
+    runtime=Path(state['repo']);topo,factor,weight=ARMS[cell['arm']]
     export=[sys.executable,'scripts/export_structured_adapter.py','--checkpoint',str(ckpt),
       '--expected-checkpoint-sha256',sha(ckpt),'--expected-global-step',str(cell['step']),
       '--output',str(out/'adapter.safetensors'),'--manifest',str(out/'adapter.manifest.json'),
@@ -186,11 +167,10 @@ def evaluate(options):
       f'model.structured_decoder.training.topology_weight={weight}',f'checkpointing.save_dir={out}']:
         args+=['--override',item]
     write(out/'request.json',{'cell':cell,'args':args,'checkpoint_sha256':sha(ckpt)})
-    # Import the frozen evaluator only here, after changing cwd/sys.path to its reconstructed source.
+    # Import directly from the checked-out source, after recording its identity.
     os.chdir(runtime);sys.path.insert(0,str(runtime))
     from scripts import run_generation_pilot as pilot
-    from scripts import historical_gate as gate
-    gate.REFERENCE_ROOT=study/'runtime/r16'
+    import historical_gate as gate
     result=pilot.main(args) if cell['mode']=='factorized' else gate.gated_pilot(pilot,cell,out,args)
     if result!=0:raise RuntimeError('Generation failed')
     groups=read(out/'generation/summary.json')['groups']

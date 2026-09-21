@@ -17,6 +17,7 @@ pair factors can be materialized for debugging, but exact inference should
 consume the endpoint factors directly.
 """
 
+import copy
 import dataclasses
 import math
 from typing import Dict, Optional, Tuple
@@ -555,6 +556,12 @@ class ContextualCouplingForestHead(nn.Module):
     component_size_cap: Maximum nodes in a selected tree; nonpositive disables.
     topology_mode: ``dynamic`` for learned forests or ``fixed`` for chains.
     factor_mode: ``dynamic`` for context/time FiLM or ``fixed`` token factors.
+    factor_embedding_mode: ``shared`` (default) or ``separate`` token tables
+      and FiLM projections for the two endpoints. Left/right refer to lower/
+      higher position on canonical edges, not the inference traversal order.
+    factor_conditioner_hidden_dim: Zero preserves the original additive
+      hidden/time FiLM projections. A positive width uses a joint conditioner
+      ``[normalized_hidden, time_features] -> Linear -> SiLU -> Linear(2R)``.
     independent_mode: Replace every pair factor by one while retaining all
       architecture parameters. Pair-factor parameters are inactive in this
       mode, so this is an architecture-count/no-edge control rather than an
@@ -582,7 +589,9 @@ class ContextualCouplingForestHead(nn.Module):
       topology_mode: str = 'dynamic',
       factor_mode: str = 'dynamic',
       independent_mode: bool = False,
-      min_edge_score: Optional[float] = None):
+      min_edge_score: Optional[float] = None,
+      factor_embedding_mode: str = 'shared',
+      factor_conditioner_hidden_dim: int = 0):
     super().__init__()
     if hidden_size < 1 or vocab_size < 2:
       raise ValueError('hidden_size must be positive and vocab_size >= 2')
@@ -598,6 +607,14 @@ class ContextualCouplingForestHead(nn.Module):
     self.component_size_cap = component_size_cap
     self.topology_mode = _check_mode('topology_mode', topology_mode)
     self.factor_mode = _check_mode('factor_mode', factor_mode)
+    if factor_embedding_mode not in {'shared', 'separate'}:
+      raise ValueError('factor_embedding_mode must be shared or separate')
+    self.factor_embedding_mode = factor_embedding_mode
+    if (not isinstance(factor_conditioner_hidden_dim, int)
+        or isinstance(factor_conditioner_hidden_dim, bool)
+        or factor_conditioner_hidden_dim < 0):
+      raise ValueError('factor_conditioner_hidden_dim must be a non-negative integer')
+    self.factor_conditioner_hidden_dim = factor_conditioner_hidden_dim
     self.independent_mode = bool(independent_mode)
     self.min_edge_score = min_edge_score
 
@@ -614,18 +631,41 @@ class ContextualCouplingForestHead(nn.Module):
       contextual_neighbors=contextual_neighbors)
 
     self.token_factor_embedding = nn.Embedding(vocab_size, rank)
-    self.factor_hidden_projection = nn.Linear(hidden_size, 2 * rank)
-    self.factor_time_projection = nn.Linear(
-      time_embed_dim, 2 * rank, bias=False)
+    if factor_conditioner_hidden_dim:
+      self.factor_conditioner = nn.Sequential(
+        nn.Linear(hidden_size + time_embed_dim, factor_conditioner_hidden_dim),
+        nn.SiLU(),
+        nn.Linear(factor_conditioner_hidden_dim, 2 * rank))
+    else:
+      self.factor_hidden_projection = nn.Linear(hidden_size, 2 * rank)
+      self.factor_time_projection = nn.Linear(
+        time_embed_dim, 2 * rank, bias=False)
     inverse_softplus_one = math.log(math.exp(1.0) - 1.0)
     nn.init.normal_(
       self.token_factor_embedding.weight,
       mean=inverse_softplus_one, std=0.01)
     # Start close to the neutral factor without making the dynamic mode
     # context-blind on its first forward pass.
-    nn.init.normal_(self.factor_hidden_projection.weight, std=1e-3)
-    nn.init.zeros_(self.factor_hidden_projection.bias)
-    nn.init.normal_(self.factor_time_projection.weight, std=2e-3)
+    if factor_conditioner_hidden_dim:
+      nn.init.normal_(self.factor_conditioner[-1].weight, std=1e-3)
+      nn.init.zeros_(self.factor_conditioner[-1].bias)
+    else:
+      nn.init.normal_(self.factor_hidden_projection.weight, std=1e-3)
+      nn.init.zeros_(self.factor_hidden_projection.bias)
+      nn.init.normal_(self.factor_time_projection.weight, std=2e-3)
+    if self.factor_embedding_mode == 'separate':
+      # Keep the existing keys as the left endpoint and add only right keys.
+      # Shared mode instantiates nothing extra and preserves legacy RNG/state.
+      self.right_token_factor_embedding = nn.Embedding(vocab_size, rank)
+      nn.init.normal_(self.right_token_factor_embedding.weight,
+                      mean=inverse_softplus_one, std=0.01)
+      if factor_conditioner_hidden_dim:
+        self.right_factor_conditioner = copy.deepcopy(self.factor_conditioner)
+      else:
+        self.right_factor_hidden_projection = copy.deepcopy(
+          self.factor_hidden_projection)
+        self.right_factor_time_projection = copy.deepcopy(
+          self.factor_time_projection)
 
   @property
   def parameter_count(self) -> int:
@@ -640,7 +680,8 @@ class ContextualCouplingForestHead(nn.Module):
       'unary_values_scanned': (
         batch_size * sequence_length * self.vocab_size),
       'candidate_factor_values': (
-        batch_size * sequence_length * self.top_k * self.rank),
+        batch_size * sequence_length * self.top_k * self.rank
+        * (2 if self.factor_embedding_mode == 'separate' else 1)),
       'message_factor_products': (
         batch_size * selected_edges * self.top_k * self.rank),
     }
@@ -749,11 +790,24 @@ class ContextualCouplingForestHead(nn.Module):
       normalized_hidden: torch.Tensor,
       time_features: torch.Tensor,
       candidate_ids: torch.Tensor,
-      factor_mode: str) -> torch.Tensor:
-    raw_token_factors = self.token_factor_embedding(candidate_ids)
+      factor_mode: str,
+      *,
+      right_endpoint: bool = False) -> torch.Tensor:
+    prefix = ('right_' if right_endpoint
+              and self.factor_embedding_mode == 'separate' else '')
+    embedding = getattr(self, prefix + 'token_factor_embedding')
+    raw_token_factors = embedding(candidate_ids)
     if factor_mode == 'dynamic':
-      film = self.factor_hidden_projection(normalized_hidden)
-      film = film + self.factor_time_projection(time_features)[:, None, :]
+      if self.factor_conditioner_hidden_dim:
+        time_per_node = time_features[:, None, :].expand(
+          -1, normalized_hidden.shape[1], -1)
+        conditioner = getattr(self, prefix + 'factor_conditioner')
+        film = conditioner(torch.cat((normalized_hidden, time_per_node), dim=-1))
+      else:
+        hidden_projection = getattr(self, prefix + 'factor_hidden_projection')
+        time_projection = getattr(self, prefix + 'factor_time_projection')
+        film = hidden_projection(normalized_hidden)
+        film = film + time_projection(time_features)[:, None, :]
       shift, scale = film.chunk(2, dim=-1)
       raw_token_factors = (
         raw_token_factors * (1.0 + scale.tanh()[:, :, None, :])
@@ -879,8 +933,16 @@ class ContextualCouplingForestHead(nn.Module):
       factor_mode=factor_mode)
     pair_left = self._gather_candidate_factors(
       node_factors, edge_index[:, :, 0])
+    right_node_factors = node_factors
+    if self.factor_embedding_mode == 'separate' and not independent_mode:
+      right_node_factors = self._node_candidate_factors(
+        normalized_hidden=normalized_hidden,
+        time_features=time_features,
+        candidate_ids=candidate_ids,
+        factor_mode=factor_mode,
+        right_endpoint=True)
     pair_right = self._gather_candidate_factors(
-      node_factors, edge_index[:, :, 1])
+      right_node_factors, edge_index[:, :, 1])
     neutral = pair_left.new_full(
       (), 1.0 / math.sqrt(self.rank))
     if independent_mode:

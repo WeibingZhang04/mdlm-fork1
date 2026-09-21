@@ -112,16 +112,142 @@
     "scope": "New package only; common token/key patterns plus personal paths/emails. Not a comprehensive secret audit."
   },
   "gpu_jobs_submitted": 0,
-  "source_reconstruction": {
-    "status": "passed",
-    "verified_files": 398,
-    "scope": "Local CPU reconstruction from the exact hashed base-runtime files; temporary fixture commit substitutes only its Git identity. All reconstructed runtime contents match the original recorded hashes. No model loaded."
-  },
   "ppl_reproduction": "Not yet measured for this wrapper.",
   "remote_source_reconstruction": {
     "status": "passed",
     "base_commit": "8e1772f4687a78a48b6a330f9f095e9880540de2",
     "verified_files": 398,
     "model_loaded": false
+  },
+  "previous_reconstruction_validation": {
+    "status": "passed",
+    "verified_files": 398,
+    "scope": "Local CPU reconstruction from the exact hashed base-runtime files; temporary fixture commit substitutes only its Git identity. All reconstructed runtime contents match the original recorded hashes. No model loaded."
+  },
+  "execution": "Direct checked-out source, no runtime patching or source copies.",
+  "direct_source_validation": {
+    "training_phase_arguments_unchanged": 20,
+    "evaluation_cells_unchanged": 247,
+    "applied_runtime_source_hashes_verified": 99,
+    "source_only_prepare": "passed; only study JSON and logs directory created",
+    "shell_and_python_syntax": "passed",
+    "reference_sampling_functions_ast_identical": 3,
+    "cpu_torch_version": "2.0.1",
+    "cpu_cases": [
+      {
+        "case": "basic-fixed-fixed-float32",
+        "exact_equal_tensors": 40
+      },
+      {
+        "case": "basic-fixed-fixed-bfloat16",
+        "exact_equal_tensors": 38
+      },
+      {
+        "case": "basic-fixed-dynamic-float32",
+        "exact_equal_tensors": 49
+      },
+      {
+        "case": "basic-fixed-dynamic-bfloat16",
+        "exact_equal_tensors": 38
+      },
+      {
+        "case": "basic-dynamic-fixed-float32",
+        "exact_equal_tensors": 40
+      },
+      {
+        "case": "basic-dynamic-fixed-bfloat16",
+        "exact_equal_tensors": 38
+      },
+      {
+        "case": "basic-dynamic-dynamic-float32",
+        "exact_equal_tensors": 49
+      },
+      {
+        "case": "basic-dynamic-dynamic-bfloat16",
+        "exact_equal_tensors": 38
+      },
+      {
+        "case": "r8-fixed-dynamic-float32",
+        "exact_equal_tensors": 57
+      },
+      {
+        "case": "r8-fixed-dynamic-bfloat16",
+        "exact_equal_tensors": 42
+      },
+      {
+        "case": "r8-dynamic-dynamic-float32",
+        "exact_equal_tensors": 57
+      },
+      {
+        "case": "r8-dynamic-dynamic-bfloat16",
+        "exact_equal_tensors": 42
+      },
+      {
+        "case": "r16-fixed-dynamic-float32",
+        "exact_equal_tensors": 57
+      },
+      {
+        "case": "r16-fixed-dynamic-bfloat16",
+        "exact_equal_tensors": 42
+      },
+      {
+        "case": "r16-dynamic-dynamic-float32",
+        "exact_equal_tensors": 57
+      },
+      {
+        "case": "r16-dynamic-dynamic-bfloat16",
+        "exact_equal_tensors": 42
+      }
+    ],
+    "cpu_scope": "All eight arms: exact initialization, head outputs and RNG in FP32 and BF16. Joint loss and parameter gradients additionally compared in FP32 only. Small synthetic inputs, no backbone loaded. Historical mdlm Python executable unavailable on login host; system CPU PyTorch used.",
+    "sampler_cases": [
+      {
+        "edges": 3,
+        "seed": 1,
+        "tokens_and_rng_equal": true
+      },
+      {
+        "edges": 3,
+        "seed": 37,
+        "tokens_and_rng_equal": true
+      },
+      {
+        "edges": 3,
+        "seed": 100001,
+        "tokens_and_rng_equal": true
+      },
+      {
+        "edges": 4,
+        "seed": 1,
+        "tokens_and_rng_equal": true
+      },
+      {
+        "edges": 4,
+        "seed": 37,
+        "tokens_and_rng_equal": true
+      },
+      {
+        "edges": 4,
+        "seed": 100001,
+        "tokens_and_rng_equal": true
+      },
+      {
+        "edges": 1,
+        "seed": 1,
+        "tokens_and_rng_equal": true
+      },
+      {
+        "edges": 1,
+        "seed": 37,
+        "tokens_and_rng_equal": true
+      },
+      {
+        "edges": 1,
+        "seed": 100001,
+        "tokens_and_rng_equal": true
+      }
+    ],
+    "gpu_jobs_submitted": 0,
+    "full_training_or_ppl_reproduction": false
   }
 }

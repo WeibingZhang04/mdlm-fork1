@@ -8,4 +8,4 @@
 #SBATCH --no-requeue
 set -euo pipefail
 STUDY="${1:?Pass the prepared study directory}"
-srun --ntasks=1 python -u "$STUDY/suite/run.py" train --study "$STUDY" --index "${SLURM_ARRAY_TASK_ID:?}"
+srun --ntasks=1 python -u "$SLURM_SUBMIT_DIR/experiments/original_table/run.py" train --study "$STUDY" --index "${SLURM_ARRAY_TASK_ID:?}"
