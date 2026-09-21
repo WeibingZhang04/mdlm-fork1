@@ -79,6 +79,54 @@ class Perplexity(NLL):
     return torch.exp(self.mean_value / self.weight)
 
 
+class RatioMetric(torchmetrics.Metric):
+  """Distributed ratio of explicitly supplied numerators/denominators."""
+
+  full_state_update = False
+
+  def __init__(self):
+    super().__init__()
+    self.add_state(
+      'numerator', default=torch.tensor(0.0, dtype=torch.float64),
+      dist_reduce_fx='sum')
+    self.add_state(
+      'denominator', default=torch.tensor(0.0, dtype=torch.float64),
+      dist_reduce_fx='sum')
+
+  def update(self, numerator, denominator):
+    self.numerator += torch.as_tensor(
+      numerator, device=self.numerator.device,
+      dtype=self.numerator.dtype).detach()
+    self.denominator += torch.as_tensor(
+      denominator, device=self.denominator.device,
+      dtype=self.denominator.dtype).detach()
+
+  def compute(self):
+    return torch.where(
+      self.denominator > 0,
+      self.numerator / self.denominator.clamp_min(1),
+      torch.zeros_like(self.numerator))
+
+
+class DistributedSumMetric(torchmetrics.Metric):
+  """Distributed sum used to expose coverage denominators."""
+
+  full_state_update = False
+
+  def __init__(self):
+    super().__init__()
+    self.add_state(
+      'total', default=torch.tensor(0.0, dtype=torch.float64),
+      dist_reduce_fx='sum')
+
+  def update(self, value):
+    self.total += torch.as_tensor(
+      value, device=self.total.device, dtype=self.total.dtype).detach()
+
+  def compute(self):
+    return self.total
+
+
 class Diffusion(L.LightningModule):
   def __init__(
     self,
@@ -130,6 +178,7 @@ class Diffusion(L.LightningModule):
     self._structured_training_corruption_generator = None
     self._structured_training_topology_generator = None
     self._last_structured_topology_metrics = {}
+    self._last_structured_metric_updates = {}
     self._initialize_structured_decoder()
 
     self.T = self.config.T
@@ -149,12 +198,32 @@ class Diffusion(L.LightningModule):
 
     if self.structured_enabled:
       conditional_metrics = torchmetrics.MetricCollection({
-        'conditional_nll_per_masked_token': NLL(),
+        'conditional_nll_per_masked_token': RatioMetric(),
       })
       conditional_metrics.set_dtype(torch.float64)
       self.structured_train_metrics = conditional_metrics.clone(prefix='train/')
       self.structured_valid_metrics = conditional_metrics.clone(prefix='val/')
       self.structured_test_metrics = conditional_metrics.clone(prefix='test/')
+      diagnostic_metrics = {
+        name: RatioMetric() for name in (
+          'factorized_nll_per_masked_token', 'candidate_recall',
+          'retained_unary_mass', 'active_fraction',
+          'teacher_eligible_fraction', 'topology_loss_per_batch')}
+      diagnostic_metrics.update({
+        'active_tokens': DistributedSumMetric(),
+        'teacher_examples': DistributedSumMetric()})
+      for view in ('edge', 'anchor', 'slot'):
+        diagnostic_metrics[f'topology_{view}_loss'] = RatioMetric()
+        diagnostic_metrics[f'topology_{view}_coverage'] = RatioMetric()
+        for count in ('valid_examples', 'coverage_numerator', 'coverage_denominator'):
+          diagnostic_metrics[f'topology_{view}_{count}'] = DistributedSumMetric()
+      # Different diagnostics have different update arguments/denominators.
+      diagnostics = torchmetrics.MetricCollection(
+        diagnostic_metrics, compute_groups=False)
+      diagnostics.set_dtype(torch.float64)
+      self.structured_train_diagnostics = diagnostics.clone(prefix='train/structured/')
+      self.structured_valid_diagnostics = diagnostics.clone(prefix='val/structured/')
+      self.structured_test_diagnostics = diagnostics.clone(prefix='test/structured/')
 
     # generative perplexity
     self.gen_ppl_metric = Perplexity()
@@ -513,10 +582,19 @@ class Diffusion(L.LightningModule):
       if prefix not in metrics_by_prefix:
         raise ValueError(f'Invalid prefix: {prefix}')
       metrics = metrics_by_prefix[prefix]
-      # distributed_nll spreads each joint NLL over its active tokens only
-      # for accounting; this metric does not imply token independence.
-      metrics.update(losses.nlls, losses.token_mask)
+      updates = self._last_structured_metric_updates
+      # Sum joint NLLs and active-token counts before dividing across batches.
+      metrics.update(*updates['conditional_nll_per_masked_token'])
       self.log_dict(metrics, on_step=False, on_epoch=True, sync_dist=True)
+      diagnostics = {
+        'train': self.structured_train_diagnostics,
+        'val': self.structured_valid_diagnostics,
+        'test': self.structured_test_diagnostics,
+      }[prefix]
+      for name, arguments in updates.items():
+        if name != 'conditional_nll_per_masked_token':
+          diagnostics[name].update(*arguments)
+      self.log_dict(diagnostics, on_step=False, on_epoch=True, sync_dist=True)
       return loss
 
     if prefix == 'train':
@@ -1122,6 +1200,46 @@ class Diffusion(L.LightningModule):
       anchor_weight=float(cfg.get('topology_anchor_weight', 0.25)),
       slot_weight=float(cfg.get('topology_slot_weight', 0.25)))
 
+  @torch.no_grad()
+  def _record_structured_diagnostics(
+      self, denoising, unary_logits, x0, active_mask, attention_mask, topology):
+    from structured_training import factorized_denoising_nll
+
+    active_tokens = denoising.active_tokens.detach()
+    factorized_nll = factorized_denoising_nll(unary_logits, x0, active_mask)
+    updates = {
+      'conditional_nll_per_masked_token': (denoising.nll_sum.detach(), active_tokens),
+      'factorized_nll_per_masked_token': (factorized_nll * active_tokens, active_tokens),
+      'candidate_recall': (denoising.candidate_hits.detach(), active_tokens),
+      'retained_unary_mass': (denoising.retained_mass_sum.detach(), active_tokens),
+      'active_fraction': (active_tokens, attention_mask.bool().sum()),
+      'active_tokens': (active_tokens,),
+    }
+    zero = denoising.loss.detach().new_zeros(())
+    teacher_examples = zero if topology is None else zero.new_tensor(x0.shape[0])
+    eligible = zero if topology is None else topology.edge_coverage_denominator.detach()
+    updates['teacher_examples'] = (teacher_examples,)
+    updates['teacher_eligible_fraction'] = (eligible, teacher_examples)
+    # Total auxiliary loss combines means over different populations; report its
+    # batch mean explicitly rather than inventing a shared example denominator.
+    updates['topology_loss_per_batch'] = (
+      zero if topology is None else topology.loss.detach(),
+      zero if topology is None else zero.new_ones(()))
+    for view in ('edge', 'anchor', 'slot'):
+      loss = zero if topology is None else getattr(topology, f'{view}_loss').detach()
+      count = zero if topology is None else getattr(
+        topology, f'{view}_valid_examples').detach()
+      numerator = zero if topology is None else getattr(
+        topology, f'{view}_coverage_numerator').detach()
+      denominator = zero if topology is None else getattr(
+        topology, f'{view}_coverage_denominator').detach()
+      updates[f'topology_{view}_loss'] = (loss * count, count)
+      updates[f'topology_{view}_valid_examples'] = (count,)
+      updates[f'topology_{view}_coverage'] = (numerator, denominator)
+      updates[f'topology_{view}_coverage_numerator'] = (numerator,)
+      updates[f'topology_{view}_coverage_denominator'] = (denominator,)
+    self._last_structured_metric_updates = updates
+
   def _forward_pass_structured(self, x0, attention_mask):
     """Conditional joint denoising NLL per masked token, not a diffusion ELBO."""
     from structured_training import structured_denoising_loss
@@ -1159,6 +1277,8 @@ class Diffusion(L.LightningModule):
     }
     weight = float(self.structured_training_config.get('topology_weight', 0.0))
     total_loss = denoising.loss + topology_zero + weight * topology_loss
+    self._record_structured_diagnostics(
+      denoising, unary_logits, x0, active_mask, attention_mask, topology)
     # The reported conditional NLL excludes the auxiliary topology objective.
     return Loss(loss=total_loss, nlls=denoising.distributed_nll,
                 token_mask=active_mask)

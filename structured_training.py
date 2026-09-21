@@ -93,6 +93,9 @@ class TopologyDistillationLoss:
   slot_coverage: torch.Tensor
   slot_coverage_numerator: torch.Tensor
   slot_coverage_denominator: torch.Tensor
+  edge_valid_examples: torch.Tensor
+  anchor_valid_examples: torch.Tensor
+  slot_valid_examples: torch.Tensor
 
 
 def _validate_token_batch(
@@ -362,4 +365,9 @@ def gold_reveal_influence_topology_loss(
     anchor_coverage_denominator=anchor_denominator,
     slot_coverage=slot_coverage,
     slot_coverage_numerator=slot_numerator,
-    slot_coverage_denominator=slot_denominator)
+    slot_coverage_denominator=slot_denominator,
+    # These are the actual loss populations, before the coverage eligibility
+    # intersection (duplicate anchor occupants can make the counts differ).
+    edge_valid_examples=edge_valid.sum(),
+    anchor_valid_examples=anchor_valid.sum(),
+    slot_valid_examples=slot_valid.sum())
