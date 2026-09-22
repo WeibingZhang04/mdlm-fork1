@@ -1,0 +1,14 @@
+# DO NOT touch other people's files. DO NOT cancel other people's jobs.
+# Install ONLY in a new analysis venv with access to mdlm's torch/transformers.
+# Do not pip install these into mdlm. See README.md for upstream attribution.
+numpy==1.26.4
+matplotlib==3.8.4
+scipy==1.13.1
+scikit-learn==1.4.2
+faiss-cpu==1.8.0.post1
+mauve-text==0.4.0
+datasets==2.18.0
+pyarrow==16.1.0
+transformers==4.38.2
+tokenizers==0.15.2
+huggingface-hub==0.23.5
