@@ -1,6 +1,9 @@
 train: openwebtext
 valid: wikitext103
 tokenizer_name_or_path: gpt2
+tokenizer_revision: 607a30d783dfa663caf39e06633721c8d4cfcd7e
+train_revision: 79d93d786212f7344586290adb811d4ae6a1762c
+valid_revision: b08601e04326c79dfdd32d625aee71d232d685c3
 cache_dir: /tmp/data
 wrap: True
 streaming: True

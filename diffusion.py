@@ -450,6 +450,11 @@ class Diffusion(L.LightningModule):
       sampler_cls = dataloader.RandomFaultTolerantSampler
     updated_dls = []
     for dl in self.trainer.fit_loop._combined_loader.flattened:
+      if isinstance(dl.dataset, torch.utils.data.IterableDataset):
+        # Streaming datasets own iteration, worker sharding, and epoch state;
+        # they have no length or random-access index for our resumable sampler.
+        updated_dls.append(dl)
+        continue
       if hasattr(dl.sampler, 'shuffle'):
         dl_sampler = sampler_cls(
           dl.dataset, shuffle=dl.sampler.shuffle)
