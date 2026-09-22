@@ -67,7 +67,7 @@ The collector writes the complete cell results and a readable best-of-selected-c
 
 ## Comparability
 
-Matching source and arguments does not guarantee identical PPL across GPU models, software environments or nondeterministic kernels. A separate existing seed-1 verification matched the original FD 1k model tensors exactly; that is not proof of the final table. No new GPU job was submitted to validate this launcher. CPU synthetic comparisons of the combined source are documented in `validation.json`; they do not establish full training or PPL reproduction. Review `validation.json` for the checks actually performed.
+Matching source and arguments does not guarantee identical PPL across GPU models, software environments or nondeterministic kernels. A separate existing seed-1 verification matched the original FD 1k model tensors exactly; that is not proof of the final table. The initial validation did not submit a GPU job; the completed FD/DD retry is recorded below. CPU synthetic comparisons of the combined source are documented in `validation.json`; they do not establish full training or PPL reproduction. Review `validation.json` for the checks actually performed.
 
 Historical CCF and MDLM reverse-step schedules match, but probability-calculation precision and final cleanup differ. CCF often executes S calls and MDLM S+1. The old table measures pipeline performance, not an isolated causal gain from the head. Historical training builds a BF16 rotary cache; evaluation builds an FP32 cache. Preserve this asymmetry when replicating; do not introduce an FP32 startup training probe. A scientifically matched alternative should be reported separately.
 
@@ -76,3 +76,99 @@ The table reports minima over three selected checkpoints and is exploratory. Rep
 ## Attribution
 
 The applied changes come from the project's preserved historical R8, R16 and confirmation runtime versions, identified by hashes in `provenance.json`. Historical sampler functions originate in `audit_ccf_sampling_v3.py` and `audit_ccf_sampling_v4.py`; their comments retain the PyTorch exponential-race attribution. The numerical architecture, objective and scoring routines were not newly designed for this package. New code handles reconstruction, paths, scheduling arguments and collection.
+
+## FD/DD 6k retry after the September 22 launch failure
+
+Jobs 1558233_0 and 1558233_1 both exited with 105 after 12 seconds on
+watgpu608. Their stderr reports `srun: ... Communication connection failure`
+and `Application launch failed`; stdout is empty. Training Python did not
+start. Evaluation 1558234 therefore remains blocked on its failed afterok
+dependency. This identifies a Slurm task-launch communication failure, but
+does not identify its underlying network/daemon cause or prove the node is
+still faulty. Cluster-side diagnosis requires the administrator's logs.
+
+The FD/DD launcher now keeps its Python entry point and batch script under
+`experiments/original_table/` in this checkout. It no longer writes executable
+code into a study directory. It preserves the Basic FD/DD seed-1 configuration
+and phase resumes at 1k, 3k and 6k, and schedules exactly six confirmation cells:
+FD and DD at 8/16/32 steps, 100 samples each, seed block 100001. No pilot is
+scheduled for this profile.
+
+Run from the existing branch (the launcher checks it):
+
+```bash
+cd /u401/n23zhang/clean_tree_mdlm/mdlm-fork1
+git branch --show-current  # must be original_table_base_crf-recovery
+unset CCF_STUDY            # choose a fresh study; preserve the failed run
+bash scripts/launch_original_table_fd_dd_6k.sh
+```
+
+This submits two training tasks and their dependent six-cell evaluation array.
+Both arrays exclude watgpu608 by default as a retry mitigation, not a repair of
+the cluster. Set `CCF_EXCLUDE_NODES` to a different node list or explicitly to
+an empty string to remove that exclusion after the issue is resolved.
+Both batch jobs explicitly activate the existing `mdlm` environment and log
+their host and interpreter before starting `srun`. No packages are installed
+and no jobs are cancelled or automatically retried.
+
+The login node mounts the home directory with `noexec`, so metadata preparation
+uses `/usr/bin/python3` (standard library only), rather than the home-installed
+Conda Python. Training and evaluation still use `mdlm` inside their allocated
+compute jobs. `CCF_PREPARE_PYTHON` can override the metadata interpreter.
+
+For preparation without submission, append `--prepare-only`. This creates a
+new study, checks the historical source and backbone hashes, and records the
+current checkout's file hashes. Use a fresh study for a later full submission.
+Do not resubmit the old generated batch file: use the repository launcher above.
+Existing study directories are refused, so old logs and partial checkpoints
+cannot be overwritten. Do not edit this checkout between preparation and job
+completion; source identity checks reject subsequent changes.
+
+CPU validation (no actual sbatch, models, or GPU work):
+
+```bash
+PYTHONDONTWRITEBYTECODE=1 CCF_TEST_CACHE="$CCF_CACHE_ROOT" \
+  /usr/bin/python3 tests/test_original_table_fd_dd_launcher.py
+```
+
+The tests verify historical training arguments, profile cells, source hashes,
+repository script paths, node exclusions and dependency wiring with a mocked
+sbatch. Passing these checks does not establish compute-node connectivity or
+a successful GPU training run.
+
+## Completed FD/DD 6k run — September 22, 2026 (UTC)
+
+Training array `1558547` and all six evaluation tasks in `1558548` completed
+successfully with exit code 0. Both Basic models reached 6,000 training steps.
+The last evaluation finished at 2026-09-22 03:55:58 UTC (September 21, 23:55:58 EDT).
+
+GPT-2-large generative perplexity (lower is better), with 100 scored samples
+per cell, scored through the first non-leading EOS:
+
+| Model | 8 sampling steps | 16 sampling steps | 32 sampling steps |
+|---|---:|---:|---:|
+| MDLM baseline (historical, released) | 815.06 | 313.78 | 162.56 |
+| Basic FD @ 6k (this run) | 615.85 | 231.58 | 143.99 |
+| Basic DD @ 6k (this run) | 665.49 | 248.41 | 145.65 |
+
+The MDLM row comes from `expected-table.csv`; MDLM was not rerun in this
+submission. The FD/DD rows use the fixed 6k checkpoint, not a best-of-checkpoints
+selection. All six cells have completion markers and zero unresolved mask
+tokens. The precision and final-cleanup differences described under
+[Comparability](#comparability) still apply; these are pipeline comparisons.
+
+Run provenance:
+
+- Branch: `original_table_base_crf-recovery`.
+- Repository: `/u401/n23zhang/clean_tree_mdlm/mdlm-fork1`.
+- Study: `/u401/n23zhang/mdlm_data/tree_mdlm_cache/runs/fd_dd_exact_seed1_6k.SnCq9S/study`.
+- Per-cell results: `evaluation/confirmation/000` through `005`, each containing
+  `completed.json` and `generation/summary.json`, relative to the study directory.
+
+Launch command used:
+
+```bash
+cd /u401/n23zhang/clean_tree_mdlm/mdlm-fork1
+unset CCF_STUDY
+bash scripts/launch_original_table_fd_dd_6k.sh
+```
