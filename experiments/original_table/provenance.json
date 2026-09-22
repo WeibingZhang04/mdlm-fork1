@@ -88,7 +88,7 @@
     "models/crf_decoder.py": "14493b3b110b7077a94d7e5413b780dd0cf02b73723f903bcb05912a0de73a35",
     "models/dimamba.py": "17f1b4e11e5dd63acebd441532f37de51e5822f2583ef7c41fdabbe0a6a34ccc",
     "models/directional_forest.py": "5c81101e1c44e2cb30c3567eb2e27dce2129014157be63d1dc5686c663cb94e1",
-    "models/dit.py": "2ad0ea896f2a59947b0baa72679851f7238b2836d336e39975b44b3cc95d8377",
+    "models/dit.py": "88ce7fbd10d2327fc2018d17da30293e1beacafbe7de720049923ce247fa2b7b",
     "models/ema.py": "f1417e66a46b2c2144e3fd47bb5c91c819f8c55f6bd18c75b72a75dc36bafb60",
     "models/structured_decoder.py": "b90fd02618d5162f8908f266fef1bdb2418a4bc172ede0863cd60ddeaa0f257a",
     "noise_schedule.py": "da16320cebbc727c03e8e45297593505fb41a597c7a5ef29eacd7043207a763c",
@@ -168,5 +168,14 @@
       "sha256": "6809560cc2cd899e1b03bce92ab69c45a3c57c6caa529e54461d99a96a6717fe"
     }
   },
-  "execution": "Direct checkout; historical patch hashes below are provenance records only. No patch files are required."
+  "execution": "Direct checkout; historical patch hashes below are provenance records only. No patch files are required.",
+  "precision_ablation": {
+    "name": "fp32_rotary_cache_only",
+    "baseline_commit": "1c19a665da6f55c4a5d888b627b62617a36b1b5a",
+    "file": "models/dit.py",
+    "historical_sha256": "2ad0ea896f2a59947b0baa72679851f7238b2836d336e39975b44b3cc95d8377",
+    "ablation_sha256": "88ce7fbd10d2327fc2018d17da30293e1beacafbe7de720049923ce247fa2b7b",
+    "change": "Disable autocast only for Rotary.forward frequency einsum. Training cache becomes FP32; generation already initializes FP32. Overall BF16 training, seeds, data, phase resumes, sampling and scoring stay unchanged.",
+    "evidence": "2026-09-21 startup audit 1557313: the 15k campaign monitoring probe initialized an FP32 cache before BF16 training. This intervention isolates cache precision without adding that probe."
+  }
 }

@@ -100,7 +100,9 @@ class Rotary(torch.nn.Module):
     if seq_len != self.seq_len_cached:
       self.seq_len_cached = seq_len
       t = torch.arange(x.shape[seq_dim], device=x.device).type_as(self.inv_freq)
-      freqs = torch.einsum("i,j->ij", t, self.inv_freq.clone())
+      # Precision-only ablation: FP32 rotary cache even during BF16 training.
+      with torch.autocast(device_type=x.device.type, enabled=False):
+        freqs = torch.einsum("i,j->ij", t, self.inv_freq.clone())
       emb = torch.cat((freqs, freqs), dim=-1).to(x.device)
       # dims are: batch, seq_len, qkv, head, dim
       self.cos_cached = emb.cos()[None, :, None, None, :].repeat(1,1,3,1,1)
