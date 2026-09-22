@@ -1874,7 +1874,8 @@ class Diffusion(L.LightningModule):
 
   def _structured_head_output(
       self, tokens, conditioning, active_mask,
-      force_no_grad_backbone=False, return_hidden_states=False):
+      force_no_grad_backbone=False, return_hidden_states=False,
+      collect_edge_source_diagnostics=False):
     hidden_states, unary_logits = self._structured_backbone_output(
       tokens=tokens,
       conditioning=conditioning,
@@ -1889,13 +1890,16 @@ class Diffusion(L.LightningModule):
       fixed_edge_mask = (
         active_mask[:, fixed_edges[:, 0]]
         & active_mask[:, fixed_edges[:, 1]])
-    output = self.structured_head(
+    head_kwargs = dict(
       hidden_states=hidden_states,
       unary_logits=unary_logits,
       timestep=head_timestep,
       active_mask=active_mask,
       fixed_edge_index=self.structured_fixed_edge_index,
       fixed_edge_mask=fixed_edge_mask)
+    if collect_edge_source_diagnostics:
+      head_kwargs['collect_edge_source_diagnostics'] = True
+    output = self.structured_head(**head_kwargs)
     if return_hidden_states:
       return output, unary_logits, hidden_states
     return output, unary_logits

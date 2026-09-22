@@ -14,7 +14,12 @@ from typing import Callable, Optional, Sequence
 
 import torch
 
-from models.structured_decoder import StructuredDecoderOutput
+from models.structured_decoder import (
+  EDGE_SOURCE_NAMES,
+  StructuredDecoderOutput,
+  selected_edge_source_counts,
+  selected_edge_sources,
+)
 from structured_objective import (
   infer_structured_distribution,
   sample_structured_tokens,
@@ -23,9 +28,7 @@ from structured_objective import (
 
 GROUP_SIZES = (1, 2, 4, 8, 16)
 SAMPLING_MODES = ('joint', 'marginal', 'backbone')
-ModelCallback = Callable[
-  [torch.Tensor, torch.Tensor, torch.Tensor],
-  tuple[StructuredDecoderOutput, torch.Tensor]]
+ModelCallback = Callable[..., tuple[StructuredDecoderOutput, torch.Tensor]]
 
 
 @dataclass(frozen=True)
@@ -53,6 +56,8 @@ class FixedGroupStep:
   active_after: torch.Tensor
   edge_index: torch.Tensor
   edge_mask: torch.Tensor
+  edge_source: Optional[torch.Tensor]
+  edge_source_counts: Optional[torch.Tensor]
   jointly_committed_edge_mask: torch.Tensor
 
 
@@ -67,6 +72,9 @@ class FixedGroupGeneration:
   group_size: int
   mode: str
   steps: tuple[FixedGroupStep, ...]
+  # Total selected-edge events over every row and inference step. The four
+  # entries follow EDGE_SOURCE_NAMES: local, chain, contextual, fixed.
+  edge_source_counts: Optional[torch.Tensor]
 
 
 def make_reveal_order(sequence_length: int, reveal_seeds: Sequence[int]) -> torch.Tensor:
@@ -203,14 +211,18 @@ def generate_fixed_groups(
     reveal_seeds: Optional[Sequence[int]] = None,
     sampling_generator: Optional[torch.Generator] = None,
     noise_eps: float = 1e-3,
-    inference_backend: str = 'low_rank') -> FixedGroupGeneration:
+    inference_backend: str = 'low_rank',
+    collect_edge_source_diagnostics: bool = False,
+    ) -> FixedGroupGeneration:
   """Generate fixed-size token groups using joint, marginal or base draws.
 
   ``model(tokens, sigma, active_mask)`` returns a structured output and raw,
   mask-excluded backbone logits. ``sigma`` has shape [unfinished_batch].
   Both backbone and head must receive this same noise conditioning. To wrap
   the production method, pass ``conditioning=sigma[:, None]`` to
-  ``model._structured_head_output``.
+  ``model._structured_head_output``. When edge-source diagnostics are enabled,
+  this function passes ``collect_edge_source_diagnostics=True`` to the callback
+  so the source tensors are never built during ordinary runs.
 
   Noise reflects the current mask fraction over the full sequence length:
   ``t = min(mask_fraction/(1-eps), 1)`` and
@@ -237,6 +249,8 @@ def generate_fixed_groups(
     raise ValueError(f'mode must be one of {SAMPLING_MODES}')
   if not math.isfinite(noise_eps) or not 0 < noise_eps < 1:
     raise ValueError('noise_eps must lie strictly between zero and one')
+  if type(collect_edge_source_diagnostics) is not bool:
+    raise TypeError('collect_edge_source_diagnostics must be boolean')
   order = _validated_order(initial_tokens, reveal_order, reveal_seeds)
   if sampling_generator is None:
     sampling_generator = torch.Generator(device=initial_tokens.device).manual_seed(0)
@@ -254,7 +268,13 @@ def generate_fixed_groups(
     effective_rate = masked_fraction.clamp_max(1.0 - noise_eps)
     diffusion_time = (masked_fraction / (1.0 - noise_eps)).clamp_max(1.0)
     sigma = -torch.log1p(-effective_rate)
-    output, logits = model(current.clone(), sigma, current_active.clone())
+    callback_args = (
+      current.clone(), sigma, current_active.clone())
+    if collect_edge_source_diagnostics:
+      output, logits = model(
+        *callback_args, collect_edge_source_diagnostics=True)
+    else:
+      output, logits = model(*callback_args)
     _validate_output(output, logits, current, current_active, mask_index)
 
     # Choose the quota before sampling so singleton rows can marginalize out
@@ -306,6 +326,11 @@ def generate_fixed_groups(
     next_active = current_active & ~revealed
     edges = output.edge_index.clamp(0, tokens.shape[1] - 1)
     joined = output.edge_mask & torch.gather(revealed, 1, edges[..., 0]) & torch.gather(revealed, 1, edges[..., 1])
+    edge_source = None
+    source_counts = None
+    if collect_edge_source_diagnostics:
+      edge_source = selected_edge_sources(output)
+      source_counts = selected_edge_source_counts(output)
     traces.append(FixedGroupStep(
       step=len(traces) + 1, row_indices=_snapshot(row_indices),
       tokens_before=_snapshot(current), active_before=_snapshot(current_active),
@@ -313,7 +338,11 @@ def generate_fixed_groups(
       sigma=_snapshot(sigma), revealed_mask=_snapshot(revealed),
       proposal_tokens=_snapshot(proposed), tokens_after=_snapshot(updated),
       active_after=_snapshot(next_active), edge_index=_snapshot(output.edge_index),
-      edge_mask=_snapshot(output.edge_mask), jointly_committed_edge_mask=_snapshot(joined)))
+      edge_mask=_snapshot(output.edge_mask),
+      edge_source=(_snapshot(edge_source) if edge_source is not None else None),
+      edge_source_counts=(
+        _snapshot(source_counts) if source_counts is not None else None),
+      jointly_committed_edge_mask=_snapshot(joined)))
     tokens.index_copy_(0, row_indices, updated)
     active.index_copy_(0, row_indices, next_active)
     nfe[row_indices] += 1
@@ -323,7 +352,14 @@ def generate_fixed_groups(
   observed = ~initial_tokens.eq(mask_index)
   if not torch.equal(tokens[observed], initial_tokens[observed]):
     raise AssertionError('an observed token changed')
+  if collect_edge_source_diagnostics and traces:
+    source_totals = torch.stack([
+      step.edge_source_counts.sum(dim=0) for step in traces]).sum(dim=0)
+  elif collect_edge_source_diagnostics:
+    source_totals = torch.zeros(len(EDGE_SOURCE_NAMES), dtype=torch.long)
+  else:
+    source_totals = None
   return FixedGroupGeneration(
     final_tokens=tokens, nfe=_snapshot(nfe), batch_calls=len(traces),
     reveal_order=_snapshot(order), group_size=group_size, mode=mode,
-    steps=tuple(traces))
+    steps=tuple(traces), edge_source_counts=source_totals)

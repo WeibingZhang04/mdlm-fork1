@@ -665,7 +665,9 @@ class StagedGenerationAdapterTest(unittest.TestCase):
               self.assertEqual(len(runs[0].steps), len(runs[index].steps))
               for reference_step, actual_step in zip(runs[0].steps, runs[index].steps):
                 for field in dataclasses.fields(reference_step):
-                  if field.name in ('edge_index', 'edge_mask', 'jointly_committed_edge_mask'):
+                  if field.name in (
+                      'edge_index', 'edge_mask', 'edge_source',
+                      'edge_source_counts', 'jointly_committed_edge_mask'):
                     continue  # The reference is edgeless; its token history is exact.
                   reference_value = getattr(reference_step, field.name)
                   actual_value = getattr(actual_step, field.name)

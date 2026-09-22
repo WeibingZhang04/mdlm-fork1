@@ -29,6 +29,13 @@ import torch.nn.functional as F
 
 _VALID_MODES = frozenset({'fixed', 'dynamic'})
 
+EDGE_SOURCE_NONE = 0
+EDGE_SOURCE_LOCAL = 1
+EDGE_SOURCE_CHAIN = 2
+EDGE_SOURCE_CONTEXTUAL = 3
+EDGE_SOURCE_FIXED = 4
+EDGE_SOURCE_NAMES = ('local', 'chain', 'contextual', 'fixed')
+
 
 def _check_mode(name: str, value: str) -> str:
   if value not in _VALID_MODES:
@@ -74,6 +81,13 @@ class StructuredDecoderOutput:
   factor_mode: str
   independent_mode: bool
 
+  # Diagnostics only. Codes are EDGE_SOURCE_* constants; zero marks padding.
+  # Keyword-only defaults preserve compatibility with specialized outputs.
+  proposal_edge_source: Optional[torch.Tensor] = dataclasses.field(
+    default=None, kw_only=True)               # [B, P]
+  edge_source: Optional[torch.Tensor] = dataclasses.field(
+    default=None, kw_only=True)               # [B, E]
+
   @property
   def num_candidate_states(self) -> int:
     """Number of states per node, including the residual state."""
@@ -108,6 +122,32 @@ class StructuredDecoderOutput:
     tail_logits.scatter_(-1, self.candidate_ids, -torch.inf)
     tail_normalizer = torch.logsumexp(tail_logits, dim=-1, keepdim=True)
     return tail_logits - tail_normalizer
+
+
+def selected_edge_sources(output: StructuredDecoderOutput) -> torch.Tensor:
+  """Return padded EDGE_SOURCE_* labels for selected inference edges."""
+  if output.edge_source is None:
+    raise ValueError(
+      'edge-source diagnostics were not enabled for this output')
+  if (output.edge_source.shape != output.edge_mask.shape
+      or output.edge_source.dtype != torch.long):
+    raise ValueError('edge_source must be long with shape [B,E]')
+  source = output.edge_source
+  return source.masked_fill(~output.edge_mask, EDGE_SOURCE_NONE)
+
+
+def selected_edge_source_counts(
+    output: StructuredDecoderOutput) -> torch.Tensor:
+  """Return per-example counts [B,4] in EDGE_SOURCE_NAMES order."""
+  source = selected_edge_sources(output)
+  return torch.stack([
+    (source == code).sum(dim=-1)
+    for code in (
+      EDGE_SOURCE_LOCAL,
+      EDGE_SOURCE_CHAIN,
+      EDGE_SOURCE_CONTEXTUAL,
+      EDGE_SOURCE_FIXED)
+  ], dim=-1)
 
 
 class ScalarTimestepEmbedding(nn.Module):
@@ -204,7 +244,9 @@ class SparseEdgeProposer(nn.Module):
     return scores.masked_fill(~edge_mask, -torch.inf)
 
   def forward(self, node_context: torch.Tensor,
-              active_mask: torch.Tensor
+              active_mask: torch.Tensor,
+              *,
+              collect_edge_source_diagnostics: bool = False,
               ) -> Tuple[torch.Tensor, ...]:
     """Return proposals, scores, and learned-anchor diagnostics.
 
@@ -247,13 +289,12 @@ class SparseEdgeProposer(nn.Module):
         batch_size, 0, dtype=torch.bool, device=device)
 
     # Preserve the fixed-chain adjacency among the remaining active nodes in
-    # the dynamic proposal graph.  Local proposals above use distance in the
+    # the dynamic proposal graph. Local proposals above use distance in the
     # original sequence, so they miss consecutive active nodes separated by
-    # more than ``local_window`` inactive positions.  The suffix minimum finds
+    # more than ``local_window`` inactive positions. The suffix minimum finds
     # the next active position to the right of every sequence position without
-    # compacting the batch into ragged tensors.  Shorter chain edges are
-    # already present in ``local_index`` and are omitted here to avoid duplicate
-    # proposals.
+    # compacting the batch into ragged tensors. Shorter chain edges are already
+    # present in ``local_index`` and are omitted here to avoid duplicates.
     positions = torch.arange(
       sequence_length, device=device, dtype=torch.long)
     active_positions = positions[None].expand(
@@ -304,10 +345,18 @@ class SparseEdgeProposer(nn.Module):
       (local_index, chain_index, contextual_index), dim=1)
     edge_mask = torch.cat(
       (local_mask, chain_mask, contextual_mask), dim=1)
+    edge_source = None
+    if collect_edge_source_diagnostics:
+      edge_source = torch.cat((
+        torch.full_like(local_mask, EDGE_SOURCE_LOCAL, dtype=torch.long),
+        torch.full_like(chain_mask, EDGE_SOURCE_CHAIN, dtype=torch.long),
+        torch.full_like(
+          contextual_mask, EDGE_SOURCE_CONTEXTUAL, dtype=torch.long),
+      ), dim=1)
     scores = self.score_edges(node_context, edge_index, edge_mask)
     return (
       edge_index, edge_mask, scores,
-      anchor_logits, anchor_indices, slot_logits)
+      anchor_logits, anchor_indices, slot_logits, edge_source)
 
 
 def _bounded_kruskal_indices(
@@ -771,6 +820,8 @@ class ContextualCouplingForestHead(nn.Module):
       proposal_edge_index: torch.Tensor,
       proposal_edge_mask: torch.Tensor,
       proposal_scores: torch.Tensor,
+      proposal_edge_source: Optional[torch.Tensor],
+      collect_edge_source_diagnostics: bool,
       topology_mode: str,
       fixed_edge_index: Optional[torch.Tensor] = None,
       fixed_edge_mask: Optional[torch.Tensor] = None,
@@ -790,7 +841,12 @@ class ContextualCouplingForestHead(nn.Module):
       edge_scores = self.edge_proposer.score_edges(
         topology_context, edge_index, edge_mask)
       edge_scores = edge_scores.masked_fill(~edge_mask, 0.0)
-      return edge_index, edge_mask, edge_scores
+      edge_source = None
+      if collect_edge_source_diagnostics:
+        edge_source = torch.full_like(
+          edge_mask, EDGE_SOURCE_FIXED, dtype=torch.long)
+        edge_source = edge_source.masked_fill(~edge_mask, EDGE_SOURCE_NONE)
+      return edge_index, edge_mask, edge_scores, edge_source
 
     selected_slots, edge_mask = _bounded_kruskal_indices(
       proposal_edge_index=proposal_edge_index,
@@ -804,14 +860,24 @@ class ContextualCouplingForestHead(nn.Module):
         batch_size, max_edges, 2, dtype=torch.long,
         device=active_mask.device)
       edge_scores = topology_context.new_zeros(batch_size, max_edges)
-      return edge_index, edge_mask, edge_scores
+      edge_source = (
+        torch.zeros_like(edge_mask, dtype=torch.long)
+        if collect_edge_source_diagnostics else None)
+      return edge_index, edge_mask, edge_scores, edge_source
 
     gather_edges = selected_slots[:, :, None].expand(-1, -1, 2)
     edge_index = torch.gather(
       proposal_edge_index, 1, gather_edges).detach()
     edge_scores = torch.gather(proposal_scores, 1, selected_slots)
     edge_scores = edge_scores.masked_fill(~edge_mask, 0.0)
-    return edge_index, edge_mask, edge_scores
+    edge_source = None
+    if collect_edge_source_diagnostics:
+      if proposal_edge_source is None:
+        raise AssertionError('enabled edge-source diagnostics are missing')
+      edge_source = torch.gather(
+        proposal_edge_source, 1, selected_slots).masked_fill(
+          ~edge_mask, EDGE_SOURCE_NONE)
+    return edge_index, edge_mask, edge_scores, edge_source
 
   def _node_candidate_factors(
       self,
@@ -862,6 +928,7 @@ class ContextualCouplingForestHead(nn.Module):
       independent_mode: Optional[bool] = None,
       fixed_edge_index: Optional[torch.Tensor] = None,
       fixed_edge_mask: Optional[torch.Tensor] = None,
+      collect_edge_source_diagnostics: bool = False,
       ) -> StructuredDecoderOutput:
     """Build candidate states, a hard forest, and positive pair factors.
 
@@ -882,9 +949,13 @@ class ContextualCouplingForestHead(nn.Module):
         edges are validated, canonicalized, detached, and padded to ``L-1``.
       fixed_edge_mask: Optional shared ``[E]`` or batched ``[B,E]`` validity
         mask.  It is only valid together with ``fixed_edge_index``.
+      collect_edge_source_diagnostics: Build proposal/selected edge-source
+        labels for diagnostics. Disabled by default to avoid inference cost.
     """
     if hidden_states.ndim != 3 or unary_logits.ndim != 3:
       raise ValueError('hidden_states and unary_logits must both be rank 3')
+    if type(collect_edge_source_diagnostics) is not bool:
+      raise TypeError('collect_edge_source_diagnostics must be boolean')
     if hidden_states.shape[:2] != unary_logits.shape[:2]:
       raise ValueError('hidden_states and unary_logits must agree on [B,L]')
     if hidden_states.shape[-1] != self.hidden_size:
@@ -943,13 +1014,18 @@ class ContextualCouplingForestHead(nn.Module):
       anchor_logits,
       anchor_indices,
       slot_logits,
-    ) = self.edge_proposer(topology_context, active_mask)
-    edge_index, edge_mask, edge_scores = self._selected_edges(
+      proposal_edge_source,
+    ) = self.edge_proposer(
+      topology_context, active_mask,
+      collect_edge_source_diagnostics=collect_edge_source_diagnostics)
+    edge_index, edge_mask, edge_scores, edge_source = self._selected_edges(
       topology_context=topology_context,
       active_mask=active_mask,
       proposal_edge_index=proposal_edge_index,
       proposal_edge_mask=proposal_edge_mask,
       proposal_scores=proposal_scores,
+      proposal_edge_source=proposal_edge_source,
+      collect_edge_source_diagnostics=collect_edge_source_diagnostics,
       topology_mode=topology_mode,
       fixed_edge_index=fixed_edge_index,
       fixed_edge_mask=fixed_edge_mask)
@@ -995,12 +1071,14 @@ class ContextualCouplingForestHead(nn.Module):
       proposal_edge_index=proposal_edge_index,
       proposal_edge_mask=proposal_edge_mask,
       proposal_scores=proposal_scores,
+      proposal_edge_source=proposal_edge_source,
       anchor_logits=anchor_logits,
       anchor_indices=anchor_indices,
       slot_logits=slot_logits,
       edge_index=edge_index,
       edge_mask=edge_mask,
       edge_scores=edge_scores,
+      edge_source=edge_source,
       pair_left_factors=pair_left,
       pair_right_factors=pair_right,
       topology_mode=topology_mode,
