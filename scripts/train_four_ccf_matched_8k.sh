@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --job-name=ccf-train4-1k
+#SBATCH --job-name=ccf-train4-8k
 #SBATCH --array=0-3%2
 #SBATCH --time=12:00:00
 #SBATCH --mem=30G
@@ -15,7 +15,7 @@
 #
 # Default: training seed 1.  To run another complete four-arm seed:
 #   sbatch --export=ALL,TRAIN_SEED=2,RUN_TAG=seed2 \
-#     scripts/train_four_ccf_matched_1k.sh
+#     scripts/train_four_ccf_matched_8k.sh
 
 set -euo pipefail
 
@@ -53,7 +53,6 @@ else
 fi
 SEED_TAG=$(printf '%03d' "$TRAIN_SEED")
 RUN_ROOT="${CCF_CACHE_ROOT}/runs/four_arm_train_s${SEED_TAG}_k128_${JOB_TAG}"
-EXPORT_DIR="$RUN_ROOT/exported_adapters"
 
 ARMS=(static_static fixed_dynamic dynamic_fixed dynamic_dynamic)
 TOPOLOGIES=(fixed fixed dynamic dynamic)
@@ -65,17 +64,15 @@ TOPOLOGY="${TOPOLOGIES[$IDX]}"
 FACTOR="${FACTORS[$IDX]}"
 TOPOLOGY_WEIGHT="${TOPOLOGY_WEIGHTS[$IDX]}"
 RUN_DIR="$RUN_ROOT/$ARM"
-ADAPTER="$EXPORT_DIR/$ARM.safetensors"
-MANIFEST="$EXPORT_DIR/$ARM.manifest.json"
 
 export HF_HUB_CACHE="$HF_CACHE"
 export TOKENIZERS_PARALLELISM=false
 
-if [[ -e "$RUN_DIR" || -e "$ADAPTER" || -e "$MANIFEST" ]]; then
+if [[ -e "$RUN_DIR" ]]; then
   echo "Refusing to overwrite an existing output for $ARM under $RUN_ROOT"
   exit 2
 fi
-mkdir -p "$RUN_DIR" "$EXPORT_DIR"
+mkdir -p "$RUN_DIR"
 
 BACKBONE_SHA256=$(sha256sum "$BACKBONE" | awk '{print $1}')
 echo "Arm: $ARM"
@@ -116,7 +113,7 @@ srun --ntasks=1 python -u main.py \
   optim.lr=0.0003 \
   optim.weight_decay=0 \
   lr_scheduler.num_warmup_steps=50 \
-  trainer.max_steps=1000 \
+  trainer.max_steps=8000 \
   trainer.val_check_interval=500 \
   trainer.limit_val_batches=32 \
   trainer.num_sanity_val_steps=0 \
@@ -143,24 +140,6 @@ if [[ ! -f "$CHECKPOINT" ]]; then
 fi
 CHECKPOINT_SHA256=$(sha256sum "$CHECKPOINT" | awk '{print $1}')
 
-python -u scripts/export_structured_adapter.py \
-  --checkpoint "$CHECKPOINT" \
-  --expected-checkpoint-sha256 "$CHECKPOINT_SHA256" \
-  --expected-global-step 1000 \
-  --output "$ADAPTER" \
-  --manifest "$MANIFEST" \
-  --control-identity "$ARM" \
-  --topology-mode "$TOPOLOGY" \
-  --factor-mode "$FACTOR" \
-  --candidate-k 128 \
-  --independent-mode false \
-  --topology-weight "$TOPOLOGY_WEIGHT" \
-  > "$EXPORT_DIR/$ARM.export-report.json"
-
-sha256sum "$ADAPTER" > "$ADAPTER.sha256"
-sha256sum "$MANIFEST" > "$MANIFEST.sha256"
-
-echo "Completed and exported: $ARM"
+echo "Completed 8,000 training steps: $ARM"
 echo "Checkpoint: $CHECKPOINT"
-echo "Adapter: $ADAPTER"
-echo "Manifest: $MANIFEST"
+echo "Checkpoint SHA256: $CHECKPOINT_SHA256"

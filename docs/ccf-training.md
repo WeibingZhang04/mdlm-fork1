@@ -9,19 +9,19 @@ Select one preset with `+experiment=ccf/<arm>`:
 | `dynamic_fixed` | dynamic | fixed | 0.1 |
 | `dynamic_dynamic` | dynamic | dynamic | 0.1 |
 
-The shared settings come from `scripts/train_four_ccf_matched_1k.sh` at commit
-`2051502329429a252d3b806e0ed195ff379c42b6`: K=128, rank16, length1024,
-frozen raw MDLM backbone, shared endpoint tables, original additive FiLM,
-head LR0.0003, no EMA, batch4, 50 warmup steps, 1000 updates. Dynamic topology
-uses gold-reveal supervision. The normal MDLM default configuration is unchanged.
+The four-arm launcher is `scripts/train_four_ccf_matched_8k.sh`: K=128, rank16,
+length1024, frozen raw MDLM backbone, shared endpoint tables, original additive
+FiLM, head LR0.0003, no EMA, batch4, 50 warmup steps, and 8000 updates. Dynamic
+topology uses gold-reveal supervision. The standalone experiment presets still
+default to 1000 updates; the launcher overrides that limit. The normal MDLM
+default configuration is unchanged.
 
-These are architecture/training presets, **not a reconstruction of the historical
-paper data protocol**. Its `train_openwebtext_pinned` loader and provenance machinery
-have not yet been restored. The presets deliberately leave `data.train`, `data.valid`,
-and `data.cache_dir` mandatory, along with `model.structured_decoder.training.backbone_checkpoint`.
-Do not substitute a corpus silently or label the result a historical reproduction.
-The present loader supports its existing source names and existing processed-cache
-layout; dataset revision/provenance must be audited separately before paper runs.
+The presets deliberately leave `data.train`, `data.valid`, and `data.cache_dir`
+mandatory, along with `model.structured_decoder.training.backbone_checkpoint`.
+The launcher selects `train_openwebtext_pinned`, which records dataset and
+tokenizer revisions but does not establish MDLM's unrecorded historical
+snapshots. It saves full Lightning checkpoints; adapter-only export is not part
+of this launcher.
 
 A training command has this shape (replace each placeholder deliberately):
 
