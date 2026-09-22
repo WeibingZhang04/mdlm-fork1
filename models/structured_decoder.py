@@ -150,9 +150,11 @@ class ScalarTimestepEmbedding(nn.Module):
 
 
 class SparseEdgeProposer(nn.Module):
-  """Build local plus learned-anchor edge proposals in O(B L A).
+  """Build local, active-chain, and learned-anchor edge proposals.
 
-  ``A`` learned anchor slots each select one active position from the context.
+  Consecutive active positions are proposed even when inactive positions
+  separate them in the original sequence.  ``A`` learned anchor slots each
+  select one active position from the context.
   Every position then chooses a small number of those slots.  This supplies
   context-dependent nonlocal proposals without computing an L-by-L attention
   matrix.  Duplicate undirected proposals are harmless: Kruskal selection
@@ -244,6 +246,30 @@ class SparseEdgeProposer(nn.Module):
       local_mask = torch.zeros(
         batch_size, 0, dtype=torch.bool, device=device)
 
+    # Preserve the fixed-chain adjacency among the remaining active nodes in
+    # the dynamic proposal graph.  Local proposals above use distance in the
+    # original sequence, so they miss consecutive active nodes separated by
+    # more than ``local_window`` inactive positions.  The suffix minimum finds
+    # the next active position to the right of every sequence position without
+    # compacting the batch into ragged tensors.  Shorter chain edges are
+    # already present in ``local_index`` and are omitted here to avoid duplicate
+    # proposals.
+    positions = torch.arange(
+      sequence_length, device=device, dtype=torch.long)
+    active_positions = positions[None].expand(
+      batch_size, -1).masked_fill(~active_mask, sequence_length)
+    next_active = torch.flip(
+      torch.cummin(
+        torch.flip(active_positions, dims=(1,)), dim=1).values,
+      dims=(1,))[:, 1:]
+    chain_left = positions[:-1][None].expand_as(next_active)
+    chain_mask = (
+      active_mask[:, :-1]
+      & next_active.lt(sequence_length)
+      & ((next_active - chain_left) > self.local_window))
+    chain_right = next_active.masked_fill(~chain_mask, 0)
+    chain_index = torch.stack((chain_left, chain_right), dim=-1)
+
     if self.contextual_neighbors:
       chosen_slots = slot_logits.topk(
         self.contextual_neighbors, dim=-1).indices
@@ -274,8 +300,10 @@ class SparseEdgeProposer(nn.Module):
       contextual_mask = torch.zeros(
         batch_size, 0, dtype=torch.bool, device=device)
 
-    edge_index = torch.cat((local_index, contextual_index), dim=1)
-    edge_mask = torch.cat((local_mask, contextual_mask), dim=1)
+    edge_index = torch.cat(
+      (local_index, chain_index, contextual_index), dim=1)
+    edge_mask = torch.cat(
+      (local_mask, chain_mask, contextual_mask), dim=1)
     scores = self.score_edges(node_context, edge_index, edge_mask)
     return (
       edge_index, edge_mask, scores,
