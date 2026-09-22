@@ -87,23 +87,34 @@ def modulate_fused(x: torch.Tensor,
 
 
 class Rotary(torch.nn.Module):
-  def __init__(self, dim, base=10_000):
+  def __init__(self, dim, base=10_000, cache_precision="bf16"):
     super().__init__()
     inv_freq = 1.0 / (base ** (torch.arange(0, dim, 2).float() / dim))
     self.register_buffer('inv_freq', inv_freq)
+    if cache_precision not in ('bf16', 'fp32'):
+      raise ValueError('rotary_cache_precision must be bf16 or fp32')
+    self.cache_precision = cache_precision
     self.seq_len_cached = None
     self.cos_cached = None
     self.sin_cached = None
 
   def forward(self, x, seq_dim=1):
+    if self.cache_precision not in ('bf16', 'fp32'):
+      raise ValueError('rotary_cache_precision must be bf16 or fp32')
+    dtype = torch.bfloat16 if self.cache_precision == 'bf16' else torch.float32
     seq_len = x.shape[seq_dim]
-    if seq_len != self.seq_len_cached:
+    if (seq_len != self.seq_len_cached or self.cos_cached is None
+        or self.cos_cached.device != x.device or self.cos_cached.dtype != dtype):
       self.seq_len_cached = seq_len
-      t = torch.arange(x.shape[seq_dim], device=x.device).type_as(self.inv_freq)
-      # Precision-only ablation: FP32 rotary cache even during BF16 training.
-      with torch.autocast(device_type=x.device.type, enabled=False):
-        freqs = torch.einsum("i,j->ij", t, self.inv_freq.clone())
-      emb = torch.cat((freqs, freqs), dim=-1).to(x.device)
+      # Select explicitly: an FP32 startup probe must not choose cache precision.
+      t = torch.arange(seq_len, device=x.device, dtype=torch.float32)
+      inv_freq = self.inv_freq.to(device=x.device, dtype=torch.float32)
+      with torch.autocast(device_type=x.device.type, dtype=torch.bfloat16,
+                          enabled=self.cache_precision == 'bf16'):
+        freqs = torch.einsum("i,j->ij", t, inv_freq.clone())
+      # CUDA einsum follows autocast; CPU outer products may not. Round phases
+      # BEFORE trig, rather than merely casting an already computed FP32 cache.
+      emb = torch.cat((freqs, freqs), dim=-1).to(dtype=dtype)
       # dims are: batch, seq_len, qkv, head, dim
       self.cos_cached = emb.cos()[None, :, None, None, :].repeat(1,1,3,1,1)
       self.sin_cached = emb.sin()[None, :, None, None, :].repeat(1,1,3,1,1)
@@ -376,7 +387,8 @@ class DIT(nn.Module, huggingface_hub.PyTorchModelHubMixin):
                                       vocab_size)
     self.sigma_map = TimestepEmbedder(config.model.cond_dim)
     self.rotary_emb = Rotary(
-      config.model.hidden_size // config.model.n_heads)
+      config.model.hidden_size // config.model.n_heads,
+      cache_precision=getattr(config.model, 'rotary_cache_precision', 'bf16'))
 
     blocks = []
     for _ in range(config.model.n_blocks):

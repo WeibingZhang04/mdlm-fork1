@@ -1,5 +1,7 @@
 name: contextual-forest-small
 type: ddit
+# Explicit cache policy, independent of trainer precision or startup probes.
+rotary_cache_precision: bf16
 monitor_metric: val/structured/conditional_nll_per_masked_token
 hidden_size: 768
 cond_dim: 128

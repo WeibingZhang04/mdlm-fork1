@@ -37,7 +37,7 @@
     "configs/experiment/tensor-train-owt-feasibility-v1.yaml": "2227fcb10f09d6e424cc7c839583c00384e29cd813c9aad635484b16e771eaa1",
     "configs/lr_scheduler/constant_warmup.yaml": "f9828ad807d5d32def6e8cc6706553fb55585becc17bcc0ccf5191a710f234f8",
     "configs/lr_scheduler/cosine_decay_warmup.yaml": "90bf1b21df14c7b0387d336c04b406260241c4f6012266756175cfdedd1c4bc5",
-    "configs/model/contextual-forest-small.yaml": "d19f76c3305f7005de4f3a626ef918a8f731d72ebc45a164d2f8af08e6043a1e",
+    "configs/model/contextual-forest-small.yaml": "bea421d1ab5f5757084f6e18f9446003c79055aef02144b381ad3cf5791ddfc5",
     "configs/model/contextual-forest-tiny.yaml": "bcd39fc10e4f5dbf2ea347fc33128591fcc3d53ed538b302994e5d02f7556142",
     "configs/model/medium.yaml": "46590019e840a5ecd3637d65d57d02c17f617a499bfc17657c382cbae557d0db",
     "configs/model/small-ar.yaml": "382903fa055efb0f8772d0e411b0c9816baca027afab8da9996cd8bf43703b89",
@@ -88,7 +88,7 @@
     "models/crf_decoder.py": "14493b3b110b7077a94d7e5413b780dd0cf02b73723f903bcb05912a0de73a35",
     "models/dimamba.py": "17f1b4e11e5dd63acebd441532f37de51e5822f2583ef7c41fdabbe0a6a34ccc",
     "models/directional_forest.py": "5c81101e1c44e2cb30c3567eb2e27dce2129014157be63d1dc5686c663cb94e1",
-    "models/dit.py": "88ce7fbd10d2327fc2018d17da30293e1beacafbe7de720049923ce247fa2b7b",
+    "models/dit.py": "271401bce6e43934cccdfe375eee9c03443beccf2d5401278d58c32788e0ce84",
     "models/ema.py": "f1417e66a46b2c2144e3fd47bb5c91c819f8c55f6bd18c75b72a75dc36bafb60",
     "models/structured_decoder.py": "b90fd02618d5162f8908f266fef1bdb2418a4bc172ede0863cd60ddeaa0f257a",
     "noise_schedule.py": "da16320cebbc727c03e8e45297593505fb41a597c7a5ef29eacd7043207a763c",
@@ -177,5 +177,18 @@
     "ablation_sha256": "88ce7fbd10d2327fc2018d17da30293e1beacafbe7de720049923ce247fa2b7b",
     "change": "Disable autocast only for Rotary.forward frequency einsum. Training cache becomes FP32; generation already initializes FP32. Overall BF16 training, seeds, data, phase resumes, sampling and scoring stay unchanged.",
     "evidence": "2026-09-21 startup audit 1557313: the 15k campaign monitoring probe initialized an FP32 cache before BF16 training. This intervention isolates cache precision without adding that probe."
+  },
+  "rotary_cache_precision_switch": {
+    "default": "bf16",
+    "choices": [
+      "bf16",
+      "fp32"
+    ],
+    "config_key": "model.rotary_cache_precision",
+    "previous_source_sha256": {
+      "models/dit.py": "88ce7fbd10d2327fc2018d17da30293e1beacafbe7de720049923ce247fa2b7b",
+      "configs/model/contextual-forest-small.yaml": "d19f76c3305f7005de4f3a626ef918a8f731d72ebc45a164d2f8af08e6043a1e"
+    },
+    "change": "Explicit cache precision independent of surrounding autocast and probe call order; BF16 default. Applies in training and generation. Historical precision_ablation above is retained as history."
   }
 }

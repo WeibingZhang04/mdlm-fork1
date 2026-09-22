@@ -41,6 +41,9 @@ def require_allocation():
         raise RuntimeError('Training and generation require a Slurm allocation')
 
 def prepare(options):
+    precision = os.environ.get('CCF_ROTARY_CACHE_PRECISION', 'bf16')
+    if precision not in ('bf16', 'fp32'):
+        raise ValueError('CCF_ROTARY_CACHE_PRECISION must be bf16 or fp32')
     repo = options.repo.resolve(); dest = options.study.resolve(); cache = options.cache.resolve()
     if dest.exists(): raise FileExistsError('Choose a new output directory: '+str(dest))
     # Never put checkpoints, runtime Git repositories, or logs inside the source repository.
@@ -64,7 +67,8 @@ def prepare(options):
     commit = subprocess.check_output(['git','-C',str(repo),'rev-parse','HEAD'],text=True).strip()
     (dest/'logs').mkdir()
     state={'cache':str(cache),'backbone':str(backbone),'source_commit':commit,'repo':str(repo),'source_only':options.source_only,
-           'source_identities':identities,'protocol_sha256':sha(HERE/'protocol.json')}
+           'source_identities':identities,'protocol_sha256':sha(HERE/'protocol.json'),
+           'rotary_cache_precision':precision,'eval_rotary_cache_precision':'fp32'}
     write(dest/'study.json',state)
     cells=make_cells(cfg)
     write(dest/'pilot-cells.json',cells['pilot']);write(dest/'confirmation-cells.json',cells['confirmation'])
@@ -113,6 +117,7 @@ def overrides(cfg,arm,phase,study,state):
         'topology':topo,'factor':factor,'weight':str(weight)}
     args=[by_key[k].format(**substitutions) for k in p['key_order']]
     if phase=='basic_1000' and arm['arm']!='dynamic_dynamic':args+=['strategy.find_unused_parameters=true']
+    args += ['model.rotary_cache_precision='+state['rotary_cache_precision']]
     return args,run,resume if phase in prior else None
 
 def train(options):
@@ -160,7 +165,8 @@ def evaluate(options):
       '--model-config','contextual-forest-small','--data-config','train_openwebtext_pinned','--allow-dirty',
       '--reference-lm','gpt2-large','--reference-lm-revision',cfg['reference_lm_revision'],
       '--reference-lm-device','cuda','--reference-lm-batch-size','1','--reference-lm-max-length','1024','--reference-lm-dtype','float32']
-    for item in [f'data.cache_dir={state["cache"]}/huggingface','model.structured_decoder.top_k=128',
+    for item in [f'data.cache_dir={state["cache"]}/huggingface',
+      'model.rotary_cache_precision='+state['eval_rotary_cache_precision'],'model.structured_decoder.top_k=128',
       f'model.structured_decoder.rank={cell["rank"]}',f'++model.structured_decoder.factor_embedding_mode={cell["embedding"]}',
       '++model.structured_decoder.factor_conditioner_hidden_dim=0',f'model.structured_decoder.topology_mode={topo}',
       f'model.structured_decoder.factor_mode={factor}','model.structured_decoder.independent_mode=false',

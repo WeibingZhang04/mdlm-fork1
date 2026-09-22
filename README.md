@@ -239,3 +239,9 @@ year={2024},
 url={https://openreview.net/forum?id=L4uaAR4ArM}
 }
 ```
+
+### Training rotary-cache precision
+
+BF16 is the default. Set `CCF_ROTARY_CACHE_PRECISION=fp32` for the FD/DD launcher,
+or use `model.rotary_cache_precision=fp32` with direct Hydra training.
+See [usage and comparison caveats](docs/rotary-cache-precision.md).
