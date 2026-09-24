@@ -3,6 +3,8 @@ import unittest
 
 import torch
 
+from models.structured_decoder import EDGE_SOURCE_CHAIN, EDGE_SOURCE_LOCAL
+
 from evaluation.generation_harness import (
   PromptSpec,
   batch_seed,
@@ -79,6 +81,53 @@ class FakeDiffusionModel:
 
   def forward(self, x, unused_conditioning):
     return self.backbone(x)
+
+
+class DiagnosticFakeDiffusionModel(FakeDiffusionModel):
+
+  def __init__(self):
+    super().__init__()
+    self.diagnostic_flags = []
+
+  def _structured_head_output(
+      self, tokens, conditioning, active_mask,
+      force_no_grad_backbone=False, return_hidden_states=False,
+      collect_edge_source_diagnostics=False):
+    del conditioning, active_mask, force_no_grad_backbone
+    self.diagnostic_flags.append(collect_edge_source_diagnostics)
+    batch_size = tokens.shape[0]
+    edge_mask = torch.ones(
+      batch_size, 2, dtype=torch.bool, device=tokens.device)
+    edge_source = None
+    if collect_edge_source_diagnostics:
+      edge_source = torch.tensor(
+        [EDGE_SOURCE_LOCAL, EDGE_SOURCE_CHAIN],
+        device=tokens.device).expand(batch_size, -1)
+    output = SimpleNamespace(
+      edge_mask=edge_mask,
+      edge_source=edge_source,
+      topology_mode='dynamic')
+    logits = torch.zeros(
+      *tokens.shape, 128, device=tokens.device)
+    if return_hidden_states:
+      hidden = torch.zeros(*tokens.shape, 3, device=tokens.device)
+      return output, logits, hidden
+    return output, logits
+
+  def _ddpm_update(self, x, unused_t, unused_dt):
+    self._structured_backbone_output(x)
+    self._structured_head_output(x, None, x.eq(self.mask_index))
+    result = x.clone()
+    for row in range(x.shape[0]):
+      positions = torch.nonzero(x[row].eq(self.mask_index)).flatten()
+      if positions.numel():
+        result[row, positions[0]] = 7
+    return result
+
+  def _structured_clean_sample(self, x, unused_conditioning):
+    self._structured_backbone_output(x)
+    self._structured_head_output(x, None, x.eq(self.mask_index))
+    return torch.where(x.eq(self.mask_index), torch.full_like(x, 7), x)
 
 
 class GenerationHarnessTest(unittest.TestCase):
@@ -205,6 +254,38 @@ class GenerationHarnessTest(unittest.TestCase):
     self.assertEqual(model.structured_sampling_mode, 'factorized')
     self.assertEqual(
       model._structured_backbone_output.__func__, original_method.__func__)
+
+  def test_edge_source_diagnostics_are_opt_in_and_aggregated(self):
+    prompt = PromptSpec(
+      prompt_id='diagnostic',
+      initial_token_ids=(5, 99, 99, 6),
+      active_mask=(False, True, True, False))
+    samples = expand_paired_samples([prompt], num_samples=2, base_seed=70)
+
+    ordinary_model = DiagnosticFakeDiffusionModel()
+    ordinary_records, ordinary_batch = run_sampling_group(
+      ordinary_model, samples, sampling_mode='structured_joint',
+      nfe_budget=4, tokenizer=self.tokenizer, device=torch.device('cpu'))
+    self.assertNotIn('edge_source_diagnostics', ordinary_batch)
+    self.assertNotIn(
+      'edge_source_diagnostics', summarize_group(ordinary_records))
+    self.assertTrue(ordinary_model.diagnostic_flags)
+    self.assertFalse(any(ordinary_model.diagnostic_flags))
+
+    diagnostic_model = DiagnosticFakeDiffusionModel()
+    records, batch = run_sampling_group(
+      diagnostic_model, samples, sampling_mode='structured_joint',
+      nfe_budget=4, tokenizer=self.tokenizer, device=torch.device('cpu'),
+      collect_edge_source_diagnostics=True)
+    self.assertTrue(all(diagnostic_model.diagnostic_flags))
+    diagnostic = batch['edge_source_diagnostics']
+    self.assertEqual(
+      diagnostic['selected_edge_events'],
+      {'local': 8, 'chain': 8, 'contextual': 0, 'fixed': 0})
+    self.assertEqual(diagnostic['total_selected_edge_events'], 16)
+    self.assertEqual(diagnostic['structured_model_calls'], 4)
+    self.assertEqual(
+      summarize_group(records)['edge_source_diagnostics'], diagnostic)
 
 
 if __name__ == '__main__':

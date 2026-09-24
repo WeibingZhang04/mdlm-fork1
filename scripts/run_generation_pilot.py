@@ -154,6 +154,11 @@ def _parse_args(argv=None) -> argparse.Namespace:
     default=list(DEFAULT_SAMPLING_MODES))
   parser.add_argument('--nfe-budgets', nargs='+', type=int, default=[32, 64])
   parser.add_argument('--device', default='cuda')
+  parser.add_argument(
+    '--edge-source-diagnostics', action='store_true',
+    help=(
+      'Collect selected local/chain/contextual/fixed edge counts during '
+      'structured inference. Disabled by default.'))
   parser.add_argument('--model-config', default='contextual-forest-small')
   parser.add_argument('--data-config', default='openwebtext-streaming')
   parser.add_argument(
@@ -588,7 +593,8 @@ def main(argv=None) -> int:
           sampling_mode=mode,
           nfe_budget=nfe_budget,
           tokenizer=tokenizer,
-          device=device)
+          device=device,
+          collect_edge_source_diagnostics=args.edge_source_diagnostics)
         for record in records:
           record.update({
             'global_pairing_digest': global_pairing_digest,
@@ -727,6 +733,7 @@ def main(argv=None) -> int:
       'sampling_modes': args.modes,
       'nfe_budgets': args.nfe_budgets,
       'num_output_records': len(all_records),
+      'edge_source_diagnostics': args.edge_source_diagnostics,
     },
     'outputs': {
       'samples_jsonl': {

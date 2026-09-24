@@ -23,6 +23,10 @@ from evaluation.generation_metrics import (
   repetition_rate,
   summarize_token_metrics,
 )
+from models.structured_decoder import (
+  EDGE_SOURCE_NAMES,
+  selected_edge_source_counts,
+)
 
 
 DEFAULT_SAMPLING_MODES = (
@@ -366,6 +370,35 @@ class _TrajectoryRecorder:
     })
 
 
+class _EdgeSourceRecorder:
+  """Accumulate selected-edge source events without affecting RNG."""
+
+  def __init__(self) -> None:
+    self._counts: torch.Tensor | None = None
+    self.model_calls = 0
+
+  def record(self, output) -> None:
+    counts = selected_edge_source_counts(output).sum(dim=0).detach()
+    self._counts = counts if self._counts is None else self._counts + counts
+    self.model_calls += 1
+
+  def summary(self) -> dict[str, Any]:
+    if self._counts is None:
+      values = [0] * len(EDGE_SOURCE_NAMES)
+    else:
+      values = [int(value) for value in self._counts.cpu().tolist()]
+    total = sum(values)
+    return {
+      'selected_edge_events': dict(zip(EDGE_SOURCE_NAMES, values)),
+      'selected_edge_event_fractions': {
+        name: (float(value / total) if total else None)
+        for name, value in zip(EDGE_SOURCE_NAMES, values)
+      },
+      'total_selected_edge_events': total,
+      'structured_model_calls': self.model_calls,
+    }
+
+
 @torch.no_grad()
 def _sample_from_initial_state(
     model,
@@ -374,6 +407,7 @@ def _sample_from_initial_state(
     nfe_budget: int,
     eps: float = 1e-5,
     trajectory_recorder: _TrajectoryRecorder | None = None,
+    edge_source_recorder: _EdgeSourceRecorder | None = None,
 ) -> tuple[torch.Tensor, int]:
   """Sample from explicit masks while leaving observed tokens untouched.
 
@@ -417,6 +451,7 @@ def _sample_from_initial_state(
     and model.structured_sampling_mode in STRUCTURED_SAMPLING_MODES)
   handle = None
   original_structured_backbone_output = None
+  original_structured_head_output = None
   if structured_path:
     # The structured path intentionally calls backbone.encode/decode directly
     # to reuse hidden states, so a hook on backbone.__call__ does not see an
@@ -435,6 +470,19 @@ def _sample_from_initial_state(
       measured_nfe += 1
 
     handle = model.backbone.register_forward_hook(count_backbone_calls)
+  if edge_source_recorder is not None:
+    if not structured_path:
+      raise ValueError(
+        'edge-source diagnostics require a structured sampling mode')
+    original_structured_head_output = model._structured_head_output
+
+    def recorded_structured_head_output(*args, **kwargs):
+      kwargs['collect_edge_source_diagnostics'] = True
+      result = original_structured_head_output(*args, **kwargs)
+      edge_source_recorder.record(result[0])
+      return result
+
+    model._structured_head_output = recorded_structured_head_output
   try:
     for index in range(num_steps):
       t = timesteps[index] * torch.ones(
@@ -489,6 +537,8 @@ def _sample_from_initial_state(
       handle.remove()
     if original_structured_backbone_output is not None:
       model._structured_backbone_output = original_structured_backbone_output
+    if original_structured_head_output is not None:
+      model._structured_head_output = original_structured_head_output
   return x, measured_nfe
 
 
@@ -499,13 +549,15 @@ def sample_from_initial_state(
     *,
     nfe_budget: int,
     eps: float = 1e-5,
+    edge_source_recorder: _EdgeSourceRecorder | None = None,
 ) -> tuple[torch.Tensor, int]:
   """Sample without trajectory capture; this is the ordinary harness path."""
   return _sample_from_initial_state(
     model,
     initial_tokens,
     nfe_budget=nfe_budget,
-    eps=eps)
+    eps=eps,
+    edge_source_recorder=edge_source_recorder)
 
 
 @torch.no_grad()
@@ -748,12 +800,19 @@ def run_sampling_group(
     nfe_budget: int,
     tokenizer,
     device: torch.device,
+    collect_edge_source_diagnostics: bool = False,
 ) -> tuple[list[dict[str, Any]], dict[str, Any]]:
   """Run one paired batch and return per-sample plus batch metadata."""
   if sampling_mode not in SAMPLING_MODES:
     raise ValueError(f'unsupported sampling mode {sampling_mode!r}')
   if not samples:
     raise ValueError('sampling group must be non-empty')
+  if type(collect_edge_source_diagnostics) is not bool:
+    raise TypeError('collect_edge_source_diagnostics must be boolean')
+  if (collect_edge_source_diagnostics
+      and sampling_mode not in STRUCTURED_SAMPLING_MODES):
+    raise ValueError(
+      'edge-source diagnostics require a structured sampling mode')
   lengths = {len(item.prompt.initial_token_ids) for item in samples}
   if len(lengths) != 1:
     raise ValueError('all prompts in a sampling batch must have equal length')
@@ -777,9 +836,12 @@ def run_sampling_group(
     torch.cuda.synchronize(device)
     torch.cuda.reset_peak_memory_stats(device)
   start = time.perf_counter()
+  edge_source_recorder = (
+    _EdgeSourceRecorder() if collect_edge_source_diagnostics else None)
   try:
     generated, measured_nfe = sample_from_initial_state(
-      model, initial, nfe_budget=nfe_budget)
+      model, initial, nfe_budget=nfe_budget,
+      edge_source_recorder=edge_source_recorder)
   finally:
     model.structured_sampling_mode = previous_sampling_mode
   if device.type == 'cuda':
@@ -812,6 +874,9 @@ def run_sampling_group(
     'peak_memory_bytes': peak_memory,
     'unresolved_mask_tokens': int(unresolved),
   }
+  if edge_source_recorder is not None:
+    batch_metadata['edge_source_diagnostics'] = (
+      edge_source_recorder.summary())
 
   records = []
   decoded = tokenizer.batch_decode(generated_cpu)
@@ -904,6 +969,30 @@ def summarize_group(records: Sequence[dict[str, Any]]) -> dict[str, Any]:
     'unresolved_mask_tokens': sum(
       int(batch['unresolved_mask_tokens']) for batch in batch_values),
   })
+  diagnostic_batches = [
+    batch.get('edge_source_diagnostics') for batch in batch_values]
+  if any(value is not None for value in diagnostic_batches):
+    if not all(value is not None for value in diagnostic_batches):
+      raise ValueError(
+        'edge-source diagnostics are missing from some generation batches')
+    source_counts = {
+      name: sum(
+        int(value['selected_edge_events'][name])
+        for value in diagnostic_batches)
+      for name in EDGE_SOURCE_NAMES
+    }
+    source_total = sum(source_counts.values())
+    result['edge_source_diagnostics'] = {
+      'selected_edge_events': source_counts,
+      'selected_edge_event_fractions': {
+        name: (float(count / source_total) if source_total else None)
+        for name, count in source_counts.items()
+      },
+      'total_selected_edge_events': source_total,
+      'structured_model_calls': sum(
+        int(value['structured_model_calls'])
+        for value in diagnostic_batches),
+    }
   return result
 
 

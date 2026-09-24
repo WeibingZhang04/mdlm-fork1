@@ -165,6 +165,8 @@ def evaluate(options):
       '--model-config','contextual-forest-small','--data-config','train_openwebtext_pinned','--allow-dirty',
       '--reference-lm','gpt2-large','--reference-lm-revision',cfg['reference_lm_revision'],
       '--reference-lm-device','cuda','--reference-lm-batch-size','1','--reference-lm-max-length','1024','--reference-lm-dtype','float32']
+    if state.get('edge_source_diagnostics', False):
+        args += ['--edge-source-diagnostics']
     for item in [f'data.cache_dir={state["cache"]}/huggingface',
       'model.rotary_cache_precision='+state['eval_rotary_cache_precision'],'model.structured_decoder.top_k=128',
       f'model.structured_decoder.rank={cell["rank"]}',f'++model.structured_decoder.factor_embedding_mode={cell["embedding"]}',

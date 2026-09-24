@@ -196,7 +196,12 @@ def _batch_rows(bundle, rows):
       changes[field.name] = value.index_select(0, rows)
     elif is_dataclass(value):
       changes[field.name] = _batch_rows(value, rows)
-  return replace(bundle, **changes)
+  result = replace(bundle, **changes)
+  for name in ('proposal_edge_source', 'edge_source'):
+    value = getattr(bundle, name, None)
+    if torch.is_tensor(value):
+      setattr(result, name, value.index_select(0, rows))
+  return result
 
 
 @torch.no_grad()

@@ -20,7 +20,7 @@ consume the endpoint factors directly.
 import copy
 import dataclasses
 import math
-from typing import Dict, Optional, Tuple
+from typing import ClassVar, Dict, Optional, Tuple
 
 import torch
 import torch.nn as nn
@@ -82,11 +82,11 @@ class StructuredDecoderOutput:
   independent_mode: bool
 
   # Diagnostics only. Codes are EDGE_SOURCE_* constants; zero marks padding.
-  # Keyword-only defaults preserve compatibility with specialized outputs.
-  proposal_edge_source: Optional[torch.Tensor] = dataclasses.field(
-    default=None, kw_only=True)               # [B, P]
-  edge_source: Optional[torch.Tensor] = dataclasses.field(
-    default=None, kw_only=True)               # [B, E]
+  # Ancillary class defaults keep diagnostics out of the dataclass constructor
+  # and preserve Python 3.9 subclass compatibility. Instrumented head outputs
+  # set instance values before returning.
+  proposal_edge_source: ClassVar[Optional[torch.Tensor]] = None  # [B, P]
+  edge_source: ClassVar[Optional[torch.Tensor]] = None           # [B, E]
 
   @property
   def num_candidate_states(self) -> int:
@@ -1062,7 +1062,7 @@ class ContextualCouplingForestHead(nn.Module):
         edge_mask[:, :, None, None], pair_right,
         torch.ones_like(pair_right) * neutral)
 
-    return StructuredDecoderOutput(
+    output = StructuredDecoderOutput(
       candidate_ids=candidate_ids,
       unary_log_potentials=unary_log_potentials,
       candidate_state_mask=candidate_state_mask,
@@ -1071,19 +1071,20 @@ class ContextualCouplingForestHead(nn.Module):
       proposal_edge_index=proposal_edge_index,
       proposal_edge_mask=proposal_edge_mask,
       proposal_scores=proposal_scores,
-      proposal_edge_source=proposal_edge_source,
       anchor_logits=anchor_logits,
       anchor_indices=anchor_indices,
       slot_logits=slot_logits,
       edge_index=edge_index,
       edge_mask=edge_mask,
       edge_scores=edge_scores,
-      edge_source=edge_source,
       pair_left_factors=pair_left,
       pair_right_factors=pair_right,
       topology_mode=topology_mode,
       factor_mode=factor_mode,
       independent_mode=bool(independent_mode))
+    output.proposal_edge_source = proposal_edge_source
+    output.edge_source = edge_source
+    return output
 
 
 def _shape_self_test() -> None:
