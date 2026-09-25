@@ -270,6 +270,21 @@ visible-token clamps, marginal sampling, and interrupted-batch replay. Measure
 both single-sample latency and batched throughput; changing batch size changes
 the random stream as well as the runtime.
 
+The full-vocabulary evaluator also accepts the exact-prefix continuation files
+described above, with the same source selection and suffix-only scorer:
+
+```bash
+python scripts/evaluate_chain_sparse_count.py --counts checkpoints/owt-counts.pt --backbone-checkpoint checkpoints/mdlm-owt.pt --backend gpu --mode pmi --strength 0.25 --continuation-file data/chain-wikitext/validation/length-1024/continuation.jsonl --one-per-document --samples 59 --steps 16 --batch-size 4 --sample-offset 30000 --score-gpt2 --output runs/wikitext-count-validation
+```
+
+It clamps each row's exact prefix, preserves adjacent equal-shape batches, and
+uses reference suffix lengths but never reference token values in generation.
+Use `--sampling marginal` for the corresponding own-marginal control. Input
+selection, partial-batch replay, and immutable source checks match the learned
+head evaluator. Keep an active run's original code snapshot: adding these
+options changes its source identity and does not permit resuming old manifests
+under the new evaluator.
+
 ## Inspect actual generation histories
 
 ```bash

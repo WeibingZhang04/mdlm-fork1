@@ -24,11 +24,14 @@ import torch
 from chain_crf.backbone import FrozenMDLM, SyntheticBackbone, file_sha256
 from chain_crf.counts import CountBigramHead
 from chain_crf.data import atomic_json, canonical_hash
-from chain_crf.generation import synchronize, token_statistics
+from chain_crf.generation import clean_token_ids, synchronize, token_statistics
 from chain_crf.sparse_count import (
     SparseCountPotential, sample_sparse_chain, sparse_chain_marginals,
 )
-from scripts.evaluate_chain_crf import score_gpt2
+from scripts.evaluate_chain_crf import (
+    continuation_batch_plan, continuation_identity, load_continuations,
+    score_gpt2, select_continuations, validate_continuation_resume,
+)
 
 
 def inference_components(backend):
@@ -67,12 +70,14 @@ def full_vocabulary_unary(log_probs, tokens, mask_id, temperature=1.):
 def generate_sparse_count(backbone, potential, *, length=256, steps=16,
                           batch_size=1, sampling='joint', temperature=1.,
                           device='cuda', sample_offset=0, prefix=None,
-                          inference_backend='reference'):
+                          inference_backend='reference', prefixes=None):
     """Same reveal schedule/offset semantics as chain_crf.generation.generate.
 
 Draws a full original-position chain, including visible/masked boundaries,
 then commits only the scheduled positions. Joint and own-marginal modes use
 the very same full-vocabulary potential; neither aggregates a residual tail.
+``prefixes`` supplies one equal-length exact-token prefix per batch row.
+Different shapes belong in separate batches, without padding or reordering.
 """
     if min(length, steps, batch_size) < 1 or sample_offset < 0:
         raise ValueError('Positive sizes and a nonnegative sample offset required')
@@ -88,17 +93,28 @@ the very same full-vocabulary potential; neither aggregates a residual tail.
         # device below through a tiny allocation rather than rejecting cuda:0.
         if potential.left.device != torch.empty(0, device=device).device:
             raise ValueError('Potential and generation must use the same device')
-    prefix = [] if prefix is None else list(prefix)
-    if any(type(v) is not int or v < 0 or v >= backbone.vocab_size or v == backbone.mask_id for v in prefix):
-        raise ValueError('Prefix must contain valid observed clean tokens')
-    tokens = torch.full((batch_size, len(prefix)+length), backbone.mask_id,
+    if prefixes is not None and prefix is not None:
+        raise ValueError('Choose shared prefix or per-example prefixes, not both')
+    if prefixes is None:
+        prefix = clean_token_ids([] if prefix is None else prefix,
+                                vocab_size=backbone.vocab_size, mask_id=backbone.mask_id)
+        prefix_rows = [prefix]*batch_size
+    else:
+        if not isinstance(prefixes, (list, tuple)) or len(prefixes) != batch_size:
+            raise ValueError('Per-example prefixes must match batch_size')
+        prefix_rows = [clean_token_ids(row, vocab_size=backbone.vocab_size,
+                                      mask_id=backbone.mask_id) for row in prefixes]
+        if len({len(row) for row in prefix_rows}) != 1:
+            raise ValueError('Per-example prefixes in one batch must have equal lengths')
+    prefix_length = len(prefix_rows[0])
+    tokens = torch.full((batch_size, prefix_length+length), backbone.mask_id,
                         dtype=torch.long, device=device)
-    if prefix:
-        tokens[:, :len(prefix)] = torch.tensor(prefix, device=device)
+    if prefix_length:
+        tokens[:, :prefix_length] = torch.tensor(prefix_rows, dtype=torch.long, device=device)
     orders = []
     for draw_id in range(sample_offset, sample_offset+batch_size):
         rng = torch.Generator().manual_seed(1729+draw_id)
-        orders.append(torch.randperm(length, generator=rng)+len(prefix))
+        orders.append(torch.randperm(length, generator=rng)+prefix_length)
     order = torch.stack(orders).to(device)
     generator = torch.Generator(device=device).manual_seed(2718+sample_offset)
     calls, committed = 0, 0
@@ -140,7 +156,7 @@ the very same full-vocabulary potential; neither aggregates a residual tail.
     return tokens, {'elapsed_seconds': elapsed, 'backbone_seconds': backbone_seconds,
                     'sampling_seconds': sampling_seconds, 'backbone_calls': calls,
                     'samples': batch_size, 'generated_tokens': batch_size*length,
-                    'prefix_length': len(prefix), 'generated_length': length,
+                    'prefix_length': prefix_length, 'generated_length': length,
                     'full_vocabulary': True, 'mean_retained_mass': 1.}
 
 
@@ -153,7 +169,8 @@ def _read_records(path):
         raise ValueError('Malformed sample record; do not silently discard interrupted/corrupt data') from error
 
 
-def _validate_records(records, config, manifest_hash, prefix, vocab_size, mask_id):
+def _validate_records(records, config, manifest_hash, prefix, vocab_size, mask_id,
+                      *, continuations=None, continuation_sha256=None):
     if [r.get('sample_id') for r in records] != list(range(len(records))):
         raise ValueError('Incomplete or duplicated sample IDs')
     offset = config['sample_offset']
@@ -163,21 +180,43 @@ def _validate_records(records, config, manifest_hash, prefix, vocab_size, mask_i
         raise ValueError('Existing sample count exceeds requested target')
     for row in records:
         ids = row.get('token_ids')
-        batch_start = row['sample_id']//config['batch_size']*config['batch_size']
-        expected_size = min(config['batch_size'], config['samples']-batch_start)
         if row.get('manifest_sha256') != manifest_hash:
             raise ValueError('Stored sample belongs to another manifest')
-        if row.get('batch_id') != batch_start or row.get('batch_size') != expected_size:
-            raise ValueError('Stored batch identity does not match the fixed batch schedule')
-        if not isinstance(ids, list) or len(ids) != len(prefix)+config['length']:
-            raise ValueError('Stored sample has invalid length')
-        if any(type(v) is not int or v < 0 or v >= vocab_size or v == mask_id for v in ids):
-            raise ValueError('Stored sample has invalid token IDs')
-        if ids[:len(prefix)] != prefix or row.get('prefix_length') != len(prefix):
-            raise ValueError('Stored sample has a changed prefix')
+        if continuations is None:
+            batch_start = row['sample_id']//config['batch_size']*config['batch_size']
+            expected_size = min(config['batch_size'], config['samples']-batch_start)
+            if row.get('batch_id') != batch_start or row.get('batch_size') != expected_size:
+                raise ValueError('Stored batch identity does not match the fixed batch schedule')
+            if not isinstance(ids, list) or len(ids) != len(prefix)+config['length']:
+                raise ValueError('Stored sample has invalid length')
+            if any(type(v) is not int or v < 0 or v >= vocab_size or v == mask_id for v in ids):
+                raise ValueError('Stored sample has invalid token IDs')
+            if ids[:len(prefix)] != prefix or row.get('prefix_length') != len(prefix):
+                raise ValueError('Stored sample has a changed prefix')
         for key in ('elapsed_seconds', 'backbone_seconds', 'sampling_seconds'):
             if not isinstance(row.get(key), (int, float)) or not math.isfinite(row[key]) or row[key] < 0:
                 raise ValueError('Stored sample has invalid timing')
+    if continuations is not None:
+        validate_continuation_resume(
+            records, continuations, continuation_batch_plan(continuations, config['batch_size']),
+            continuation_sha256, vocab_size=vocab_size, mask_id=mask_id)
+
+
+def _continuation_selection(config, *, vocab_size, mask_id):
+    """Use the shared exact-ID reader/selection policy for generation and scoring."""
+    if not config.get('continuation_file'):
+        return None, None
+    source, digest = load_continuations(config['continuation_file'],
+                                       vocab_size=vocab_size, mask_id=mask_id)
+    selected = select_continuations(source, offset=config['continuation_offset'],
+                                    samples=config['samples'],
+                                    one_per_document=config['one_per_document'])
+    metadata = {'file_sha256': digest, 'source_rows': len(source), 'selected_rows': len(selected),
+                'selected_chunk_ids': [row['chunk_id'] for row in selected],
+                'prefix_policy': 'exact IDs; no tokenization or added special tokens',
+                'length_policy': 'generate exactly len(reference_continuation_ids) for each row',
+                'reference_policy': 'reference token values never enter generation; only suffix lengths are used'}
+    return selected, metadata
 
 
 def _append_jsonl(path, rows):
@@ -198,7 +237,8 @@ def _arguments(argv):
                         help='Exact FP64 inference backend; included in immutable identity')
     parser.add_argument('--backbone-checkpoint', type=Path)
     parser.add_argument('--cache-dir', type=Path)
-    parser.add_argument('--length', type=int, default=256)
+    parser.add_argument('--length', type=int, default=256,
+                        help='Generated suffix length; continuation-file mode uses each reference suffix length')
     parser.add_argument('--steps', type=int, default=16)
     parser.add_argument('--samples', type=int, default=256)
     parser.add_argument('--sample-offset', type=int, default=0)
@@ -208,6 +248,12 @@ def _arguments(argv):
     prefix = parser.add_mutually_exclusive_group()
     prefix.add_argument('--prefix', default='')
     prefix.add_argument('--prefix-token-ids', type=int, nargs='+')
+    prefix.add_argument('--continuation-file', '--continuations-jsonl', type=Path,
+                        help='Exact prefix_input_ids, reference_continuation_ids and source identities')
+    parser.add_argument('--continuation-offset', type=int, default=0,
+                        help='Input row after optional document selection, independent of draw IDs')
+    parser.add_argument('--one-per-document', action='store_true',
+                        help='Use only the first chunk per source article in continuation-file mode')
     parser.add_argument('--synthetic', action='store_true')
     parser.add_argument('--resume', action='store_true')
     parser.add_argument('--score-gpt2', action='store_true')
@@ -218,6 +264,10 @@ def _arguments(argv):
         raise ValueError('Sample/batch counts, length and steps must be positive')
     if args.sample_offset < 0 or args.warmup < 0:
         raise ValueError('Sample offset and warmup must be nonnegative')
+    if args.continuation_offset < 0:
+        raise ValueError('Continuation offset must be nonnegative')
+    if not args.continuation_file and (args.continuation_offset or args.one_per_document):
+        raise ValueError('Continuation selection options require --continuation-file')
     if not math.isfinite(args.strength) or args.strength < 0:
         raise ValueError('Strength must be finite and nonnegative')
     if not math.isfinite(args.temperature) or args.temperature <= 0:
@@ -233,8 +283,13 @@ def _score_existing(args):
         raise ValueError('Synthetic fixtures must not be externally scored as text results')
     records = _read_records(args.output/'samples.jsonl')
     config = manifest['config']
+    continuations, info = _continuation_selection(
+        config, vocab_size=manifest['backbone']['vocab_size'], mask_id=manifest['backbone']['mask_id'])
+    if info != manifest.get('continuations'):
+        raise ValueError('Continuation source differs from the immutable generation manifest')
     _validate_records(records, config, canonical_hash(manifest), manifest['prefix_token_ids'],
-                      manifest['backbone']['vocab_size'], manifest['backbone']['mask_id'])
+                      manifest['backbone']['vocab_size'], manifest['backbone']['mask_id'],
+                      continuations=continuations, continuation_sha256=info['file_sha256'] if info else None)
     if len(records) != config['samples']:
         raise ValueError('Scoring requires the complete immutable sample set')
     result = score_gpt2(records, args.device)
@@ -252,8 +307,10 @@ def _run(args):
         raise ValueError('Synthetic fixture does not tokenize text; use --prefix-token-ids')
     prefix = args.prefix_token_ids or (model.tokenizer.encode(args.prefix, add_special_tokens=False)
                                        if args.prefix else [])
-    if any(v < 0 or v >= model.vocab_size or v == model.mask_id for v in prefix):
-        raise ValueError('Prefix must contain valid observed clean tokens')
+    prefix = clean_token_ids(prefix, vocab_size=model.vocab_size, mask_id=model.mask_id)
+    continuations, continuation_info = _continuation_selection(
+        vars(args), vocab_size=model.vocab_size, mask_id=model.mask_id)
+    continuation_sha256 = continuation_info['file_sha256'] if continuation_info else None
     before = time.perf_counter()
     head = CountBigramHead.load(args.counts, mode=args.mode, strength=args.strength).to(args.device)
     if head.vocab_size != model.vocab_size:
@@ -299,6 +356,8 @@ def _run(args):
                    'token_seed': '2718 + first draw_id of original batch',
                    'reveal_counts': 'ceil((step+1)*generated_length/steps)'},
     }
+    if continuation_info is not None:
+        manifest['continuations'] = continuation_info
     manifest_path = args.output/'manifest.json'
     if manifest_path.exists():
         if json.loads(manifest_path.read_text()) != manifest:
@@ -310,17 +369,30 @@ def _run(args):
     manifest_hash = canonical_hash(manifest)
     records_path = args.output/'samples.jsonl'
     records = _read_records(records_path)
-    _validate_records(records, configuration, manifest_hash, prefix, model.vocab_size, model.mask_id)
+    _validate_records(records, configuration, manifest_hash, prefix, model.vocab_size, model.mask_id,
+                      continuations=continuations, continuation_sha256=continuation_sha256)
     kwargs = dict(length=args.length, steps=args.steps, sampling=args.sampling,
                   temperature=args.temperature, device=args.device, prefix=prefix,
                   inference_backend=args.backend)
+    batches = (continuation_batch_plan(continuations, args.batch_size) if continuations is not None
+               else [(offset, min(args.batch_size, args.samples-offset))
+                     for offset in range(0, args.samples, args.batch_size)])
+
+    def draw_batch(offset, size, draw_offset):
+        batch_kwargs = kwargs
+        if continuations is not None:
+            batch_kwargs = {key: value for key, value in kwargs.items() if key not in ('prefix', 'length')}
+            batch_kwargs.update(prefixes=[row['prefix_input_ids'] for row in continuations[offset:offset+size]],
+                                length=len(continuations[offset]['reference_continuation_ids']))
+        return generate_sparse_count(model, potential, batch_size=size,
+                                     sample_offset=draw_offset, **batch_kwargs)
+
     warmup_seconds = 0.
     if len(records) < args.samples:
         before = time.perf_counter()
         for index in range(args.warmup):
-            generate_sparse_count(model, potential, batch_size=args.batch_size,
-                                  sample_offset=args.sample_offset+args.samples+index*args.batch_size,
-                                  **kwargs)
+            size = batches[0][1] if continuations is not None else args.batch_size
+            draw_batch(0, size, args.sample_offset+args.samples+index*args.batch_size)
         synchronize(args.device)
         warmup_seconds = time.perf_counter()-before
     setup = {'manifest_sha256': manifest_hash, 'resumed': args.resume,
@@ -337,13 +409,10 @@ def _run(args):
     del head  # The static potential now owns everything needed for inference.
     # Replay an interrupted partial batch from its ORIGINAL offset. Otherwise
     # the per-batch RNG seed would change even though draw IDs stayed the same.
-    first_batch = len(records)//args.batch_size*args.batch_size
-    for offset in range(first_batch, args.samples, args.batch_size):
-        size = min(args.batch_size, args.samples-offset)
+    for offset, size in batches:
         if offset+size <= len(records):
             continue
-        tokens, timing = generate_sparse_count(model, potential, batch_size=size,
-                                               sample_offset=args.sample_offset+offset, **kwargs)
+        tokens, timing = draw_batch(offset, size, args.sample_offset+offset)
         token_rows = tokens.cpu().tolist()
         existing = max(0, len(records)-offset)
         for index in range(existing):
@@ -353,10 +422,12 @@ def _run(args):
         for index in range(existing, size):
             row = token_rows[index]
             record = {'sample_id': offset+index, 'draw_id': args.sample_offset+offset+index,
-                      'token_ids': row, 'prefix_length': len(prefix),
+                      'token_ids': row,
                       'text': model.tokenizer.decode(row) if model.tokenizer else ' '.join(map(str, row)),
                       'batch_id': offset, 'batch_size': size, 'manifest_sha256': manifest_hash,
                       **timing}
+            if continuations is not None:
+                record.update(continuation_identity(continuations[offset+index], continuation_sha256))
             for key in ('elapsed_seconds', 'backbone_seconds', 'sampling_seconds'):
                 record[key] = timing[key]/size
             batch.append(record)
@@ -370,12 +441,12 @@ def _run(args):
               'backbone_seconds': sum(row['backbone_seconds'] for row in records),
               'sampling_seconds': sum(row['sampling_seconds'] for row in records),
               'backbone_calls_per_sample': sum(row['backbone_calls'] for row in records)/len(records),
-              'generated_tokens_per_second': len(records)*args.length/elapsed,
+              'generated_tokens_per_second': sum(len(row['token_ids'])-row['prefix_length'] for row in records)/elapsed,
               'setup_invocations': len(setup_runs),
               'static_potential_setup_seconds_first_invocation': setup_runs[0]['static_potential_seconds'],
               'static_potential_setup_seconds_all_invocations': sum(row['static_potential_seconds'] for row in setup_runs),
               'timing_scope': 'generation includes backbone/unaries/DP/sampling/commit; setup and warmup separate',
-              **token_statistics([row['token_ids'][len(prefix):] for row in records])}
+              **token_statistics([row['token_ids'][row['prefix_length']:] for row in records])}
     atomic_json(result, args.output/'metrics.json')
     print(json.dumps(result, indent=2), flush=True)
     if args.score_gpt2:
