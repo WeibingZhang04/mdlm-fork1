@@ -370,6 +370,25 @@ python scripts/evaluate_chain_mauve.py features --input runs/final-method/sample
 python scripts/evaluate_chain_mauve.py compare --reference runs/mauve-reference-features --generation runs/mauve-method-features --output runs/mauve-method.json
 ```
 
+For native-length MDLM evaluation, account for the model's documented
+BOS/payload/EOS training convention. A terminal-state feature can distinguish
+an unwrapped reference from a generated sequence ending in EOS for that reason
+alone. `wrap-reference` creates a separate boundary-matched reference from the
+same selected documents, without changing their order or exclusion rules:
+
+```bash
+python scripts/evaluate_chain_mauve.py wrap-reference --input data/mauve-reference-1024/references.jsonl --output data/mauve-reference-1024-wrapped
+python scripts/evaluate_chain_mauve.py features --input data/mauve-reference-1024-wrapped/references.jsonl --role reference --length 1024 --samples 5000 --output runs/mauve-reference-features-wrapped
+python scripts/evaluate_chain_mauve.py compare --reference runs/mauve-reference-features-wrapped --generation runs/mauve-method-features --output runs/mauve-method-wrapped.json
+```
+
+Each transformed reference is `[50256] + raw_ids[:1022] + [50256]`. This matches
+the boundary convention, not the full packed training population. Original
+references and scores remain unchanged; new manifests record the transformation
+and parent hashes. Use this same reference for every method. Generation IDs
+and their existing features are unchanged. The comparator verifies compatibility
+with the original identity feature extractor; it never rewrites its manifests.
+
 Feature extraction is offline-cache-only, using the terminal last-layer hidden
 state of GPT-2-large revision `32b71b12589c2f8d625668d2335a01cac3249519`, in FP32.
 Reference features can be reused across methods. Compare equal sample counts

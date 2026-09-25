@@ -2,7 +2,9 @@
 """Pinned, fixed-length MAUVE evaluation: reference, features, then compare.
 
 The reference is the original MDLM OWT validation tail, not a new test split.
-No BOS/EOS tokens are inserted, no EOS truncation or decode/retokenize is used.
+The original ``reference`` command selects raw tokens. ``wrap-reference`` makes
+a separate, authenticated BOS/payload/EOS version of those same documents.
+Feature extraction never changes supplied IDs or stops at EOS.
 Compare identical sample counts and lengths across methods. Fewer than 5000
 samples per distribution are explicitly labeled exploratory here.
 """
@@ -26,6 +28,8 @@ from scripts.prepare_chain_data import prior_document_ids, OWT_REPOSITORY, OWT_R
 GPT2_REVISION = "32b71b12589c2f8d625668d2335a01cac3249519"
 SOURCE_ROWS = 8013769
 HELDOUT_START = SOURCE_ROWS - 100000
+GPT2_BOUNDARY_ID = 50256
+WRAPPED_REFERENCE_FORMAT = "mdlm_bos_eos_v1"
 
 
 def write_json(path, value):
@@ -158,6 +162,98 @@ def read_records(path, *, length, samples):
     return records
 
 
+def reference_wrapping(length):
+    return {"operation": "prepend_bos_take_first_L_minus_2_raw_tokens_append_eos",
+            "bos_id": GPT2_BOUNDARY_ID, "eos_id": GPT2_BOUNDARY_ID,
+            "input_length": length, "output_length": length,
+            "raw_token_span": [0, length - 2], "retokenization": False,
+            "document_selection": "unchanged_parent_documents_and_order"}
+
+
+def validate_wrapped_reference(manifest):
+    """Check the explicit record transformation, separate from feature extraction."""
+    length = manifest.get("length")
+    if (manifest.get("role") != "reference" or type(length) is not int or not 3 <= length <= 1024
+            or manifest.get("schema") != "chain_mauve_reference_v2"
+            or manifest.get("reference_format") != WRAPPED_REFERENCE_FORMAT
+            or manifest.get("transformation") != reference_wrapping(length)):
+        raise ValueError("Invalid wrapped reference transformation")
+    parent = manifest.get("parent_reference", {})
+    raw = parent.get("manifest", {})
+    if (raw.get("role") != "reference" or raw.get("length") != length
+            or raw.get("samples") != manifest.get("samples")
+            or raw.get("selection") != "first_N_distinct_eligible_documents_first_L_raw_tokens"
+            or raw.get("reference_format", "raw_document_prefix_v1") != "raw_document_prefix_v1"
+            or raw.get("tokenizer_revision") != TOKENIZER_REVISION
+            or raw.get("source") != manifest.get("source")
+            or raw.get("records_sha256") != parent.get("records_sha256")
+            or raw.get("excluded_document_count") != manifest.get("excluded_document_count")
+            or raw.get("exclusion_file_sha256") != manifest.get("exclusion_file_sha256")):
+        raise ValueError("Wrapped reference parent provenance differs")
+    for key in ("manifest_sha256", "records_sha256"):
+        value = parent.get(key)
+        if not isinstance(value, str) or len(value) != 64 or any(c not in "0123456789abcdef" for c in value):
+            raise ValueError("Wrapped reference parent checksum is invalid")
+
+
+def wrap_reference(input_path, output):
+    """Transform every authenticated raw reference; never select new documents."""
+    input_path, output = Path(input_path), Path(output)
+    if output.exists():
+        raise FileExistsError("Output exists; preserve the original reference")
+    parent_path = input_path.parent / "manifest.json"
+    raw = json.loads(parent_path.read_text())
+    parent_sha, records_sha = file_sha256(parent_path), file_sha256(input_path)
+    length, samples = raw.get("length"), raw.get("samples")
+    if (raw.get("role") != "reference" or type(length) is not int or not 3 <= length <= 1024
+            or type(samples) is not int or samples < 1
+            or raw.get("selection") != "first_N_distinct_eligible_documents_first_L_raw_tokens"
+            or raw.get("reference_format", "raw_document_prefix_v1") != "raw_document_prefix_v1"
+            or "transformation" in raw or raw.get("tokenizer_revision") != TOKENIZER_REVISION
+            or raw.get("records_sha256") != records_sha):
+        raise ValueError("Need an authenticated original raw reference, not an already wrapped input")
+    source = raw.get("source", {})
+    if (source.get("repository") != OWT_REPOSITORY or source.get("revision") != OWT_REVISION
+            or source.get("window") != [HELDOUT_START, SOURCE_ROWS]
+            or source.get("role") != "original_mdlm_validation_tail_not_test"):
+        raise ValueError("Raw reference source is not the pinned held-out population")
+    records = [json.loads(line) for line in input_path.read_text().splitlines() if line.strip()]
+    if len(records) != samples or [r["sample_id"] for r in records] != list(range(samples)):
+        raise ValueError("Parent reference count/order does not match its manifest")
+    if len({r["document_id"] for r in records}) != samples:
+        raise ValueError("Parent reference contains duplicate documents")
+    transformed = []
+    for record in records:
+        tokens = record["token_ids"]
+        validate_tokens(tokens, length)
+        if (record.get("prefix_length", 0) != 0 or record.get("source_token_offset") != 0
+                or not HELDOUT_START <= record["source_document_index"] < SOURCE_ROWS):
+            raise ValueError("Parent reference is not a raw held-out document prefix")
+        transformed.append({**record,
+            "token_ids": [GPT2_BOUNDARY_ID] + tokens[:length - 2] + [GPT2_BOUNDARY_ID],
+            "raw_parent_token_ids_sha256": hashlib.sha256(
+                json.dumps(tokens, separators=(",", ":")).encode()).hexdigest(),
+            "source_raw_token_span": [0, length - 2]})
+    manifest = {**raw, "schema": "chain_mauve_reference_v2",
+                "reference_format": WRAPPED_REFERENCE_FORMAT,
+                "selection": "same_ordered_documents_as_authenticated_raw_parent",
+                "transformation": reference_wrapping(length),
+                "parent_reference": {"manifest_sha256": parent_sha, "records_sha256": records_sha,
+                                     "manifest": raw},
+                "transformer_sha256": file_sha256(__file__)}
+    validate_wrapped_reference(manifest)
+    if file_sha256(parent_path) != parent_sha or file_sha256(input_path) != records_sha:
+        raise ValueError("Raw reference changed during transformation")
+    output.mkdir(parents=True)
+    path = output / "references.jsonl"
+    with path.open("x") as handle:
+        for record in transformed:
+            handle.write(json.dumps(record) + "\n")
+    manifest["records_sha256"] = file_sha256(path)
+    write_json(output / "manifest.json", manifest)
+    return manifest
+
+
 @torch.inference_mode()
 def terminal_features(model, records, *, device, batch_size):
     if batch_size < 1:
@@ -178,12 +274,41 @@ def terminal_features(model, records, *, device, batch_size):
     return features
 
 
-def feature_protocol(length):
-    return {"model": "gpt2-large", "revision": GPT2_REVISION,
+def feature_protocol(length, *, version=1):
+    protocol = {"model": "gpt2-large", "revision": GPT2_REVISION,
             "tokenizer_revision": TOKENIZER_REVISION, "length": length,
             "tokens": "original_gpt2_ids_no_inserted_specials_no_eos_stop_no_retokenization",
             "features": "final_layer_terminal_hidden_state", "dtype": "float32",
             "tf32": False}
+    if version == 2:
+        # This describes the featurizer, not upstream record preparation.
+        protocol.update(schema_version=2,
+                        tokens="supplied_gpt2_ids_identity_no_added_specials_no_eos_stop_no_retokenization")
+    elif version != 1:
+        raise ValueError("Unknown feature protocol version")
+    return protocol
+
+
+def comparison_input_protocol(p_manifest, q_manifest):
+    """Allow the known legacy identity featurizer, never arbitrary protocol drift."""
+    p, q = p_manifest["protocol"], q_manifest["protocol"]
+    if p.get("schema_version") == 2:
+        reference = p_manifest.get("reference_selection", {})
+        validate_wrapped_reference(reference)
+        length = reference["length"]
+        if (p != feature_protocol(length, version=2)
+                or q not in (feature_protocol(length), feature_protocol(length, version=2))
+                or p_manifest.get("input_sha256") != reference.get("records_sha256")
+                or p_manifest.get("samples") != reference.get("samples")):
+            raise ValueError("Feature protocols or wrapped reference provenance differ")
+        return {"reference_format": WRAPPED_REFERENCE_FORMAT,
+                "reference_transformation": reference["transformation"],
+                "parent_raw_reference_sha256": reference["parent_reference"]["records_sha256"],
+                "generation_format": "unchanged_generated_token_ids",
+                "feature_compatibility": "verified_v1_or_v2_identity_extraction_same_model_precision_length"}
+    if p != q:
+        raise ValueError("Feature protocols differ")
+    return None
 
 
 def load_features(directory):
@@ -202,8 +327,7 @@ def load_features(directory):
 def compare_features(p_features, q_features, p_manifest, q_manifest, compute):
     if p_manifest["role"] != "reference" or q_manifest["role"] != "generation":
         raise ValueError("Need human reference p and generated q features")
-    if p_manifest["protocol"] != q_manifest["protocol"]:
-        raise ValueError("Feature protocols differ")
+    input_protocol = comparison_input_protocol(p_manifest, q_manifest)
     if p_features.shape != q_features.shape or len(p_features) < 100:
         raise ValueError("Equal feature shapes and at least 100 samples each are required")
     count = len(p_features)
@@ -218,6 +342,8 @@ def compare_features(p_features, q_features, p_manifest, q_manifest, compute):
                    ("p_hist", "q_hist", "divergence_curve")})
     output.update(samples_per_distribution=count, protocol=protocol,
                   interpretation="exploratory_small_sample" if count < 5000 else "fixed_final_comparison")
+    if input_protocol is not None:
+        output["comparison_input_protocol"] = input_protocol
     return output
 
 
@@ -229,6 +355,8 @@ def main(argv=None):
     ref.add_argument("--heldout-cache", type=Path, required=True)
     ref.add_argument("--exclude-documents", type=Path, nargs="+", required=True)
     ref.add_argument("--cache-dir", type=Path)
+    wrap = commands.add_parser("wrap-reference", help="Wrap all authenticated existing raw references in a new directory")
+    wrap.add_argument("--input", type=Path, required=True)
     feat = commands.add_parser("features")
     feat.add_argument("--input", type=Path, required=True)
     feat.add_argument("--role", choices=["reference", "generation"], required=True)
@@ -242,7 +370,7 @@ def main(argv=None):
     for command in (ref, feat):
         command.add_argument("--length", type=int, choices=[256, 1024], required=True)
         command.add_argument("--samples", type=int, default=5000)
-    for command in (ref, feat, compare):
+    for command in (ref, wrap, feat, compare):
         command.add_argument("--output", type=Path, required=True)
     args = parser.parse_args(argv)
     if args.output.exists():
@@ -268,6 +396,9 @@ def main(argv=None):
                    "tokenizer_revision": TOKENIZER_REVISION, "records_sha256": file_sha256(path),
                    "excluded_document_count": len(excluded),
                    "exclusion_file_sha256": [file_sha256(p) for p in args.exclude_documents]})
+    elif args.command == "wrap-reference":
+        result = wrap_reference(args.input, args.output)
+        print(json.dumps({k: result[k] for k in ("reference_format", "samples", "length", "records_sha256")}))
     elif args.command == "features":
         from transformers import AutoModel
         input_digest = file_sha256(args.input)
@@ -278,6 +409,16 @@ def main(argv=None):
             if (reference.get("role") != "reference" or reference.get("length") != args.length
                     or reference.get("records_sha256") != file_sha256(args.input)):
                 raise ValueError("Reference selection manifest does not match the supplied passages")
+            if reference.get("reference_format", "raw_document_prefix_v1") not in (
+                    "raw_document_prefix_v1", WRAPPED_REFERENCE_FORMAT):
+                raise ValueError("Unknown reference record format")
+            if reference.get("reference_format") == WRAPPED_REFERENCE_FORMAT:
+                validate_wrapped_reference(reference)
+                if args.samples != reference["samples"]:
+                    raise ValueError("Wrapped reference must retain all selected parent documents")
+                if any(r["token_ids"][0] != GPT2_BOUNDARY_ID or r["token_ids"][-1] != GPT2_BOUNDARY_ID
+                       or r.get("source_raw_token_span") != [0, args.length - 2] for r in records):
+                    raise ValueError("Wrapped reference records do not match their boundary transformation")
         torch.backends.cuda.matmul.allow_tf32 = False
         torch.backends.cudnn.allow_tf32 = False
         model = AutoModel.from_pretrained("gpt2-large", revision=GPT2_REVISION,
@@ -294,8 +435,9 @@ def main(argv=None):
         path = args.output / "features.npy"
         with path.open("xb") as handle:
             np.save(handle, features, allow_pickle=False)
+        protocol_version = 2 if reference and reference.get("reference_format") == WRAPPED_REFERENCE_FORMAT else 1
         write_json(args.output / "manifest.json", {"role": args.role,
-                   "protocol": feature_protocol(args.length), "samples": len(records),
+                   "protocol": feature_protocol(args.length, version=protocol_version), "samples": len(records),
                    "input_sha256": input_digest, "features_sha256": file_sha256(path),
                    "reference_selection": reference, "sample_ids": [r["sample_id"] for r in records],
                    "draw_ids": [r.get("draw_id") for r in records],
