@@ -115,6 +115,35 @@ each head independently. Adding `--continue-init-stream` continues the initial
 run's exact next data batch and corruption draw, with a fresh contextual-head
 optimizer. It requires the same data, seed, batch size and sequence length.
 
+## Matched backbone continuation
+
+The separate joint trainer updates the released MDLM backbone. Its two arms
+are ordinary independent MDLM continuation and backbone-plus-contextual-CRF
+training. Both use the same effective batch size, data stream, corruption
+stream, dropout initialization, backbone optimizer, and time weighting.
+The contextual head starts with exactly zero pair scores. A small nonconstant
+gate initialization lets context-dependent pair scores begin learning.
+
+```bash
+python scripts/train_chain_joint.py --arm independent --data data/chain-owt --release-checkpoint checkpoints/mdlm-owt.pt --output runs/continued-mdlm --steps 1000
+python scripts/train_chain_joint.py --arm contextual --data data/chain-owt --release-checkpoint checkpoints/mdlm-owt.pt --output runs/joint-contextual --steps 1000
+python scripts/evaluate_chain_joint.py --checkpoint runs/joint-contextual/best.pt --output runs/joint-generation --length 1024 --steps 16 --samples 256 --sample-offset 10000 --score-gpt2
+```
+
+The contextual objective is a time-weighted joint denoising loss, not a claimed
+diffusion ELBO. All-visible corruptions contribute zero without resampling.
+Top-K identities are discrete, but unary values and the complete residual
+mass remain differentiable. Gradient accumulation divides by the effective
+batch token count, not the microbatch size.
+
+Each checkpoint contains the tuned backbone, head, optimizer, scheduler, data
+stream and RNG state. Use `scripts/evaluate_chain_joint.py` for these coupled
+checkpoints; do not combine their heads with the unchanged released backbone.
+`--control own-marginal` keeps the CRF but samples its node marginals;
+`--control pair-disabled` removes its edges while keeping the same tuned
+backbone. Resume requires matching data, code and training configuration;
+`--steps` is the total update target, including updates already completed.
+
 ## Generate, score and diagnose
 
 ```bash
