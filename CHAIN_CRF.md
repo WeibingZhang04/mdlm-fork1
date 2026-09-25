@@ -409,5 +409,24 @@ exploratory. It fixes the clustering RNG, uses the standard five optimization
 restarts, and does not run model-seed sweeps or confidence intervals. Report
 MAUVE alongside evaluator perplexity, repetition, diversity and decoding time.
 
+## Tokenization diagnostics
+
+Audit retained samples with a SHA256-pinned GPT-2 tokenizer JSON, without new
+generation, model scoring, or GPU use:
+
+```bash
+python scripts/evaluate_chain_tokenization.py --input runs/final-method/samples.jsonl --tokenizer-json path/to/tokenizer.json --tokenizer-sha256 KNOWN_TOKENIZER_SHA256 --output runs/final-method/tokenization.json
+```
+
+The aggregate-only report records input, tokenizer, and evaluator hashes. It
+separates malformed UTF-8 from literal replacement characters, checks byte
+reconstruction against the pinned decoder, and measures decode/encode ID
+round-trips. It also identifies errors explained solely by final UTF-8
+truncation after removing at most one initial/final boundary token. A valid
+string can have noncanonical BPE IDs, so a round-trip mismatch is not itself
+invalid text. These diagnostics do not replace decoded-text quality evaluation
+or establish why a generation metric changed. The existing raw-ID GPT-2 scorer
+and a decode/retokenize scorer measure different token sequences.
+
 The implementation contains no claimed benchmark improvements or fabricated
 results. Use separately recorded runs for any performance claims.
