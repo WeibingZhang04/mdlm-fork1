@@ -83,7 +83,7 @@ def render(series, output, title):
     import matplotlib
     matplotlib.use('Agg')
     import matplotlib.pyplot as plt
-    from matplotlib.ticker import ScalarFormatter
+    from matplotlib.ticker import ScalarFormatter, FuncFormatter
     output = Path(output)
     if output.exists():
         raise FileExistsError('Choose a new plot directory to preserve existing evidence')
@@ -106,12 +106,14 @@ def render(series, output, title):
         axis.set_xscale('log', base=2)
         axis.set_yscale('log')
         axis.yaxis.set_major_formatter(ScalarFormatter())
+        axis.yaxis.set_minor_formatter(ScalarFormatter())
         axis.grid(True, which='major', alpha=.18, linewidth=.6)
         axis.spines[['top', 'right']].set_visible(False)
     steps = sorted({p['steps'] for row in series for p in row['points']})
     axes[0].set_xticks(steps, labels=[str(step) for step in steps])
     axes[0].set_xlabel('Denoising steps')
     axes[1].set_xlabel('Seconds per sample (complete generation)')
+    axes[1].xaxis.set_major_formatter(FuncFormatter(lambda value, position: f'{value:g}'))
     axes[0].set_ylabel('Generative perplexity (lower is better)')
     axes[1].legend(frameon=False)
     fig.suptitle(title, fontsize=10)
