@@ -270,6 +270,17 @@ visible-token clamps, marginal sampling, and interrupted-batch replay. Measure
 both single-sample latency and batched throughput; changing batch size changes
 the random stream as well as the runtime.
 
+`--backend segments --max-chunk-tokens 512` eliminates visible nodes and
+absorbs their edge factors into neighboring masked spans. Equal-length spans
+are batched without padding, using the same full-vocabulary FP64 potential.
+The joint distribution is unchanged, but bucketed sampling consumes randomness
+in a different order. Backend, chunk budget and source hashes are therefore
+fixed in the resume identity. The 512-position default bounds each bucket
+chunk's real positions, not peak memory; an individual longer span remains
+intact. Boundary gathers and full-vocabulary marginals require additional
+memory. CPU enumeration and replay tests do not establish production GPU speed
+or memory use: run the CUDA checks and profile the intended workload first.
+
 The full-vocabulary evaluator also accepts the exact-prefix continuation files
 described above, with the same source selection and suffix-only scorer:
 

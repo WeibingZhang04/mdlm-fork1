@@ -4,6 +4,9 @@
 Static sparse-potential construction is timed separately. Generation timing
 includes the backbone, full-vocabulary unaries, DP, sampling and commitment.
 This is a correctness-first FP64 baseline, not a claim of fast inference.
+The opt-in segments backend eliminates visible nodes exactly. Its bucketed
+sampler preserves the joint law, not reference-backend seed-by-seed draws;
+the chunk budget is therefore part of the immutable generation identity.
 """
 from __future__ import annotations
 
@@ -43,7 +46,24 @@ def inference_components(backend):
             sparse_chain_marginals as gpu_marginals,
         )
         return GPUCountPotential, gpu_sample, gpu_marginals
-    raise ValueError('Backend must be reference or gpu')
+    if backend == 'segments':
+        from chain_crf.sparse_count_segments import (
+            SegmentedCountPotential, sample_sparse_chain as segmented_sample,
+            sparse_chain_marginals as segmented_marginals,
+        )
+        return SegmentedCountPotential, segmented_sample, segmented_marginals
+    raise ValueError('Backend must be reference, gpu or segments')
+
+
+def _inference_kwargs(backend, max_chunk_tokens):
+    if backend == 'segments':
+        budget = 512 if max_chunk_tokens is None else max_chunk_tokens
+        if type(budget) is not int or budget < 1:
+            raise ValueError('max_chunk_tokens must be a positive integer')
+        return {'max_chunk_tokens': budget}
+    if max_chunk_tokens is not None:
+        raise ValueError('--max-chunk-tokens requires --backend segments')
+    return {}
 
 
 def full_vocabulary_unary(log_probs, tokens, mask_id, temperature=1.):
@@ -70,7 +90,8 @@ def full_vocabulary_unary(log_probs, tokens, mask_id, temperature=1.):
 def generate_sparse_count(backbone, potential, *, length=256, steps=16,
                           batch_size=1, sampling='joint', temperature=1.,
                           device='cuda', sample_offset=0, prefix=None,
-                          inference_backend='reference', prefixes=None):
+                          inference_backend='reference', prefixes=None,
+                          max_chunk_tokens=None):
     """Same reveal schedule/offset semantics as chain_crf.generation.generate.
 
 Draws a full original-position chain, including visible/masked boundaries,
@@ -78,6 +99,9 @@ then commits only the scheduled positions. Joint and own-marginal modes use
 the very same full-vocabulary potential; neither aggregates a residual tail.
 ``prefixes`` supplies one equal-length exact-token prefix per batch row.
 Different shapes belong in separate batches, without padding or reordering.
+Segments defaults to a 512-position chunk budget, not a total memory cap;
+an individual longer span remains intact. Fix backend, budget and batch shape
+for replay: segmented FFBS is law-equivalent, not sample-identical to reference.
 """
     if min(length, steps, batch_size) < 1 or sample_offset < 0:
         raise ValueError('Positive sizes and a nonnegative sample offset required')
@@ -86,6 +110,7 @@ Different shapes belong in separate batches, without padding or reordering.
     if sampling not in ('joint', 'marginal'):
         raise ValueError('sampling must be joint or marginal')
     _, joint_sampler, marginal_inference = inference_components(inference_backend)
+    inference_kwargs = _inference_kwargs(inference_backend, max_chunk_tokens)
     if potential.vocab_size != backbone.vocab_size:
         raise ValueError('Count/backbone vocabulary mismatch')
     if potential.left.device != torch.device(device):
@@ -136,9 +161,9 @@ Different shapes belong in separate batches, without padding or reordering.
         unary = full_vocabulary_unary(prediction['log_probs'], tokens,
                                       backbone.mask_id, temperature)
         if sampling == 'joint':
-            drawn = joint_sampler(unary, potential, generator=generator)
+            drawn = joint_sampler(unary, potential, generator=generator, **inference_kwargs)
         else:
-            probabilities = marginal_inference(unary, potential)
+            probabilities = marginal_inference(unary, potential, **inference_kwargs)
             drawn = torch.multinomial(probabilities.reshape(-1, backbone.vocab_size),
                                       1, generator=generator).reshape(tokens.shape)
         visible = tokens.ne(backbone.mask_id)
@@ -233,8 +258,11 @@ def _arguments(argv):
     parser.add_argument('--mode', choices=['pmi', 'conditional'], default='pmi')
     parser.add_argument('--strength', type=float, default=.1)
     parser.add_argument('--sampling', choices=['joint', 'marginal'], default='joint')
-    parser.add_argument('--backend', choices=['reference', 'gpu'], default='reference',
+    parser.add_argument('--backend', choices=['reference', 'gpu', 'segments'], default='reference',
                         help='Exact FP64 inference backend; included in immutable identity')
+    parser.add_argument('--max-chunk-tokens', type=int,
+                        help='Segments only: position budget per exact-length bucket chunk (default 512); '
+                             'not a total memory cap; individual longer spans remain intact; changes RNG grouping')
     parser.add_argument('--backbone-checkpoint', type=Path)
     parser.add_argument('--cache-dir', type=Path)
     parser.add_argument('--length', type=int, default=256,
@@ -260,6 +288,7 @@ def _arguments(argv):
     parser.add_argument('--score-only', action='store_true')
     parser.add_argument('--warmup', type=int, default=1)
     args = parser.parse_args(argv)
+    args.max_chunk_tokens = _inference_kwargs(args.backend, args.max_chunk_tokens).get('max_chunk_tokens')
     if min(args.samples, args.batch_size, args.length, args.steps) < 1:
         raise ValueError('Sample/batch counts, length and steps must be positive')
     if args.sample_offset < 0 or args.warmup < 0:
@@ -337,8 +366,10 @@ def _run(args):
         'scripts/train_chain_crf.py', 'chain_crf/core.py', 'chain_crf/heads.py',
         'models/dit.py', 'configs/model/small.yaml', 'scripts/prepare_released_mdlm_owt.py',
     ]
-    if args.backend == 'gpu':
+    if args.backend in ('gpu', 'segments'):
         source_files.append('chain_crf/sparse_count_gpu.py')
+    if args.backend == 'segments':
+        source_files.append('chain_crf/sparse_count_segments.py')
     manifest = {
         'format': 'chain_sparse_count_eval_v1', 'config': configuration,
         'backbone': model.provenance, 'backbone_identity_sha256': canonical_hash(model.provenance),
@@ -356,6 +387,13 @@ def _run(args):
                    'token_seed': '2718 + first draw_id of original batch',
                    'reveal_counts': 'ceil((step+1)*generated_length/steps)'},
     }
+    if args.backend == 'segments':
+        manifest['method'].update({
+            'max_chunk_tokens': args.max_chunk_tokens,
+            'segmentation': 'exact visible-node elimination; contiguous free spans; exact-length buckets',
+            'sampling_equivalence': 'same joint law, not seed-by-seed reference samples; fixed budget required for replay',
+            'chunk_budget_scope': 'real positions per chunk; one longer span remains intact; not a total memory cap',
+        })
     if continuation_info is not None:
         manifest['continuations'] = continuation_info
     manifest_path = args.output/'manifest.json'
@@ -373,7 +411,7 @@ def _run(args):
                       continuations=continuations, continuation_sha256=continuation_sha256)
     kwargs = dict(length=args.length, steps=args.steps, sampling=args.sampling,
                   temperature=args.temperature, device=args.device, prefix=prefix,
-                  inference_backend=args.backend)
+                  inference_backend=args.backend, max_chunk_tokens=args.max_chunk_tokens)
     batches = (continuation_batch_plan(continuations, args.batch_size) if continuations is not None
                else [(offset, min(args.batch_size, args.samples-offset))
                      for offset in range(0, args.samples, args.batch_size)])
