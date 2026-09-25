@@ -2,8 +2,9 @@
 
 This harness adds pair potentials to a frozen, released MDLM-OWT model. It
 provides count-based bigrams, learned global transitions, contextual transitions,
-and a parameter-comparable independent adapter. It does not modify the backbone
-weights or require the repository's older structured-decoder pipeline.
+and a parameter-comparable independent adapter. The main trainer freezes the
+backbone; a separate matched-continuation trainer can update it jointly with
+the CRF. Neither requires the repository's older structured-decoder pipeline.
 
 ## Model
 
@@ -192,6 +193,37 @@ python scripts/evaluate_chain_crf.py --backbone-checkpoint checkpoints/mdlm-owt.
 This reports joint conditional NLL, own-marginal NLL, backbone NLL, candidate
 coverage and retained mass at several mask rates. These conditional diagnostics
 are not an exact likelihood of the final multi-step generation distribution.
+
+## Exact-prefix WikiText transfer
+
+Prepare the pinned, original WikiText-103 raw validation and test splits:
+
+```bash
+python scripts/prepare_chain_transfer.py --output data/chain-wikitext --lengths 256 1024 --prefix-length 64
+python scripts/evaluate_chain_crf.py --backbone-checkpoint checkpoints/mdlm-owt.pt --mode contextual --head runs/contextual/best.pt --continuation-file data/chain-wikitext/validation/length-256/continuation.jsonl --one-per-document --samples 60 --steps 16 --batch-size 4 --sample-offset 30000 --inference segments --score-gpt2 --output runs/wikitext-contextual-validation
+```
+
+Preparation checks the original parquet hashes, reconstructs article boundaries
+without changing source text, and creates nonoverlapping within-article chunks.
+Two equation lines in the pinned test file resemble titles; explicit source-row
+assertions keep them inside their article. Validation and test remain separate.
+The bundle records source rows, article and chunk IDs, exact GPT-2 token IDs,
+tokenizer revision, and dropped tails. It does not add BOS/EOS tokens.
+
+The continuation evaluator clamps each example's exact prefix IDs and generates
+only the suffix. Reference token values are never model inputs; their lengths
+specify the generation lengths. GPT-2 scoring conditions on the complete prefix
+but scores only suffix targets. Equal-shape examples share a batch without
+padding or reordering. `--one-per-document` selects the first complete chunk of
+each article; request the actual article count for the chosen length. Articles
+shorter than that length have no complete chunk.
+
+`--continuation-offset` selects a source window independently of the random-draw
+offset. Resume verifies the input file hash, source identities, shapes and
+prefix tokens, then replays an interrupted batch at its original shape and draw
+offset. Use validation for configuration selection and keep test untouched
+until the final settings are fixed. WikiText transfer does not by itself prove
+that these documents were absent from the backbone's pretraining corpus.
 
 ## Full-vocabulary count baseline
 

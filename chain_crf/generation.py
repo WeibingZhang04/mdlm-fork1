@@ -13,6 +13,19 @@ def synchronize(device):
         torch.cuda.synchronize(device)
 
 
+def clean_token_ids(values, *, vocab_size, mask_id, label='Prefix'):
+    """Validate exact IDs without coercion, tokenization, or special tokens."""
+    if not isinstance(values, (list, tuple)):
+        raise ValueError(f'{label} must be a list of integer token IDs')
+    if any(type(token) is not int for token in values):
+        raise ValueError(f'{label} must contain integer token IDs')
+    if any(token < 0 or token >= vocab_size for token in values):
+        raise ValueError(f'{label} contains out-of-vocabulary token IDs')
+    if mask_id in values:
+        raise ValueError(f'{label} must contain observed clean tokens, not absorbing masks')
+    return list(values)
+
+
 def potentials(packet, head, mode, hidden, time_value):
     unary = packet.unary
     b, length, states = unary.shape
@@ -34,12 +47,14 @@ def potentials(packet, head, mode, hidden, time_value):
 @torch.no_grad()
 def generate(backbone, head=None, mode='backbone', *, length=256, steps=16,
              batch_size=1, k=64, sampling='joint', temperature=1., device='cuda',
-             sample_offset=0, prefix=None, inference='dense'):
+             sample_offset=0, prefix=None, inference='dense', prefixes=None):
     """One batch. Schedule randomness is separate from token-draw randomness.
 
     All systems receive the same sample-index-dependent reveal permutation.
     Runtime excludes model loading and includes backbone, support, pair scores,
     DP, stochastic sampling, and token commitment. No final greedy denoise.
+    ``prefixes`` accepts one equal-length exact-token prefix per batch row;
+    different shapes must be placed in separate batches (never padded).
     """
     if steps < 1 or length < 1 or temperature <= 0 or batch_size < 1:
         raise ValueError('Positive steps, generated length and temperature required')
@@ -47,19 +62,31 @@ def generate(backbone, head=None, mode='backbone', *, length=256, steps=16,
         raise ValueError('sampling must be joint or marginal')
     if inference not in ('dense', 'segments'):
         raise ValueError('inference must be dense or segments')
-    prefix = [] if prefix is None else list(prefix)
-    if backbone.mask_id in prefix:
-        raise ValueError('Prefix must contain observed clean tokens')
-    tokens = torch.full((batch_size, len(prefix)+length), backbone.mask_id,
+    if prefixes is not None and prefix is not None:
+        raise ValueError('Choose shared prefix or per-example prefixes, not both')
+    if prefixes is None:
+        prefix = clean_token_ids([] if prefix is None else prefix,
+            vocab_size=backbone.vocab_size, mask_id=backbone.mask_id)
+        prefix_rows = [prefix] * batch_size
+    else:
+        if not isinstance(prefixes, (list, tuple)) or len(prefixes) != batch_size:
+            raise ValueError('Per-example prefixes must match batch_size')
+        prefix_rows = [clean_token_ids(row, vocab_size=backbone.vocab_size,
+                       mask_id=backbone.mask_id) for row in prefixes]
+        if len({len(row) for row in prefix_rows}) != 1:
+            raise ValueError('Per-example prefixes in one batch must have equal lengths')
+    prefix_length = len(prefix_rows[0])
+    prefix_tensor = torch.tensor(prefix_rows, dtype=torch.long, device=device)
+    tokens = torch.full((batch_size, prefix_length+length), backbone.mask_id,
                         dtype=torch.long, device=device)
-    if prefix:
-        tokens[:, :len(prefix)] = torch.tensor(prefix, device=device)
+    if prefix_length:
+        tokens[:, :prefix_length] = prefix_tensor
     # Reproducible inputs are not replicated experiments: each configuration
     # is run once and generates different examples across sample IDs.
     orders = []
     for sample_id in range(sample_offset, sample_offset+batch_size):
         rng = torch.Generator().manual_seed(1729+sample_id)
-        orders.append(torch.randperm(length, generator=rng)+len(prefix))
+        orders.append(torch.randperm(length, generator=rng)+prefix_length)
     order = torch.stack(orders).to(device)
     generator = torch.Generator(device=device).manual_seed(2718+sample_offset)
     calls = 0
@@ -123,11 +150,13 @@ def generate(backbone, head=None, mode='backbone', *, length=256, steps=16,
     elapsed = time.perf_counter()-start
     if tokens.eq(backbone.mask_id).any():
         raise RuntimeError('Generation left absorbing masks in the output')
+    if prefix_length and not torch.equal(tokens[:, :prefix_length], prefix_tensor):
+        raise RuntimeError('Generation changed an observed prefix token')
     return tokens, {'elapsed_seconds':elapsed,'backbone_seconds':backbone_seconds,
                     'sampling_seconds':sampler_seconds,'backbone_calls':calls,
                     'samples':batch_size,'generated_tokens':batch_size*length,
                     'mean_retained_mass':sum(retained_mass)/len(retained_mass) if retained_mass else 1.,
-                    'prefix_length':len(prefix),'generated_length':length}
+                    'prefix_length':prefix_length,'generated_length':length}
 
 
 @torch.no_grad()
