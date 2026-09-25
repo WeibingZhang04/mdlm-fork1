@@ -164,6 +164,34 @@ This reports joint conditional NLL, own-marginal NLL, backbone NLL, candidate
 coverage and retained mass at several mask rates. These conditional diagnostics
 are not an exact likelihood of the final multi-step generation distribution.
 
+## Full-vocabulary count baseline
+
+`scripts/evaluate_chain_sparse_count.py` provides a separate exact
+full-vocabulary count model. This is important for conditional-bigram scores:
+penalizing only explicit candidate pairs leaves the neutral residual state
+unpenalized. Even a uniform conditional bigram model then changes the candidate
+distribution, although a constant full-vocabulary edge score should not.
+
+For the smoothed count model and any nonnegative strength, the exponentiated
+conditional or PMI potential is a rank-one backoff plus nonnegative sparse
+corrections on observed bigrams. The implementation caches both sparse CSR
+orientations, uses scaled FP64 forward/backward messages, and samples the
+joint chain over the whole vocabulary. It preserves visible-token clamps and
+original-position adjacencies without a top-K or neutral-tail approximation.
+Its work is `O(L*(E+V))`, where E is the number of observed training bigrams.
+
+```bash
+python scripts/evaluate_chain_sparse_count.py --counts checkpoints/owt-counts.pt --backbone-checkpoint checkpoints/mdlm-owt.pt --output runs/full-count-conditional --mode conditional --strength 0.1 --length 256 --steps 16 --samples 256 --batch-size 1 --score-gpt2
+```
+
+Static potential construction and loading are recorded separately from full
+generation time. `--sampling marginal` uses the same model's exact node
+marginals; `--sample-offset`, strict manifests, fixed-batch replay and writer
+locking support interrupted runs. The example strength is not a claimed
+optimum. The tests include dense enumeration, fractional powers, empty counts,
+constant-shift invariance, sampling, clamping and optional CUDA parity. Device
+checks skip when CUDA is absent; run them on the target GPU before benchmarking.
+
 ## Official Tensor-Train baseline adapter
 
 `scripts/evaluate_chain_tensor_train.py` loads the released rank-4 OWT head from
