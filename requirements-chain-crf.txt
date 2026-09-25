@@ -1,0 +1,14 @@
+# Research harness: Python 3.10 and PyTorch 2.5.1.
+# For CUDA, install the appropriate PyTorch wheel before this file.
+torch==2.5.1
+numpy==1.26.4
+fsspec==2024.2.0
+pyarrow==15.0.2
+datasets==2.18.0
+pandas==2.2.1
+einops==0.7.0
+omegaconf==2.3.0
+transformers==4.38.2
+huggingface-hub==0.36.2
+safetensors==0.4.2
+pytest==8.3.5
