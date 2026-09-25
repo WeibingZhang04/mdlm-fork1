@@ -92,9 +92,12 @@ def main(argv=None):
     p.add_argument('--count-mode',choices=['pmi','conditional'],default='pmi')
     p.add_argument('--strength',type=float,default=.1)
     p.add_argument('--sampling',choices=['joint','marginal'],default='joint')
+    p.add_argument('--inference',choices=['dense','segments'],default='dense')
     p.add_argument('--length',type=int,default=256)
     p.add_argument('--steps',type=int,default=16)
     p.add_argument('--samples',type=int,default=256)
+    p.add_argument('--sample-offset',type=int,default=0,
+                   help='First draw ID; use disjoint IDs for screening and final evaluation')
     p.add_argument('--batch-size',type=int,default=1)
     p.add_argument('--k',type=int,default=64)
     p.add_argument('--temperature',type=float,default=1.)
@@ -111,6 +114,8 @@ def main(argv=None):
     args=p.parse_args(argv)
     if args.samples<1 or args.batch_size<1 or args.dev_examples<1:
         raise ValueError('Sample, batch and development counts must be positive')
+    if args.sample_offset<0:
+        raise ValueError('Sample offset must be nonnegative')
     records_path=args.output/'samples.jsonl'
     if args.score_only:
         records=[json.loads(line) for line in records_path.read_text().splitlines() if line.strip()]
@@ -133,6 +138,8 @@ def main(argv=None):
     source_files=['scripts/evaluate_chain_crf.py','scripts/train_chain_crf.py',
                   'chain_crf/generation.py','chain_crf/core.py','chain_crf/heads.py',
                   'chain_crf/counts.py','chain_crf/backbone.py','chain_crf/data.py','models/dit.py']
+    if args.inference == 'segments':
+        source_files.append('chain_crf/segments.py')
     manifest={'config':configuration,'backbone':model.provenance,'head':head_info,
               'dev_data_sha256':file_sha256(args.dev_data) if args.dev_data else None,
               'source_sha256':{name:file_sha256(source_root/name) for name in source_files}}
@@ -154,21 +161,26 @@ def main(argv=None):
             raise ValueError('--denoise-only needs --dev-data')
         return
     kwargs=dict(length=args.length,steps=args.steps,k=args.k,sampling=args.sampling,
-                temperature=args.temperature,device=args.device,prefix=prefix)
-    for _ in range(args.warmup):
+                temperature=args.temperature,device=args.device,prefix=prefix,inference=args.inference)
+    for warmup_index in range(args.warmup):
         # Same shape and path; these samples are discarded and not timed in totals.
-        generate(model,head,args.mode,batch_size=args.batch_size,sample_offset=1_000_000,**kwargs)
+        warmup_offset=args.sample_offset+args.samples+warmup_index*args.batch_size
+        generate(model,head,args.mode,batch_size=args.batch_size,sample_offset=warmup_offset,**kwargs)
     records=[json.loads(line) for line in records_path.read_text().splitlines() if line.strip()] if records_path.exists() else []
     if [r['sample_id'] for r in records]!=list(range(len(records))):
         raise ValueError('Incomplete or duplicated sample IDs')
+    if [r['draw_id'] for r in records]!=list(range(args.sample_offset,args.sample_offset+len(records))):
+        raise ValueError('Stored draw IDs do not match the requested sample offset')
     if len(records)>args.samples:
         raise ValueError('Existing sample count exceeds requested target')
     for offset in range(len(records),args.samples,args.batch_size):
         size=min(args.batch_size,args.samples-offset)
-        tokens,timing=generate(model,head,args.mode,batch_size=size,sample_offset=offset,**kwargs)
+        tokens,timing=generate(model,head,args.mode,batch_size=size,
+                              sample_offset=args.sample_offset+offset,**kwargs)
         batch=[]
         for index,row in enumerate(tokens.cpu().tolist()):
-            record={'sample_id':offset+index,'token_ids':row,'prefix_length':len(prefix),
+            record={'sample_id':offset+index,'draw_id':args.sample_offset+offset+index,
+                    'token_ids':row,'prefix_length':len(prefix),
                     'text':model.tokenizer.decode(row) if model.tokenizer else ' '.join(map(str,row)),
                     'batch_id':offset,'batch_size':size,**timing}
             # Per-sample normalized times permit summation without double counting.

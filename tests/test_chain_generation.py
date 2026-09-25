@@ -21,11 +21,12 @@ class ToyBackbone:
         return {'log_probs':lp, 'hidden':hidden}
 
 
+@pytest.mark.parametrize('inference', ['dense','segments'])
 @pytest.mark.parametrize('mode,sampling', [('backbone','joint'),('global','joint'),('global','marginal'),('independent','joint')])
-def test_generation_completes_preserves_prefix_and_is_reproducible(mode, sampling):
+def test_generation_completes_preserves_prefix_and_is_reproducible(mode, sampling, inference):
     head = None if mode == 'backbone' else IndependentHead(5, 3, 4) if mode == 'independent' else GlobalPairHead(5, 3)
     backbone = ToyBackbone(mask_has_mass=True)
-    kwargs = dict(length=7, steps=3, batch_size=3, k=2, sampling=sampling, device='cpu', prefix=[2,1], sample_offset=17)
+    kwargs = dict(length=7, steps=3, batch_size=3, k=2, sampling=sampling, device='cpu', prefix=[2,1], sample_offset=17,inference=inference)
     tokens, stats = generate(backbone,head,mode,**kwargs)
     assert tokens.shape == (3,9) and not tokens.eq(4).any()
     assert tokens[:,:2].eq(torch.tensor([2,1])).all()

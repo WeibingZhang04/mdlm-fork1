@@ -160,6 +160,40 @@ def restore(payload, head, optimizer, scheduler, stream, mask_rng, identity):
     return int(payload["step"]), payload["best_dev"]
 
 
+def continue_initialization_stream(initial, stream, mask_rng, *, train_sha256, config):
+    """Continue the warm-start run's next data/mask draw, not its optimizer.
+
+    The contextual head adds parameters, so it intentionally gets a fresh
+    optimizer. Its examples and corruption stream instead continue exactly
+    after the global initialization's final update.
+    """
+    if initial["identity"]["train_sha256"] != train_sha256:
+        raise ValueError("Warm-start stream uses a different training data file")
+    for key in ("seed", "batch_size", "length"):
+        if initial["config"][key] != config[key]:
+            raise ValueError(f"Warm-start stream requires matching {key}")
+    if initial["identity"]["train_examples"] != len(stream.tokens):
+        raise ValueError("Warm-start stream has a different training selection")
+    stream.load_state_dict(initial["stream"])
+    mask_rng.set_state(initial["mask_rng"].cpu())
+    return int(initial["step"])
+
+
+def initialization_token_exposures(initial):
+    """Count the initial global run using its own validated training dimensions."""
+    identity, config = initial["identity"], initial["config"]
+    if initial.get("identity_sha256") != canonical_hash(identity) or identity.get("config") != config:
+        raise ValueError("Global initialization training identity checksum/configuration mismatch")
+    values = (initial["step"], config["batch_size"], config["length"])
+    if (any(type(value) is not int for value in values)
+            or values[0] < 0 or min(values[1:]) < 1):
+        raise ValueError("Invalid global initialization training dimensions")
+    expected = values[0] * values[1] * values[2]
+    if "trained_tokens" in initial and initial["trained_tokens"] != expected:
+        raise ValueError("Global initialization token count differs from its training configuration")
+    return expected
+
+
 def main(argv=None):
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument("--data", type=Path, required=True, help="Prepared directory or training JSONL/PT")
@@ -170,6 +204,8 @@ def main(argv=None):
     p.add_argument("--cache-dir", type=Path)
     p.add_argument("--resume", type=Path)
     p.add_argument("--init-global", type=Path, help="Initialize contextual head from a global-head checkpoint")
+    p.add_argument("--continue-init-stream", action="store_true",
+                   help="Continue global initialization's exact next data/corruption draw; contextual optimizer stays fresh")
     p.add_argument("--seed", type=int, default=1)
     p.add_argument("--steps", type=int, default=10000)
     p.add_argument("--batch-size", type=int, default=4)
@@ -199,6 +235,8 @@ def main(argv=None):
         raise ValueError("Invalid learning configuration")
     if args.init_global and (args.mode != "contextual" or args.resume):
         raise ValueError("--init-global is only for a fresh contextual-head run")
+    if args.continue_init_stream and (not args.init_global or args.resume):
+        raise ValueError("--continue-init-stream requires a fresh --init-global run")
     if args.output.exists() and any(args.output.iterdir()) and not args.resume:
         raise FileExistsError("Output is nonempty: use a new directory or explicit --resume")
     args.output.mkdir(parents=True, exist_ok=True)
@@ -223,6 +261,7 @@ def main(argv=None):
     head = make_head(args.mode, backbone.vocab_size, backbone.hidden_size, args.rank, args.mlp_size).to(args.device)
     if args.init_global:
         initial = torch.load(args.init_global, map_location="cpu", weights_only=True)
+        initialization_tokens = initialization_token_exposures(initial)
         if initial["config"]["mode"] != "global" or initial["config"]["rank"] != args.rank:
             raise ValueError("Global initialization must have matching rank")
         if initial["identity"]["backbone"] != backbone.provenance:
@@ -234,6 +273,13 @@ def main(argv=None):
                       if args.resume else None)
     init_global_sha256 = (file_sha256(args.init_global) if args.init_global else
                          resume_payload["identity"].get("init_global_sha256") if resume_payload else None)
+    stream_continuation = (bool(resume_payload["identity"].get("continue_init_stream", False))
+                           if resume_payload else args.continue_init_stream)
+    initialization_steps = (int(initial["step"]) if args.init_global else
+                            int(resume_payload["identity"].get("initialization_steps", 0)) if resume_payload else 0)
+    if not args.init_global:
+        initialization_tokens = (int(resume_payload["identity"].get("initialization_token_exposures", 0))
+                                 if resume_payload else 0)
     config = {"mode": args.mode, "vocab_size": backbone.vocab_size, "hidden_size": backbone.hidden_size,
               "rank": args.rank, "mlp_size": args.mlp_size, "k": args.k, "length": args.length,
               "seed": args.seed, "batch_size": args.batch_size, "backbone_batch_size": args.backbone_batch_size,
@@ -243,6 +289,9 @@ def main(argv=None):
               "synthetic_only": args.synthetic_backbone}
     identity = {"config": config, "backbone": backbone.provenance,
                 "init_global_sha256": init_global_sha256,
+                "continue_init_stream": stream_continuation,
+                "initialization_steps": initialization_steps,
+                "initialization_token_exposures": initialization_tokens,
                 "train_sha256": file_sha256(train_path), "dev_sha256": file_sha256(dev_path),
                 "train_examples": len(train), "dev_examples": len(dev),
                 "source_sha256": {name: file_sha256(ROOT/name) for name in SOURCE_FILES},
@@ -253,6 +302,9 @@ def main(argv=None):
         optimizer, lambda step: min(1., (step+1)/max(1,args.warmup_steps)))
     stream = BatchStream(train, args.batch_size, args.seed+1000)
     mask_rng = torch.Generator().manual_seed(args.seed+2000)
+    if args.continue_init_stream:
+        continue_initialization_stream(initial, stream, mask_rng,
+            train_sha256=identity["train_sha256"], config=config)
     step, best = 0, None
     if args.resume:
         step, best = restore(resume_payload, head, optimizer, scheduler, stream, mask_rng, identity)
@@ -271,7 +323,11 @@ def main(argv=None):
                  "loss": "joint clean-token NLL / masked-token count, including residual conditional likelihood",
                  "corruption": "uniform t in [.001,1]; independent Bernoulli mask probability .999*t",
                  "resume_sha256": file_sha256(args.resume) if args.resume else None,
-                 "init_global_sha256": init_global_sha256},
+                 "init_global_sha256": init_global_sha256,
+                 "initialization_steps": initialization_steps,
+                 "initialization_token_exposures": initialization_tokens,
+                 "continue_init_stream": stream_continuation,
+                 "contextual_optimizer": "fresh; data and corruption RNG continued" if stream_continuation else None},
                 args.output/"protocol.json")
     stopped = []
     signal.signal(signal.SIGTERM, lambda *_: stopped.append("SIGTERM"))
@@ -326,6 +382,9 @@ def main(argv=None):
     save()
     summary = {"complete": step == args.steps, "step": step, "target_steps": args.steps,
                "trained_tokens": step*args.batch_size*args.length, "best_dev": best,
+               "initialization_steps": initialization_steps,
+               "initialization_token_exposures": initialization_tokens,
+               "total_training_token_exposures": step*args.batch_size*args.length+initialization_tokens,
                "stop_reason": stopped or ["finished"], "elapsed_seconds": time.perf_counter()-start,
                "synthetic_only": args.synthetic_backbone, "last_sha256": file_sha256(args.output/"last.pt")}
     atomic_json(summary, args.output/"results.json")

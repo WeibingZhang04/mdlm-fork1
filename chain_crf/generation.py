@@ -34,7 +34,7 @@ def potentials(packet, head, mode, hidden, time_value):
 @torch.no_grad()
 def generate(backbone, head=None, mode='backbone', *, length=256, steps=16,
              batch_size=1, k=64, sampling='joint', temperature=1., device='cuda',
-             sample_offset=0, prefix=None):
+             sample_offset=0, prefix=None, inference='dense'):
     """One batch. Schedule randomness is separate from token-draw randomness.
 
     All systems receive the same sample-index-dependent reveal permutation.
@@ -45,6 +45,8 @@ def generate(backbone, head=None, mode='backbone', *, length=256, steps=16,
         raise ValueError('Positive steps, generated length and temperature required')
     if sampling not in ('joint', 'marginal'):
         raise ValueError('sampling must be joint or marginal')
+    if inference not in ('dense', 'segments'):
+        raise ValueError('inference must be dense or segments')
     prefix = [] if prefix is None else list(prefix)
     if backbone.mask_id in prefix:
         raise ValueError('Prefix must contain observed clean tokens')
@@ -98,11 +100,19 @@ def generate(backbone, head=None, mode='backbone', *, length=256, steps=16,
                 states = torch.multinomial(probabilities.reshape(-1,probabilities.shape[-1]),
                                            1,generator=generator).reshape(tokens.shape)
             elif sampling == 'marginal':
-                probabilities = chain_marginals(unary,edge).double()
+                if inference == 'segments':
+                    from chain_crf.segments import segmented_marginals
+                    probabilities = segmented_marginals(unary,edge,packet.masked).double()
+                else:
+                    probabilities = chain_marginals(unary,edge).double()
                 states = torch.multinomial(probabilities.reshape(-1,probabilities.shape[-1]),
                                            1,generator=generator).reshape(tokens.shape)
             else:
-                states = sample_chain(unary,edge,generator=generator)
+                if inference == 'segments':
+                    from chain_crf.segments import sample_segmented_chain
+                    states = sample_segmented_chain(unary,edge,packet.masked,generator=generator)
+                else:
+                    states = sample_chain(unary,edge,generator=generator)
             drawn = sample_candidate_tokens(packet,states,generator=generator)
             positions = order[:,committed:next_count]
             tokens.scatter_(1,positions,drawn.gather(1,positions))

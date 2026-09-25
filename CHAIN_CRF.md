@@ -49,13 +49,14 @@ Use Python 3.10. Install PyTorch for the intended device, then:
 
 ```bash
 python -m pip install -r requirements-chain-crf.txt
-python -m pytest -q tests/test_chain_crf_core.py tests/test_chain_crf_heads.py tests/test_chain_generation.py tests/test_chain_training.py
+python -m pytest -q tests/test_chain_*.py
 ```
 
-The 42 offline tests cover enumerated partitions, likelihoods, marginals and
+The 96 offline tests cover enumerated partitions, likelihoods, marginals and
 gradients; joint sampling; clamping and residual states; learning agreement,
 disagreement and context-dependent joints; document separation; generation
-schedules; training; and exact optimizer/RNG resume. The synthetic backbone is
+schedules; training; exact optimizer/RNG resume; segmented inference; and
+baseline/evaluation protocols. The synthetic backbone is
 only a test fixture, not a reported language-model result.
 
 FlashAttention is optional. `models/dit.py` uses PyTorch SDPA when FlashAttention
@@ -110,7 +111,9 @@ continuing a different experiment. `--max-seconds` enables a checkpointed time c
 
 `--init-global runs/global/best.pt` can warm-start a contextual head. Record that
 extra training history when comparing data budgets; the commands above train
-each head independently.
+each head independently. Adding `--continue-init-stream` continues the initial
+run's exact next data batch and corruption draw, with a fresh contextual-head
+optimizer. It requires the same data, seed, batch size and sequence length.
 
 ## Generate, score and diagnose
 
@@ -126,6 +129,19 @@ reveal schedule. Sweep step counts explicitly, including a longer-step baseline
 that can use the time spent on pair scoring and DP. Prefix continuation is
 available through `--prefix`. Use a separate output directory per configuration;
 `--resume` verifies its complete manifest.
+
+`--inference segments` eliminates clamped positions and samples independent
+contiguous masked runs, absorbing observed boundary factors into their endpoint
+unaries. It preserves the dense model's distribution, not its seed-by-seed
+samples. Dense inference remains the default. Padded run batching can use more
+memory for mixtures of long and short runs; benchmark the intended batch and
+mask pattern rather than assuming it is always faster.
+
+Use `--sample-offset 10000` for a final draw set disjoint from an earlier screen
+at offset zero. Outputs distinguish the local `sample_id` from its RNG/reveal
+`draw_id`. Keep batch size fixed: categorical RNG consumption is batch-based.
+Warmup draws lie outside the requested evaluation interval. Old manifests
+without draw identities require their original evaluator, not a new-code resume.
 
 Outputs include sampled token IDs and text, source/model identities, backbone
 calls, end-to-end timing, sampling overhead, entropy, distinct n-grams and
@@ -143,6 +159,65 @@ python scripts/evaluate_chain_crf.py --backbone-checkpoint checkpoints/mdlm-owt.
 This reports joint conditional NLL, own-marginal NLL, backbone NLL, candidate
 coverage and retained mass at several mask rates. These conditional diagnostics
 are not an exact likelihood of the final multi-step generation distribution.
+
+## Official Tensor-Train baseline adapter
+
+`scripts/evaluate_chain_tensor_train.py` loads the released rank-4 OWT head from
+[the authors' repository](https://github.com/ssamt/tensor-train), requiring clean
+source at commit `9d0087afd3771ac3e94898ed842858fcc81fb3b0`. It verifies the head
+and released MDLM backbone checksums. The head checkpoint does not contain new
+backbone weights: both systems use the same frozen MDLM release. Head capacity,
+training budget, attention implementation and runtime stack are not matched by
+that fact.
+
+```bash
+python scripts/evaluate_chain_tensor_train.py --source-root path/to/tensor-train --checkpoint path/to/ttd_4_marg.pt --cache-root path/to/hf-home --output runs/tt-native --length 256 --steps 16 --samples 512 --score-gpt2
+```
+
+Use a separate environment for the official implementation. The audited stack
+is Python 3.12, PyTorch 2.3.1+cu121, Transformers 4.46.2,
+FlashAttention 2.7.4.post1 and Triton 2.3.1. Defaults invoke the unmodified native
+sampler, including its FP32 random draws. `--sampling-precision float64` and
+`--schedule matched` are explicitly recorded interventions. The common quality
+scorer uses original GPT-2 token IDs without EOS truncation or retokenization;
+it is not the original paper's scorer protocol. Generation timing excludes
+quality scoring and model loading. Use lengths 256 or 1024 and step counts
+dividing the length.
+
+## Distributional quality with MAUVE
+
+`scripts/evaluate_chain_mauve.py` separates reference selection, GPU feature
+extraction and CPU clustering. The implementation has offline protocol tests;
+no GPU MAUVE result is claimed by this release. It imports the official
+[`mauve-text` package](https://github.com/krishnap25/mauve), rather than providing
+a replacement implementation. Install `mauve-text==0.4.0` plus compatible
+`faiss-cpu`, `scikit-learn`, `scipy`, `joblib` and `threadpoolctl` in the evaluator
+environment without replacing the pinned PyTorch/Transformers stack.
+
+The reference source is the pinned raw OWT cache's final 100,000 documents:
+the original MDLM **validation** partition, not a newly claimed test set. The
+script checks its metadata against the document-preserving processed cache and
+an independent document hash/index. It selects the first requested number of
+distinct eligible documents after exclusions, taking each document's first L
+raw GPT-2 tokens. Thus the reference population is documents of at least L
+tokens. It never joins documents, inserts BOS/EOS, stops at EOS, or retokenizes
+decoded strings. Pass all adapter train/dev/test JSONLs as exclusions.
+
+```bash
+python scripts/evaluate_chain_mauve.py reference --raw-cache path/to/raw-owt-arrow-cache --heldout-cache path/to/pinned-heldout-cache --exclude-documents data/chain-owt/train.jsonl data/chain-owt/dev.jsonl data/chain-owt/test.jsonl --length 256 --samples 5000 --output data/mauve-reference-256
+python scripts/evaluate_chain_mauve.py features --input data/mauve-reference-256/references.jsonl --role reference --length 256 --samples 5000 --output runs/mauve-reference-features
+python scripts/evaluate_chain_mauve.py features --input runs/final-method/samples.jsonl --role generation --length 256 --samples 5000 --output runs/mauve-method-features
+python scripts/evaluate_chain_mauve.py compare --reference runs/mauve-reference-features --generation runs/mauve-method-features --output runs/mauve-method.json
+```
+
+Feature extraction is offline-cache-only, using the terminal last-layer hidden
+state of GPT-2-large revision `32b71b12589c2f8d625668d2335a01cac3249519`, in FP32.
+Reference features can be reused across methods. Compare equal sample counts
+and identical lengths/settings. The authors recommend several thousand samples
+per distribution and use 5000; this harness labels smaller comparisons
+exploratory. It fixes the clustering RNG, uses the standard five optimization
+restarts, and does not run model-seed sweeps or confidence intervals. Report
+MAUVE alongside evaluator perplexity, repetition, diversity and decoding time.
 
 The implementation contains no claimed benchmark improvements or fabricated
 results. Use separately recorded runs for any performance claims.
