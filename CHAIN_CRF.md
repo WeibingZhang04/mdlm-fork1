@@ -145,6 +145,14 @@ checkpoints; do not combine their heads with the unchanged released backbone.
 backbone. Resume requires matching data, code and training configuration;
 `--steps` is the total update target, including updates already completed.
 
+`scripts/prepare_chain_native_parents.py` recovers intact 1,024-token rows
+from an authenticated source cache when all four of their 256-token chunks
+belong to an existing training or development split. It verifies the previous
+data and exclusions, preserves document roles, and excludes incomplete parents;
+it never constructs a longer sequence by joining chunks. Supply the audited
+expected row counts with `--expected-train` and `--expected-dev`. Native-length
+continuation then uses `--length 1024` with those newly prepared data files.
+
 ## Generate, score and diagnose
 
 ```bash
@@ -252,6 +260,30 @@ locking support interrupted runs. The example strength is not a claimed
 optimum. The tests include dense enumeration, fractional powers, empty counts,
 constant-shift invariance, sampling, clamping and optional CUDA parity. Device
 checks skip when CUDA is absent; run them on the target GPU before benchmarking.
+
+`--backend gpu` selects a separate FP64 implementation with device-side column
+gathers and deferred message validation. Invalid messages still raise before
+any result is returned. The default `reference` implementation is unchanged;
+the selected backend and its source checksum are included in the run identity.
+Tests compare both backends with dense enumeration and verify matching draws,
+visible-token clamps, marginal sampling, and interrupted-batch replay. Measure
+both single-sample latency and batched throughput; changing batch size changes
+the random stream as well as the runtime.
+
+## Inspect actual generation histories
+
+```bash
+python scripts/trace_chain_generation.py --mode contextual --backbone-checkpoint checkpoints/mdlm-owt.pt --head runs/contextual/best.pt --length 1024 --steps 16 --samples 4 --batch-size 1 --sample-offset 40000 --output runs/contextual-traces
+```
+
+The recorder executes the production sampler and saves every actual input
+state, commitment, and final output without consuming additional random draws.
+Structured traces also contain the full sampled proposals, including discarded
+tokens. The factorized baseline samples only scheduled positions, so unproposed
+entries are `null`, not invented token predictions. Use `--sampling marginal`
+for the same-CRF marginal control and `--mode backbone` for the original model.
+Keep all requested draw IDs and state any display crop. Trace capture adds CPU
+copies and synchronization, so its timings are explicitly not benchmarks.
 
 ## Official Tensor-Train baseline adapter
 

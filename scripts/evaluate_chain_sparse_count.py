@@ -31,6 +31,18 @@ from chain_crf.sparse_count import (
 from scripts.evaluate_chain_crf import score_gpt2
 
 
+def inference_components(backend):
+    if backend == 'reference':
+        return SparseCountPotential, sample_sparse_chain, sparse_chain_marginals
+    if backend == 'gpu':
+        from chain_crf.sparse_count_gpu import (
+            GPUCountPotential, sample_sparse_chain as gpu_sample,
+            sparse_chain_marginals as gpu_marginals,
+        )
+        return GPUCountPotential, gpu_sample, gpu_marginals
+    raise ValueError('Backend must be reference or gpu')
+
+
 def full_vocabulary_unary(log_probs, tokens, mask_id, temperature=1.):
     """Normalized full-V log unaries, with exact observed-token point masses."""
     if log_probs.ndim != 3 or log_probs.shape[:2] != tokens.shape:
@@ -54,7 +66,8 @@ def full_vocabulary_unary(log_probs, tokens, mask_id, temperature=1.):
 @torch.no_grad()
 def generate_sparse_count(backbone, potential, *, length=256, steps=16,
                           batch_size=1, sampling='joint', temperature=1.,
-                          device='cuda', sample_offset=0, prefix=None):
+                          device='cuda', sample_offset=0, prefix=None,
+                          inference_backend='reference'):
     """Same reveal schedule/offset semantics as chain_crf.generation.generate.
 
 Draws a full original-position chain, including visible/masked boundaries,
@@ -67,6 +80,7 @@ the very same full-vocabulary potential; neither aggregates a residual tail.
         raise ValueError('Temperature must be finite and positive')
     if sampling not in ('joint', 'marginal'):
         raise ValueError('sampling must be joint or marginal')
+    _, joint_sampler, marginal_inference = inference_components(inference_backend)
     if potential.vocab_size != backbone.vocab_size:
         raise ValueError('Count/backbone vocabulary mismatch')
     if potential.left.device != torch.device(device):
@@ -106,9 +120,9 @@ the very same full-vocabulary potential; neither aggregates a residual tail.
         unary = full_vocabulary_unary(prediction['log_probs'], tokens,
                                       backbone.mask_id, temperature)
         if sampling == 'joint':
-            drawn = sample_sparse_chain(unary, potential, generator=generator)
+            drawn = joint_sampler(unary, potential, generator=generator)
         else:
-            probabilities = sparse_chain_marginals(unary, potential)
+            probabilities = marginal_inference(unary, potential)
             drawn = torch.multinomial(probabilities.reshape(-1, backbone.vocab_size),
                                       1, generator=generator).reshape(tokens.shape)
         visible = tokens.ne(backbone.mask_id)
@@ -180,6 +194,8 @@ def _arguments(argv):
     parser.add_argument('--mode', choices=['pmi', 'conditional'], default='pmi')
     parser.add_argument('--strength', type=float, default=.1)
     parser.add_argument('--sampling', choices=['joint', 'marginal'], default='joint')
+    parser.add_argument('--backend', choices=['reference', 'gpu'], default='reference',
+                        help='Exact FP64 inference backend; included in immutable identity')
     parser.add_argument('--backbone-checkpoint', type=Path)
     parser.add_argument('--cache-dir', type=Path)
     parser.add_argument('--length', type=int, default=256)
@@ -245,7 +261,8 @@ def _run(args):
     synchronize(args.device)
     count_loading = time.perf_counter()-before
     before = time.perf_counter()
-    potential = SparseCountPotential.from_head(head)
+    potential_class, _, _ = inference_components(args.backend)
+    potential = potential_class.from_head(head)
     synchronize(args.device)
     potential_setup = time.perf_counter()-before
     count_sha = file_sha256(args.counts)
@@ -263,6 +280,8 @@ def _run(args):
         'scripts/train_chain_crf.py', 'chain_crf/core.py', 'chain_crf/heads.py',
         'models/dit.py', 'configs/model/small.yaml', 'scripts/prepare_released_mdlm_owt.py',
     ]
+    if args.backend == 'gpu':
+        source_files.append('chain_crf/sparse_count_gpu.py')
     manifest = {
         'format': 'chain_sparse_count_eval_v1', 'config': configuration,
         'backbone': model.provenance, 'backbone_identity_sha256': canonical_hash(model.provenance),
@@ -274,6 +293,7 @@ def _run(args):
                    'adjacency': 'all original adjacent positions including visible boundaries',
                    'potential': args.mode, 'strength': args.strength,
                    'smoothing': head.smoothing, 'inference_dtype': 'float64',
+                   'inference_backend': args.backend,
                    'static_potential_timing': 'excluded from generation; reported in setup_runs.jsonl',
                    'reveal_seed': '1729 + draw_id',
                    'token_seed': '2718 + first draw_id of original batch',
@@ -292,7 +312,8 @@ def _run(args):
     records = _read_records(records_path)
     _validate_records(records, configuration, manifest_hash, prefix, model.vocab_size, model.mask_id)
     kwargs = dict(length=args.length, steps=args.steps, sampling=args.sampling,
-                  temperature=args.temperature, device=args.device, prefix=prefix)
+                  temperature=args.temperature, device=args.device, prefix=prefix,
+                  inference_backend=args.backend)
     warmup_seconds = 0.
     if len(records) < args.samples:
         before = time.perf_counter()
