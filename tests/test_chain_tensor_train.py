@@ -3,7 +3,8 @@ from types import SimpleNamespace
 import pytest
 import torch
 
-from scripts.evaluate_chain_tensor_train import MatchedReveal, sampling_precision, validate_dimensions
+from scripts.evaluate_chain_tensor_train import (MatchedReveal, sampling_precision,
+                                                 validate_dimensions, validate_sample_records)
 
 
 @pytest.mark.parametrize("length", [256, 1024])
@@ -53,3 +54,71 @@ def test_sampler_patch_restores_on_error():
         with sampling_precision([module], "float64"):
             raise RuntimeError("fixture")
     assert module.sample is original
+
+
+def test_draw_range_resume_validation():
+    records = [{"sample_id": i, "draw_id": 1000 + i} for i in range(3)]
+    validate_sample_records(records, sample_offset=1000, samples=4)
+    with pytest.raises(ValueError, match="draw IDs"):
+        validate_sample_records(records, sample_offset=0, samples=4)
+    with pytest.raises(ValueError, match="sample IDs"):
+        validate_sample_records(records[::-1], sample_offset=1000, samples=4)
+    with pytest.raises(ValueError, match="sample IDs"):
+        validate_sample_records(records, sample_offset=1000, samples=2)
+    with pytest.raises(ValueError, match="draw IDs"):
+        validate_sample_records([{"sample_id": 0}], sample_offset=0, samples=1)
+    with pytest.raises(ValueError, match="nonnegative"):
+        validate_sample_records([], sample_offset=-1, samples=1)
+
+
+def test_cli_offset_reaches_sampler_and_disjoint_warmup(tmp_path, monkeypatch):
+    import json
+    from scripts import evaluate_chain_tensor_train as wrapper
+
+    class Fixture(torch.nn.Module):
+        def __init__(self):
+            super().__init__()
+            self.weight = torch.nn.Parameter(torch.zeros(()))
+            self.tokenizer = SimpleNamespace(decode=lambda ids: " ".join(map(str, ids)))
+
+    def load(args):
+        generation = SimpleNamespace(length=args.length, batch_size=args.batch_size)
+        return Fixture(), SimpleNamespace(generation=generation), None, {"fixture": True}
+
+    calls = []
+    def generate(model, config, upstream, *, sample_offset, sampling, schedule):
+        calls.append((sample_offset, config.generation.batch_size, sampling, schedule))
+        tokens = torch.full((config.generation.batch_size, config.generation.length), sample_offset)
+        return tokens, {"elapsed_seconds": 1., "backbone_calls": 4,
+                        "reported_steps": 4., "schedule_sha256": None}
+
+    monkeypatch.setattr(wrapper, "load_official", load)
+    monkeypatch.setattr(wrapper, "generate_batch", generate)
+    output = tmp_path / "draws"
+    argv = ["--source-root", str(tmp_path), "--checkpoint", str(tmp_path / "unused.pt"),
+            "--cache-root", str(tmp_path), "--output", str(output), "--length", "8",
+            "--steps", "4", "--samples", "5", "--sample-offset", "17",
+            "--batch-size", "3", "--device", "cpu"]
+    wrapper.main(argv)
+    assert calls == [(22, 3, "native", "native"), (17, 3, "native", "native"),
+                     (20, 2, "native", "native")]
+    records = [json.loads(x) for x in (output / "samples.jsonl").read_text().splitlines()]
+    assert [r["sample_id"] for r in records] == [0, 1, 2, 3, 4]
+    assert [r["draw_id"] for r in records] == [17, 18, 19, 20, 21]
+    calls.clear()
+    wrapper.main(argv + ["--resume"])
+    assert calls == [(22, 3, "native", "native")]
+    calls.clear()
+    (output / "samples.jsonl").write_text(json.dumps(records[0]) + "\n")
+    wrapper.main(argv + ["--resume"])
+    assert calls == [(22, 3, "native", "native"), (17, 3, "native", "native"),
+                     (20, 2, "native", "native")]
+    replayed = [json.loads(x) for x in (output / "samples.jsonl").read_text().splitlines()]
+    assert replayed == records
+    # Corrupted or numerically divergent replay must not append or rewrite any output.
+    broken = dict(records[0], token_ids=[-1] * 8)
+    (output / "samples.jsonl").write_text(json.dumps(broken) + "\n")
+    before = {p.name: p.read_bytes() for p in output.iterdir()}
+    with pytest.raises(ValueError, match="saved prefix"):
+        wrapper.main(argv + ["--resume"])
+    assert {p.name: p.read_bytes() for p in output.iterdir()} == before

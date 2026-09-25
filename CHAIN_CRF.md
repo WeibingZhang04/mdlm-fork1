@@ -52,7 +52,7 @@ python -m pip install -r requirements-chain-crf.txt
 python -m pytest -q tests/test_chain_*.py
 ```
 
-The 96 offline tests cover enumerated partitions, likelihoods, marginals and
+The offline tests cover enumerated partitions, likelihoods, marginals and
 gradients; joint sampling; clamping and residual states; learning agreement,
 disagreement and context-dependent joints; document separation; generation
 schedules; training; exact optimizer/RNG resume; segmented inference; and
@@ -142,6 +142,10 @@ at offset zero. Outputs distinguish the local `sample_id` from its RNG/reveal
 `draw_id`. Keep batch size fixed: categorical RNG consumption is batch-based.
 Warmup draws lie outside the requested evaluation interval. Old manifests
 without draw identities require their original evaluator, not a new-code resume.
+An interrupted partial batch is regenerated at its original RNG offset and
+shape. Its saved token prefix must match before missing rows are appended.
+Recorded generation time covers retained samples; it is not an accounting of
+all compute spent on interrupted and replayed jobs.
 
 Outputs include sampled token IDs and text, source/model identities, backbone
 calls, end-to-end timing, sampling overhead, entropy, distinct n-grams and
@@ -183,6 +187,26 @@ scorer uses original GPT-2 token IDs without EOS truncation or retokenization;
 it is not the original paper's scorer protocol. Generation timing excludes
 quality scoring and model loading. Use lengths 256 or 1024 and step counts
 dividing the length.
+The adapter also accepts `--sample-offset` and verifies draw identities on
+resume. Its warmup draws are disjoint from the requested interval, and partial
+batches use the same replay-and-verify rule as the chain evaluator.
+
+## Plot measured quality and time
+
+`scripts/plot_chain_generation.py` reads a JSON list of series, each with a
+`label` and a `runs` list of completed evaluator directories. It checks equal
+sample counts, lengths, batch sizes and quality-scoring protocols, then writes
+PDF/PNG plots of generative perplexity against denoising steps and elapsed time.
+Its numeric sidecar records source-file hashes without local machine paths.
+It neither fits curves nor aggregates training seeds. Kernel, precision and
+sampler differences still need to be stated in the figure caption; the shared
+scorer does not make different implementations a controlled runtime comparison.
+Plotting additionally requires Matplotlib; it is not needed for training or
+generation.
+
+```bash
+python scripts/plot_chain_generation.py --specification runs/plot-series.json --output runs/quality-time-plot --title "Measured generation quality and time"
+```
 
 ## Distributional quality with MAUVE
 

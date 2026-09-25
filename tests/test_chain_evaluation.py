@@ -50,3 +50,35 @@ def test_negative_offset_rejected_before_creating_output(tmp_path):
     with pytest.raises(ValueError, match='nonnegative'):
         main(arguments(output, -1))
     assert not output.exists()
+
+
+@pytest.mark.parametrize('saved_count',[1,4])
+def test_partial_batch_replays_original_draws_before_appending(tmp_path,saved_count):
+    output=tmp_path/'batched'
+    args=arguments(output,10000)
+    args[args.index('--samples')+1]='7'
+    args[args.index('--batch-size')+1]='3'
+    main(args)
+    expected=read_records(output)
+    saved=expected[:saved_count]
+    (output/'samples.jsonl').write_text(''.join(json.dumps(r)+'\n' for r in saved))
+    main(args+['--resume'])
+    resumed=read_records(output)
+    keys=('sample_id','draw_id','token_ids','prefix_length','batch_id','batch_size')
+    assert [[r[k] for k in keys] for r in resumed]==[[r[k] for k in keys] for r in expected]
+    assert resumed[:saved_count]==saved
+
+
+def test_partial_batch_refuses_changed_saved_prefix_before_appending(tmp_path):
+    output=tmp_path/'tampered'
+    args=arguments(output,10000)
+    args[args.index('--batch-size')+1]='3'
+    main(args)
+    saved=read_records(output)[:1]
+    saved[0]['token_ids'][0]=(saved[0]['token_ids'][0]+1)%16
+    path=output/'samples.jsonl'
+    path.write_text(json.dumps(saved[0])+'\n')
+    before=path.read_bytes()
+    with pytest.raises(ValueError,match='Replayed partial batch differs'):
+        main(args+['--resume'])
+    assert path.read_bytes()==before

@@ -42,6 +42,17 @@ def validate_dimensions(length, steps, samples, batch_size):
     return length // steps
 
 
+def validate_sample_records(records, *, sample_offset, samples):
+    """Resume only the same contiguous, explicitly identified draw range."""
+    if sample_offset < 0:
+        raise ValueError("Sample offset must be nonnegative")
+    if [row.get("sample_id") for row in records] != list(range(len(records))) or len(records) > samples:
+        raise ValueError("Invalid existing sample IDs")
+    expected = list(range(sample_offset, sample_offset + len(records)))
+    if [row.get("draw_id") for row in records] != expected:
+        raise ValueError("Stored draw IDs do not match the requested sample offset")
+
+
 class MatchedReveal:
     """The chain harness's sample-ID reveal sets, sorted for upstream TT cores."""
 
@@ -199,6 +210,8 @@ def main(argv=None):
     p.add_argument("--length", type=int, default=256)
     p.add_argument("--steps", type=int, default=16)
     p.add_argument("--samples", type=int, default=64)
+    p.add_argument("--sample-offset", type=int, default=0,
+                   help="First draw ID; use a separate range for final evaluation after pilot selection")
     p.add_argument("--batch-size", type=int, default=1)
     p.add_argument("--device", default="cuda")
     p.add_argument("--schedule", choices=["native", "matched"], default="native")
@@ -207,6 +220,7 @@ def main(argv=None):
     p.add_argument("--resume", action="store_true")
     args = p.parse_args(argv)
     validate_dimensions(args.length, args.steps, args.samples, args.batch_size)
+    validate_sample_records([], sample_offset=args.sample_offset, samples=args.samples)
     if args.output.exists() and not args.resume:
         raise FileExistsError("Use a new output directory or explicit --resume")
     args.output.mkdir(parents=True, exist_ok=True)
@@ -216,23 +230,35 @@ def main(argv=None):
                 "identity":identity, "wrapper_sha256":file_sha256(Path(__file__)),
                 "quality_scoring":"raw_GPT2_token_ids_shared_chain_evaluator_not_native_retokenization"}
     manifest_path = args.output / "manifest.json"
-    if manifest_path.exists() and json.loads(manifest_path.read_text()) != manifest:
-        raise ValueError("Resume identity mismatch")
-    atomic_json(manifest, manifest_path)
+    if manifest_path.exists():
+        if json.loads(manifest_path.read_text()) != manifest:
+            raise ValueError("Resume identity mismatch")
+    else:
+        atomic_json(manifest, manifest_path)
     records_path = args.output / "samples.jsonl"
     records = [json.loads(line) for line in records_path.read_text().splitlines() if line] if records_path.exists() else []
-    if [row["sample_id"] for row in records] != list(range(len(records))) or len(records) > args.samples:
-        raise ValueError("Invalid existing sample IDs")
-    generate_batch(model, config, upstream, sample_offset=1_000_000,
+    validate_sample_records(records, sample_offset=args.sample_offset, samples=args.samples)
+    # Warmup draws are outside the requested range and excluded from metrics.
+    generate_batch(model, config, upstream, sample_offset=args.sample_offset + args.samples,
                    sampling=args.sampling_precision, schedule=args.schedule)
-    for offset in range(len(records), args.samples, args.batch_size):
+    # A native batch uses one seeded RNG stream. If an append was interrupted,
+    # replay that original batch and verify its saved prefix before any writes.
+    first_batch = (len(records) if len(records) == args.samples else
+                   len(records) // args.batch_size * args.batch_size)
+    for offset in range(first_batch, args.samples, args.batch_size):
         config.generation.batch_size = min(args.batch_size, args.samples - offset)
-        tokens, timing = generate_batch(model, config, upstream, sample_offset=offset,
+        tokens, timing = generate_batch(model, config, upstream, sample_offset=args.sample_offset + offset,
                                        sampling=args.sampling_precision, schedule=args.schedule)
-        batch = [{"sample_id":offset+i, "token_ids":ids, "prefix_length":0,
+        batch = [{"sample_id":offset+i, "draw_id":args.sample_offset+offset+i,
+                  "token_ids":ids, "prefix_length":0,
                   "text":model.tokenizer.decode(ids), "batch_size":len(tokens), **timing,
                   "elapsed_seconds":timing["elapsed_seconds"] / len(tokens)}
                  for i,ids in enumerate(tokens.cpu().tolist())]
+        saved_prefix = max(0, len(records) - offset)
+        for i in range(saved_prefix):
+            if records[offset+i]["token_ids"] != batch[i]["token_ids"]:
+                raise ValueError("Replayed partial-batch token IDs differ from the saved prefix")
+        batch = batch[saved_prefix:]
         with records_path.open("a") as f:
             for row in batch:
                 f.write(json.dumps(row, allow_nan=False) + "\n")

@@ -173,7 +173,11 @@ def main(argv=None):
         raise ValueError('Stored draw IDs do not match the requested sample offset')
     if len(records)>args.samples:
         raise ValueError('Existing sample count exceeds requested target')
-    for offset in range(len(records),args.samples,args.batch_size):
+    # Token RNG is seeded once per original batch. If interruption left only
+    # some rows on disk, replay that entire batch at its original draw offset;
+    # starting a new batch at len(records) would change the remaining draws.
+    start_offset=(len(records)//args.batch_size)*args.batch_size if len(records)<args.samples else args.samples
+    for offset in range(start_offset,args.samples,args.batch_size):
         size=min(args.batch_size,args.samples-offset)
         tokens,timing=generate(model,head,args.mode,batch_size=size,
                               sample_offset=args.sample_offset+offset,**kwargs)
@@ -187,12 +191,19 @@ def main(argv=None):
             for key in ('elapsed_seconds','backbone_seconds','sampling_seconds'):
                 record[key]=timing[key]/size
             batch.append(record)
+        overlap=min(len(records)-offset,len(batch))
+        for previous,replayed in zip(records[offset:offset+overlap],batch[:overlap]):
+            keys=('sample_id','draw_id','token_ids','prefix_length','batch_id','batch_size')
+            if any(previous[key]!=replayed[key] for key in keys):
+                raise ValueError('Replayed partial batch differs from its saved prefix')
+        pending=batch[overlap:]
         with records_path.open('a') as f:
-            for row in batch:
+            for row in pending:
                 f.write(json.dumps(row,allow_nan=False)+'\n')
             f.flush()
-        records.extend(batch)
-        print(json.dumps({'completed':len(records),'target':args.samples,'batch':timing}),flush=True)
+        records.extend(pending)
+        print(json.dumps({'completed':len(records),'target':args.samples,'batch':timing,
+                          'replayed_existing_rows':overlap}),flush=True)
     elapsed=sum(r['elapsed_seconds'] for r in records)
     result={'samples':len(records),'elapsed_seconds':elapsed,'seconds_per_sample':elapsed/len(records),
             'backbone_seconds':sum(r['backbone_seconds'] for r in records),
