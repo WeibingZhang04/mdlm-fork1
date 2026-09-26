@@ -1,4 +1,4 @@
-"""Training-document bigram baselines with sparse, vectorized pair lookup."""
+"""Count bigram baselines with sparse, vectorized pair lookup."""
 
 from collections import Counter
 from typing import Iterable, Optional
@@ -10,7 +10,7 @@ from torch import Tensor, nn
 class CountBigramHead(nn.Module):
     """Smoothed PMI or log-conditional count score.
 
-    For N observed within-document edges, empirical joint p_emp and add-one
+    For N observed within-sequence edges, empirical joint p_emp and add-one
     smoothed edge-endpoint backoff distributions bL,bR:
 
         p_pair = (1-epsilon) p_emp + epsilon bL bR.
@@ -19,7 +19,9 @@ class CountBigramHead(nn.Module):
     just the backoff distributions, so the conditional really normalizes.
 
     epsilon=smoothing is the independence-mixture weight in (0,1]. There
-    are no across-document edges. The residual candidate always scores zero.
+    are no edges across supplied sequences. The caller supplies documents or
+    packed token blocks and owns their boundary convention. The residual
+    candidate always scores zero.
     Counts and marginals use float64; returned pair scores use float32.
     """
 
@@ -37,7 +39,7 @@ class CountBigramHead(nn.Module):
         self.register_buffer("pair_counts", torch.empty(0, dtype=torch.float64))
 
     def fit(self, token_sequences: Iterable):
-        """Reset counts from an iterable of documents (lists or 1-D tensors)."""
+        """Reset counts from token sequences (lists or 1-D tensors)."""
         pairs = Counter()
         left = torch.zeros(self.vocab_size, dtype=torch.float64)
         right = torch.zeros(self.vocab_size, dtype=torch.float64)
