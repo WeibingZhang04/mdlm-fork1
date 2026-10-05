@@ -267,7 +267,7 @@ def main(argv=None):
     source_files=['scripts/evaluate_chain_crf.py','scripts/train_chain_crf.py',
                   'chain_crf/generation.py','chain_crf/core.py', 'chain_crf/cuda_forward.py','chain_crf/heads.py',
                   'chain_crf/counts.py','chain_crf/backbone.py','chain_crf/data.py','models/dit.py',
-                  'chain_crf/profiling.py']
+                  'chain_crf/profiling.py','chain_crf/cuda_sampling.py']
     if args.inference == 'segments':
         source_files.append('chain_crf/segments.py')
     manifest={'config':configuration,'backbone':model.provenance,'head':head_info,

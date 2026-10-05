@@ -90,6 +90,11 @@ def test_profile_preserves_draws_and_excludes_warmup_and_later_batches(tmp_path,
         assert stages['crf.forward_filter']['device_kernel_ms']==pytest.approx(
             sum(e['dur'] for e in fused)/1000)
         assert stages['crf.inference']['device_kernel_ms']>=stages['crf.forward_filter']['device_kernel_ms']
+        backward=[e for e in trace['traceEvents']
+                  if e.get('cat')=='kernel' and e.get('name')=='_backward_sample_kernel']
+        assert backward
+        assert stages['crf.backward_fused']['device_kernel_ms']>=sum(e['dur'] for e in backward)/1000-1e-9
+        assert stages['crf.backward_sample']['device_kernel_ms']>=stages['crf.backward_fused']['device_kernel_ms']
     assert 'Profiling adds overhead' in (profiled/'profile.txt').read_text()
     assert json.loads((profiled/'metrics.json').read_text())['contains_profiled_batches']
     assert not (plain/'profile.json').exists()

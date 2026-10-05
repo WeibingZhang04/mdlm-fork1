@@ -90,10 +90,19 @@ def chain_marginals(unary: Tensor, edge: Tensor) -> Tensor:
 
 @torch.no_grad()
 def sample_chain(unary: Tensor, edge: Tensor, generator: Optional[torch.Generator] = None) -> Tensor:
-    """Forward filtering/backward sampling; returns a joint draw [B,L]."""
+    """Forward filtering/backward sampling; returns a joint draw [B,L].
+
+    The fused CUDA sampler preserves the joint law, but consumes RNG in a
+    different order from the reference path (same seeds can yield new draws).
+    """
     unary, edge = _inputs(unary, edge)
     alpha = _forward(unary, edge)
     with torch.profiler.record_function('crf.backward_sample'):
+        if unary.is_cuda and unary.dtype == torch.float32:
+            from .cuda_sampling import fused_backward_sample
+            fused = fused_backward_sample(alpha, edge, generator)
+            if fused is not None:
+                return fused
         states = torch.empty(unary.shape[:2], dtype=torch.long, device=unary.device)
         states[:, -1] = torch.multinomial(alpha[-1].double().softmax(-1), 1, generator=generator).squeeze(-1)
         for pos in range(unary.shape[1] - 2, -1, -1):
