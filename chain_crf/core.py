@@ -13,7 +13,11 @@ from torch import Tensor
 
 
 def _logsumexp(x: Tensor, dim: int) -> Tensor:
-    """A logsumexp whose gradient is zero on an all-negative-infinity slice."""
+    """Reduce finite/-inf log scores, protecting impossible-slice gradients."""
+    if not torch.is_grad_enabled():
+        # Native logsumexp already returns -inf for an impossible slice.
+        # Only its backward derivative needs the guarded path below.
+        return torch.logsumexp(x, dim=dim)
     valid = torch.isfinite(x).any(dim=dim, keepdim=True)
     safe = torch.where(valid, x, torch.zeros_like(x))
     out = torch.logsumexp(safe, dim=dim)
@@ -32,6 +36,14 @@ def _inputs(unary: Tensor, edge: Tensor):
 
 def _forward(unary: Tensor, edge: Tensor):
     with torch.profiler.record_function('crf.forward_filter'):
+        # Keep autograd, CPU, FP64 and large-state inference on the reference
+        # path. The optional CUDA kernel performs the same recurrence in one
+        # launch, including impossible-state handling.
+        if not torch.is_grad_enabled() and unary.is_cuda and unary.dtype == torch.float32:
+            from .cuda_forward import fused_forward
+            fused = fused_forward(unary, edge)
+            if fused is not None:
+                return list(fused.unbind(dim=1))
         messages = [unary[:, 0]]
         for pos in range(1, unary.shape[1]):
             messages.append(unary[:, pos] + _logsumexp(messages[-1].unsqueeze(-1) + edge[:, pos - 1], -2))

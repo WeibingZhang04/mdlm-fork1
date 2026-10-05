@@ -264,7 +264,7 @@ def main(argv=None):
                    if k not in ('resume','score_gpt2','warmup')}
     source_root=Path(__file__).resolve().parents[1]
     source_files=['scripts/evaluate_chain_crf.py','scripts/train_chain_crf.py',
-                  'chain_crf/generation.py','chain_crf/core.py','chain_crf/heads.py',
+                  'chain_crf/generation.py','chain_crf/core.py', 'chain_crf/cuda_forward.py','chain_crf/heads.py',
                   'chain_crf/counts.py','chain_crf/backbone.py','chain_crf/data.py','models/dit.py']
     if args.inference == 'segments':
         source_files.append('chain_crf/segments.py')

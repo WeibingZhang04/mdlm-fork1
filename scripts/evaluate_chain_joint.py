@@ -72,7 +72,7 @@ def main(argv=None):
                      if key not in ("resume", "warmup", "score_gpt2")}
     configuration["effective_k"] = k
     sources = ("scripts/evaluate_chain_joint.py", "scripts/evaluate_chain_crf.py", "chain_crf/joint.py",
-               "chain_crf/generation.py", "chain_crf/core.py", "chain_crf/heads.py", "chain_crf/backbone.py",
+               "chain_crf/generation.py", "chain_crf/core.py", "chain_crf/cuda_forward.py", "chain_crf/heads.py", "chain_crf/backbone.py",
                "chain_crf/data.py", "models/dit.py", "chain_crf/segments.py")
     manifest = {"config": configuration, "checkpoint_sha256": file_sha256(args.checkpoint),
                 "training_identity": payload["identity"], "training_step": payload["step"],

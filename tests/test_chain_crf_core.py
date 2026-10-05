@@ -69,6 +69,51 @@ def test_impossible_transition_slices_are_autograd_safe():
     torch.testing.assert_close(actual[0, 1:], torch.tensor([[1., 0.], [1., 0.]]))
 
 
+@pytest.mark.parametrize('dtype', [torch.float32, torch.float64])
+@pytest.mark.parametrize('inference_context', [torch.no_grad, torch.inference_mode])
+def test_inference_reduction_matches_guarded_values_and_training_gradients(dtype,inference_context):
+    from chain_crf.core import _logsumexp
+
+    values=torch.tensor([[0.,-torch.inf,-80.], [-torch.inf,-torch.inf,-torch.inf],
+                         [-1000.,-1001.,-torch.inf]],dtype=dtype,requires_grad=True)
+    guarded=_logsumexp(values,-1)
+    with inference_context():
+        fast=_logsumexp(values,-1)
+    torch.testing.assert_close(fast,guarded.detach(),rtol=0,atol=0)
+    assert fast[1].isneginf() and not fast.requires_grad
+    guarded[torch.isfinite(guarded)].sum().backward()
+    assert torch.isfinite(values.grad).all()
+    assert values.grad[1].eq(0).all()
+
+
+@pytest.mark.parametrize('inference_context', [torch.no_grad, torch.inference_mode])
+def test_inference_partition_marginals_and_draws_match_guarded_chain(monkeypatch,inference_context):
+    import chain_crf.core as core
+
+    unary=torch.tensor([[[0.,-torch.inf,-torch.inf], [.3,-.4,-torch.inf],
+                          [-torch.inf,0.,-torch.inf], [.2,-.7,-torch.inf]]])
+    edge=torch.tensor([[[[.2,-.1,-torch.inf], [0.,.1,-torch.inf], [0.,0.,-torch.inf]],
+                        [[0.,.4,-torch.inf], [-torch.inf,.3,-torch.inf], [0.,0.,-torch.inf]],
+                        [[0.,0.,-torch.inf], [.2,-.3,-torch.inf], [0.,0.,-torch.inf]]]])
+    expected_z,expected_marginal,_,_=enumerate_chain(unary,edge)
+    reducer=core._logsumexp
+
+    def guarded(values,dim):
+        with torch.enable_grad():
+            return reducer(values,dim)
+
+    with inference_context():
+        torch.testing.assert_close(core.chain_log_partition(unary,edge)[0],expected_z)
+        torch.testing.assert_close(core.chain_marginals(unary,edge),expected_marginal)
+        fast=core.sample_chain(unary.expand(64,-1,-1),edge.expand(64,-1,-1,-1),
+                               generator=torch.Generator().manual_seed(72))
+        with monkeypatch.context() as patch:
+            patch.setattr(core,'_logsumexp',guarded)
+            reference=core.sample_chain(unary.expand(64,-1,-1),edge.expand(64,-1,-1,-1),
+                                        generator=torch.Generator().manual_seed(72))
+    assert torch.equal(fast,reference)
+
+
 def test_joint_sampler_matches_joint_not_product_marginals():
     n = 24000
     unary = torch.zeros(n, 2, 2)
