@@ -1,0 +1,621 @@
+{
+  "boundary_policy": {
+    "append_eos_per_document": true,
+    "attention_reset_at_eos": false,
+    "bos_id": 50256,
+    "eos_id": 50256,
+    "outer_bos_eos_per_row": true,
+    "packing_order": "selected document order",
+    "pair_edges_at_eos": "retain adjacent factors involving the separator; never connect different rows",
+    "payload_tokens": 1022,
+    "tail_policy": "drop one incomplete payload per split"
+  },
+  "data_loader_sha256": "afffda50358c5e1def5949ca30e03f186475098719c166e0f37cf673b60cb9f0",
+  "document_quotas": {
+    "dev": 2000,
+    "heldout_eval": 100000,
+    "train": 200000
+  },
+  "evaluation_selection": "complete validation tail in original source order; no filtering",
+  "exact_document_deduplication": {
+    "dev": true,
+    "heldout_eval": false,
+    "train": true
+  },
+  "excluded_ids_sha256": "7d1dff8986211391398c2feec48645996d20f42863a32b413dafb4cb96fe0072",
+  "excluded_sources": {
+    "/u401/n23zhang/rework-data/data/chain-owt/dev.jsonl": "49eb64df55b7ce03b4ddb35d39733906bee2be4fa151086ae45185b75683cbd9",
+    "/u401/n23zhang/rework-data/data/chain-owt/test.jsonl": "b9b28ffd05c2603455d75f6f6260cfa91178786537539e97ec986457fedd8e03",
+    "/u401/n23zhang/rework-data/data/chain-owt/train.jsonl": "780df75109f9032667c15a31c39c61cbccb005d1766936cafa1d5ae6cff51418"
+  },
+  "files": {
+    "dev.jsonl": "5b92a50ed5eac94dd958c6afc58d44071154e201d968dc3b1311bd278302e75a",
+    "dev.pt": "a2923beb115896fcd13c7a69f3ffedc21ceab9d312421f8ee1d6bdbeaf7334d5",
+    "heldout_eval.jsonl": "1fd641c0e9af6f7685cecf0aa5ccb4e30a6d862693860395f268d69bc2a0ac18",
+    "heldout_eval.pt": "89fdeb26a7762736fcdaa9e76e0ceed25e4bec48ba95776f524c1e73ff5466a8",
+    "selected_documents.json": "b98179aafb3854cfd91c9d7d17add3979b495eb3798d6a5b6a8c0ad4f24a8af9",
+    "train.jsonl": "56adeb8a4a5b38cb11323a9f42a2a6009ca59d07b47669a102c7f5e2846003da",
+    "train.pt": "bd052ad49f7d3f227503d3d99f1716ac987317470eaa0a44fce66b06e6647668"
+  },
+  "length": 1024,
+  "near_document_deduplication": false,
+  "preparation_source_sha256": "82ba5dab853cb5a474017d21968d3e15eb8f5a9f7ffb2e49ab8ddf14044d7ff3",
+  "prior_exclusion_roles": [
+    "train",
+    "dev"
+  ],
+  "schema": "chain_crf_packed_data_v2",
+  "seed": "mdlm-crf-1024-v1",
+  "selection": "sha256 counter Fisher-Yates on training indices; dev first, then train",
+  "selection_report": {
+    "evaluation_population": "full-tail",
+    "rejections": {
+      "training_duplicate_excluded_or_in_validation": 238
+    },
+    "selected_documents": {
+      "dev": 2000,
+      "heldout_eval": 100000,
+      "train": 200000
+    },
+    "selection_sha256": "cb959aaf908de11a84ba8914c7300edaf6e93722f9b6e0dcff601c14ac0cffda",
+    "validation_tail_audit": {
+      "duplicate_content_documents": 0,
+      "empty_documents": 0,
+      "prior_experiment_overlap_documents": 0
+    },
+    "validation_tail_unique_hashes": 100000
+  },
+  "source": {
+    "config": "plain_text",
+    "dataset_info": {
+      "builder_name": "parquet",
+      "citation": "",
+      "config_name": "plain_text",
+      "dataset_name": "openwebtext",
+      "dataset_size": 39769491688,
+      "description": "",
+      "download_checksums": {
+        "hf://datasets/Skylion007/openwebtext@79d93d786212f7344586290adb811d4ae6a1762c/plain_text/train-00000-of-00080.parquet": {
+          "checksum": null,
+          "num_bytes": 302848326
+        },
+        "hf://datasets/Skylion007/openwebtext@79d93d786212f7344586290adb811d4ae6a1762c/plain_text/train-00001-of-00080.parquet": {
+          "checksum": null,
+          "num_bytes": 305678548
+        },
+        "hf://datasets/Skylion007/openwebtext@79d93d786212f7344586290adb811d4ae6a1762c/plain_text/train-00002-of-00080.parquet": {
+          "checksum": null,
+          "num_bytes": 304419240
+        },
+        "hf://datasets/Skylion007/openwebtext@79d93d786212f7344586290adb811d4ae6a1762c/plain_text/train-00003-of-00080.parquet": {
+          "checksum": null,
+          "num_bytes": 304332042
+        },
+        "hf://datasets/Skylion007/openwebtext@79d93d786212f7344586290adb811d4ae6a1762c/plain_text/train-00004-of-00080.parquet": {
+          "checksum": null,
+          "num_bytes": 301175397
+        },
+        "hf://datasets/Skylion007/openwebtext@79d93d786212f7344586290adb811d4ae6a1762c/plain_text/train-00005-of-00080.parquet": {
+          "checksum": null,
+          "num_bytes": 301755705
+        },
+        "hf://datasets/Skylion007/openwebtext@79d93d786212f7344586290adb811d4ae6a1762c/plain_text/train-00006-of-00080.parquet": {
+          "checksum": null,
+          "num_bytes": 303536715
+        },
+        "hf://datasets/Skylion007/openwebtext@79d93d786212f7344586290adb811d4ae6a1762c/plain_text/train-00007-of-00080.parquet": {
+          "checksum": null,
+          "num_bytes": 300180244
+        },
+        "hf://datasets/Skylion007/openwebtext@79d93d786212f7344586290adb811d4ae6a1762c/plain_text/train-00008-of-00080.parquet": {
+          "checksum": null,
+          "num_bytes": 302694767
+        },
+        "hf://datasets/Skylion007/openwebtext@79d93d786212f7344586290adb811d4ae6a1762c/plain_text/train-00009-of-00080.parquet": {
+          "checksum": null,
+          "num_bytes": 302691677
+        },
+        "hf://datasets/Skylion007/openwebtext@79d93d786212f7344586290adb811d4ae6a1762c/plain_text/train-00010-of-00080.parquet": {
+          "checksum": null,
+          "num_bytes": 302204895
+        },
+        "hf://datasets/Skylion007/openwebtext@79d93d786212f7344586290adb811d4ae6a1762c/plain_text/train-00011-of-00080.parquet": {
+          "checksum": null,
+          "num_bytes": 302975845
+        },
+        "hf://datasets/Skylion007/openwebtext@79d93d786212f7344586290adb811d4ae6a1762c/plain_text/train-00012-of-00080.parquet": {
+          "checksum": null,
+          "num_bytes": 302244422
+        },
+        "hf://datasets/Skylion007/openwebtext@79d93d786212f7344586290adb811d4ae6a1762c/plain_text/train-00013-of-00080.parquet": {
+          "checksum": null,
+          "num_bytes": 302055257
+        },
+        "hf://datasets/Skylion007/openwebtext@79d93d786212f7344586290adb811d4ae6a1762c/plain_text/train-00014-of-00080.parquet": {
+          "checksum": null,
+          "num_bytes": 304001822
+        },
+        "hf://datasets/Skylion007/openwebtext@79d93d786212f7344586290adb811d4ae6a1762c/plain_text/train-00015-of-00080.parquet": {
+          "checksum": null,
+          "num_bytes": 303473398
+        },
+        "hf://datasets/Skylion007/openwebtext@79d93d786212f7344586290adb811d4ae6a1762c/plain_text/train-00016-of-00080.parquet": {
+          "checksum": null,
+          "num_bytes": 304131969
+        },
+        "hf://datasets/Skylion007/openwebtext@79d93d786212f7344586290adb811d4ae6a1762c/plain_text/train-00017-of-00080.parquet": {
+          "checksum": null,
+          "num_bytes": 301375243
+        },
+        "hf://datasets/Skylion007/openwebtext@79d93d786212f7344586290adb811d4ae6a1762c/plain_text/train-00018-of-00080.parquet": {
+          "checksum": null,
+          "num_bytes": 301508378
+        },
+        "hf://datasets/Skylion007/openwebtext@79d93d786212f7344586290adb811d4ae6a1762c/plain_text/train-00019-of-00080.parquet": {
+          "checksum": null,
+          "num_bytes": 301406222
+        },
+        "hf://datasets/Skylion007/openwebtext@79d93d786212f7344586290adb811d4ae6a1762c/plain_text/train-00020-of-00080.parquet": {
+          "checksum": null,
+          "num_bytes": 303965188
+        },
+        "hf://datasets/Skylion007/openwebtext@79d93d786212f7344586290adb811d4ae6a1762c/plain_text/train-00021-of-00080.parquet": {
+          "checksum": null,
+          "num_bytes": 303492063
+        },
+        "hf://datasets/Skylion007/openwebtext@79d93d786212f7344586290adb811d4ae6a1762c/plain_text/train-00022-of-00080.parquet": {
+          "checksum": null,
+          "num_bytes": 304784301
+        },
+        "hf://datasets/Skylion007/openwebtext@79d93d786212f7344586290adb811d4ae6a1762c/plain_text/train-00023-of-00080.parquet": {
+          "checksum": null,
+          "num_bytes": 305250514
+        },
+        "hf://datasets/Skylion007/openwebtext@79d93d786212f7344586290adb811d4ae6a1762c/plain_text/train-00024-of-00080.parquet": {
+          "checksum": null,
+          "num_bytes": 300473667
+        },
+        "hf://datasets/Skylion007/openwebtext@79d93d786212f7344586290adb811d4ae6a1762c/plain_text/train-00025-of-00080.parquet": {
+          "checksum": null,
+          "num_bytes": 303497159
+        },
+        "hf://datasets/Skylion007/openwebtext@79d93d786212f7344586290adb811d4ae6a1762c/plain_text/train-00026-of-00080.parquet": {
+          "checksum": null,
+          "num_bytes": 300841872
+        },
+        "hf://datasets/Skylion007/openwebtext@79d93d786212f7344586290adb811d4ae6a1762c/plain_text/train-00027-of-00080.parquet": {
+          "checksum": null,
+          "num_bytes": 301179312
+        },
+        "hf://datasets/Skylion007/openwebtext@79d93d786212f7344586290adb811d4ae6a1762c/plain_text/train-00028-of-00080.parquet": {
+          "checksum": null,
+          "num_bytes": 302216916
+        },
+        "hf://datasets/Skylion007/openwebtext@79d93d786212f7344586290adb811d4ae6a1762c/plain_text/train-00029-of-00080.parquet": {
+          "checksum": null,
+          "num_bytes": 302599929
+        },
+        "hf://datasets/Skylion007/openwebtext@79d93d786212f7344586290adb811d4ae6a1762c/plain_text/train-00030-of-00080.parquet": {
+          "checksum": null,
+          "num_bytes": 299345408
+        },
+        "hf://datasets/Skylion007/openwebtext@79d93d786212f7344586290adb811d4ae6a1762c/plain_text/train-00031-of-00080.parquet": {
+          "checksum": null,
+          "num_bytes": 302655351
+        },
+        "hf://datasets/Skylion007/openwebtext@79d93d786212f7344586290adb811d4ae6a1762c/plain_text/train-00032-of-00080.parquet": {
+          "checksum": null,
+          "num_bytes": 303272946
+        },
+        "hf://datasets/Skylion007/openwebtext@79d93d786212f7344586290adb811d4ae6a1762c/plain_text/train-00033-of-00080.parquet": {
+          "checksum": null,
+          "num_bytes": 301539738
+        },
+        "hf://datasets/Skylion007/openwebtext@79d93d786212f7344586290adb811d4ae6a1762c/plain_text/train-00034-of-00080.parquet": {
+          "checksum": null,
+          "num_bytes": 302560727
+        },
+        "hf://datasets/Skylion007/openwebtext@79d93d786212f7344586290adb811d4ae6a1762c/plain_text/train-00035-of-00080.parquet": {
+          "checksum": null,
+          "num_bytes": 301341568
+        },
+        "hf://datasets/Skylion007/openwebtext@79d93d786212f7344586290adb811d4ae6a1762c/plain_text/train-00036-of-00080.parquet": {
+          "checksum": null,
+          "num_bytes": 303206782
+        },
+        "hf://datasets/Skylion007/openwebtext@79d93d786212f7344586290adb811d4ae6a1762c/plain_text/train-00037-of-00080.parquet": {
+          "checksum": null,
+          "num_bytes": 302424854
+        },
+        "hf://datasets/Skylion007/openwebtext@79d93d786212f7344586290adb811d4ae6a1762c/plain_text/train-00038-of-00080.parquet": {
+          "checksum": null,
+          "num_bytes": 302372305
+        },
+        "hf://datasets/Skylion007/openwebtext@79d93d786212f7344586290adb811d4ae6a1762c/plain_text/train-00039-of-00080.parquet": {
+          "checksum": null,
+          "num_bytes": 301636847
+        },
+        "hf://datasets/Skylion007/openwebtext@79d93d786212f7344586290adb811d4ae6a1762c/plain_text/train-00040-of-00080.parquet": {
+          "checksum": null,
+          "num_bytes": 303737749
+        },
+        "hf://datasets/Skylion007/openwebtext@79d93d786212f7344586290adb811d4ae6a1762c/plain_text/train-00041-of-00080.parquet": {
+          "checksum": null,
+          "num_bytes": 304266038
+        },
+        "hf://datasets/Skylion007/openwebtext@79d93d786212f7344586290adb811d4ae6a1762c/plain_text/train-00042-of-00080.parquet": {
+          "checksum": null,
+          "num_bytes": 302040879
+        },
+        "hf://datasets/Skylion007/openwebtext@79d93d786212f7344586290adb811d4ae6a1762c/plain_text/train-00043-of-00080.parquet": {
+          "checksum": null,
+          "num_bytes": 305323537
+        },
+        "hf://datasets/Skylion007/openwebtext@79d93d786212f7344586290adb811d4ae6a1762c/plain_text/train-00044-of-00080.parquet": {
+          "checksum": null,
+          "num_bytes": 301885118
+        },
+        "hf://datasets/Skylion007/openwebtext@79d93d786212f7344586290adb811d4ae6a1762c/plain_text/train-00045-of-00080.parquet": {
+          "checksum": null,
+          "num_bytes": 303334655
+        },
+        "hf://datasets/Skylion007/openwebtext@79d93d786212f7344586290adb811d4ae6a1762c/plain_text/train-00046-of-00080.parquet": {
+          "checksum": null,
+          "num_bytes": 302169880
+        },
+        "hf://datasets/Skylion007/openwebtext@79d93d786212f7344586290adb811d4ae6a1762c/plain_text/train-00047-of-00080.parquet": {
+          "checksum": null,
+          "num_bytes": 302501111
+        },
+        "hf://datasets/Skylion007/openwebtext@79d93d786212f7344586290adb811d4ae6a1762c/plain_text/train-00048-of-00080.parquet": {
+          "checksum": null,
+          "num_bytes": 302652427
+        },
+        "hf://datasets/Skylion007/openwebtext@79d93d786212f7344586290adb811d4ae6a1762c/plain_text/train-00049-of-00080.parquet": {
+          "checksum": null,
+          "num_bytes": 301871994
+        },
+        "hf://datasets/Skylion007/openwebtext@79d93d786212f7344586290adb811d4ae6a1762c/plain_text/train-00050-of-00080.parquet": {
+          "checksum": null,
+          "num_bytes": 303349696
+        },
+        "hf://datasets/Skylion007/openwebtext@79d93d786212f7344586290adb811d4ae6a1762c/plain_text/train-00051-of-00080.parquet": {
+          "checksum": null,
+          "num_bytes": 305031989
+        },
+        "hf://datasets/Skylion007/openwebtext@79d93d786212f7344586290adb811d4ae6a1762c/plain_text/train-00052-of-00080.parquet": {
+          "checksum": null,
+          "num_bytes": 303050982
+        },
+        "hf://datasets/Skylion007/openwebtext@79d93d786212f7344586290adb811d4ae6a1762c/plain_text/train-00053-of-00080.parquet": {
+          "checksum": null,
+          "num_bytes": 300684516
+        },
+        "hf://datasets/Skylion007/openwebtext@79d93d786212f7344586290adb811d4ae6a1762c/plain_text/train-00054-of-00080.parquet": {
+          "checksum": null,
+          "num_bytes": 303631897
+        },
+        "hf://datasets/Skylion007/openwebtext@79d93d786212f7344586290adb811d4ae6a1762c/plain_text/train-00055-of-00080.parquet": {
+          "checksum": null,
+          "num_bytes": 302735425
+        },
+        "hf://datasets/Skylion007/openwebtext@79d93d786212f7344586290adb811d4ae6a1762c/plain_text/train-00056-of-00080.parquet": {
+          "checksum": null,
+          "num_bytes": 303083314
+        },
+        "hf://datasets/Skylion007/openwebtext@79d93d786212f7344586290adb811d4ae6a1762c/plain_text/train-00057-of-00080.parquet": {
+          "checksum": null,
+          "num_bytes": 300544465
+        },
+        "hf://datasets/Skylion007/openwebtext@79d93d786212f7344586290adb811d4ae6a1762c/plain_text/train-00058-of-00080.parquet": {
+          "checksum": null,
+          "num_bytes": 303089061
+        },
+        "hf://datasets/Skylion007/openwebtext@79d93d786212f7344586290adb811d4ae6a1762c/plain_text/train-00059-of-00080.parquet": {
+          "checksum": null,
+          "num_bytes": 301706009
+        },
+        "hf://datasets/Skylion007/openwebtext@79d93d786212f7344586290adb811d4ae6a1762c/plain_text/train-00060-of-00080.parquet": {
+          "checksum": null,
+          "num_bytes": 301068661
+        },
+        "hf://datasets/Skylion007/openwebtext@79d93d786212f7344586290adb811d4ae6a1762c/plain_text/train-00061-of-00080.parquet": {
+          "checksum": null,
+          "num_bytes": 302642138
+        },
+        "hf://datasets/Skylion007/openwebtext@79d93d786212f7344586290adb811d4ae6a1762c/plain_text/train-00062-of-00080.parquet": {
+          "checksum": null,
+          "num_bytes": 301151001
+        },
+        "hf://datasets/Skylion007/openwebtext@79d93d786212f7344586290adb811d4ae6a1762c/plain_text/train-00063-of-00080.parquet": {
+          "checksum": null,
+          "num_bytes": 300798197
+        },
+        "hf://datasets/Skylion007/openwebtext@79d93d786212f7344586290adb811d4ae6a1762c/plain_text/train-00064-of-00080.parquet": {
+          "checksum": null,
+          "num_bytes": 303348229
+        },
+        "hf://datasets/Skylion007/openwebtext@79d93d786212f7344586290adb811d4ae6a1762c/plain_text/train-00065-of-00080.parquet": {
+          "checksum": null,
+          "num_bytes": 301745696
+        },
+        "hf://datasets/Skylion007/openwebtext@79d93d786212f7344586290adb811d4ae6a1762c/plain_text/train-00066-of-00080.parquet": {
+          "checksum": null,
+          "num_bytes": 299821953
+        },
+        "hf://datasets/Skylion007/openwebtext@79d93d786212f7344586290adb811d4ae6a1762c/plain_text/train-00067-of-00080.parquet": {
+          "checksum": null,
+          "num_bytes": 301605059
+        },
+        "hf://datasets/Skylion007/openwebtext@79d93d786212f7344586290adb811d4ae6a1762c/plain_text/train-00068-of-00080.parquet": {
+          "checksum": null,
+          "num_bytes": 303100801
+        },
+        "hf://datasets/Skylion007/openwebtext@79d93d786212f7344586290adb811d4ae6a1762c/plain_text/train-00069-of-00080.parquet": {
+          "checksum": null,
+          "num_bytes": 301381334
+        },
+        "hf://datasets/Skylion007/openwebtext@79d93d786212f7344586290adb811d4ae6a1762c/plain_text/train-00070-of-00080.parquet": {
+          "checksum": null,
+          "num_bytes": 300170424
+        },
+        "hf://datasets/Skylion007/openwebtext@79d93d786212f7344586290adb811d4ae6a1762c/plain_text/train-00071-of-00080.parquet": {
+          "checksum": null,
+          "num_bytes": 301359176
+        },
+        "hf://datasets/Skylion007/openwebtext@79d93d786212f7344586290adb811d4ae6a1762c/plain_text/train-00072-of-00080.parquet": {
+          "checksum": null,
+          "num_bytes": 301922808
+        },
+        "hf://datasets/Skylion007/openwebtext@79d93d786212f7344586290adb811d4ae6a1762c/plain_text/train-00073-of-00080.parquet": {
+          "checksum": null,
+          "num_bytes": 300555941
+        },
+        "hf://datasets/Skylion007/openwebtext@79d93d786212f7344586290adb811d4ae6a1762c/plain_text/train-00074-of-00080.parquet": {
+          "checksum": null,
+          "num_bytes": 300259549
+        },
+        "hf://datasets/Skylion007/openwebtext@79d93d786212f7344586290adb811d4ae6a1762c/plain_text/train-00075-of-00080.parquet": {
+          "checksum": null,
+          "num_bytes": 302686876
+        },
+        "hf://datasets/Skylion007/openwebtext@79d93d786212f7344586290adb811d4ae6a1762c/plain_text/train-00076-of-00080.parquet": {
+          "checksum": null,
+          "num_bytes": 302646710
+        },
+        "hf://datasets/Skylion007/openwebtext@79d93d786212f7344586290adb811d4ae6a1762c/plain_text/train-00077-of-00080.parquet": {
+          "checksum": null,
+          "num_bytes": 303181602
+        },
+        "hf://datasets/Skylion007/openwebtext@79d93d786212f7344586290adb811d4ae6a1762c/plain_text/train-00078-of-00080.parquet": {
+          "checksum": null,
+          "num_bytes": 300854488
+        },
+        "hf://datasets/Skylion007/openwebtext@79d93d786212f7344586290adb811d4ae6a1762c/plain_text/train-00079-of-00080.parquet": {
+          "checksum": null,
+          "num_bytes": 302753464
+        }
+      },
+      "download_size": 24193092408,
+      "features": {
+        "text": {
+          "_type": "Value",
+          "dtype": "string",
+          "id": null
+        }
+      },
+      "homepage": "",
+      "license": "",
+      "post_processed": null,
+      "post_processing_size": null,
+      "size_in_bytes": 63962584096,
+      "splits": {
+        "train": {
+          "dataset_name": "openwebtext",
+          "name": "train",
+          "num_bytes": 39769491688,
+          "num_examples": 8013769,
+          "shard_lengths": [
+            101173,
+            100173,
+            100173,
+            100173,
+            102173,
+            101173,
+            101173,
+            102173,
+            101173,
+            101172,
+            101172,
+            101172,
+            101172,
+            101172,
+            101172,
+            101172,
+            101172,
+            101172,
+            102172,
+            102172,
+            100172,
+            101172,
+            100172,
+            101172,
+            102172,
+            101172,
+            101172,
+            101172,
+            101172,
+            101172,
+            102172,
+            100172,
+            101172,
+            101172,
+            101172,
+            101172,
+            101172,
+            101172,
+            101172,
+            101172,
+            100172,
+            101172,
+            101172,
+            101172,
+            101172,
+            101172,
+            101172,
+            101172,
+            101172,
+            101172,
+            101172,
+            100172,
+            101172,
+            101172,
+            101172,
+            101172,
+            101172,
+            101172,
+            101172,
+            102172,
+            101172,
+            101172,
+            101172,
+            101172,
+            101172,
+            102172,
+            101172,
+            101172,
+            102172,
+            101172,
+            102172,
+            101172,
+            102172,
+            102172,
+            102172,
+            100172,
+            101172,
+            102172,
+            101172,
+            16172
+          ]
+        }
+      },
+      "supervised_keys": null,
+      "task_templates": null,
+      "version": {
+        "description": null,
+        "major": 0,
+        "minor": 0,
+        "patch": 0,
+        "version_str": "0.0.0"
+      }
+    },
+    "fingerprint": "44d9557fb6ab6921",
+    "historical_alignment": "not independently authenticated by this script; apply published tail rule to pinned source",
+    "loader": "datasets.load_dataset at pinned revision, no remote Python",
+    "repository": "Skylion007/openwebtext",
+    "revision": "79d93d786212f7344586290adb811d4ae6a1762c",
+    "rows": 8013769,
+    "source_audit": null,
+    "split": "train",
+    "tokenizer_backend_sha256": "90ba1834b02914854a00a5c08ce138b2f3efaf646c295fbcbb6312b2be8b0199",
+    "versions": {
+      "datasets": "2.18.0",
+      "python": "3.10.21",
+      "tokenizers": "0.15.2",
+      "torch": "2.5.1+cu121",
+      "transformers": "4.38.2"
+    }
+  },
+  "source_training_window": [
+    0,
+    7913769
+  ],
+  "source_validation_window": [
+    7913769,
+    8013769
+  ],
+  "split_roles": {
+    "dev": "head checkpoint and configuration selection",
+    "heldout_eval": "reserved evaluation from the published MDLM validation-tail rule",
+    "train": "head optimization and count fitting"
+  },
+  "splits": {
+    "dev": {
+      "documents_with_retained_tokens": 2000,
+      "dropped_tail_spans": [
+        {
+          "document_id": "34ff9dd2bb78dd0c0e25b7fcfc6eea1b410087510988c7ed47ea00e6609d6606",
+          "row_token_start": 1,
+          "row_token_stop": 429,
+          "source_document_index": 1577935,
+          "source_text_length": 1600,
+          "source_token_start": 1173,
+          "source_token_stop": 1601,
+          "split": "dev"
+        }
+      ],
+      "dropped_tail_tokens": 428,
+      "packed_source_eos_tokens": 1999,
+      "packed_text_tokens": 2199389,
+      "packed_tokens": 2205696,
+      "row_boundary_tokens": 4308,
+      "rows": 2154,
+      "selected_documents": 2000,
+      "source_eos_tokens": 2000,
+      "source_text_tokens": 2199816,
+      "tokens_sha256_le_int64": "fdcc46a949c55dd9411ba3b4cdc02d106b39ab0abb2bd5738ec6574c94046ea2"
+    },
+    "heldout_eval": {
+      "documents_with_retained_tokens": 100000,
+      "dropped_tail_spans": [
+        {
+          "document_id": "92a606cfb46f0407276213c71cb43dfb6c2a6f12b8f5876643de2eab33fc3e3c",
+          "row_token_start": 1,
+          "row_token_stop": 327,
+          "source_document_index": 8013768,
+          "source_text_length": 454,
+          "source_token_start": 129,
+          "source_token_stop": 455,
+          "split": "heldout_eval"
+        }
+      ],
+      "dropped_tail_tokens": 326,
+      "packed_source_eos_tokens": 99999,
+      "packed_text_tokens": 112851441,
+      "packed_tokens": 113172480,
+      "row_boundary_tokens": 221040,
+      "rows": 110520,
+      "selected_documents": 100000,
+      "source_eos_tokens": 100000,
+      "source_text_tokens": 112851766,
+      "tokens_sha256_le_int64": "2cbe121d2a7720d3861ca3ad7ec8e579ce383b92a6559255d2d1982d3dcd23a6"
+    },
+    "train": {
+      "documents_with_retained_tokens": 200000,
+      "dropped_tail_spans": [
+        {
+          "document_id": "ae15cbe81332496dd8975452f6d1e12b6e708745e3181001d4b6aaea5b5924aa",
+          "row_token_start": 1,
+          "row_token_stop": 242,
+          "source_document_index": 4826625,
+          "source_text_length": 292,
+          "source_token_start": 52,
+          "source_token_stop": 293,
+          "split": "train"
+        }
+      ],
+      "dropped_tail_tokens": 241,
+      "packed_source_eos_tokens": 199999,
+      "packed_text_tokens": 224748333,
+      "packed_tokens": 225388544,
+      "row_boundary_tokens": 440212,
+      "rows": 220106,
+      "selected_documents": 200000,
+      "source_eos_tokens": 200000,
+      "source_text_tokens": 224748573,
+      "tokens_sha256_le_int64": "ff7a999e271bc399dc1db48514beb7f6d17182e11bdd2167c9fbb1e2386c3b46"
+    }
+  },
+  "tokenizer": "openai-community/gpt2",
+  "tokenizer_revision": "607a30d783dfa663caf39e06633721c8d4cfcd7e"
+}
