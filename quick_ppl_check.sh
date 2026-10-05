@@ -23,11 +23,11 @@ common=(
   --device cuda
   --length 1024
   --steps 16
-  --samples 20
+  --samples 200
   --batch-size 1
   --k 64
   --sampling joint
-  --inference segments
+  --inference segment
   --warmup 1
   --sample-offset 93000000
   --score-gpt2
