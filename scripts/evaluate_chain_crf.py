@@ -13,6 +13,7 @@ from chain_crf.backbone import FrozenMDLM,SyntheticBackbone,file_sha256
 from chain_crf.counts import CountBigramHead
 from chain_crf.data import atomic_json,load_token_data,canonical_hash
 from chain_crf.generation import generate,denoising,token_statistics,clean_token_ids
+from chain_crf.profiling import summarize_trace,format_stage_report
 from scripts.train_chain_crf import make_head
 
 
@@ -265,7 +266,8 @@ def main(argv=None):
     source_root=Path(__file__).resolve().parents[1]
     source_files=['scripts/evaluate_chain_crf.py','scripts/train_chain_crf.py',
                   'chain_crf/generation.py','chain_crf/core.py', 'chain_crf/cuda_forward.py','chain_crf/heads.py',
-                  'chain_crf/counts.py','chain_crf/backbone.py','chain_crf/data.py','models/dit.py']
+                  'chain_crf/counts.py','chain_crf/backbone.py','chain_crf/data.py','models/dit.py',
+                  'chain_crf/profiling.py']
     if args.inference == 'segments':
         source_files.append('chain_crf/segments.py')
     manifest={'config':configuration,'backbone':model.provenance,'head':head_info,
@@ -346,18 +348,17 @@ def main(argv=None):
             # gaps. Keep raw kernels for PyTorch's device-time table totals.
             averages[:]=[event for event in averages if event.device_type.name=='CPU'
                          or not event.key.startswith(('mdlm.','crf.','generation.'))]
-            stages=[{'stage':event.key,'calls':event.count,
-                     'cpu_total_ms':event.cpu_time_total/1000,
-                     'device_total_ms':event.device_time_total/1000}
-                    for event in averages if event.key.startswith(('mdlm.','crf.','generation.'))]
+            # Driver-launched kernels (e.g. Triton) are not reliably attached
+            # to the native CPU event tree. Use raw launch correlations for
+            # every stage, including parents, so no work is lost/double-added.
+            with (args.output/'profile.json').open() as trace_file:
+                summary=summarize_trace(json.load(trace_file))
+            stages=summary['stages']
             atomic_json({'batch_offset':offset,'draw_offset':args.sample_offset+offset,
-                         'device':args.device,'stages':stages,
-                         'note':'CPU totals include dispatch/waits; device totals sum associated kernel durations. Nested regions overlap. Do not add CPU and GPU times. Profiling adds overhead.'},
+                         'device':args.device,**summary},
                         args.output/'profile-stages.json')
-            report='Profiling adds overhead; these are not clean benchmark timings.\n'
-            report+='Named regions: inclusive CPU / summed device kernel milliseconds (nested regions overlap)\n'
-            report+='\n'.join(f"{s['stage']}: {s['cpu_total_ms']:.3f} / {s['device_total_ms']:.3f} ms ({s['calls']} calls)"
-                              for s in stages)
+            report=format_stage_report(summary)
+            report+='\n\nNative operator tables use PyTorch attribution, which may misassign custom kernels. Use the corrected stage table above for stage totals.\n'
             report+='\n\nTop operators by self CPU time\n'+averages.table(sort_by='self_cpu_time_total',row_limit=30)
             if torch.device(args.device).type=='cuda':
                 report+='\n\nTop operators by self device time\n'+averages.table(sort_by='self_device_time_total',row_limit=30)

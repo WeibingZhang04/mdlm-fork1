@@ -129,6 +129,9 @@ def build_candidates(log_probs: Tensor, masked_input: Tensor, mask_id: int, k: i
     Input probabilities are normalized after excluding the mask token. Tail
     mass is computed with logsumexp of excluded tokens (not 1-sum(topK)), so
     small tails remain numerically stable. k may be zero or >= vocabulary.
+    Top-K and tail reductions run only on masked rows; visible rows are
+    filled directly with their deterministic state. The returned normalized
+    backbone probabilities retain their existing meaning at every position.
     """
     if log_probs.ndim != 3 or masked_input.shape != log_probs.shape[:2]:
         raise ValueError("log_probs [B,L,V] and masked_input [B,L] are required")
@@ -143,30 +146,39 @@ def build_candidates(log_probs: Tensor, masked_input: Tensor, mask_id: int, k: i
     # Observed MDLM rows may be point masses. A visible mask-token point mass
     # is invalid; well-formed visible rows and all masked rows normalize here.
     lp = lp - norm
-    # Ask for one extra item and remove MASK explicitly. Merely assigning it
-    # -inf is insufficient when other real tokens also have zero probability:
-    # topk can break -inf ties by returning MASK instead of a real token.
-    with torch.profiler.record_function('crf.topk'):
-        extra_values, extra_ids = torch.topk(lp, k + 1, dim=-1)
-    order = torch.arange(k + 1, device=lp.device)
-    mask_position = torch.where(extra_ids.eq(mask_id), order, k + 1).amin(-1, keepdim=True)
-    keep = torch.arange(k, device=lp.device).expand(*lp.shape[:2], k)
-    keep = keep + keep.ge(mask_position).long()
-    top_values = extra_values.gather(-1, keep)
-    top_ids = extra_ids.gather(-1, keep)
-    with torch.profiler.record_function('crf.tail_mass'):
-        tail = lp.clone()
-        tail.scatter_(-1, top_ids, -torch.inf)
-        tail_mass = _logsumexp(tail, -1)
-    ids = torch.cat((top_ids, torch.full_like(masked_input.unsqueeze(-1), -1)), -1)
-    unary = torch.cat((top_values, tail_mass.unsqueeze(-1)), -1)
     masked = masked_input.eq(mask_id)
-    visible_ids = torch.full_like(ids, -1)
-    visible_ids[..., 0] = masked_input
-    visible_unary = torch.full_like(unary, -torch.inf)
-    visible_unary[..., 0] = 0.
-    ids = torch.where(masked.unsqueeze(-1), ids, visible_ids)
-    unary = torch.where(masked.unsqueeze(-1), unary, visible_unary)
+    active_rows = masked.reshape(-1).nonzero(as_tuple=False).squeeze(-1)
+    ids = masked_input.new_full((*masked_input.shape, k + 1), -1)
+    ids[..., 0] = masked_input
+    unary = lp.new_full(ids.shape, -torch.inf)
+    unary[..., 0] = 0.
+    if active_rows.numel():
+        flat_lp = lp.reshape(-1, vocab)
+        # Avoid copying the whole vocabulary tensor at the fully masked step.
+        active_lp = (flat_lp if active_rows.numel() == masked.numel()
+                     else flat_lp.index_select(0, active_rows))
+        # Ask for one extra item and remove MASK explicitly. Merely assigning
+        # it -inf is insufficient when topk breaks ties among impossible tokens.
+        with torch.profiler.record_function('crf.topk'):
+            extra_values, extra_ids = torch.topk(active_lp, k + 1, dim=-1)
+        order = torch.arange(k + 1, device=lp.device)
+        mask_position = torch.where(extra_ids.eq(mask_id), order, k + 1).amin(-1, keepdim=True)
+        keep = torch.arange(k, device=lp.device).expand(active_rows.numel(), k)
+        keep = keep + keep.ge(mask_position).long()
+        top_values = extra_values.gather(-1, keep)
+        top_ids = extra_ids.gather(-1, keep)
+        with torch.profiler.record_function('crf.tail_mass'):
+            tail = active_lp.clone()
+            tail.scatter_(-1, top_ids, -torch.inf)
+            tail_mass = _logsumexp(tail, -1)
+        active_ids = torch.cat((top_ids, top_ids.new_full((active_rows.numel(), 1), -1)), -1)
+        active_unary = torch.cat((top_values, tail_mass.unsqueeze(-1)), -1)
+        ids.view(-1, k + 1).index_copy_(0, active_rows, active_ids)
+        unary.view(-1, k + 1).index_copy_(0, active_rows, active_unary)
+    elif lp.requires_grad:
+        # Preserve a zero gradient to the backbone for an entirely clamped
+        # chain. An empty sum avoids multiplying any -inf values by zero.
+        unary = unary + lp[..., :0].sum()
     gold_states = gold_tail = None
     if gold is not None:
         if gold.shape != masked_input.shape:
@@ -179,6 +191,7 @@ def build_candidates(log_probs: Tensor, masked_input: Tensor, mask_id: int, k: i
         explicit = matches.any(-1)
         gold_states = torch.where(explicit, matches.long().argmax(-1), torch.full_like(gold, k))
         gold_lp = lp.gather(-1, gold.unsqueeze(-1)).squeeze(-1)
+        tail_mass = unary[..., -1]
         # Avoid undefined -inf - -inf on unused states of point-mass rows.
         is_tail = masked & ~explicit & torch.isfinite(tail_mass)
         numerator = torch.where(is_tail, gold_lp, torch.zeros_like(gold_lp))

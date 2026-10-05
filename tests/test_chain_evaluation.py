@@ -80,6 +80,16 @@ def test_profile_preserves_draws_and_excludes_warmup_and_later_batches(tmp_path,
                 'crf.forward_filter','crf.backward_sample','crf.residual_expand'}<=stages.keys()
     trace=json.loads((profiled/'profile.json').read_text())
     assert 'mdlm.forward' in {event.get('name') for event in trace['traceEvents']}
+    assert summary['attribution']['method']=='cuda_launch_correlation_v1'
+    assert summary['attribution']['missing_launch']['events']==0
+    assert summary['attribution']['ambiguous_launch']['events']==0
+    if device=='cuda' and mode=='count':
+        fused=[e for e in trace['traceEvents']
+               if e.get('cat')=='kernel' and e.get('name')=='_forward_kernel']
+        assert fused  # Ensure this exercises actual driver-launched kernels.
+        assert stages['crf.forward_filter']['device_kernel_ms']==pytest.approx(
+            sum(e['dur'] for e in fused)/1000)
+        assert stages['crf.inference']['device_kernel_ms']>=stages['crf.forward_filter']['device_kernel_ms']
     assert 'Profiling adds overhead' in (profiled/'profile.txt').read_text()
     assert json.loads((profiled/'metrics.json').read_text())['contains_profiled_batches']
     assert not (plain/'profile.json').exists()
