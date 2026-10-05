@@ -52,6 +52,47 @@ def test_negative_offset_rejected_before_creating_output(tmp_path):
     assert not output.exists()
 
 
+@pytest.mark.parametrize('mode,inference,device', [('backbone','dense','cpu'), ('count','dense','cpu'),
+                                                ('count','segments','cpu'), ('count','dense','cuda')])
+def test_profile_preserves_draws_and_excludes_warmup_and_later_batches(tmp_path,mode,inference,device):
+    import torch
+    from chain_crf.counts import CountBigramHead
+
+    if device=='cuda' and not torch.cuda.is_available():
+        pytest.skip('CUDA profiling requires a GPU')
+    extra=['--mode',mode,'--inference',inference,'--device',device,'--warmup','1']
+    if mode=='count':
+        counts=tmp_path/'counts.pt'
+        CountBigramHead(17).fit([[0,1,2,3,4]]).save(counts)
+        extra+=['--counts',str(counts)]
+    plain,profiled=tmp_path/'plain',tmp_path/'profiled'
+    main(arguments(plain)+extra)
+    main(arguments(profiled)+extra+['--profile'])
+    rows=read_records(profiled)
+    assert [r['token_ids'] for r in rows]==[r['token_ids'] for r in read_records(plain)]
+    assert [r['profiled'] for r in rows]==[True,False,False,False]
+    summary=json.loads((profiled/'profile-stages.json').read_text())
+    stages={s['stage']:s for s in summary['stages']}
+    assert len(stages)==len(summary['stages'])  # CUDA annotations must not duplicate regions.
+    assert stages['mdlm.forward']['calls']==2  # Two steps, one batch; no warmup.
+    if mode=='count':
+        assert {'crf.candidates','crf.topk','crf.tail_mass','crf.potentials',
+                'crf.forward_filter','crf.backward_sample','crf.residual_expand'}<=stages.keys()
+    trace=json.loads((profiled/'profile.json').read_text())
+    assert 'mdlm.forward' in {event.get('name') for event in trace['traceEvents']}
+    assert 'Profiling adds overhead' in (profiled/'profile.txt').read_text()
+    assert json.loads((profiled/'metrics.json').read_text())['contains_profiled_batches']
+    assert not (plain/'profile.json').exists()
+
+
+@pytest.mark.parametrize('flag', ['--score-only','--denoise-only'])
+def test_profile_requires_generation(tmp_path,flag):
+    output=tmp_path/'invalid'
+    with pytest.raises(ValueError,match='requires generation'):
+        main(arguments(output)+['--profile',flag])
+    assert not output.exists()
+
+
 @pytest.mark.parametrize('saved_count',[1,4])
 def test_partial_batch_replays_original_draws_before_appending(tmp_path,saved_count):
     output=tmp_path/'batched'

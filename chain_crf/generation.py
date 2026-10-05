@@ -103,46 +103,54 @@ def generate(backbone, head=None, mode='backbone', *, length=256, steps=16,
         t = torch.full((batch_size,), 1.-committed/length, device=device)
         synchronize(device)
         before = time.perf_counter()
-        prediction = backbone(tokens, t)
-        synchronize(device)
+        with torch.profiler.record_function('mdlm.forward'):
+            prediction = backbone(tokens, t)
+            synchronize(device)
         backbone_seconds += time.perf_counter()-before
         calls += 1
         before = time.perf_counter()
         if mode == 'backbone':
-            # Only sample scheduled tokens: native factorization needs no DP
-            # or candidate construction. Sampling uses FP64 probabilities.
-            positions = order[:, committed:next_count]
-            logits = prediction['log_probs'].gather(
-                1, positions.unsqueeze(-1).expand(-1,-1,backbone.vocab_size)) / temperature
-            logits[..., backbone.mask_id] = -torch.inf
-            drawn = torch.multinomial(logits.double().softmax(-1).reshape(-1,backbone.vocab_size),
-                                      1,generator=generator).reshape(batch_size,-1)
-            tokens.scatter_(1,positions,drawn)
+            with torch.profiler.record_function('generation.backbone_sample'):
+                # Only sample scheduled tokens: native factorization needs no DP
+                # or candidate construction. Sampling uses FP64 probabilities.
+                positions = order[:, committed:next_count]
+                logits = prediction['log_probs'].gather(
+                    1, positions.unsqueeze(-1).expand(-1,-1,backbone.vocab_size)) / temperature
+                logits[..., backbone.mask_id] = -torch.inf
+                drawn = torch.multinomial(logits.double().softmax(-1).reshape(-1,backbone.vocab_size),
+                                          1,generator=generator).reshape(batch_size,-1)
+                tokens.scatter_(1,positions,drawn)
         else:
-            packet = build_candidates(prediction['log_probs']/temperature,tokens,backbone.mask_id,k)
-            unary, edge = potentials(packet,head,mode,prediction['hidden'],t)
-            retained_mass.append(float((1-packet.unary[:,:,-1].exp())[packet.masked].mean()))
-            if mode == 'independent':
-                probabilities = unary.double().softmax(-1)
-                states = torch.multinomial(probabilities.reshape(-1,probabilities.shape[-1]),
-                                           1,generator=generator).reshape(tokens.shape)
-            elif sampling == 'marginal':
-                if inference == 'segments':
-                    from chain_crf.segments import segmented_marginals
-                    probabilities = segmented_marginals(unary,edge,packet.masked).double()
+            with torch.profiler.record_function('crf.candidates'):
+                packet = build_candidates(prediction['log_probs']/temperature,tokens,backbone.mask_id,k)
+            with torch.profiler.record_function('crf.potentials'):
+                unary, edge = potentials(packet,head,mode,prediction['hidden'],t)
+            with torch.profiler.record_function('crf.retained_mass'):
+                retained_mass.append(float((1-packet.unary[:,:,-1].exp())[packet.masked].mean()))
+            with torch.profiler.record_function('crf.inference'):
+                if mode == 'independent':
+                    probabilities = unary.double().softmax(-1)
+                    states = torch.multinomial(probabilities.reshape(-1,probabilities.shape[-1]),
+                                               1,generator=generator).reshape(tokens.shape)
+                elif sampling == 'marginal':
+                    if inference == 'segments':
+                        from chain_crf.segments import segmented_marginals
+                        probabilities = segmented_marginals(unary,edge,packet.masked).double()
+                    else:
+                        probabilities = chain_marginals(unary,edge).double()
+                    states = torch.multinomial(probabilities.reshape(-1,probabilities.shape[-1]),
+                                               1,generator=generator).reshape(tokens.shape)
                 else:
-                    probabilities = chain_marginals(unary,edge).double()
-                states = torch.multinomial(probabilities.reshape(-1,probabilities.shape[-1]),
-                                           1,generator=generator).reshape(tokens.shape)
-            else:
-                if inference == 'segments':
-                    from chain_crf.segments import sample_segmented_chain
-                    states = sample_segmented_chain(unary,edge,packet.masked,generator=generator)
-                else:
-                    states = sample_chain(unary,edge,generator=generator)
-            drawn = sample_candidate_tokens(packet,states,generator=generator)
-            positions = order[:,committed:next_count]
-            tokens.scatter_(1,positions,drawn.gather(1,positions))
+                    if inference == 'segments':
+                        from chain_crf.segments import sample_segmented_chain
+                        states = sample_segmented_chain(unary,edge,packet.masked,generator=generator)
+                    else:
+                        states = sample_chain(unary,edge,generator=generator)
+            with torch.profiler.record_function('crf.residual_expand'):
+                drawn = sample_candidate_tokens(packet,states,generator=generator)
+            with torch.profiler.record_function('generation.commit'):
+                positions = order[:,committed:next_count]
+                tokens.scatter_(1,positions,drawn.gather(1,positions))
         committed = next_count
         synchronize(device)
         sampler_seconds += time.perf_counter()-before

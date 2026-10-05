@@ -29,9 +29,11 @@ class GlobalPairHead(nn.Module):
 
     def forward(self, candidate_ids: Tensor, hidden: Optional[Tensor] = None,
                 time: Optional[Tensor] = None) -> Tensor:
-        left = _embeddings(self.left, candidate_ids[:, :-1]).float()
-        right = _embeddings(self.right, candidate_ids[:, 1:]).float()
-        return torch.einsum("blir,bljr->blij", left, right)
+        with torch.profiler.record_function('crf.factor_lookup'):
+            left = _embeddings(self.left, candidate_ids[:, :-1]).float()
+            right = _embeddings(self.right, candidate_ids[:, 1:]).float()
+        with torch.profiler.record_function('crf.pair_scores'):
+            return torch.einsum("blir,bljr->blij", left, right)
 
 
 class ContextualPairHead(GlobalPairHead):
@@ -73,12 +75,15 @@ class ContextualPairHead(GlobalPairHead):
         if time.numel() == 1:
             time = time.expand(b)
         time = time.reshape(b, 1, 1).expand(b, max(length - 1, 0), 1)
-        normalized = self.norm(hidden.to(self.norm.weight.dtype))
-        gate_input = torch.cat((normalized[:, :-1], normalized[:, 1:], time.to(normalized.dtype)), -1)
-        gate = self.gate(gate_input).float()
-        left = _embeddings(self.left, candidate_ids[:, :-1]).float()
-        right = _embeddings(self.right, candidate_ids[:, 1:]).float()
-        return torch.einsum("blir,bljr->blij", left * (1. + gate.unsqueeze(-2)), right)
+        with torch.profiler.record_function('crf.context_gate'):
+            normalized = self.norm(hidden.to(self.norm.weight.dtype))
+            gate_input = torch.cat((normalized[:, :-1], normalized[:, 1:], time.to(normalized.dtype)), -1)
+            gate = self.gate(gate_input).float()
+        with torch.profiler.record_function('crf.factor_lookup'):
+            left = _embeddings(self.left, candidate_ids[:, :-1]).float()
+            right = _embeddings(self.right, candidate_ids[:, 1:]).float()
+        with torch.profiler.record_function('crf.pair_scores'):
+            return torch.einsum("blir,bljr->blij", left * (1. + gate.unsqueeze(-2)), right)
 
 
 class IndependentHead(nn.Module):

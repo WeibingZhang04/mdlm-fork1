@@ -31,9 +31,10 @@ def _inputs(unary: Tensor, edge: Tensor):
 
 
 def _forward(unary: Tensor, edge: Tensor):
-    messages = [unary[:, 0]]
-    for pos in range(1, unary.shape[1]):
-        messages.append(unary[:, pos] + _logsumexp(messages[-1].unsqueeze(-1) + edge[:, pos - 1], -2))
+    with torch.profiler.record_function('crf.forward_filter'):
+        messages = [unary[:, 0]]
+        for pos in range(1, unary.shape[1]):
+            messages.append(unary[:, pos] + _logsumexp(messages[-1].unsqueeze(-1) + edge[:, pos - 1], -2))
     return messages
 
 
@@ -63,9 +64,10 @@ def chain_log_marginals(unary: Tensor, edge: Tensor) -> Tensor:
     log_z = _logsumexp(alpha[-1], -1)
     beta = torch.zeros_like(unary[:, -1])
     marginals = [alpha[-1] - log_z[:, None]]
-    for pos in range(unary.shape[1] - 2, -1, -1):
-        beta = _logsumexp(edge[:, pos] + (unary[:, pos + 1] + beta).unsqueeze(-2), -1)
-        marginals.append(alpha[pos] + beta - log_z[:, None])
+    with torch.profiler.record_function('crf.backward_messages'):
+        for pos in range(unary.shape[1] - 2, -1, -1):
+            beta = _logsumexp(edge[:, pos] + (unary[:, pos + 1] + beta).unsqueeze(-2), -1)
+            marginals.append(alpha[pos] + beta - log_z[:, None])
     return torch.stack(marginals[::-1], dim=1)
 
 
@@ -79,12 +81,13 @@ def sample_chain(unary: Tensor, edge: Tensor, generator: Optional[torch.Generato
     """Forward filtering/backward sampling; returns a joint draw [B,L]."""
     unary, edge = _inputs(unary, edge)
     alpha = _forward(unary, edge)
-    states = torch.empty(unary.shape[:2], dtype=torch.long, device=unary.device)
-    states[:, -1] = torch.multinomial(alpha[-1].double().softmax(-1), 1, generator=generator).squeeze(-1)
-    for pos in range(unary.shape[1] - 2, -1, -1):
-        selected_edge = edge[:, pos].gather(-1, states[:, pos + 1, None, None].expand(-1, unary.shape[-1], 1)).squeeze(-1)
-        probs = (alpha[pos] + selected_edge).double().softmax(-1)
-        states[:, pos] = torch.multinomial(probs, 1, generator=generator).squeeze(-1)
+    with torch.profiler.record_function('crf.backward_sample'):
+        states = torch.empty(unary.shape[:2], dtype=torch.long, device=unary.device)
+        states[:, -1] = torch.multinomial(alpha[-1].double().softmax(-1), 1, generator=generator).squeeze(-1)
+        for pos in range(unary.shape[1] - 2, -1, -1):
+            selected_edge = edge[:, pos].gather(-1, states[:, pos + 1, None, None].expand(-1, unary.shape[-1], 1)).squeeze(-1)
+            probs = (alpha[pos] + selected_edge).double().softmax(-1)
+            states[:, pos] = torch.multinomial(probs, 1, generator=generator).squeeze(-1)
     return states
 
 
@@ -131,16 +134,18 @@ def build_candidates(log_probs: Tensor, masked_input: Tensor, mask_id: int, k: i
     # Ask for one extra item and remove MASK explicitly. Merely assigning it
     # -inf is insufficient when other real tokens also have zero probability:
     # topk can break -inf ties by returning MASK instead of a real token.
-    extra_values, extra_ids = torch.topk(lp, k + 1, dim=-1)
+    with torch.profiler.record_function('crf.topk'):
+        extra_values, extra_ids = torch.topk(lp, k + 1, dim=-1)
     order = torch.arange(k + 1, device=lp.device)
     mask_position = torch.where(extra_ids.eq(mask_id), order, k + 1).amin(-1, keepdim=True)
     keep = torch.arange(k, device=lp.device).expand(*lp.shape[:2], k)
     keep = keep + keep.ge(mask_position).long()
     top_values = extra_values.gather(-1, keep)
     top_ids = extra_ids.gather(-1, keep)
-    tail = lp.clone()
-    tail.scatter_(-1, top_ids, -torch.inf)
-    tail_mass = _logsumexp(tail, -1)
+    with torch.profiler.record_function('crf.tail_mass'):
+        tail = lp.clone()
+        tail.scatter_(-1, top_ids, -torch.inf)
+        tail_mass = _logsumexp(tail, -1)
     ids = torch.cat((top_ids, torch.full_like(masked_input.unsqueeze(-1), -1)), -1)
     unary = torch.cat((top_values, tail_mass.unsqueeze(-1)), -1)
     masked = masked_input.eq(mask_id)

@@ -220,7 +220,11 @@ def main(argv=None):
     p.add_argument('--resume',action='store_true')
     p.add_argument('--synthetic',action='store_true')
     p.add_argument('--warmup',type=int,default=1)
+    p.add_argument('--profile',action='store_true',
+                   help='Profile the first generated batch after warmup; save profile.json, profile.txt and profile-stages.json. Adds timing overhead.')
     args=p.parse_args(argv)
+    if args.profile and (args.score_only or args.denoise_only):
+        raise ValueError('--profile requires generation, not --score-only or --denoise-only')
     if args.samples<1 or args.batch_size<1 or args.dev_examples<1:
         raise ValueError('Sample, batch and development counts must be positive')
     if args.sample_offset<0:
@@ -323,10 +327,48 @@ def main(argv=None):
     # Token RNG is seeded once per original batch. If interruption left only
     # some rows on disk, replay that entire batch at its original draw offset;
     # starting a new batch at len(records) would change the remaining draws.
+    profile_pending=args.profile
     for offset,size in batches:
         if offset+size<=len(records):
             continue
-        tokens,timing=draw_batch(offset,size,args.sample_offset+offset)
+        if profile_pending:
+            activities=[torch.profiler.ProfilerActivity.CPU]
+            if torch.device(args.device).type=='cuda':
+                activities.append(torch.profiler.ProfilerActivity.CUDA)
+            # Warmup/model loading are outside this scope. Keep traces bounded
+            # to one batch; use --steps 1 --samples 1 for an initial profile.
+            with torch.profiler.profile(activities=activities,record_shapes=True,
+                                        profile_memory=True) as profiler:
+                tokens,timing=draw_batch(offset,size,args.sample_offset+offset)
+            profiler.export_chrome_trace(str(args.output/'profile.json'))
+            averages=profiler.key_averages()
+            # CUDA range annotations duplicate CPU regions and include idle
+            # gaps. Keep raw kernels for PyTorch's device-time table totals.
+            averages[:]=[event for event in averages if event.device_type.name=='CPU'
+                         or not event.key.startswith(('mdlm.','crf.','generation.'))]
+            stages=[{'stage':event.key,'calls':event.count,
+                     'cpu_total_ms':event.cpu_time_total/1000,
+                     'device_total_ms':event.device_time_total/1000}
+                    for event in averages if event.key.startswith(('mdlm.','crf.','generation.'))]
+            atomic_json({'batch_offset':offset,'draw_offset':args.sample_offset+offset,
+                         'device':args.device,'stages':stages,
+                         'note':'CPU totals include dispatch/waits; device totals sum associated kernel durations. Nested regions overlap. Do not add CPU and GPU times. Profiling adds overhead.'},
+                        args.output/'profile-stages.json')
+            report='Profiling adds overhead; these are not clean benchmark timings.\n'
+            report+='Named regions: inclusive CPU / summed device kernel milliseconds (nested regions overlap)\n'
+            report+='\n'.join(f"{s['stage']}: {s['cpu_total_ms']:.3f} / {s['device_total_ms']:.3f} ms ({s['calls']} calls)"
+                              for s in stages)
+            report+='\n\nTop operators by self CPU time\n'+averages.table(sort_by='self_cpu_time_total',row_limit=30)
+            if torch.device(args.device).type=='cuda':
+                report+='\n\nTop operators by self device time\n'+averages.table(sort_by='self_device_time_total',row_limit=30)
+            (args.output/'profile.txt').write_text(report+'\n')
+            print(json.dumps({'profile':str(args.output/'profile.txt'),'stages':stages,
+                              'timing_note':'Profiled batch includes profiler overhead'}),flush=True)
+            timing['profiled']=True
+            profile_pending=False
+        else:
+            tokens,timing=draw_batch(offset,size,args.sample_offset+offset)
+            timing['profiled']=False
         batch=[]
         for index,row in enumerate(tokens.cpu().tolist()):
             local_id=offset+index
@@ -358,6 +400,7 @@ def main(argv=None):
                           'replayed_existing_rows':overlap}),flush=True)
     elapsed=sum(r['elapsed_seconds'] for r in records)
     result={'samples':len(records),'elapsed_seconds':elapsed,'seconds_per_sample':elapsed/len(records),
+            'contains_profiled_batches':any(r.get('profiled',False) for r in records),
             'backbone_seconds':sum(r['backbone_seconds'] for r in records),
             'sampling_seconds':sum(r['sampling_seconds'] for r in records),
             'backbone_calls_per_sample':sum(r['backbone_calls'] for r in records)/len(records),
