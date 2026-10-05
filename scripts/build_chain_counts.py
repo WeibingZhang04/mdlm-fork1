@@ -40,7 +40,7 @@ def main():
     else:
         payload = torch.load(args.data, map_location='cpu', weights_only=True)
         source = payload.get('provenance', {})
-        if source.get('split') in ('dev', 'test', 'validation'):
+        if source.get('split', 'train') != 'train':
             raise ValueError('Count fitting requires training data')
         if payload['tokens'].dtype!=torch.long or payload['tokens'].ndim!=2:
             raise ValueError('Prepared count tokens must be a 2-D int64 tensor')
@@ -67,7 +67,7 @@ def main():
     model.save(args.output)
     result = dict(seen, data_sha256=file_sha256(args.data), counts_sha256=file_sha256(args.output),
                   source=source, distinct_pairs=model.pair_keys.numel(),
-                  boundary_rule='No edges between input rows; document/chunk boundaries are never joined.')
+                  boundary_rule='No edges between rows; within-row document separators remain tokens under the prepared-data policy.')
     atomic_json(result, args.output.with_suffix('.json'))
     print(json.dumps(result, indent=2))
 

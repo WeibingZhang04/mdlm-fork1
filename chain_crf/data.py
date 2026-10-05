@@ -47,6 +47,25 @@ def atomic_json(payload, path):
             os.unlink(temporary)
 
 
+def row_document_identity(value):
+    """Keep every source document of a packed row, while accepting legacy IDs."""
+    if isinstance(value, str) and value:
+        return value
+    if (isinstance(value, (list, tuple)) and value
+            and all(isinstance(doc, str) and doc for doc in value)
+            and len(set(value)) == len(value)):
+        return tuple(value)
+    raise ValueError("Invalid document identity: need an ID or distinct source document IDs")
+
+
+def source_document_set(rows):
+    result = set()
+    for value in rows:
+        value = row_document_identity(value)
+        result.update((value,) if isinstance(value, str) else value)
+    return result
+
+
 def load_token_data(path, *, length, vocab_size, mask_id, max_examples=None):
     """Read a prepared .pt or document-identified .jsonl; never invent IDs."""
     path = Path(path)
@@ -58,9 +77,8 @@ def load_token_data(path, *, length, vocab_size, mask_id, max_examples=None):
                     continue
                 row = json.loads(line)
                 ids = row.get("input_ids")
-                doc = row.get("document_id", row.get("source_document_sha256"))
-                if not isinstance(doc, str) or not doc:
-                    raise ValueError("Every training row needs a source document identity")
+                doc = row_document_identity(row.get("document_ids",
+                    row.get("document_id", row.get("source_document_sha256"))))
                 if not isinstance(ids, list) or any(type(v) is not int for v in ids):
                     raise ValueError("Every input_ids row must be a list of integer token IDs")
                 if len(ids) < length:
@@ -82,13 +100,12 @@ def load_token_data(path, *, length, vocab_size, mask_id, max_examples=None):
         raise ValueError("Invalid tokens/document_ids")
     if bool(((tokens < 0) | (tokens >= vocab_size) | (tokens == mask_id)).any()):
         raise ValueError("Clean training data contains invalid tokens or absorbing masks")
-    if any(not isinstance(doc, str) or not doc for doc in docs):
-        raise ValueError("Invalid document identity")
+    docs = [row_document_identity(doc) for doc in docs]
     return tokens, docs, source
 
 
 def assert_disjoint(train, train_docs, dev, dev_docs):
-    if set(train_docs) & set(dev_docs):
+    if source_document_set(train_docs) & source_document_set(dev_docs):
         raise ValueError("Training/development document overlap")
     train_hash = {hashlib.sha256(row.numpy().tobytes()).hexdigest() for row in train.cpu()}
     if any(hashlib.sha256(row.numpy().tobytes()).hexdigest() in train_hash for row in dev.cpu()):
