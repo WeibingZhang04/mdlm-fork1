@@ -22,14 +22,14 @@ common=(
   --cache-dir "$HF_HOME/hub"
   --device cuda
   --length 1024
-  --steps 16
+  --steps 32
   --samples 200
   --batch-size 1
   --k 64
   --sampling joint
-  --inference segment
+  --inference segments
   --warmup 1
-  --sample-offset 93000000
+  --sample-offset 200
   --score-gpt2
 )
 
