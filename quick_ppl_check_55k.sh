@@ -7,7 +7,7 @@ source /opt/anaconda3/etc/profile.d/conda.sh
 conda activate mdlm-crf
 
 base=/u401/n23zhang/rework-data
-heads="$base/runs/draft-full-scale-training/preliminary-checkpoints_2026_10_01_14_29_45_UTC"
+heads="$base/runs/draft-full-scale-training/train_2026_10_01_05_46_13_UTC"
 counts="$base/runs/draft-full-scale-training/train_2026_10_01_05_46_13_UTC/counts/owt-counts.pt"
 
 export HF_HOME="$base/hf-cache"
@@ -50,14 +50,14 @@ time_count=$SECONDS
 echo "Bigram count elapsed: $((time_count - time_baseline)) seconds"
 
 python -u scripts/evaluate_chain_crf.py "${common[@]}" \
-  --mode global --head "$heads/global-step-30000.pt" \
+  --mode global --head "$heads/global/best.pt" \
   --output "$out/global"
 
 time_global=$SECONDS
 echo "Global CRF elapsed: $((time_global - time_count)) seconds"
 
 python -u scripts/evaluate_chain_crf.py "${common[@]}" \
-  --mode contextual --head "$heads/contextual-step-30000.pt" \
+  --mode contextual --head "$heads/contextual/best.pt" \
   --output "$out/contextual"
 
 time_contextual=$SECONDS

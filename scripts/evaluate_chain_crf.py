@@ -184,6 +184,18 @@ def score_gpt2(records,device,model_name='gpt2-large',
             'samples':individual}
 
 
+def parse_vocab_cap(value):
+    if value.lower() == 'none':
+        return None
+    try:
+        cap = int(value)
+    except ValueError:
+        raise argparse.ArgumentTypeError('vocabulary cap must be none or a positive integer') from None
+    if cap < 1:
+        raise argparse.ArgumentTypeError('vocabulary cap must be none or a positive integer')
+    return cap
+
+
 def main(argv=None):
     p=argparse.ArgumentParser(description=__doc__)
     p.add_argument('--output',type=Path,required=True)
@@ -204,6 +216,10 @@ def main(argv=None):
                    help='First draw ID; use disjoint IDs for screening and final evaluation')
     p.add_argument('--batch-size',type=int,default=1)
     p.add_argument('--k',type=int,default=64)
+    p.add_argument('--vocab-cap',type=parse_vocab_cap,default=None,metavar='none|C',
+                   help='Generation support: none (default) keeps the full vocabulary; a positive integer '
+                        'restricts all modes, including backbone, to the top C clean tokens per position. '
+                        'Independent of --k; CRF residuals cover allowed tokens beyond --k.')
     p.add_argument('--temperature',type=float,default=1.)
     p.add_argument('--device',default='cuda')
     p.add_argument('--prefix',default='')
@@ -226,6 +242,8 @@ def main(argv=None):
     args=p.parse_args(argv)
     if args.profile and (args.score_only or args.denoise_only):
         raise ValueError('--profile requires generation, not --score-only or --denoise-only')
+    if args.vocab_cap is not None and (args.dev_data or args.denoise_only):
+        raise ValueError('--vocab-cap is generation-only; omit --dev-data/--denoise-only for capped runs')
     if args.samples<1 or args.batch_size<1 or args.dev_examples<1:
         raise ValueError('Sample, batch and development counts must be positive')
     if args.sample_offset<0:
@@ -298,7 +316,8 @@ def main(argv=None):
             raise ValueError('--denoise-only needs --dev-data')
         return
     kwargs=dict(length=args.length,steps=args.steps,k=args.k,sampling=args.sampling,
-                temperature=args.temperature,device=args.device,prefix=prefix,inference=args.inference)
+                temperature=args.temperature,device=args.device,prefix=prefix,inference=args.inference,
+                vocab_cap=args.vocab_cap)
     batches=(continuation_batch_plan(continuations,args.batch_size) if continuations is not None
              else [(offset,min(args.batch_size,args.samples-offset))
                    for offset in range(0,args.samples,args.batch_size)])
@@ -401,6 +420,7 @@ def main(argv=None):
                           'replayed_existing_rows':overlap}),flush=True)
     elapsed=sum(r['elapsed_seconds'] for r in records)
     result={'samples':len(records),'elapsed_seconds':elapsed,'seconds_per_sample':elapsed/len(records),
+            'vocab_cap':args.vocab_cap,'k':args.k,
             'contains_profiled_batches':any(r.get('profiled',False) for r in records),
             'backbone_seconds':sum(r['backbone_seconds'] for r in records),
             'sampling_seconds':sum(r['sampling_seconds'] for r in records),

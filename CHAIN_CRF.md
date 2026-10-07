@@ -168,6 +168,37 @@ that can use the time spent on pair scoring and DP. Prefix continuation is
 available through `--prefix`. Use a separate output directory per configuration;
 `--resume` verifies its complete manifest.
 
+Vocabulary truncation and explicit CRF states are separate generation options:
+
+| Options | Allowed tokens per masked position | Explicit CRF states and residual |
+|---|---|---|
+| `--vocab-cap none --k 64` (default) | All clean tokens | Top 64 plus the rest of the vocabulary |
+| `--vocab-cap 500 --k 64` | Top 500 by backbone unary probability | Top 64 plus a residual over the other 436 |
+| `--vocab-cap 500 --k 500` | Top 500 | 500 explicit tokens; no residual probability |
+| `--vocab-cap 1000 --k 64` | Top 1,000 | Top 64 plus a residual over the other 936 |
+| `--vocab-cap 2000 --k 64` | Top 2,000 | Top 64 plus a residual over the other 1,936 |
+
+The cap is recomputed at each generation step and masked position, before head
+potentials, excluding MASK and renormalizing the allowed unary probabilities.
+It applies to `backbone`, `count` (bigram), `global`, `contextual`, and
+`independent`. The baseline ignores `--k`, but obeys `--vocab-cap`.
+Observed/prefix tokens stay fixed even when outside the current top-C set.
+Residual expansion samples only allowed non-explicit tokens. Its pair potentials
+remain neutral: full token support is not a full-vocabulary pairwise model.
+Using a cap larger than `--k` therefore differs from a dense CRF with C explicit
+states; to make every allowed token explicit, set `--k` equal to the cap.
+
+Caps must be positive integers or `none`. Caps above the clean vocabulary size
+allow all clean tokens; K is clipped to the allowed size. The residual tensor
+slot remains for compatibility, with zero probability when no tokens remain.
+`mean_retained_mass` for structured draws measures explicit-state unary mass
+within the allowed, renormalized vocabulary, not mass retained before truncation.
+The numeric cap (JSON null for none) is recorded in manifests, sample records,
+and metrics; changing it requires a new output directory. This option is for
+generation only; capped runs reject `--dev-data`/`--denoise-only` to avoid mixing
+them with uncapped denoising diagnostics. Training, reveal scheduling, GPT-2
+scoring, original `main.py`, and the separate sparse-count evaluator are unchanged.
+
 `--inference segments` eliminates clamped positions and samples independent
 contiguous masked runs, absorbing observed boundary factors into their endpoint
 unaries. It preserves the dense model's distribution, not its seed-by-seed

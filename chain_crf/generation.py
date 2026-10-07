@@ -5,7 +5,7 @@ import time
 from collections import Counter
 import torch
 from chain_crf.core import (build_candidates, sample_chain, sample_candidate_tokens,
-                            chain_marginals, chain_log_marginals, gold_log_prob)
+                            chain_marginals, chain_log_marginals, gold_log_prob, topk_clean)
 
 
 def synchronize(device):
@@ -47,7 +47,8 @@ def potentials(packet, head, mode, hidden, time_value):
 @torch.no_grad()
 def generate(backbone, head=None, mode='backbone', *, length=256, steps=16,
              batch_size=1, k=64, sampling='joint', temperature=1., device='cuda',
-             sample_offset=0, prefix=None, inference='dense', prefixes=None):
+             sample_offset=0, prefix=None, inference='dense', prefixes=None,
+             vocab_cap=None):
     """One batch. Schedule randomness is separate from token-draw randomness.
 
     All systems receive the same sample-index-dependent reveal permutation.
@@ -55,6 +56,9 @@ def generate(backbone, head=None, mode='backbone', *, length=256, steps=16,
     DP, stochastic sampling, and token commitment. No final greedy denoise.
     ``prefixes`` accepts one equal-length exact-token prefix per batch row;
     different shapes must be placed in separate batches (never padded).
+    A positive vocab_cap restricts baseline and structured draws to that many
+    top clean tokens at each masked position, separately from CRF k. None
+    preserves full token support; residuals contain only allowed tokens.
     """
     if steps < 1 or length < 1 or temperature <= 0 or batch_size < 1:
         raise ValueError('Positive steps, generated length and temperature required')
@@ -62,6 +66,8 @@ def generate(backbone, head=None, mode='backbone', *, length=256, steps=16,
         raise ValueError('sampling must be joint or marginal')
     if inference not in ('dense', 'segments'):
         raise ValueError('inference must be dense or segments')
+    if vocab_cap is not None and (type(vocab_cap) is not int or vocab_cap < 1):
+        raise ValueError('vocab_cap must be None or a positive integer')
     if prefixes is not None and prefix is not None:
         raise ValueError('Choose shared prefix or per-example prefixes, not both')
     if prefixes is None:
@@ -111,18 +117,25 @@ def generate(backbone, head=None, mode='backbone', *, length=256, steps=16,
         before = time.perf_counter()
         if mode == 'backbone':
             with torch.profiler.record_function('generation.backbone_sample'):
-                # Only sample scheduled tokens: native factorization needs no DP
-                # or candidate construction. Sampling uses FP64 probabilities.
+                # Only sample scheduled tokens; no chain DP is needed.
+                # Sampling uses FP64 probabilities in both vocabulary modes.
                 positions = order[:, committed:next_count]
                 logits = prediction['log_probs'].gather(
                     1, positions.unsqueeze(-1).expand(-1,-1,backbone.vocab_size)) / temperature
                 logits[..., backbone.mask_id] = -torch.inf
-                drawn = torch.multinomial(logits.double().softmax(-1).reshape(-1,backbone.vocab_size),
-                                          1,generator=generator).reshape(batch_size,-1)
+                if vocab_cap is not None:
+                    values, ids = topk_clean(logits, backbone.mask_id, vocab_cap)
+                    states = torch.multinomial(values.double().softmax(-1).reshape(-1,values.shape[-1]),
+                                              1,generator=generator).reshape(*ids.shape[:-1],1)
+                    drawn = ids.gather(-1,states).squeeze(-1)
+                else:
+                    drawn = torch.multinomial(logits.double().softmax(-1).reshape(-1,backbone.vocab_size),
+                                              1,generator=generator).reshape(batch_size,-1)
                 tokens.scatter_(1,positions,drawn)
         else:
             with torch.profiler.record_function('crf.candidates'):
-                packet = build_candidates(prediction['log_probs']/temperature,tokens,backbone.mask_id,k)
+                packet = build_candidates(prediction['log_probs']/temperature,tokens,backbone.mask_id,k,
+                                          vocab_cap=vocab_cap)
             with torch.profiler.record_function('crf.potentials'):
                 unary, edge = potentials(packet,head,mode,prediction['hidden'],t)
             with torch.profiler.record_function('crf.retained_mass'):
@@ -164,7 +177,8 @@ def generate(backbone, head=None, mode='backbone', *, length=256, steps=16,
                     'sampling_seconds':sampler_seconds,'backbone_calls':calls,
                     'samples':batch_size,'generated_tokens':batch_size*length,
                     'mean_retained_mass':sum(retained_mass)/len(retained_mass) if retained_mass else 1.,
-                    'prefix_length':prefix_length,'generated_length':length}
+                    'prefix_length':prefix_length,'generated_length':length,
+                    'vocab_cap':vocab_cap}
 
 
 @torch.no_grad()

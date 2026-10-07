@@ -131,8 +131,19 @@ class CandidateBatch:
     normalized_log_probs: Tensor
 
 
+def topk_clean(log_probs: Tensor, mask_id: int, k: int):
+    """Select exactly K clean-token slots, excluding MASK even in -inf ties."""
+    k = min(k, log_probs.shape[-1] - 1)
+    extra_values, extra_ids = torch.topk(log_probs, k + 1, dim=-1)
+    order = torch.arange(k + 1, device=log_probs.device)
+    mask_position = torch.where(extra_ids.eq(mask_id), order, k + 1).amin(-1, keepdim=True)
+    keep = torch.arange(k, device=log_probs.device).expand(*log_probs.shape[:-1], k)
+    keep = keep + keep.ge(mask_position).long()
+    return extra_values.gather(-1, keep), extra_ids.gather(-1, keep)
+
+
 def build_candidates(log_probs: Tensor, masked_input: Tensor, mask_id: int, k: int,
-                     gold: Optional[Tensor] = None) -> CandidateBatch:
+                     gold: Optional[Tensor] = None, *, vocab_cap: Optional[int] = None) -> CandidateBatch:
     """Build candidates without changing held-out support to include gold.
 
     Input probabilities are normalized after excluding the mask token. Tail
@@ -141,13 +152,19 @@ def build_candidates(log_probs: Tensor, masked_input: Tensor, mask_id: int, k: i
     Top-K and tail reductions run only on masked rows; visible rows are
     filled directly with their deterministic state. The returned normalized
     backbone probabilities retain their existing meaning at every position.
+    A positive vocab_cap C first restricts masked rows to the top C clean
+    tokens and renormalizes. Up to K are explicit; the remaining allowed
+    tokens form the residual. When C <= K, the residual has -inf mass.
+    None preserves full support. Gold outside the cap has zero probability.
     """
     if log_probs.ndim != 3 or masked_input.shape != log_probs.shape[:2]:
         raise ValueError("log_probs [B,L,V] and masked_input [B,L] are required")
     if k < 0 or not 0 <= mask_id < log_probs.shape[-1]:
         raise ValueError("k must be nonnegative and mask_id inside the vocabulary")
+    if vocab_cap is not None and (type(vocab_cap) is not int or vocab_cap < 1):
+        raise ValueError("vocab_cap must be None or a positive integer")
     vocab = log_probs.shape[-1]
-    k = min(k, vocab - 1)
+    k = min(k, vocab - 1, vocab_cap if vocab_cap is not None else vocab - 1)
     dtype = torch.float64 if log_probs.dtype == torch.float64 else torch.float32
     lp = log_probs.to(dtype).clone()
     lp[..., mask_id] = -torch.inf
@@ -169,13 +186,16 @@ def build_candidates(log_probs: Tensor, masked_input: Tensor, mask_id: int, k: i
         # Ask for one extra item and remove MASK explicitly. Merely assigning
         # it -inf is insufficient when topk breaks ties among impossible tokens.
         with torch.profiler.record_function('crf.topk'):
-            extra_values, extra_ids = torch.topk(active_lp, k + 1, dim=-1)
-        order = torch.arange(k + 1, device=lp.device)
-        mask_position = torch.where(extra_ids.eq(mask_id), order, k + 1).amin(-1, keepdim=True)
-        keep = torch.arange(k, device=lp.device).expand(active_rows.numel(), k)
-        keep = keep + keep.ge(mask_position).long()
-        top_values = extra_values.gather(-1, keep)
-        top_ids = extra_ids.gather(-1, keep)
+            if vocab_cap is None:
+                top_values, top_ids = topk_clean(active_lp, mask_id, k)
+            else:
+                cap_values, cap_ids = topk_clean(active_lp, mask_id, vocab_cap)
+                cap_values = cap_values - _logsumexp(cap_values, -1).unsqueeze(-1)
+                # Take explicit states from this same ranked support, so ties
+                # cannot select different tokens at the cap boundary.
+                top_values, top_ids = cap_values[:, :k], cap_ids[:, :k]
+                active_lp = torch.full_like(active_lp, -torch.inf).scatter(-1, cap_ids, cap_values)
+                lp = flat_lp.index_copy(0, active_rows, active_lp).reshape_as(lp)
         with torch.profiler.record_function('crf.tail_mass'):
             tail = active_lp.clone()
             tail.scatter_(-1, top_ids, -torch.inf)
