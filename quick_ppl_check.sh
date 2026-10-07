@@ -23,7 +23,7 @@ common=(
   --device cuda
   --length 1024
   --steps 32
-  --samples 200
+  --samples 20
   --batch-size 1
   --k 64
   --sampling joint
@@ -32,21 +32,37 @@ common=(
   --sample-offset 200
   --score-gpt2
 )
+SECONDS=0
+time0=$SECONDS
+echo "Timing each method: model loading, warmup, generation, and GPT-2-large scoring included."
 
 python -u scripts/evaluate_chain_crf.py "${common[@]}" \
   --mode backbone --output "$out/vanilla"
+
+time_baseline=$SECONDS
+echo "Vanilla baseline elapsed: $((time_baseline - time0)) seconds"
 
 python -u scripts/evaluate_chain_crf.py "${common[@]}" \
   --mode count --counts "$counts" --count-mode pmi --strength 0.1 \
   --output "$out/bigram"
 
+time_count=$SECONDS
+echo "Bigram count elapsed: $((time_count - time_baseline)) seconds"
+
 python -u scripts/evaluate_chain_crf.py "${common[@]}" \
   --mode global --head "$heads/global-step-30000.pt" \
   --output "$out/global"
 
+time_global=$SECONDS
+echo "Global CRF elapsed: $((time_global - time_count)) seconds"
+
 python -u scripts/evaluate_chain_crf.py "${common[@]}" \
   --mode contextual --head "$heads/contextual-step-30000.pt" \
   --output "$out/contextual"
+
+time_contextual=$SECONDS
+echo "Contextual CRF elapsed: $((time_contextual - time_global)) seconds"
+echo "Total for all four evaluations: $((time_contextual - time0)) seconds"
 
 python - "$out" <<'PY_SUMMARY'
 import json
