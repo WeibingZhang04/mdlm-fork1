@@ -6,7 +6,7 @@ source /opt/anaconda3/etc/profile.d/conda.sh
 conda activate mdlm
 
 REPRO_ROOT=/u401/n23zhang/rework-data/original_reproduction
-REPRO_CODE=/u401/n23zhang/bd3lm_mdlm_original_reproduction/mdlm
+REPRO_CODE=/u401/n23zhang/crf-rework/mdlm-fork1
 REPRO_RUN="$REPRO_ROOT/runs/mdlm_$(date -u +%Y_%m_%d_%H_%M_%S_UTC)_$$"
 
 export HF_HOME="$REPRO_ROOT/cache/mdlm/huggingface"
@@ -38,7 +38,7 @@ python main.py \
   sampling.predictor=ddpm_cache  \
   sampling.steps=32 \
   loader.eval_batch_size=1 \
-  sampling.num_sample_batches=20 \
+  sampling.num_sample_batches=60 \
   sampling.semi_ar=False \
   backbone=hf_dit \
   hydra.run.dir="$REPRO_RUN" \
