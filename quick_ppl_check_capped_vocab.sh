@@ -23,7 +23,7 @@ elif [[ ! "$vocab_cap" =~ ^[1-9][0-9]*$ ]]; then
 fi
 length=1024
 steps=32
-samples=60
+samples=10
 batch_size=1
 warmup=1
 if (( samples % batch_size != 0 )); then

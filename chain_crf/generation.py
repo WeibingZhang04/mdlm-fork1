@@ -89,8 +89,9 @@ def potentials(packet, head, mode, hidden, time_value):
 
 
 def _draw_structured(prediction, tokens, mask_id, head, mode, t, k,
-                     sampling, temperature, inference, vocab_cap, generator):
-    """Existing custom-head draw, separated from the choice of reveal positions."""
+                     sampling, temperature, inference, vocab_cap, generator, *,
+                     resolve_mask=None):
+    """Draw all chain states, resolving tail tokens only where requested."""
     with torch.profiler.record_function('crf.candidates'):
         packet = build_candidates(prediction['log_probs']/temperature,tokens,mask_id,k,
                                   vocab_cap=vocab_cap)
@@ -119,7 +120,11 @@ def _draw_structured(prediction, tokens, mask_id, head, mode, t, k,
             else:
                 states = sample_chain(unary,edge,generator=generator)
     with torch.profiler.record_function('crf.residual_expand'):
-        drawn = sample_candidate_tokens(packet,states,generator=generator)
+        if resolve_mask is None:
+            drawn = sample_candidate_tokens(packet,states,generator=generator)
+        else:
+            drawn = sample_candidate_tokens(packet,states,generator=generator,
+                                           resolve_mask=resolve_mask)
     return drawn, retained_mass
 
 
@@ -313,7 +318,9 @@ def _generate_ddpm_cache(backbone, tokens, steps, *, generator, head=None,
     CRF token draws and native clean/MASK draws use separate RNG streams.
     For custom heads, only the native draw's reveal positions are retained;
     token identities come from the CRF. The head receives the current t on
-    every step, even when the backbone is cached.
+    every step, even when the backbone is cached. Residual token identities
+    are drawn only at revealed positions. This preserves the conditional law
+    but changes token RNG consumption relative to eager tail expansion.
     Default timing synchronizes only at the outer measurement boundaries.
     stage_timing adds per-stage synchronization for diagnosis, with overhead.
     """
@@ -363,20 +370,23 @@ def _generate_ddpm_cache(backbone, tokens, steps, *, generator, head=None,
                 next_tokens = _ddpm_transition(
                     p_x0_cache, tokens, backbone.mask_id, t, dt, generator)
         else:
-            drawn, mass = _draw_structured(
-                prediction_cache, tokens, backbone.mask_id, head, mode, t, k,
-                sampling, 1., inference, vocab_cap, generator)
-            retained_mass.append(mass)
-            with torch.profiler.record_function('generation.commit'):
-                # Use native MDLM's full clean/MASK draw to select positions.
-                # Keep CRF token identities at revealed positions; discard the
-                # native clean-token identities. This full draw is timed too.
+            with torch.profiler.record_function('generation.reveal'):
+                # This native draw uses its own RNG, independent of CRF states.
+                # Determine which token IDs will be needed before expanding tails.
                 if p_x0_cache is None:
                     p_x0_cache = _ddpm_clean_probs(
                         prediction_cache['log_probs'], tokens, backbone.mask_id, vocab_cap)
                 native_next = _ddpm_transition(
                     p_x0_cache, tokens, backbone.mask_id, t, dt, reveal_generator)
                 reveal = tokens.eq(backbone.mask_id) & native_next.ne(backbone.mask_id)
+            # Still sample the full joint chain: skipping unrevealed states
+            # would lose their effect on the revealed states' distribution.
+            drawn, mass = _draw_structured(
+                prediction_cache, tokens, backbone.mask_id, head, mode, t, k,
+                sampling, 1., inference, vocab_cap, generator, resolve_mask=reveal)
+            retained_mass.append(mass)
+            with torch.profiler.record_function('generation.commit'):
+                # Unresolved tail IDs are -1 only where reveal is false.
                 next_tokens = torch.where(reveal, drawn, tokens)
         if not torch.equal(next_tokens, tokens) or time_conditioning:
             prediction_cache = p_x0_cache = None

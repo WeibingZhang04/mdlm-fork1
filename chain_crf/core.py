@@ -239,10 +239,22 @@ def gold_log_prob(candidates: CandidateBatch, edge: Tensor, unary_delta: Optiona
 
 @torch.no_grad()
 def sample_candidate_tokens(candidates: CandidateBatch, states: Tensor,
-                            generator: Optional[torch.Generator] = None) -> Tensor:
-    """Expand sampled residual states using the backbone conditional tail law."""
+                            generator: Optional[torch.Generator] = None, *,
+                            resolve_mask: Optional[Tensor] = None) -> Tensor:
+    """Expand residual states, optionally only where token IDs will be used.
+
+    Unresolved residuals remain -1 when resolve_mask is supplied; callers must
+    discard those positions before committing tokens. The full candidate-state
+    draw is unchanged. Skipping unused tail draws changes RNG consumption.
+    """
+    if resolve_mask is not None:
+        if (resolve_mask.shape != states.shape or resolve_mask.dtype != torch.bool
+                or resolve_mask.device != states.device):
+            raise ValueError("resolve_mask must be boolean with states' shape and device")
     tokens = candidates.candidate_ids.gather(-1, states.unsqueeze(-1)).squeeze(-1)
     residual = tokens.lt(0)
+    if resolve_mask is not None:
+        residual = residual & resolve_mask
     if residual.any():
         tail_lp = candidates.normalized_log_probs[residual].clone()
         explicit = candidates.candidate_ids[residual]
