@@ -28,6 +28,8 @@ loader:
 
 sampling:
   predictor: ddpm_cache  # analytic, ddpm, ddpm_cache
+  vocab_cap: null  # Optional positive clean-token cap; native SUBS ddpm_cache only
+  warmup_batches: 0  # Used only with eval.sample_output_dir
   steps: 128
   noise_removal: True
   # TODO(yair): @subham, why aren't these params under `eval`?
@@ -45,6 +47,7 @@ training:
   change_of_variables: False
 
 eval:
+  sample_output_dir: null  # Opt-in native timing/token export; score saved IDs separately
   checkpoint_path: ''  # Used to evaluate a checkpoint after training.
   disable_ema: False
   compute_generative_perplexity: False

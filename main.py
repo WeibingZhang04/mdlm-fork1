@@ -1,4 +1,9 @@
+import hashlib
+import inspect
+import json
 import os
+import platform
+from pathlib import Path
 
 import fsspec
 import hydra
@@ -83,6 +88,92 @@ def _print_batch(train_ds, valid_ds, tokenizer, k=64):
     print('ids:', last)
 
 
+@torch.no_grad()
+def save_native_samples(model, config):
+  """Warm up, record native draws, and export raw IDs for the common scorer."""
+  if config.sampling.semi_ar or model.sampler != 'ddpm_cache' or model.parameterization != 'subs':
+    raise ValueError('Native sample export currently requires SUBS ddpm_cache, not semi-AR')
+  warmup = config.sampling.warmup_batches
+  batches = config.sampling.num_sample_batches
+  if type(warmup) is not int or warmup < 0 or batches < 1 or config.loader.eval_batch_size < 1:
+    raise ValueError('Require nonnegative warmup and positive batch/sample counts')
+  output = Path(config.eval.sample_output_dir)
+  output.mkdir(parents=True, exist_ok=True)
+  for name in ('samples.jsonl', 'metrics.json', 'manifest.json'):
+    if (output/name).exists():
+      raise FileExistsError(f'Choose a new native output directory: {output/name}')
+
+  # Warmup must not advance the production RNG sequence from config.seed.
+  devices = [model.device] if model.device.type == 'cuda' else []
+  with torch.random.fork_rng(devices=devices):
+    for _ in range(warmup):
+      model.restore_model_and_sample(num_steps=config.sampling.steps)
+
+  calls = 0
+
+  def count_forward(module, inputs, output):
+    nonlocal calls
+    calls += 1
+
+  source_root = Path(__file__).resolve().parent
+  sources = [source_root/name for name in ('main.py', 'diffusion.py')]
+  backbone_source = inspect.getsourcefile(type(model.backbone))
+  if backbone_source:
+    sources.append(Path(backbone_source))
+  metadata = {
+    'backend': 'native_mdlm', 'checkpoint': str(config.eval.checkpoint_path),
+    'seed': config.seed, 'steps': config.sampling.steps, 'length': config.model.length,
+    'batch_size': config.loader.eval_batch_size, 'warmup_batches': warmup,
+    'noise_removal': config.sampling.noise_removal,
+    'vocab_cap': config.sampling.vocab_cap,
+    'timing_scope': 'native diffusion loop including optional final noise removal; excludes setup, EMA copying, warmup, decoding, I/O and scoring',
+    'scoring': 'saved raw token IDs; use the existing GPT-2-large score-only path',
+    'source_sha256': {str(p): hashlib.sha256(p.read_bytes()).hexdigest() for p in sources},
+    'python': platform.python_version(), 'torch': str(torch.__version__),
+    'cuda': torch.version.cuda, 'hostname': platform.node(),
+    'cpu_affinity_count': len(os.sched_getaffinity(0)) if hasattr(os, 'sched_getaffinity') else None,
+    'slurm_cpus_per_task': os.environ.get('SLURM_CPUS_PER_TASK'),
+    'gpu': torch.cuda.get_device_name(model.device) if model.device.type == 'cuda' else None,
+  }
+  (output/'manifest.json').write_text(json.dumps(metadata, indent=2)+'\n')
+  handle = model.backbone.register_forward_hook(count_forward)
+  elapsed = 0.
+  total = 0
+  text_samples = []
+  try:
+    with (output/'samples.jsonl').open('x') as stream:
+      for batch in range(batches):
+        before_calls = calls
+        model._sample_elapsed_seconds = None
+        samples = model.restore_model_and_sample(num_steps=config.sampling.steps)
+        seconds = model._sample_elapsed_seconds
+        if seconds is None:
+          raise RuntimeError('Native sampler did not record its generation timing')
+        batch_calls = calls-before_calls
+        rows = samples.cpu().tolist()
+        text_samples = model.tokenizer.batch_decode(samples)
+        for row, text in zip(rows, text_samples):
+          record = {'sample_id': total, 'token_ids': row, 'text': text,
+                    'prefix_length': 0, 'batch_id': batch, 'batch_size': len(rows),
+                    'elapsed_seconds': seconds/len(rows),
+                    'backbone_calls': batch_calls, 'vocab_cap': config.sampling.vocab_cap}
+          stream.write(json.dumps(record, allow_nan=False)+'\n')
+          total += 1
+        stream.flush()
+        elapsed += seconds
+        print(json.dumps({'native_completed': total, 'batch_seconds': seconds,
+                          'backbone_calls': batch_calls}), flush=True)
+  finally:
+    handle.remove()
+  metrics = {**{k: metadata[k] for k in ('backend', 'vocab_cap', 'noise_removal', 'timing_scope')},
+             'samples': total, 'elapsed_seconds': elapsed, 'seconds_per_sample': elapsed/total,
+             'actual_backbone_calls': calls, 'backbone_calls_per_batch': calls/batches,
+             'warmup_batches': warmup}
+  (output/'metrics.json').write_text(json.dumps(metrics, indent=2)+'\n')
+  print(json.dumps(metrics, indent=2), flush=True)
+  return text_samples
+
+
 def generate_samples(config, logger, tokenizer):
   logger.info('Generating samples.')
   model = _load_from_checkpoint(config=config,
@@ -91,6 +182,8 @@ def generate_samples(config, logger, tokenizer):
   if config.eval.disable_ema:
     logger.info('Disabling EMA.')
     model.ema = None
+  if config.eval.get('sample_output_dir') is not None:
+    return save_native_samples(model, config)
   stride_length = config.sampling.stride_length
   num_strides = config.sampling.num_strides
   for _ in range(config.sampling.num_sample_batches):

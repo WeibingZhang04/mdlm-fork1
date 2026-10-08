@@ -1,6 +1,7 @@
 import itertools
 import math
 import os
+import time
 import typing
 from dataclasses import dataclass
 
@@ -20,6 +21,28 @@ import noise_schedule
 import utils
 
 LOG2 = math.log(2)
+
+
+def capped_clean_probs(log_probs, tokens, mask_id, cap):
+  """Truncate clean unaries, leaving DDPM's MASK/reveal probability separate."""
+  if type(cap) is not int or cap < 1:
+    raise ValueError('sampling.vocab_cap must be null or a positive integer')
+  probabilities = log_probs.float().exp()
+  masked = tokens.eq(mask_id)
+  if not masked.any():
+    return probabilities
+  scores = log_probs[masked].float().clone()
+  scores[:, mask_id] = -torch.inf
+  k = min(cap, scores.shape[-1]-1)
+  # Remove MASK explicitly, even when impossible logits tie at -inf.
+  values, ids = scores.topk(k+1, dim=-1)
+  order = torch.arange(k+1, device=scores.device)
+  mask_position = torch.where(ids.eq(mask_id), order, k+1).amin(-1, keepdim=True)
+  keep = torch.arange(k, device=scores.device).expand(scores.shape[0], k)
+  keep = keep + keep.ge(mask_position).long()
+  values, ids = values.gather(-1, keep), ids.gather(-1, keep)
+  probabilities[masked] = torch.zeros_like(scores).scatter(-1, ids, values.softmax(-1))
+  return probabilities
 
 
 def _sample_categorical(categorical_probs):
@@ -612,7 +635,12 @@ class Diffusion(L.LightningModule):
         sigma_1d = self._process_sigma(sigma_t)
         p_x0 = self._compute_crf_marginals(x, sigma_1d)
       else:
-        p_x0 = self.forward(x, sigma_t).exp()
+        log_p_x0 = self.forward(x, sigma_t)
+        cap = self.config.sampling.get('vocab_cap')
+        if cap is None:
+          p_x0 = log_p_x0.exp()
+        else:
+          p_x0 = capped_clean_probs(log_p_x0, x, self.mask_index, cap)
     
     assert move_chance_t.ndim == p_x0.ndim
     q_xs = p_x0 * (move_chance_t - move_chance_s)
@@ -770,6 +798,13 @@ class Diffusion(L.LightningModule):
   @torch.no_grad()
   def _sample(self, num_steps=None, eps=1e-5):
     """Generate samples from the model."""
+    cap = self.config.sampling.get('vocab_cap')
+    if cap is not None:
+      if type(cap) is not int or cap < 1:
+        raise ValueError('sampling.vocab_cap must be null or a positive integer')
+      if (self.sampler != 'ddpm_cache' or self.parameterization != 'subs'
+          or self.config.backbone == 'crf_dit' or self.config.sampling.semi_ar):
+        raise ValueError('Native vocabulary cap requires non-CRF SUBS ddpm_cache, not semi-AR')
     batch_size_per_gpu = self.config.loader.eval_batch_size
     if self.parameterization == 'ar':
       return self._ar_sampler(batch_size_per_gpu)
@@ -784,6 +819,11 @@ class Diffusion(L.LightningModule):
     dt = (1 - eps) / num_steps
     p_x0_cache = None
 
+    record_timing = self.config.eval.get('sample_output_dir') is not None
+    if record_timing:
+      if self.device.type == 'cuda':
+        torch.cuda.synchronize(self.device)
+      sample_start = time.perf_counter()
     for i in range(num_steps):
       t = timesteps[i] * torch.ones(
         x.shape[0], 1, device=self.device)
@@ -812,7 +852,15 @@ class Diffusion(L.LightningModule):
         x = p_x0.argmax(dim=-1)
       else:
         unet_conditioning = self.noise(t)[0]
-        x = self.forward(x, unet_conditioning).argmax(dim=-1)
+        log_p_x0 = self.forward(x, unet_conditioning)
+        if cap is None:
+          x = log_p_x0.argmax(dim=-1)
+        else:
+          x = capped_clean_probs(log_p_x0, x, self.mask_index, cap).argmax(dim=-1)
+    if record_timing:
+      if self.device.type == 'cuda':
+        torch.cuda.synchronize(self.device)
+      self._sample_elapsed_seconds = time.perf_counter() - sample_start
     return x
 
   def restore_model_and_sample(self, num_steps, eps=1e-5):

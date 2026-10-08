@@ -197,7 +197,37 @@ The numeric cap (JSON null for none) is recorded in manifests, sample records,
 and metrics; changing it requires a new output directory. This option is for
 generation only; capped runs reject `--dev-data`/`--denoise-only` to avoid mixing
 them with uncapped denoising diagnostics. Training, reveal scheduling, GPT-2
-scoring, original `main.py`, and the separate sparse-count evaluator are unchanged.
+scoring and the separate sparse-count evaluator are unchanged by this option.
+
+`quick_ppl_check_capped_vocab.sh` also runs a `native_mdlm` row through the original
+`main.py mode=sample_eval` -> `restore_model_and_sample` -> `Diffusion._sample`
+path. `VOCAB_CAP=none` or a positive integer controls the cap for all five rows;
+the default is 500. `vanilla` in this table remains the custom-evaluator baseline.
+The cap helper lives in `diffusion.py`; `main.py` saves native token IDs and
+generation durations for the table. There is no separate native sampler module.
+Native generation uses the existing `mdlm` conda environment (override with
+`NATIVE_ENV`) and original-reproduction HF cache in a subshell. All five rows use
+the existing raw-ID GPT-2-large scorer; `evaluate_chain_crf.py --score-only` never
+generates the native samples. The upstream retokenized PPL path is bypassed only
+when the new `eval.sample_output_dir` export option is enabled.
+
+Native `sampling.vocab_cap=null` leaves its probability calculation unchanged.
+A positive cap restricts/renormalizes clean unaries in FP32 before DDPM adds MASK
+transition mass, preserving its reveal probabilities and original categorical sampler.
+It supports non-CRF SUBS DDPM-cache sampling only. `sampling.warmup_batches` draws
+are discarded and their RNG changes restored before production sampling.
+The script retains native final noise removal, which can add a backbone call
+beyond the requested diffusion steps. Actual forward calls and timing scope are
+recorded; native timing covers the loop and final noise removal, excluding model
+loading, initial buffers, EMA copying, warmup, decoding, I/O, and scoring. Custom
+timing additionally includes its existing per-step synchronizations/diagnostics.
+All five rows exclude loading, warmup, decoding, output I/O, and PPL scoring from
+seconds/sample. The shared script settings use one discarded warmup batch and
+60 measured samples per method. The Bash elapsed totals include the whole commands
+and are separate from the generation-only seconds/sample table.
+This adds an original-sampler reference, not a controlled comparison of identical
+reveal schedules, RNG streams, precision, or final denoising. Without the opt-in
+export/cap settings, the original `main.py` evaluation behavior remains unchanged.
 
 `--inference segments` eliminates clamped positions and samples independent
 contiguous masked runs, absorbing observed boundary factors into their endpoint
