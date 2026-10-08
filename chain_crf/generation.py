@@ -7,6 +7,50 @@ import torch
 from chain_crf.core import (build_candidates, sample_chain, sample_candidate_tokens,
                             chain_marginals, chain_log_marginals, gold_log_prob, topk_clean)
 
+def _ddpm_clean_probs(log_probs, tokens, mask_id, cap):
+    """Native capped clean law in FP32, with visible tokens clamped (SUBS).
+
+    FrozenMDLM already returns normalized clean log probabilities in FP32.
+    Keep the full vocabulary tensor for native categorical sampling. This
+    counterpart avoids importing diffusion.py's Lightning/HF dependencies.
+
+    This is a remix of functions in diffusion.py
+    """
+    scores = log_probs.float().clone()
+    scores[..., mask_id] = -torch.inf
+    probabilities = scores.exp()
+    masked = tokens.eq(mask_id)
+    if cap is not None and masked.any():
+        values, ids = topk_clean(scores[masked], mask_id, cap)
+        probabilities[masked] = torch.zeros_like(scores[masked]).scatter(-1, ids, values.softmax(-1))
+    # Unlike native Diffusion.forward, FrozenMDLM does not clamp visible rows.
+    if (~masked).any():
+        visible = torch.zeros_like(probabilities[~masked])
+        visible.scatter_(-1, tokens[~masked].unsqueeze(-1), 1.)
+        probabilities[~masked] = visible
+    return probabilities
+
+
+def _native_categorical(probabilities, generator):
+    # _sample_categorical from diffusion.py from MDLM but with an explicit generator
+    uniform = torch.rand(probabilities.shape, dtype=probabilities.dtype,
+                         device=probabilities.device, generator=generator)
+    denominator = 1e-10 - (uniform + 1e-10).log()
+    return (probabilities / denominator).argmax(dim=-1)
+
+
+def _ddpm_transition(p_x0, tokens, mask_id, t, dt, generator):
+    """Adapted from MDLM's diffusion.Diffusion._ddpm_caching_update's sampling step.
+
+    p_x0 contains clean-token probabilities; t is a vector of batch times.
+    """
+    move_chance_t = t[:, None, None]
+    move_chance_s = (t - dt)[:, None, None]
+    q_xs = p_x0 * (move_chance_t - move_chance_s)
+    q_xs[:, :, mask_id] = move_chance_s[:, :, 0]
+    drawn = _native_categorical(q_xs, generator)
+    return torch.where(tokens != mask_id, tokens, drawn)
+
 
 def synchronize(device):
     if torch.device(device).type == 'cuda':
@@ -179,6 +223,70 @@ def generate(backbone, head=None, mode='backbone', *, length=256, steps=16,
                     'mean_retained_mass':sum(retained_mass)/len(retained_mass) if retained_mass else 1.,
                     'prefix_length':prefix_length,'generated_length':length,
                     'vocab_cap':vocab_cap}
+
+
+@torch.no_grad()
+def _generate_ddpm_cache_baseline(backbone, tokens, steps, *, generator,
+                                  vocab_cap=None, noise_removal=True, eps=1e-5):
+    """Native Diffusion._sample DDPM-cache loop for the frozen MDLM baseline."""
+    if steps < 1 or not 0 < eps < 1:
+        raise ValueError('Positive steps and sampling eps in (0,1) required')
+    device = tokens.device
+    timesteps = torch.linspace(1, eps, steps + 1, device=device)
+    dt = (1 - eps) / steps
+    p_x0_cache = None
+    time_conditioning = getattr(backbone, 'time_conditioning', True)
+    calls = cache_hits = 0
+    backbone_seconds = sampler_seconds = 0.
+
+    def predict(t):
+        nonlocal calls, backbone_seconds
+        synchronize(device)
+        before = time.perf_counter()
+        with torch.profiler.record_function('mdlm.forward'):
+            prediction = backbone(tokens, t)
+        synchronize(device)
+        backbone_seconds += time.perf_counter() - before
+        calls += 1
+        return prediction
+
+    synchronize(device)
+    start = time.perf_counter()
+    for step in range(steps):
+        t = timesteps[step] * torch.ones(tokens.shape[0], device=device)
+        if p_x0_cache is None:
+            prediction = predict(t)
+        else:
+            cache_hits += 1
+        before = time.perf_counter()
+        with torch.profiler.record_function('generation.backbone_sample'):
+            if p_x0_cache is None:
+                p_x0_cache = _ddpm_clean_probs(
+                    prediction['log_probs'], tokens, backbone.mask_id, vocab_cap)
+            next_tokens = _ddpm_transition(
+                p_x0_cache, tokens, backbone.mask_id, t, dt, generator)
+            if not torch.equal(next_tokens, tokens) or time_conditioning:
+                p_x0_cache = None
+            tokens = next_tokens
+        synchronize(device)
+        sampler_seconds += time.perf_counter() - before
+
+    if noise_removal:
+        t = timesteps[-1] * torch.ones(tokens.shape[0], device=device)
+        prediction = predict(t)
+        before = time.perf_counter()
+        scores = prediction['log_probs']
+        if vocab_cap is not None:
+            scores = _ddpm_clean_probs(scores, tokens, backbone.mask_id, vocab_cap)
+        tokens = torch.where(tokens != backbone.mask_id, tokens, scores.argmax(-1))
+        synchronize(device)
+        sampler_seconds += time.perf_counter() - before
+    synchronize(device)
+    elapsed = time.perf_counter() - start
+    return tokens, {'elapsed_seconds': elapsed, 'backbone_seconds': backbone_seconds,
+                    'sampling_seconds': sampler_seconds, 'backbone_calls': calls,
+                    'cache_hits': cache_hits, 'noise_removal': noise_removal,
+                    'sampling_eps': eps}
 
 
 @torch.no_grad()

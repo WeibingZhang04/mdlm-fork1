@@ -43,6 +43,8 @@ class FrozenMDLM(nn.Module):
     Lightning envelope. If omitted, only the pinned release is downloaded.
     """
 
+    time_conditioning = False
+
     def __init__(self, checkpoint=None, *, device="cuda", cache_dir=None):
         super().__init__()
         from omegaconf import OmegaConf
@@ -114,6 +116,8 @@ class FrozenMDLM(nn.Module):
 
 class SyntheticBackbone(nn.Module):
     """Small deterministic offline plumbing fixture; never a real-data result."""
+
+    time_conditioning = False
 
     def __init__(self, vocab_size=17, hidden_size=12, device="cpu", seed=17):
         super().__init__()
