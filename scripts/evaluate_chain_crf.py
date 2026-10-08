@@ -6,6 +6,7 @@ import hashlib
 import json
 import math
 import sys
+import time
 from pathlib import Path
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]))
 import torch
@@ -211,6 +212,14 @@ def main(argv=None):
     p.add_argument('--length',type=int,default=256,
                    help='Generated suffix length; continuation-file mode instead uses each reference suffix length')
     p.add_argument('--steps',type=int,default=16)
+    p.add_argument('--sampler',choices=['fixed','ddpm_cache'],default='fixed',
+                   help='fixed: existing fixed-count reveals; ddpm_cache: native clean/MASK reveals and backbone caching')
+    p.add_argument('--noise-removal',action=argparse.BooleanOptionalAction,default=None,
+                   help='Final greedy cleanup; defaults on for ddpm_cache, off for fixed. Without it, output must still contain no MASK tokens.')
+    p.add_argument('--sampling-eps',type=float,default=1e-5,
+                   help='Final DDPM time (default: 1e-5); ignored by the fixed schedule')
+    p.add_argument('--stage-timing',action='store_true',default=None,
+                   help='Add synchronized stage timing to DDPM (adds overhead). Fixed sampling already measures stages.')
     p.add_argument('--samples',type=int,default=256)
     p.add_argument('--sample-offset',type=int,default=0,
                    help='First draw ID; use disjoint IDs for screening and final evaluation')
@@ -240,6 +249,16 @@ def main(argv=None):
     p.add_argument('--profile',action='store_true',
                    help='Profile the first generated batch after warmup; save profile.json, profile.txt and profile-stages.json. Adds timing overhead.')
     args=p.parse_args(argv)
+    args.noise_removal = args.sampler == 'ddpm_cache' if args.noise_removal is None else args.noise_removal
+    args.stage_timing = args.sampler == 'fixed' if args.stage_timing is None else args.stage_timing
+    if args.sampler == 'ddpm_cache' and args.temperature != 1.:
+        raise ValueError('Native-style ddpm_cache requires --temperature 1')
+    if args.sampler == 'fixed' and args.noise_removal:
+        raise ValueError('--noise-removal requires --sampler ddpm_cache')
+    if not 0 < args.sampling_eps < 1:
+        raise ValueError('--sampling-eps must be in (0,1)')
+    if args.sampler == 'ddpm_cache' and args.denoise_only:
+        raise ValueError('--sampler ddpm_cache requires generation, not --denoise-only')
     if args.profile and (args.score_only or args.denoise_only):
         raise ValueError('--profile requires generation, not --score-only or --denoise-only')
     if args.vocab_cap is not None and (args.dev_data or args.denoise_only):
@@ -269,6 +288,8 @@ def main(argv=None):
     model=SyntheticBackbone(device=args.device) if args.synthetic else FrozenMDLM(
         args.backbone_checkpoint,device=args.device,cache_dir=args.cache_dir)
     head,head_info=load_head(args,model)
+    post_load_start=time.perf_counter()
+    post_load_elapsed=None
     if args.prefix and model.tokenizer is None:
         raise ValueError('Synthetic fixture does not tokenize text')
     prefix=model.tokenizer.encode(args.prefix,add_special_tokens=False) if args.prefix else []
@@ -317,7 +338,8 @@ def main(argv=None):
         return
     kwargs=dict(length=args.length,steps=args.steps,k=args.k,sampling=args.sampling,
                 temperature=args.temperature,device=args.device,prefix=prefix,inference=args.inference,
-                vocab_cap=args.vocab_cap)
+                vocab_cap=args.vocab_cap,sampler=args.sampler,noise_removal=args.noise_removal,
+                sampling_eps=args.sampling_eps,stage_timing=args.stage_timing)
     batches=(continuation_batch_plan(continuations,args.batch_size) if continuations is not None
              else [(offset,min(args.batch_size,args.samples-offset))
                    for offset in range(0,args.samples,args.batch_size)])
@@ -328,9 +350,13 @@ def main(argv=None):
             batch_kwargs={key:value for key,value in kwargs.items() if key not in ('prefix','length')}
             batch_kwargs.update(prefixes=[row['prefix_input_ids'] for row in continuations[offset:offset+size]],
                                 length=len(continuations[offset]['reference_continuation_ids']))
-        return generate(model,head,args.mode,batch_size=size,sample_offset=draw_offset,**batch_kwargs)
+        tokens,timing=generate(model,head,args.mode,batch_size=size,sample_offset=draw_offset,**batch_kwargs)
+        if tokens.eq(model.mask_id).any():
+            raise ValueError('Generation left MASK tokens; enable --noise-removal before saving/scoring samples')
+        return tokens,timing
 
     records=[json.loads(line) for line in records_path.read_text().splitlines() if line.strip()] if records_path.exists() else []
+    initial_record_count=len(records)
     if [r['sample_id'] for r in records]!=list(range(len(records))):
         raise ValueError('Incomplete or duplicated sample IDs')
     if [r['draw_id'] for r in records]!=list(range(args.sample_offset,args.sample_offset+len(records))):
@@ -340,11 +366,18 @@ def main(argv=None):
     if continuations is not None:
         validate_continuation_resume(records,continuations,batches,continuation_sha256,
                                      vocab_size=model.vocab_size,mask_id=model.mask_id)
+    # Drain loading/setup work before excluding warmup and its pending GPU work.
+    if torch.device(args.device).type == 'cuda':
+        torch.cuda.synchronize(torch.device(args.device))
+    warmup_start=time.perf_counter()
     for warmup_index in range(args.warmup):
         # Same shape/path, discarded; draw IDs lie outside the target range.
         warmup_offset=args.sample_offset+args.samples+warmup_index*args.batch_size
         warmup_size=batches[0][1] if continuations is not None else args.batch_size
         draw_batch(0,warmup_size,warmup_offset)
+    if torch.device(args.device).type == 'cuda':
+        torch.cuda.synchronize(torch.device(args.device))
+    warmup_elapsed=time.perf_counter()-warmup_start
     # Token RNG is seeded once per original batch. If interruption left only
     # some rows on disk, replay that entire batch at its original draw offset;
     # starting a new batch at len(records) would change the remaining draws.
@@ -401,7 +434,7 @@ def main(argv=None):
                 record.update(continuation_identity(source,continuation_sha256))
             # Per-sample normalized times permit summation without double counting.
             for key in ('elapsed_seconds','backbone_seconds','sampling_seconds'):
-                record[key]=timing[key]/size
+                record[key]=timing[key]/size if timing[key] is not None else None
             batch.append(record)
         overlap=min(len(records)-offset,len(batch))
         for previous,replayed in zip(records[offset:offset+overlap],batch[:overlap]):
@@ -415,19 +448,40 @@ def main(argv=None):
             for row in pending:
                 f.write(json.dumps(row,allow_nan=False)+'\n')
             f.flush()
+        if offset+size == args.samples:
+            post_load_elapsed=time.perf_counter()-post_load_start-warmup_elapsed
         records.extend(pending)
         print(json.dumps({'completed':len(records),'target':args.samples,'batch':timing,
                           'replayed_existing_rows':overlap}),flush=True)
     elapsed=sum(r['elapsed_seconds'] for r in records)
     result={'samples':len(records),'elapsed_seconds':elapsed,'seconds_per_sample':elapsed/len(records),
             'vocab_cap':args.vocab_cap,'k':args.k,
+            'sampler':args.sampler,'noise_removal':args.noise_removal,
+            'sampling_eps':args.sampling_eps if args.sampler=='ddpm_cache' else None,
+            'timing_mode':records[0]['timing_mode'],
+            'noise_removal_method':records[0]['noise_removal_method'],
+            'reveal_sampler':records[0]['reveal_sampler'],
             'contains_profiled_batches':any(r.get('profiled',False) for r in records),
-            'backbone_seconds':sum(r['backbone_seconds'] for r in records),
-            'sampling_seconds':sum(r['sampling_seconds'] for r in records),
+            'backbone_seconds':(sum(r['backbone_seconds'] for r in records)
+                                if all(r.get('backbone_seconds') is not None for r in records) else None),
+            'sampling_seconds':(sum(r['sampling_seconds'] for r in records)
+                                if all(r.get('sampling_seconds') is not None for r in records) else None),
             'backbone_calls_per_sample':sum(r['backbone_calls'] for r in records)/len(records),
             'generated_tokens_per_second':sum(len(r['token_ids'])-r['prefix_length'] for r in records)/elapsed,
             **token_statistics([r['token_ids'][r['prefix_length']:] for r in records])}
-    atomic_json(result,args.output/'metrics.json')
+    # A resumed partial run cannot reconstruct time spent before interruption.
+    post_load_fields={
+        'post_load_elapsed_seconds':post_load_elapsed if initial_record_count == 0 else None,
+        'post_load_seconds_per_sample':post_load_elapsed/len(records) if initial_record_count == 0 else None,
+        'post_load_timing_complete':initial_record_count == 0,
+        'post_load_timing_scope':'after model loading through closing samples.jsonl; includes setup, synchronization, generation, decoding and sample I/O; excludes model loading, warmup, scoring and final summaries'}
+    metrics_path=args.output/'metrics.json'
+    if initial_record_count == len(records) and metrics_path.exists():
+        previous=json.loads(metrics_path.read_text())
+        if previous.get('post_load_timing_complete'):
+            post_load_fields={key:previous[key] for key in post_load_fields}
+    result.update(post_load_fields)
+    atomic_json(result,metrics_path)
     print(json.dumps(result,indent=2),flush=True)
     if args.score_gpt2:
         del head,model

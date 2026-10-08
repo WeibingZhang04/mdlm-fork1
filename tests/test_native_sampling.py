@@ -39,7 +39,7 @@ def main_functions():
     tree = ast.parse((ROOT/'main.py').read_text())
     functions = [n for n in tree.body if isinstance(n,ast.FunctionDef)
                  and n.name in ('save_native_samples','generate_samples')]
-    namespace = {'torch':torch,'Path':Path,'os':os,'hashlib':hashlib,'inspect':inspect,
+    namespace = {'torch':torch,'Path':Path,'os':os,'hashlib':hashlib,'inspect':inspect,'time':time,
                  'json':json,'platform':platform,'__file__':str(ROOT/'main.py')}
     exec(compile(ast.Module(body=functions,type_ignores=[]),'main.py','exec'),namespace)
     return namespace
@@ -223,6 +223,7 @@ def test_native_seconds_exclude_loading_setup_warmup_decoding_and_output(tmp_pat
     def advance(seconds):
         clock.now += seconds
     monkeypatch.setitem(NATIVE,'time',SimpleNamespace(perf_counter=lambda: clock.now))
+    monkeypatch.setitem(MAIN,'time',SimpleNamespace(perf_counter=lambda: clock.now))
     model = ToyNative(output=str(tmp_path),warmup=2)
 
     def load_model(**kwargs):
@@ -255,6 +256,8 @@ def test_native_seconds_exclude_loading_setup_warmup_decoding_and_output(tmp_pat
     assert metrics['elapsed_seconds'] == 2.*metrics['actual_backbone_calls']
     assert metrics['seconds_per_sample'] == metrics['elapsed_seconds']/4
     assert clock.now > metrics['elapsed_seconds']+1000.
+    assert metrics['post_load_elapsed_seconds'] == metrics['elapsed_seconds']+2*100+2*200+300
+    assert metrics['post_load_seconds_per_sample'] == metrics['post_load_elapsed_seconds']/4
     assert not (tmp_path/'gpt2-large.json').exists()  # Scoring is a later command.
 
 

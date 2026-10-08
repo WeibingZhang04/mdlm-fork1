@@ -41,6 +41,10 @@ common=(
   --device cuda
   --length "$length"
   --steps "$steps"
+  --sampler ddpm_cache
+  --noise-removal
+  --sampling-eps 1e-5
+  --temperature 1
   --samples "$samples"
   --batch-size "$batch_size"
   --k 64
@@ -116,15 +120,15 @@ import sys
 from pathlib import Path
 
 root = Path(sys.argv[1])
-print("\nSampling results (all methods exclude model loading, warmup, decoding, output I/O, and PPL scoring):")
-print(f'{"Method":<14} {"Seconds/sample":>15} {"GPT-2-large PPL":>17} {"Calls/batch":>12}')
+print("\nSampling results (after models load through last sample written; includes synchronization, decoding and sample I/O; excludes loading, warmup and PPL scoring):")
+print(f'{"Method":<14} {"Post-load s/sample":>18} {"GPT-2-large PPL":>17} {"Calls/batch":>12}')
 for name in ("native_mdlm", "vanilla", "bigram", "global", "contextual"):
     metrics = json.loads((root/name/"metrics.json").read_text())
     score = json.loads((root/name/"gpt2-large.json").read_text())
     calls = metrics.get("backbone_calls_per_batch", metrics.get("backbone_calls_per_sample"))
-    print(f'{name:<14} {metrics["seconds_per_sample"]:>15.4f} '
+    print(f'{name:<14} {metrics["post_load_seconds_per_sample"]:>18.4f} '
           f'{score["perplexity"]:>17.2f} {calls:>12.1f}')
-print("Native MDLM uses DDPM-cache and final noise removal; vanilla is the custom evaluator baseline.")
-print("Native timing includes final noise removal; custom timing includes its per-step synchronization/diagnostics.")
+print("All five methods use DDPM-cache with final noise removal; vanilla is the custom evaluator baseline.")
+print("Generation-loop-only timing is also saved in metrics.json as seconds_per_sample.")
 print(f"\nResults: {root}")
 PY_SUMMARY

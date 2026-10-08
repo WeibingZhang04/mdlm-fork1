@@ -3,6 +3,7 @@ import inspect
 import json
 import os
 import platform
+import time
 from pathlib import Path
 
 import fsspec
@@ -89,8 +90,10 @@ def _print_batch(train_ds, valid_ds, tokenizer, k=64):
 
 
 @torch.no_grad()
-def save_native_samples(model, config):
+def save_native_samples(model, config, post_load_start=None):
   """Warm up, record native draws, and export raw IDs for the common scorer."""
+  if post_load_start is None:
+    post_load_start = time.perf_counter()
   if config.sampling.semi_ar or model.sampler != 'ddpm_cache' or model.parameterization != 'subs':
     raise ValueError('Native sample export currently requires SUBS ddpm_cache, not semi-AR')
   warmup = config.sampling.warmup_batches
@@ -103,11 +106,19 @@ def save_native_samples(model, config):
     if (output/name).exists():
       raise FileExistsError(f'Choose a new native output directory: {output/name}')
 
+  # Drain loading/setup work inside the measured interval, then exclude warmup.
+  if model.device.type == 'cuda':
+    torch.cuda.synchronize(model.device)
+  warmup_start = time.perf_counter()
   # Warmup must not advance the production RNG sequence from config.seed.
   devices = [model.device] if model.device.type == 'cuda' else []
   with torch.random.fork_rng(devices=devices):
     for _ in range(warmup):
       model.restore_model_and_sample(num_steps=config.sampling.steps)
+
+  if model.device.type == 'cuda':
+    torch.cuda.synchronize(model.device)
+  warmup_elapsed = time.perf_counter() - warmup_start
 
   calls = 0
 
@@ -127,6 +138,7 @@ def save_native_samples(model, config):
     'noise_removal': config.sampling.noise_removal,
     'vocab_cap': config.sampling.vocab_cap,
     'timing_scope': 'native diffusion loop including optional final noise removal; excludes setup, EMA copying, warmup, decoding, I/O and scoring',
+    'post_load_timing_scope': 'after model loading through closing samples.jsonl; includes setup, synchronization, generation, decoding and sample I/O; excludes model loading, warmup, scoring and final summaries',
     'scoring': 'saved raw token IDs; use the existing GPT-2-large score-only path',
     'source_sha256': {str(p): hashlib.sha256(p.read_bytes()).hexdigest() for p in sources},
     'python': platform.python_version(), 'torch': str(torch.__version__),
@@ -163,12 +175,17 @@ def save_native_samples(model, config):
         elapsed += seconds
         print(json.dumps({'native_completed': total, 'batch_seconds': seconds,
                           'backbone_calls': batch_calls}), flush=True)
+    post_load_elapsed = time.perf_counter() - post_load_start - warmup_elapsed
   finally:
     handle.remove()
   metrics = {**{k: metadata[k] for k in ('backend', 'vocab_cap', 'noise_removal', 'timing_scope')},
              'samples': total, 'elapsed_seconds': elapsed, 'seconds_per_sample': elapsed/total,
              'actual_backbone_calls': calls, 'backbone_calls_per_batch': calls/batches,
-             'warmup_batches': warmup}
+             'warmup_batches': warmup,
+             'post_load_elapsed_seconds': post_load_elapsed,
+             'post_load_seconds_per_sample': post_load_elapsed/total,
+             'post_load_timing_complete': True,
+             'post_load_timing_scope': metadata['post_load_timing_scope']}
   (output/'metrics.json').write_text(json.dumps(metrics, indent=2)+'\n')
   print(json.dumps(metrics, indent=2), flush=True)
   return text_samples
@@ -178,12 +195,13 @@ def generate_samples(config, logger, tokenizer):
   logger.info('Generating samples.')
   model = _load_from_checkpoint(config=config,
                                 tokenizer=tokenizer)
+  post_load_start = time.perf_counter()
   model.gen_ppl_metric.reset()
   if config.eval.disable_ema:
     logger.info('Disabling EMA.')
     model.ema = None
   if config.eval.get('sample_output_dir') is not None:
-    return save_native_samples(model, config)
+    return save_native_samples(model, config, post_load_start=post_load_start)
   stride_length = config.sampling.stride_length
   num_strides = config.sampling.num_strides
   for _ in range(config.sampling.num_sample_batches):

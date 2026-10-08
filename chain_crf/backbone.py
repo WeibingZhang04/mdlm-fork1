@@ -110,7 +110,9 @@ class FrozenMDLM(nn.Module):
             tokens, torch.zeros(len(tokens), device=tokens.device))
         logits = self.encoder.decode(hidden, conditioning).float()
         logits[..., self.mask_id] = -torch.inf
-        return {"log_probs": logits.log_softmax(-1).detach(),
+        # Match vanilla MDLM's _subs_parameterization normalization arithmetic.
+        logits = logits - torch.logsumexp(logits, dim=-1, keepdim=True)
+        return {"log_probs": logits.detach(),
                 "hidden": hidden.float().detach()}
 
 

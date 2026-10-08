@@ -32,14 +32,14 @@ if args[0]=='main.py':
     config=dict(arg.split('=',1) for arg in args[1:])
     out=Path(config['eval.sample_output_dir'])
     (out/'samples.jsonl').write_text('{}\n')
-    (out/'metrics.json').write_text(json.dumps({'seconds_per_sample':.2,'backbone_calls_per_batch':33}))
+    (out/'metrics.json').write_text(json.dumps({'seconds_per_sample':.2,'post_load_seconds_per_sample':.35,'backbone_calls_per_batch':33}))
 else:
     out=Path(args[args.index('--output')+1])
     out.mkdir(exist_ok=True)
     if '--score-only' in args:
         assert (out/'samples.jsonl').exists()
     else:
-        (out/'metrics.json').write_text(json.dumps({'seconds_per_sample':.4,'backbone_calls_per_sample':32}))
+        (out/'metrics.json').write_text(json.dumps({'seconds_per_sample':.4,'post_load_seconds_per_sample':.65,'backbone_calls_per_sample':33}))
     (out/'gpt2-large.json').write_text(json.dumps({'perplexity':100.}))
 ''')
     mock.chmod(0o755)
@@ -61,6 +61,7 @@ else:
     assert native['sampling.steps']=='32' and native['sampling.num_sample_batches']=='60'
     assert native['sampling.warmup_batches']=='1' and native['loader.eval_batch_size']=='1'
     assert native['sampling.noise_removal']=='True'
+    assert native['sampling.predictor']=='ddpm_cache'
     assert commands[0]['hf_home']==str(base/'original_reproduction/cache/mdlm/huggingface')
     assert '--score-only' in commands[1]['args']
     assert all(command['hf_home']==str(base/'hf-cache') for command in commands[1:])
@@ -69,7 +70,15 @@ else:
         assert args[args.index('--vocab-cap')+1]==cap
         assert args[args.index('--samples')+1]=='60'
         assert args[args.index('--steps')+1]=='32'
+        assert args[args.index('--sampler')+1]=='ddpm_cache'
+        assert '--noise-removal' in args and '--no-noise-removal' not in args
+        assert args[args.index('--sampling-eps')+1]=='1e-5'
+        assert args[args.index('--temperature')+1]=='1'
+        assert '--stage-timing' not in args
         assert args[args.index('--warmup')+1]=='1'
     assert 'Total for all five evaluations:' in result.stdout
     assert 'native_mdlm' in result.stdout and '33.0' in result.stdout
-    assert 'vanilla' in result.stdout and '32.0' in result.stdout
+    assert 'vanilla' in result.stdout and '33.0' in result.stdout
+    assert 'All five methods use DDPM-cache' in result.stdout
+    assert 'Post-load s/sample' in result.stdout
+    assert '0.3500' in result.stdout and '0.6500' in result.stdout
