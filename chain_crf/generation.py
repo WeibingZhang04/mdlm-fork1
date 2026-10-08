@@ -4,7 +4,7 @@ import math
 import time
 from collections import Counter
 import torch
-from chain_crf.core import (build_candidates, sample_chain, sample_candidate_tokens,
+from chain_crf.core import (build_candidates, build_sampling_candidates, sample_chain, sample_candidate_tokens,
                             chain_marginals, chain_log_marginals, gold_log_prob, topk_clean)
 
 def _ddpm_clean_probs(log_probs, tokens, mask_id, cap):
@@ -93,8 +93,13 @@ def _draw_structured(prediction, tokens, mask_id, head, mode, t, k,
                      resolve_mask=None):
     """Draw all chain states, resolving tail tokens only where requested."""
     with torch.profiler.record_function('crf.candidates'):
-        packet = build_candidates(prediction['log_probs']/temperature,tokens,mask_id,k,
-                                  vocab_cap=vocab_cap)
+        if resolve_mask is None:
+            packet = build_candidates(prediction['log_probs']/temperature,tokens,mask_id,k,
+                                      vocab_cap=vocab_cap)
+        else:
+            # Generation needs sampled token IDs, not the training likelihood packet.
+            packet = build_sampling_candidates(prediction['log_probs'], tokens, mask_id, k,
+                                               vocab_cap=vocab_cap, temperature=temperature)
     with torch.profiler.record_function('crf.potentials'):
         unary, edge = potentials(packet,head,mode,prediction['hidden'],t)
     with torch.profiler.record_function('crf.retained_mass'):
@@ -282,12 +287,18 @@ def generate(backbone, head=None, mode='backbone', *, length=256, steps=16,
                                               1,generator=generator).reshape(batch_size,-1)
                 tokens.scatter_(1,positions,drawn)
         else:
+            # The fixed permutation already tells us which token IDs are
+            # needed. Keep the full joint state draw, but resolve only these
+            # tails and use the compact inference candidate representation.
+            positions = order[:, committed:next_count]
+            resolve_mask = torch.zeros_like(tokens, dtype=torch.bool)
+            resolve_mask.scatter_(1, positions, True)
             drawn, mass = _draw_structured(
                 prediction, tokens, backbone.mask_id, head, mode, t, k,
-                sampling, temperature, inference, vocab_cap, generator)
+                sampling, temperature, inference, vocab_cap, generator,
+                resolve_mask=resolve_mask)
             retained_mass.append(mass)
             with torch.profiler.record_function('generation.commit'):
-                positions = order[:,committed:next_count]
                 tokens.scatter_(1,positions,drawn.gather(1,positions))
         committed = next_count
         synchronize(device)
