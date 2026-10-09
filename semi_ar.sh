@@ -47,10 +47,10 @@ common=(
   --temperature 1
   --samples "$samples"
   --batch-size "$batch_size"
-  --k 1000
+  --k 64
   --vocab-cap "$vocab_cap"
   --sampling joint
-  --inference dense
+  --inference segments
   --warmup "$warmup"
   --sample-offset 200
   --score-gpt2
