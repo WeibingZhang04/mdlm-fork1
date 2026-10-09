@@ -8,8 +8,7 @@ def __getattr__(name):
   OmegaConf, Transformers, FlashAttention, or the Mamba kernels.
   """
   if name in {
-      'dit', 'ema', 'crf_decoder', 'structured_decoder',
-      'dimamba', 'autoregressive'}:
+      'dit', 'ema', 'dimamba', 'autoregressive'}:
     module = importlib.import_module(f'{__name__}.{name}')
     globals()[name] = module
     return module
