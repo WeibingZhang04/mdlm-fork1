@@ -88,6 +88,21 @@ def chain_marginals(unary: Tensor, edge: Tensor) -> Tensor:
     return chain_log_marginals(unary, edge).exp()
 
 
+def _sampling_probs(log_scores: Tensor) -> Tensor:
+    """Normalize categorical scores in FP64 without CUDA's softmax kernel.
+
+    The installed torch 2.5.1+cu121 CUDA softmax fails on valid FP64 rows
+    (including [23,1001] point masses from segment padding). Separate stable
+    reductions avoid that path without reducing sampling precision. Invalid
+    distributions remain invalid; do not replace their NaNs with probabilities.
+    """
+    scores = log_scores.double()
+    if not scores.is_cuda:
+        return scores.softmax(-1)
+    weights = (scores - scores.amax(dim=-1, keepdim=True)).exp()
+    return weights / weights.sum(dim=-1, keepdim=True)
+
+
 @torch.no_grad()
 def sample_chain(unary: Tensor, edge: Tensor, generator: Optional[torch.Generator] = None) -> Tensor:
     """Forward filtering/backward sampling; returns a joint draw [B,L].
@@ -104,10 +119,10 @@ def sample_chain(unary: Tensor, edge: Tensor, generator: Optional[torch.Generato
             if fused is not None:
                 return fused
         states = torch.empty(unary.shape[:2], dtype=torch.long, device=unary.device)
-        states[:, -1] = torch.multinomial(alpha[-1].double().softmax(-1), 1, generator=generator).squeeze(-1)
+        states[:, -1] = torch.multinomial(_sampling_probs(alpha[-1]), 1, generator=generator).squeeze(-1)
         for pos in range(unary.shape[1] - 2, -1, -1):
             selected_edge = edge[:, pos].gather(-1, states[:, pos + 1, None, None].expand(-1, unary.shape[-1], 1)).squeeze(-1)
-            probs = (alpha[pos] + selected_edge).double().softmax(-1)
+            probs = _sampling_probs(alpha[pos] + selected_edge)
             states[:, pos] = torch.multinomial(probs, 1, generator=generator).squeeze(-1)
     return states
 
@@ -371,6 +386,6 @@ def sample_candidate_tokens(candidates: Union[CandidateBatch, SamplingCandidateB
         residual = residual & resolve_mask
     if residual.any():
         tail_lp, tail_ids = candidates.residual_distribution(residual)
-        selected = torch.multinomial(tail_lp.double().softmax(-1), 1, generator=generator)
+        selected = torch.multinomial(_sampling_probs(tail_lp), 1, generator=generator)
         tokens[residual] = (selected if tail_ids is None else tail_ids.gather(-1, selected)).squeeze(-1)
     return tokens

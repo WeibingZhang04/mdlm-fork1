@@ -91,6 +91,12 @@ def pack_segments(unary: Tensor, edge: Tensor, masked: Tensor) -> SegmentBatch:
     output remain differentiable with respect to finite unary/edge scores;
     the mask and clamp-state identities are discrete structure.
     """
+    inputs = _prepare_segments(unary, edge, masked)
+    return _pack_runs(*inputs)
+
+
+def _prepare_segments(unary: Tensor, edge: Tensor, masked: Tensor):
+    """Validate and find runs once, without allocating packed edge tables."""
     unary, edge = _inputs(unary, edge)
     batch, length, states = unary.shape
     if masked.shape != (batch, length) or masked.dtype != torch.bool:
@@ -119,6 +125,12 @@ def pack_segments(unary: Tensor, edge: Tensor, masked: Tensor) -> SegmentBatch:
     end_indices = ends.nonzero(as_tuple=False)
     run_batch, run_start = run_indices.unbind(-1)
     lengths = end_indices[:, 1] - run_start + 1
+    return unary, edge, constant, clamped, run_batch, run_start, lengths
+
+
+def _pack_runs(unary, edge, constant, clamped, run_batch, run_start, lengths):
+    """Materialize only the requested runs, padding to their local maximum."""
+    _, length, states = unary.shape
     width = int(lengths.max()) if lengths.numel() else 1
     offsets = torch.arange(width, device=unary.device)
     positions = run_start[:, None] + offsets
@@ -164,19 +176,73 @@ def pack_segments(unary: Tensor, edge: Tensor, masked: Tensor) -> SegmentBatch:
                         run_start, lengths, positions, valid, clamped)
 
 
-def segmented_log_partition(unary: Tensor, edge: Tensor, masked: Tensor) -> Tensor:
-    return pack_segments(unary, edge, masked).log_partition()
+def validate_segment_batch_size(segment_batch_size):
+    if segment_batch_size is not None and (
+            type(segment_batch_size) is not int or segment_batch_size < 1):
+        raise ValueError("segment_batch_size must be a positive integer or None")
 
 
-def segmented_log_marginals(unary: Tensor, edge: Tensor, masked: Tensor) -> Tensor:
-    return pack_segments(unary, edge, masked).log_marginals()
+def _chunked_inference(unary, edge, masked, segment_batch_size, operation, generator=None):
+    """Bound packed runs in forward inference, not autograd's saved tensors.
+
+    The original dense inputs remain live. A long run is never split. Chunks
+    keep the original run order, so there is no sorting or length bucketing.
+    """
+    validate_segment_batch_size(segment_batch_size)
+    unary, edge, constant, clamped, batches, starts, lengths = _prepare_segments(
+        unary, edge, masked)
+    if operation == 'partition':
+        result = constant
+    elif operation == 'sample':
+        result = clamped.clone()
+    else:
+        result = torch.full_like(unary, -torch.inf)
+        result.scatter_(-1, clamped.unsqueeze(-1), 0.)
+    for start in range(0, lengths.numel(), segment_batch_size):
+        stop = start + segment_batch_size
+        packed = _pack_runs(unary, edge, constant, clamped,
+                            batches[start:stop], starts[start:stop], lengths[start:stop])
+        if operation == 'partition':
+            values = chain_log_partition(packed.unary, packed.edge)
+            result = result.index_add(0, packed.run_batch, values)
+        else:
+            values = (sample_chain(packed.unary, packed.edge, generator)
+                      if operation == 'sample'
+                      else chain_log_marginals(packed.unary, packed.edge))
+            rows = packed.run_batch[:, None].expand_as(packed.positions)
+            result[rows[packed.valid], packed.positions[packed.valid]] = values[packed.valid]
+            del rows
+        # Release this chunk before packing the next one. Autograd may still
+        # retain tensors for backward when callers request gradients.
+        del values, packed
+    return result
 
 
-def segmented_marginals(unary: Tensor, edge: Tensor, masked: Tensor) -> Tensor:
-    return pack_segments(unary, edge, masked).marginals()
+def segmented_log_partition(unary: Tensor, edge: Tensor, masked: Tensor, *,
+                            segment_batch_size: Optional[int] = None) -> Tensor:
+    if segment_batch_size is None:
+        return pack_segments(unary, edge, masked).log_partition()
+    return _chunked_inference(unary, edge, masked, segment_batch_size, 'partition')
+
+
+def segmented_log_marginals(unary: Tensor, edge: Tensor, masked: Tensor, *,
+                            segment_batch_size: Optional[int] = None) -> Tensor:
+    if segment_batch_size is None:
+        return pack_segments(unary, edge, masked).log_marginals()
+    return _chunked_inference(unary, edge, masked, segment_batch_size, 'marginals')
+
+
+def segmented_marginals(unary: Tensor, edge: Tensor, masked: Tensor, *,
+                        segment_batch_size: Optional[int] = None) -> Tensor:
+    return segmented_log_marginals(
+        unary, edge, masked, segment_batch_size=segment_batch_size).exp()
 
 
 @torch.no_grad()
 def sample_segmented_chain(unary: Tensor, edge: Tensor, masked: Tensor,
-                           generator: Optional[torch.Generator] = None) -> Tensor:
-    return pack_segments(unary, edge, masked).sample(generator)
+                           generator: Optional[torch.Generator] = None, *,
+                           segment_batch_size: Optional[int] = None) -> Tensor:
+    """Sample with an optional cap on packed runs; chunking changes seeded draws."""
+    if segment_batch_size is None:
+        return pack_segments(unary, edge, masked).sample(generator)
+    return _chunked_inference(unary, edge, masked, segment_batch_size, 'sample', generator)

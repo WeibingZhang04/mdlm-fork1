@@ -38,6 +38,8 @@ def main(argv=None):
     p.add_argument("--batch-size", type=int, default=1)
     p.add_argument("--k", type=int, help="Default: checkpoint training K")
     p.add_argument("--inference", choices=("dense", "segments"), default="segments")
+    p.add_argument('--segment-batch-size', type=int, default=None,
+                   help='Maximum segments packed together (positive integer; default: all)')
     p.add_argument("--temperature", type=float, default=1.)
     p.add_argument("--prefix", default="")
     p.add_argument("--dev-data", type=Path)
@@ -48,6 +50,8 @@ def main(argv=None):
     p.add_argument("--resume", action="store_true")
     p.add_argument("--threads", type=int, default=4)
     args = p.parse_args(argv)
+    if args.segment_batch_size is not None and (args.segment_batch_size < 1 or args.inference != 'segments'):
+        p.error('--segment-batch-size must be positive and requires --inference segments')
     if min(args.length, args.steps, args.samples, args.batch_size, args.dev_examples, args.threads) < 1:
         raise ValueError("Dimensions, sample counts and threads must be positive")
     if args.sample_offset < 0 or args.warmup < 0 or args.temperature <= 0 or args.k is not None and args.k < 0:
@@ -107,7 +111,8 @@ def main(argv=None):
     if len(records) > args.samples:
         raise ValueError("Stored samples exceed requested target")
     kwargs = dict(length=args.length, steps=args.steps, k=k, sampling=sampling, device=args.device,
-                  temperature=args.temperature, prefix=prefix, inference=args.inference)
+                  temperature=args.temperature, prefix=prefix, inference=args.inference,
+                  segment_batch_size=args.segment_batch_size)
     for index in range(args.warmup):
         generate(backbone, head, mode, batch_size=args.batch_size,
                  sample_offset=args.sample_offset+args.samples+index*args.batch_size, **kwargs)

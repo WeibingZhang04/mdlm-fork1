@@ -236,6 +236,21 @@ samples. Dense inference remains the default. Padded run batching can use more
 memory for mixtures of long and short runs; benchmark the intended batch and
 mask pattern rather than assuming it is always faster.
 
+Use `--inference segments --segment-batch-size 32` to pack and infer at most
+32 masked runs at a time, independently of `--batch-size` (generated sequences).
+Chunks preserve run order and pad only to their own longest run; each chunk's
+packed tensors are released before the next chunk is built in no-grad inference.
+The flag is supported by the evaluation CLIs and recorded in their manifests. Omit it for the existing all-runs batching. It applies to generation,
+not the dense held-out `--denoise-only` diagnostic or the separate sparse-count
+`--backend segments` API.
+
+Start with 32 when memory is tight or K is large; try 64 for more parallelism,
+or 16 for a smaller working set. These are starting points, not measured GPU
+optima. The cap bounds run count, not bytes: original dense edges remain live,
+long runs remain intact, and edge storage scales as `(K+1)^2`. Changing the cap
+preserves the model law but can change seeded samples; keep it fixed for replay.
+Gradient-enabled calls may retain tensors from multiple chunks for backward.
+
 Use `--sample-offset 10000` for a final draw set disjoint from an earlier screen
 at offset zero. Outputs distinguish the local `sample_id` from its RNG/reveal
 `draw_id`. Keep batch size fixed: categorical RNG consumption is batch-based.

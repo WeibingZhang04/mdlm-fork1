@@ -90,7 +90,7 @@ def potentials(packet, head, mode, hidden, time_value):
 
 def _draw_structured(prediction, tokens, mask_id, head, mode, t, k,
                      sampling, temperature, inference, vocab_cap, generator, *,
-                     resolve_mask=None):
+                     resolve_mask=None, segment_batch_size=None):
     """Draw all chain states, resolving tail tokens only where requested."""
     with torch.profiler.record_function('crf.candidates'):
         if resolve_mask is None:
@@ -113,7 +113,8 @@ def _draw_structured(prediction, tokens, mask_id, head, mode, t, k,
         elif sampling == 'marginal':
             if inference == 'segments':
                 from chain_crf.segments import segmented_marginals
-                probabilities = segmented_marginals(unary,edge,packet.masked).double()
+                probabilities = segmented_marginals(
+                    unary, edge, packet.masked, segment_batch_size=segment_batch_size).double()
             else:
                 probabilities = chain_marginals(unary,edge).double()
             states = torch.multinomial(probabilities.reshape(-1,probabilities.shape[-1]),
@@ -121,7 +122,9 @@ def _draw_structured(prediction, tokens, mask_id, head, mode, t, k,
         else:
             if inference == 'segments':
                 from chain_crf.segments import sample_segmented_chain
-                states = sample_segmented_chain(unary,edge,packet.masked,generator=generator)
+                states = sample_segmented_chain(
+                    unary, edge, packet.masked, generator=generator,
+                    segment_batch_size=segment_batch_size)
             else:
                 states = sample_chain(unary,edge,generator=generator)
     with torch.profiler.record_function('crf.residual_expand'):
@@ -134,7 +137,7 @@ def _draw_structured(prediction, tokens, mask_id, head, mode, t, k,
 
 
 def _denoise_structured(prediction, tokens, mask_id, head, mode, t, k,
-                        inference, vocab_cap):
+                        inference, vocab_cap, *, segment_batch_size=None):
     """Greedy token marginals for the current top-K-plus-tail CRF model."""
     with torch.profiler.record_function('crf.candidates'):
         packet = build_candidates(prediction['log_probs'], tokens, mask_id, k,
@@ -145,8 +148,9 @@ def _denoise_structured(prediction, tokens, mask_id, head, mode, t, k,
         if mode == 'independent':
             log_marginals = unary.log_softmax(-1)
         elif inference == 'segments':
-            from chain_crf.segments import pack_segments
-            log_marginals = pack_segments(unary, edge, packet.masked).log_marginals()
+            from chain_crf.segments import segmented_log_marginals
+            log_marginals = segmented_log_marginals(
+                unary, edge, packet.masked, segment_batch_size=segment_batch_size)
         else:
             log_marginals = chain_log_marginals(unary, edge)
     with torch.profiler.record_function('crf.residual_argmax'):
@@ -171,7 +175,7 @@ def generate(backbone, head=None, mode='backbone', *, length=256, steps=16,
              batch_size=1, k=64, sampling='joint', temperature=1., device='cuda',
              sample_offset=0, prefix=None, inference='dense', prefixes=None,
              vocab_cap=None, sampler='fixed', noise_removal=None,
-             sampling_eps=1e-5, stage_timing=None):
+             sampling_eps=1e-5, stage_timing=None, segment_batch_size=None):
     """One batch using the fixed schedule or native-style DDPM-cache transitions.
 
     Fixed sampling shares a reveal permutation and has no final denoise.
@@ -184,6 +188,10 @@ def generate(backbone, head=None, mode='backbone', *, length=256, steps=16,
     top clean tokens at each masked position, separately from CRF k. None
     preserves full token support; residuals contain only allowed tokens.
     """
+    from chain_crf.segments import validate_segment_batch_size
+    validate_segment_batch_size(segment_batch_size)
+    if segment_batch_size is not None and inference != 'segments':
+        raise ValueError('segment_batch_size requires inference=segments')
     if sampler not in ('fixed', 'ddpm_cache'):
         raise ValueError('sampler must be fixed or ddpm_cache')
     noise_removal = sampler == 'ddpm_cache' if noise_removal is None else noise_removal
@@ -230,7 +238,7 @@ def generate(backbone, head=None, mode='backbone', *, length=256, steps=16,
             backbone, tokens, steps, generator=generator, head=head, mode=mode,
             k=k, sampling=sampling, inference=inference, reveal_generator=reveal_generator,
             vocab_cap=vocab_cap, noise_removal=noise_removal, eps=sampling_eps,
-            stage_timing=stage_timing)
+            stage_timing=stage_timing, segment_batch_size=segment_batch_size)
         remaining_masks = int(tokens.eq(backbone.mask_id).sum())
         if noise_removal and remaining_masks:
             raise RuntimeError('Final denoising left absorbing masks in the output')
@@ -296,7 +304,7 @@ def generate(backbone, head=None, mode='backbone', *, length=256, steps=16,
             drawn, mass = _draw_structured(
                 prediction, tokens, backbone.mask_id, head, mode, t, k,
                 sampling, temperature, inference, vocab_cap, generator,
-                resolve_mask=resolve_mask)
+                resolve_mask=resolve_mask, segment_batch_size=segment_batch_size)
             retained_mass.append(mass)
             with torch.profiler.record_function('generation.commit'):
                 tokens.scatter_(1,positions,drawn.gather(1,positions))
@@ -323,7 +331,8 @@ def generate(backbone, head=None, mode='backbone', *, length=256, steps=16,
 def _generate_ddpm_cache(backbone, tokens, steps, *, generator, head=None,
                          mode='backbone', k=64, sampling='joint', inference='dense',
                          reveal_generator=None, vocab_cap=None,
-                         noise_removal=True, eps=1e-5, stage_timing=False):
+                         noise_removal=True, eps=1e-5, stage_timing=False,
+                         segment_batch_size=None):
     """Native DDPM-cache baseline, or CRF clean draws with its reveal law.
 
     CRF token draws and native clean/MASK draws use separate RNG streams.
@@ -394,7 +403,8 @@ def _generate_ddpm_cache(backbone, tokens, steps, *, generator, head=None,
             # would lose their effect on the revealed states' distribution.
             drawn, mass = _draw_structured(
                 prediction_cache, tokens, backbone.mask_id, head, mode, t, k,
-                sampling, 1., inference, vocab_cap, generator, resolve_mask=reveal)
+                sampling, 1., inference, vocab_cap, generator, resolve_mask=reveal,
+                segment_batch_size=segment_batch_size)
             retained_mass.append(mass)
             with torch.profiler.record_function('generation.commit'):
                 # Unresolved tail IDs are -1 only where reveal is false.
@@ -419,7 +429,8 @@ def _generate_ddpm_cache(backbone, tokens, steps, *, generator, head=None,
             tokens = torch.where(tokens != backbone.mask_id, tokens, scores.argmax(-1))
         else:
             tokens = _denoise_structured(prediction, tokens, backbone.mask_id,
-                                        head, mode, t, k, inference, vocab_cap)
+                                        head, mode, t, k, inference, vocab_cap,
+                                        segment_batch_size=segment_batch_size)
         if stage_timing:
             synchronize(device)
             sampler_seconds += time.perf_counter() - before

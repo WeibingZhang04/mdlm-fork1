@@ -209,6 +209,8 @@ def main(argv=None):
     p.add_argument('--strength',type=float,default=.1)
     p.add_argument('--sampling',choices=['joint','marginal'],default='joint')
     p.add_argument('--inference',choices=['dense','segments'],default='dense')
+    p.add_argument('--segment-batch-size', type=int, default=None,
+                   help='Maximum segments packed together (positive integer; default: all)')
     p.add_argument('--length',type=int,default=256,
                    help='Generated suffix length; continuation-file mode instead uses each reference suffix length')
     p.add_argument('--steps',type=int,default=16)
@@ -249,6 +251,8 @@ def main(argv=None):
     p.add_argument('--profile',action='store_true',
                    help='Profile the first generated batch after warmup; save profile.json, profile.txt and profile-stages.json. Adds timing overhead.')
     args=p.parse_args(argv)
+    if args.segment_batch_size is not None and (args.segment_batch_size < 1 or args.inference != 'segments'):
+        p.error('--segment-batch-size must be positive and requires --inference segments')
     args.noise_removal = args.sampler == 'ddpm_cache' if args.noise_removal is None else args.noise_removal
     args.stage_timing = args.sampler == 'fixed' if args.stage_timing is None else args.stage_timing
     if args.sampler == 'ddpm_cache' and args.temperature != 1.:
@@ -339,7 +343,8 @@ def main(argv=None):
     kwargs=dict(length=args.length,steps=args.steps,k=args.k,sampling=args.sampling,
                 temperature=args.temperature,device=args.device,prefix=prefix,inference=args.inference,
                 vocab_cap=args.vocab_cap,sampler=args.sampler,noise_removal=args.noise_removal,
-                sampling_eps=args.sampling_eps,stage_timing=args.stage_timing)
+                sampling_eps=args.sampling_eps,stage_timing=args.stage_timing,
+                segment_batch_size=args.segment_batch_size)
     batches=(continuation_batch_plan(continuations,args.batch_size) if continuations is not None
              else [(offset,min(args.batch_size,args.samples-offset))
                    for offset in range(0,args.samples,args.batch_size)])
