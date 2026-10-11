@@ -31,9 +31,27 @@ if (( samples % batch_size != 0 )); then
   exit 2
 fi
 
+# Select the CRF backend without changing either MDLM baseline.
+# Example: CRF_INFERENCE=fused-pairs bash quick_ppl_check_capped_vocab.sh
+crf_inference="${CRF_INFERENCE:-dense}"
+case "$crf_inference" in
+  dense|segments|fused-pairs) ;;
+  *) echo 'CRF_INFERENCE must be dense, segments, or fused-pairs' >&2; exit 2 ;;
+esac
+crf_args=(--inference "$crf_inference")
+if [[ "$crf_inference" != dense ]]; then
+  crf_segment_batch_size="${CRF_SEGMENT_BATCH_SIZE:-32}"
+  if [[ ! "$crf_segment_batch_size" =~ ^[1-9][0-9]*$ ]]; then
+    echo 'CRF_SEGMENT_BATCH_SIZE must be a positive integer' >&2
+    exit 2
+  fi
+  crf_args+=(--segment-batch-size "$crf_segment_batch_size")
+fi
+
 out="$base/runs/sampling-capped-$(date -u +%Y-%m-%d_%H-%M-%S_UTC)_$$"
 mkdir "$out"
 echo "Results: $out"
+echo "CRF backend: $crf_inference"
 
 common=(
   --backbone-checkpoint "$base/checkpoints/mdlm-owt.pt"
@@ -50,7 +68,6 @@ common=(
   --k 1000
   --vocab-cap "$vocab_cap"
   --sampling joint
-  --inference dense
   --warmup "$warmup"
   --sample-offset 200
   --score-gpt2
@@ -87,26 +104,26 @@ time_native=$SECONDS
 echo "Native MDLM elapsed: $((time_native - time0)) seconds"
 
 python -u scripts/evaluate_chain_crf.py "${common[@]}" \
-  --mode backbone --output "$out/vanilla"
+  --mode backbone --inference dense --output "$out/vanilla"
 
 time_baseline=$SECONDS
 echo "Custom-evaluator baseline elapsed: $((time_baseline - time_native)) seconds"
 
-python -u scripts/evaluate_chain_crf.py "${common[@]}" \
+python -u scripts/evaluate_chain_crf.py "${common[@]}" "${crf_args[@]}" \
   --mode count --counts "$counts" --count-mode pmi --strength 0.1 \
   --output "$out/bigram"
 
 time_count=$SECONDS
 echo "Bigram count elapsed: $((time_count - time_baseline)) seconds"
 
-python -u scripts/evaluate_chain_crf.py "${common[@]}" \
+python -u scripts/evaluate_chain_crf.py "${common[@]}" "${crf_args[@]}" \
   --mode global --head "$heads/global-step-30000.pt" \
   --output "$out/global"
 
 time_global=$SECONDS
 echo "Global CRF elapsed: $((time_global - time_count)) seconds"
 
-python -u scripts/evaluate_chain_crf.py "${common[@]}" \
+python -u scripts/evaluate_chain_crf.py "${common[@]}" "${crf_args[@]}" \
   --mode contextual --head "$heads/contextual-step-30000.pt" \
   --output "$out/contextual"
 

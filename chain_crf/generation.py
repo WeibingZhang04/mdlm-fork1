@@ -101,12 +101,25 @@ def _draw_structured(prediction, tokens, mask_id, head, mode, t, k,
             packet = build_sampling_candidates(prediction['log_probs'], tokens, mask_id, k,
                                                vocab_cap=vocab_cap, temperature=temperature)
     with torch.profiler.record_function('crf.potentials'):
-        unary, edge = potentials(packet,head,mode,prediction['hidden'],t)
+        unary, edge = ((packet.unary, None) if inference == 'fused-pairs' else
+                       potentials(packet,head,mode,prediction['hidden'],t))
     with torch.profiler.record_function('crf.retained_mass'):
         mass = (1-packet.unary[:,:,-1].exp())[packet.masked]
         retained_mass = float(mass.mean()) if mass.numel() else 1.
     with torch.profiler.record_function('crf.inference'):
-        if mode == 'independent':
+        if inference == 'fused-pairs':
+            from chain_crf.fused_pairs import infer_fused_pairs
+            values = infer_fused_pairs(packet, head, prediction['hidden'], t,
+                generator=generator, segment_batch_size=segment_batch_size,
+                sampling='joint' if sampling == 'joint' else 'log_marginals')
+            if sampling == 'joint':
+                states = values
+            else:
+                from chain_crf.core import _sampling_probs
+                probabilities = _sampling_probs(values)
+                states = torch.multinomial(probabilities.reshape(-1, probabilities.shape[-1]),
+                    1, generator=generator).reshape(tokens.shape)
+        elif mode == 'independent':
             probabilities = unary.double().softmax(-1)
             states = torch.multinomial(probabilities.reshape(-1,probabilities.shape[-1]),
                                        1,generator=generator).reshape(tokens.shape)
@@ -143,9 +156,14 @@ def _denoise_structured(prediction, tokens, mask_id, head, mode, t, k,
         packet = build_candidates(prediction['log_probs'], tokens, mask_id, k,
                                   vocab_cap=vocab_cap)
     with torch.profiler.record_function('crf.potentials'):
-        unary, edge = potentials(packet, head, mode, prediction['hidden'], t)
+        unary, edge = ((packet.unary, None) if inference == 'fused-pairs' else
+                       potentials(packet, head, mode, prediction['hidden'], t))
     with torch.profiler.record_function('crf.inference'):
-        if mode == 'independent':
+        if inference == 'fused-pairs':
+            from chain_crf.fused_pairs import infer_fused_pairs
+            log_marginals = infer_fused_pairs(packet, head, prediction['hidden'], t,
+                segment_batch_size=segment_batch_size, sampling='log_marginals')
+        elif mode == 'independent':
             log_marginals = unary.log_softmax(-1)
         elif inference == 'segments':
             from chain_crf.segments import segmented_log_marginals
@@ -190,8 +208,8 @@ def generate(backbone, head=None, mode='backbone', *, length=256, steps=16,
     """
     from chain_crf.segments import validate_segment_batch_size
     validate_segment_batch_size(segment_batch_size)
-    if segment_batch_size is not None and inference != 'segments':
-        raise ValueError('segment_batch_size requires inference=segments')
+    if segment_batch_size is not None and inference not in ('segments', 'fused-pairs'):
+        raise ValueError('segment_batch_size requires inference=segments or fused-pairs')
     if sampler not in ('fixed', 'ddpm_cache'):
         raise ValueError('sampler must be fixed or ddpm_cache')
     noise_removal = sampler == 'ddpm_cache' if noise_removal is None else noise_removal
@@ -208,8 +226,10 @@ def generate(backbone, head=None, mode='backbone', *, length=256, steps=16,
         raise ValueError('Positive steps, generated length and temperature required')
     if sampling not in ('joint', 'marginal'):
         raise ValueError('sampling must be joint or marginal')
-    if inference not in ('dense', 'segments'):
-        raise ValueError('inference must be dense or segments')
+    if inference not in ('dense', 'segments', 'fused-pairs'):
+        raise ValueError('inference must be dense, segments or fused-pairs')
+    if inference == 'fused-pairs' and mode not in ('count', 'global', 'contextual'):
+        raise ValueError('fused-pairs requires mode=count, global or contextual')
     if vocab_cap is not None and (type(vocab_cap) is not int or vocab_cap < 1):
         raise ValueError('vocab_cap must be None or a positive integer')
     if prefixes is not None and prefix is not None:

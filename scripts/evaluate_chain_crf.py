@@ -208,7 +208,7 @@ def main(argv=None):
     p.add_argument('--count-mode',choices=['pmi','conditional'],default='pmi')
     p.add_argument('--strength',type=float,default=.1)
     p.add_argument('--sampling',choices=['joint','marginal'],default='joint')
-    p.add_argument('--inference',choices=['dense','segments'],default='dense')
+    p.add_argument('--inference',choices=['dense','segments','fused-pairs'],default='dense')
     p.add_argument('--segment-batch-size', type=int, default=None,
                    help='Maximum segments packed together (positive integer; default: all)')
     p.add_argument('--length',type=int,default=256,
@@ -251,8 +251,11 @@ def main(argv=None):
     p.add_argument('--profile',action='store_true',
                    help='Profile the first generated batch after warmup; save profile.json, profile.txt and profile-stages.json. Adds timing overhead.')
     args=p.parse_args(argv)
-    if args.segment_batch_size is not None and (args.segment_batch_size < 1 or args.inference != 'segments'):
-        p.error('--segment-batch-size must be positive and requires --inference segments')
+    if args.segment_batch_size is not None and (args.segment_batch_size < 1 or args.inference not in ('segments', 'fused-pairs')):
+        p.error('--segment-batch-size must be positive and requires --inference segments or fused-pairs')
+    if args.inference == 'fused-pairs':
+        if args.mode not in ('count', 'global', 'contextual') or args.dev_data or args.denoise_only:
+            p.error('--inference fused-pairs supports generation with count/global/contextual heads only')
     args.noise_removal = args.sampler == 'ddpm_cache' if args.noise_removal is None else args.noise_removal
     args.stage_timing = args.sampler == 'fixed' if args.stage_timing is None else args.stage_timing
     if args.sampler == 'ddpm_cache' and args.temperature != 1.:
@@ -311,8 +314,10 @@ def main(argv=None):
                   'chain_crf/generation.py','chain_crf/core.py', 'chain_crf/cuda_forward.py','chain_crf/heads.py',
                   'chain_crf/counts.py','chain_crf/backbone.py','chain_crf/data.py','models/dit.py',
                   'chain_crf/profiling.py','chain_crf/cuda_sampling.py']
-    if args.inference == 'segments':
+    if args.inference in ('segments', 'fused-pairs'):
         source_files.append('chain_crf/segments.py')
+    if args.inference == 'fused-pairs':
+        source_files.append('chain_crf/fused_pairs.py')
     manifest={'config':configuration,'backbone':model.provenance,'head':head_info,
               'dev_data_sha256':file_sha256(args.dev_data) if args.dev_data else None,
               'source_sha256':{name:file_sha256(source_root/name) for name in source_files}}

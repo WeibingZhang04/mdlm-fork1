@@ -122,7 +122,7 @@ def test_joint_law_matches_enumeration_with_clamps_and_forbidden_edges(cuda, seg
 def test_fallback_does_not_consume_rng(cuda, monkeypatch):
     rng = torch.Generator(device=cuda).manual_seed(44)
     before = rng.get_state().clone()
-    for states, dtype in [(3, torch.double), (129, torch.float32)]:
+    for states, dtype in [(3, torch.double), (1025, torch.float32)]:
         messages = [torch.zeros(2, states, dtype=dtype, device=cuda)] * 3
         edge = torch.zeros(2, 2, states, states, dtype=dtype, device=cuda)
         assert cuda_sampling.fused_backward_sample(messages, edge, rng) is None
