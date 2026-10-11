@@ -111,10 +111,76 @@ def test_count_cache_invalidation():
     assert second.values.data_ptr() != first.values.data_ptr()
     head.fit([[2, 2, 3, 2, 2]])
     third = fp.prepare_factors(packet, head)
-    assert third.keys.numel() == 3
+    assert third.keys.ne(-1).sum().item() == 3
     actual = fp.infer_fused_pairs(packet, head, sampling='log_marginals')
     expected = segmented_log_marginals(packet.unary, head(packet.candidate_ids), packet.masked)
     torch.testing.assert_close(actual, expected, atol=1e-5, rtol=1e-5)
+
+
+@pytest.mark.parametrize('vocab', [23, 50258, 65536, 70000])
+@pytest.mark.parametrize('mode', ['pmi', 'conditional'])
+@torch.no_grad()
+def test_count_hash_high_keys_missing_and_residual(vocab, mode):
+    head = CountBigramHead(vocab, mode=mode, strength=-.7).fit(
+        [[0, 1, 0], [vocab-1, vocab-1, vocab-2, 1], [1, vocab-1]]).cuda()
+    keys, values, left_bg, right_bg = fp._count_table(head)
+    assert keys.dtype == (torch.int32 if vocab < 65536 else torch.int64)
+    ids = torch.tensor([0, 1, 2, vocab-2, vocab-1, -1], device='cuda')
+    candidate_ids = ids[None, None].expand(1, 2, -1)
+    expected = head(candidate_ids)[0, 0]
+    actual = fp._lookup_count_pairs(ids[:, None], ids[None, :], keys, values,
+                                    left_bg, right_bg, vocab)
+    torch.testing.assert_close(actual, expected, atol=1e-6, rtol=1e-6)
+
+
+@torch.no_grad()
+def test_count_hash_collision_chain_and_empty_table():
+    # Force 24 distinct keys into the same initial slot of a 64-slot table.
+    def bucket(key):
+        x = key & 0xffffffff
+        x = ((x ^ (x >> 16)) * 0x7feb352d) & 0xffffffff
+        x = ((x ^ (x >> 15)) * 0x846ca68b) & 0xffffffff
+        return (x ^ (x >> 16)) & 63
+
+    colliding = [key for key in range(10000) if bucket(key) == 63][:25]
+    vocab = 101
+    queries = torch.tensor(colliding + [0, -1], dtype=torch.long, device='cuda')
+    a = torch.where(queries >= 0, queries // vocab, -1)
+    b = torch.where(queries >= 0, queries % vocab, -1)
+    left_bg = torch.linspace(-1, 1, vocab, dtype=torch.float64, device='cuda')
+    right_bg = -left_bg / 3
+    for count in (0, 24):
+        keys = queries[:count]
+        values = torch.arange(count, dtype=torch.float32, device='cuda') + .125
+        table_keys, table_values = fp._build_count_hash(keys, values, vocab)
+        actual = fp._lookup_count_pairs(a, b, table_keys, table_values, left_bg, right_bg, vocab)
+        expected = (left_bg[a.clamp_min(0)] + right_bg[b.clamp_min(0)]).float()
+        expected[:count] = values
+        expected[-1] = 0.
+        torch.testing.assert_close(actual, expected, atol=0, rtol=0)
+
+
+@torch.no_grad()
+def test_count_hash_cache_settings_and_inplace_mutation():
+    _, head, _, _, _ = fixture('count-pmi', 3)
+    first = fp._count_table(head)
+    assert fp._count_table(head) is first
+    for change in ('mode', 'smoothing', 'counts'):
+        if change == 'mode':
+            head.mode = 'conditional'
+        elif change == 'smoothing':
+            head.smoothing = .3
+        else:
+            head.pair_counts.mul_(2)
+            head.left_counts.mul_(2)
+            head.right_counts.mul_(2)
+        second = fp._count_table(head)
+        assert second is not first
+        ids = torch.arange(head.vocab_size, device='cuda')
+        actual = fp._lookup_count_pairs(ids[:, None], ids[None, :], *second, head.vocab_size)
+        expected = head(ids[None, None].expand(1, 2, -1))[0, 0]
+        torch.testing.assert_close(actual, expected, atol=1e-6, rtol=1e-6)
+        first = second
 
 
 @pytest.mark.parametrize('kind', ['global', 'contextual', 'count-pmi'])

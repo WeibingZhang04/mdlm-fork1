@@ -3,6 +3,8 @@
 Pair scores are computed inside tiled forward/backward message kernels and
 inside backward sampling. This keeps the original signed log potentials (not
 a new low-rank probability model). Work is still quadratic in candidate count.
+Count heads cache an exact GPU hash table of observed scores; missing pairs use
+the same float64 additive backoff. Tables rebuild when counts or settings change.
 Visible boundaries are absorbed into endpoint unaries; original adjacency and
 the neutral residual state are preserved. Training uses the existing backend.
 
@@ -27,24 +29,65 @@ _COUNT_CACHE = weakref.WeakKeyDictionary()
 
 if triton is not None:
     @triton.jit
+    def _count_hash(key, capacity: tl.constexpr):
+        # Mix both halves for large vocabularies; normal token pairs fit uint32.
+        x = key.to(tl.uint32) ^ (key.to(tl.uint64) >> 32).to(tl.uint32)
+        x = (x ^ (x >> 16)) * 0x7feb352d
+        x = (x ^ (x >> 15)) * 0x846ca68b
+        return (x ^ (x >> 16)) & (capacity - 1)
+
+
+    @triton.jit
+    def _insert_count_hash(keys, values, table_keys, table_values,
+                           entries: tl.constexpr, capacity: tl.constexpr,
+                           block: tl.constexpr):
+        index = tl.program_id(0) * block + tl.arange(0, block)
+        pending = index < entries
+        key = tl.load(keys + index, pending, other=0)
+        value = tl.load(values + index, pending, other=0.)
+        stored_key = key.to(table_keys.dtype.element_ty)
+        empty = tl.full((block,), -1, table_keys.dtype.element_ty)
+        slot = _count_hash(key, capacity)
+        while tl.sum(pending.to(tl.int32), 0) > 0:
+            # atomic_cas has no mask: inactive lanes perform a no-op CAS at 0.
+            previous = tl.atomic_cas(table_keys + tl.where(pending, slot, 0),
+                                     empty, tl.where(pending, stored_key, empty))
+            inserted = pending & ((previous == -1) | (previous == stored_key))
+            tl.store(table_values + slot, value, inserted)
+            pending = pending & ~inserted
+            slot = (slot + 1) & (capacity - 1)
+
+
+    @triton.jit
     def _count_scores(a, b, keys, values, left_bg, right_bg,
-                      vocab: tl.constexpr, entries: tl.constexpr,
-                      search_steps: tl.constexpr):
+                      vocab: tl.constexpr, capacity: tl.constexpr):
         valid = (a >= 0) & (b >= 0)
         wanted = a.to(tl.int64) * vocab + b
-        lo = tl.full(wanted.shape, 0, tl.int64)
-        hi = tl.full(wanted.shape, entries, tl.int64)
-        for _ in range(search_steps):
-            mid = (lo + hi) // 2
-            key = tl.load(keys + mid, mid < entries, other=9223372036854775807)
-            go_right = key < wanted
-            lo = tl.where(go_right, mid + 1, lo)
-            hi = tl.where(go_right, hi, mid)
-        found = (lo < entries) & (tl.load(
-            keys + lo, lo < entries, other=-2) == wanted)
+        stored_key = wanted.to(keys.dtype.element_ty)
+        slot = _count_hash(wanted, capacity)
+        pending = valid
+        score = tl.full(wanted.shape, 0., tl.float32)
+        found = tl.full(wanted.shape, False, tl.int1)
+        while tl.sum(pending.to(tl.int32)) > 0:
+            key = tl.load(keys + slot, pending, other=-1)
+            hit = pending & (key == stored_key)
+            score = tl.where(hit, tl.load(values + slot, hit, other=0.), score)
+            found = found | hit
+            pending = pending & ~hit & (key != -1)
+            slot = (slot + 1) & (capacity - 1)
         bg = tl.load(left_bg + a, a >= 0, other=0.) + tl.load(right_bg + b, b >= 0, other=0.)
-        score = tl.load(values + lo, found, other=0.)
         return tl.where(valid, tl.where(found, score, bg).to(tl.float32), 0.)
+
+
+    @triton.jit
+    def _count_query_kernel(a, b, keys, values, left_bg, right_bg, output,
+                            size: tl.constexpr, vocab: tl.constexpr,
+                            capacity: tl.constexpr, block: tl.constexpr):
+        index = tl.program_id(0) * block + tl.arange(0, block)
+        ai = tl.load(a + index, index < size, other=-1)
+        bi = tl.load(b + index, index < size, other=-1)
+        score = _count_scores(ai, bi, keys, values, left_bg, right_bg, vocab, capacity)
+        tl.store(output + index, score, index < size)
 
 
     @triton.jit
@@ -53,7 +96,7 @@ if triton is not None:
                    original_length: tl.constexpr, states: tl.constexpr,
                    rank: tl.constexpr, rank_block: tl.constexpr,
                    kind: tl.constexpr, vocab: tl.constexpr,
-                   entries: tl.constexpr, search_steps: tl.constexpr):
+                   capacity: tl.constexpr):
         if kind == 0:
             r = tl.arange(0, rank_block)
             x = tl.load(left + ((original_row * original_length + edge_pos) * states
@@ -69,7 +112,7 @@ if triton is not None:
             bi = tl.load(ids + (original_row * original_length + edge_pos + 1) * states + b,
                          b < states, other=-1)
             return _count_scores(ai[:, None], bi[None, :], keys, values, left_bg, right_bg,
-                                 vocab, entries, search_steps)
+                                 vocab, capacity)
 
 
     @triton.jit
@@ -77,7 +120,7 @@ if triton is not None:
                         rows, starts, lengths, pos, width,
                         original_length: tl.constexpr, states: tl.constexpr,
                         rank: tl.constexpr, rank_block: tl.constexpr, kind: tl.constexpr,
-                        vocab: tl.constexpr, entries: tl.constexpr, search_steps: tl.constexpr,
+                        vocab: tl.constexpr, capacity: tl.constexpr,
                         state_block: tl.constexpr, tile: tl.constexpr, backward: tl.constexpr):
         run = tl.program_id(0).to(tl.int64)
         selected = tl.program_id(1) * tile + tl.arange(0, tile)
@@ -94,7 +137,7 @@ if triton is not None:
                     scores = _pair_tile(left, right, ids, keys, values, left_bg, right_bg,
                                         row, start + pos, selected, reduction_states,
                                         original_length, states, rank, rank_block, kind,
-                                        vocab, entries, search_steps)
+                                        vocab, capacity)
                     nxt = (run * width + pos + 1) * states + reduction_states
                     incoming = tl.load(messages + nxt, reduction_states < states, other=-float('inf'))
                     incoming += tl.load(unary + nxt, reduction_states < states, other=-float('inf'))
@@ -118,7 +161,7 @@ if triton is not None:
                     scores = _pair_tile(left, right, ids, keys, values, left_bg, right_bg,
                                         row, start + pos - 1, reduction_states, selected,
                                         original_length, states, rank, rank_block, kind,
-                                        vocab, entries, search_steps)
+                                        vocab, capacity)
                     incoming = tl.load(messages + (run * width + pos - 1) * states + reduction_states,
                                        reduction_states < states, other=-float('inf'))
                     scores += incoming[:, None]
@@ -148,7 +191,7 @@ if triton is not None:
                        left_bg, right_bg, rows, starts, lengths, width,
                        original_length: tl.constexpr, states: tl.constexpr,
                        rank: tl.constexpr, rank_block: tl.constexpr, kind: tl.constexpr,
-                       vocab: tl.constexpr, entries: tl.constexpr, search_steps: tl.constexpr,
+                       vocab: tl.constexpr, capacity: tl.constexpr,
                        state_block: tl.constexpr):
         run = tl.program_id(0).to(tl.int64)
         a = tl.arange(0, state_block)
@@ -176,7 +219,7 @@ if triton is not None:
                                  a < states, other=-1)
                     bi = tl.load(ids + (row * original_length + start + pos + 1) * states + selected)
                     column = _count_scores(ai, bi, keys, values, left_bg, right_bg,
-                                           vocab, entries, search_steps)
+                                           vocab, capacity)
                 logits += column
             maximum = tl.max(logits, axis=0)
             bad = bad | (maximum == -float('inf')) | (tl.sum(
@@ -209,7 +252,7 @@ class PairFactors:
     def constants(self):
         return (self.ids.shape[1], self.ids.shape[2], self.rank,
                 max(32, triton.next_power_of_2(self.rank)), self.kind, self.vocab,
-                self.keys.numel(), max(1, self.keys.numel().bit_length()))
+                self.keys.numel())
 
     def boundary(self, rows, positions, states, *, left_boundary):
         """Only K scores per visible boundary, never a K-by-K table."""
@@ -225,16 +268,43 @@ class PairFactors:
         else:
             a = self.ids[rows, positions]
             b = self.ids[rows, positions + 1, states, None]
-        query = a * self.vocab + b
-        score = self.left_bg[a.clamp_min(0)] + self.right_bg[b.clamp_min(0)]
-        if self.keys.numel():
-            index = torch.searchsorted(self.keys, query).clamp_max(self.keys.numel() - 1)
-            score = torch.where(self.keys[index] == query, self.values[index], score)
-        return torch.where((a >= 0) & (b >= 0), score, 0.).float()
+        return _lookup_count_pairs(a, b, self.keys, self.values,
+                                   self.left_bg, self.right_bg, self.vocab)
+
+
+def _build_count_hash(keys, values, vocab):
+    """Immutable linear-probing map with load <= 0.5 and exact key checks.
+
+    Int32 storage preserves all uint32 key bits. Reserve all-ones for an empty
+    slot; use int64 if the vocabulary could produce that sentinel or wider keys.
+    For 17.7M observed pairs this uses 512 MiB, independent of sequence length.
+    """
+    capacity = triton.next_power_of_2(max(2, 2 * keys.numel()))
+    dtype = torch.int32 if vocab * vocab < 2**32 else torch.int64
+    table_keys = torch.full((capacity,), -1, dtype=dtype, device=keys.device)
+    table_values = torch.empty(capacity, dtype=torch.float32, device=keys.device)
+    if keys.numel():
+        with torch.cuda.device(keys.device):
+            _insert_count_hash[(triton.cdiv(keys.numel(), 256),)](
+                keys, values, table_keys, table_values, keys.numel(), capacity, 256)
+    return table_keys, table_values
+
+
+def _lookup_count_pairs(a, b, keys, values, left_bg, right_bg, vocab):
+    """Small boundary queries; bulk pair queries remain inside message kernels."""
+    a, b = torch.broadcast_tensors(a, b)
+    a, b = a.contiguous(), b.contiguous()
+    output = torch.empty(a.shape, dtype=torch.float32, device=a.device)
+    if output.numel():
+        with torch.cuda.device(a.device):
+            _count_query_kernel[(triton.cdiv(output.numel(), 256),)](
+                a, b, keys, values, left_bg, right_bg, output,
+                output.numel(), vocab, keys.numel(), 256, enable_fp_fusion=False)
+    return output
 
 
 def _count_table(head):
-    signature = (head.mode, head.strength, head.smoothing,
+    signature = (head.vocab_size, head.mode, head.strength, head.smoothing,
                  tuple((id(v), v._version, v.device) for v in
                        (head.left_counts, head.right_counts, head.pair_keys, head.pair_counts)))
     cached = _COUNT_CACHE.get(head)
@@ -256,7 +326,9 @@ def _count_table(head):
     score = joint.log() - ml[a].log()
     if head.mode == 'pmi':
         score -= mr[b].log()
-    result = (keys, (score * head.strength).float(), left_bg, right_bg)
+    with torch.profiler.record_function('crf.count_hash_build'):
+        hash_keys, hash_values = _build_count_hash(keys, (score * head.strength).float(), head.vocab_size)
+    result = (hash_keys, hash_values, left_bg, right_bg)
     _COUNT_CACHE[head] = signature, result
     return result
 

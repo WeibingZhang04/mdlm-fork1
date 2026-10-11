@@ -13,7 +13,7 @@ counts="$base/runs/draft-full-scale-training/train_2026_10_01_05_46_13_UTC/count
 export HF_HOME="$base/hf-cache"
 export HF_HUB_OFFLINE=1 TRANSFORMERS_OFFLINE=1 PYTHONNOUSERSITE=1
 
-vocab_cap="${VOCAB_CAP:-500}"
+vocab_cap="${VOCAB_CAP:-1000}"
 native_cap="$vocab_cap"
 if [[ "$vocab_cap" == none ]]; then
   native_cap=null
@@ -23,7 +23,7 @@ elif [[ ! "$vocab_cap" =~ ^[1-9][0-9]*$ ]]; then
 fi
 length=1024
 steps=32
-samples=10
+samples=5
 batch_size=1
 warmup=1
 if (( samples % batch_size != 0 )); then
@@ -65,7 +65,7 @@ common=(
   --temperature 1
   --samples "$samples"
   --batch-size "$batch_size"
-  --k 1000
+  --k 500
   --vocab-cap "$vocab_cap"
   --sampling joint
   --warmup "$warmup"

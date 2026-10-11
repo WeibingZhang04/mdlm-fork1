@@ -506,3 +506,36 @@ and a decode/retokenize scorer measure different token sequences.
 
 The implementation contains no claimed benchmark improvements or fabricated
 results. Use separately recorded runs for any performance claims.
+
+## Experimental on-demand pair scoring on CUDA
+
+Generation supports `--inference fused-pairs --segment-batch-size 32` for
+`count`, `global`, and `contextual` heads. This optional backend computes pair
+scores inside Triton message and backward-sampling kernels instead of allocating
+an original or packed `[batch, length-1, K+1, K+1]` edge table. It retains the
+same signed log potentials, candidate/tail support, observed boundaries, reveal
+schedule and final token-marginal cleanup. It also supports marginal sampling.
+The existing `dense` and `segments` backends and their defaults are unchanged.
+
+The backend requires NVIDIA CUDA, Triton, FP32 unaries, at most 1024 states
+(including the residual), and learned rank at most 32. It is generation-only;
+training and held-out denoising losses continue to use the established backend.
+Unsupported configurations raise explicitly. Reduction order can change seeded
+draws; distributional equivalence is subject to FP32 rounding. Categorical
+perturbations are generated in FP64 with the caller's PyTorch generator.
+
+Count heads cache one shared table of observed-pair log scores. The cache is
+invalidated when count buffers or scoring settings change. Learned heads keep
+candidate embeddings and context gates, with no probability-space low-rank
+approximation. The forward recurrence still does quadratic pairwise work and
+advances sequentially through each masked run. Lower memory use therefore does
+not by itself guarantee a speedup, especially at small K. Exclude first-use
+Triton compilation and count-table setup when measuring steady-state speed, and
+report those setup costs separately when relevant.
+
+`tests/test_chain_fused_pairs.py` compares forward messages, marginals and
+fixed-noise joint draws with the dense reference, checks a tiny enumerated joint
+law, and exercises clamps, residuals, count-cache invalidation and generation.
+`scripts/benchmark_fused_pairs.py` runs prewarmed, alternating A/B generation
+measurements using the existing WatGPU checkpoints. It records memory, runtime,
+source hashes, same-backend replay, and real-backbone marginal comparisons.
