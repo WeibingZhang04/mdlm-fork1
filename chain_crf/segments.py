@@ -143,9 +143,9 @@ def _pack_runs(unary, edge, constant, clamped, run_batch, run_start, lengths):
     if length > 1 and lengths.numel():
         left_positions = (run_start - 1).clamp_min(0)
         left_states = clamped[run_batch, left_positions]
-        left_edges = edge[run_batch, left_positions]
-        left_scores = left_edges.gather(
-            -2, left_states[:, None, None].expand(-1, 1, states)).squeeze(-2)
+        # Select the boundary row directly: copying full [runs, S, S]
+        # matrices first would materialize S times more boundary data.
+        left_scores = edge[run_batch, left_positions, left_states, :]
         left_scores = torch.where(
             (run_start > 0)[:, None], left_scores, torch.zeros_like(left_scores))
         packed_unary = packed_unary + torch.where(
@@ -154,9 +154,7 @@ def _pack_runs(unary, edge, constant, clamped, run_batch, run_start, lengths):
         run_end = run_start + lengths - 1
         right_positions = run_end.clamp_max(length - 2)
         right_states = clamped[run_batch, (run_end + 1).clamp_max(length - 1)]
-        right_edges = edge[run_batch, right_positions]
-        right_scores = right_edges.gather(
-            -1, right_states[:, None, None].expand(-1, states, 1)).squeeze(-1)
+        right_scores = edge[run_batch, right_positions, :, right_states]
         right_scores = torch.where(
             (run_end < length - 1)[:, None], right_scores, torch.zeros_like(right_scores))
         packed_unary = packed_unary + torch.where(
@@ -168,7 +166,7 @@ def _pack_runs(unary, edge, constant, clamped, run_batch, run_start, lengths):
     packed_unary = torch.where(valid[..., None], packed_unary, dummy)
     if width > 1:
         packed_edge = edge[run_batch[:, None], positions[:, :-1].clamp_max(length - 2)]
-        packed_edge = torch.where(valid[:, 1:, None, None], packed_edge, 0.)
+        packed_edge.masked_fill_(~valid[:, 1:, None, None], 0.)
     else:
         # Preserve an empty differentiable view where no internal edge exists.
         packed_edge = edge[run_batch, :0]

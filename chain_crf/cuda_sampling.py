@@ -8,7 +8,8 @@ Triton never substitutes its default FP32 RNG or approximate logarithm.
 
 Noise is generated for the entire chain at once, so the random stream differs
 from per-position torch.multinomial. The distribution is the same, but old
-seeds do not promise identical token sequences. CPU/FP64/large-state cases
+seeds do not promise identical token sequences. CUDA FP32 messages support
+up to 1024 states, including K=500/1000 plus the residual state. Other inputs
 retain the reference sampler and its random stream.
 """
 import torch
@@ -28,13 +29,15 @@ if triton is not None:
         eb, el: tl.constexpr, ei: tl.constexpr, ej: tl.constexpr,
         block: tl.constexpr,
     ):
-        batch = tl.program_id(0)
+        # Packed large-K edges can span more than 2**31 elements. Widen before
+        # multiplying strides, not after an overflowing 32-bit calculation.
+        batch = tl.program_id(0).to(tl.int64)
         indices = tl.arange(0, block)
         valid = indices < states
         selected = tl.full((), 0, tl.int32)
         bad = tl.full((), False, tl.int1)
         for offset in range(length):
-            pos = length - 1 - offset
+            pos = (length - 1 - offset).to(tl.int64)
             address = (batch * length + pos) * states + indices
             logits = tl.load(alpha + address, valid, other=-float('inf'))
             if offset > 0:
@@ -83,7 +86,7 @@ def fused_backward_sample(messages, edge, generator=None):
     if (triton is None or torch.is_grad_enabled() or not first.is_cuda
             or torch.version.hip is not None or first.dtype != torch.float32
             or edge.dtype != torch.float32 or edge.device != first.device
-            or not 1 <= first.shape[-1] <= 128 or first.shape[0] == 0
+            or not 1 <= first.shape[-1] <= 1024 or first.shape[0] == 0
             or first.numel() * len(messages) > 8 * 1024 * 1024):
         return None
     # Bound extra FP64 noise storage to 64 MiB; larger workloads use the

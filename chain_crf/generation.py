@@ -231,9 +231,12 @@ def generate(backbone, head=None, mode='backbone', *, length=256, steps=16,
                         dtype=torch.long, device=device)
     if prefix_length:
         tokens[:, :prefix_length] = prefix_tensor
+    # Even seeds identify token streams; odd seeds identify reveal streams.
+    token_seed = 2 * sample_offset
+    reveal_seed = token_seed + 1
     if sampler == 'ddpm_cache':
-        generator = torch.Generator(device=device).manual_seed(2718+sample_offset)
-        reveal_generator = torch.Generator(device=device).manual_seed(1729+sample_offset)
+        generator = torch.Generator(device=device).manual_seed(token_seed)
+        reveal_generator = torch.Generator(device=device).manual_seed(reveal_seed)
         tokens, timing = _generate_ddpm_cache(
             backbone, tokens, steps, generator=generator, head=head, mode=mode,
             k=k, sampling=sampling, inference=inference, reveal_generator=reveal_generator,
@@ -247,16 +250,16 @@ def generate(backbone, head=None, mode='backbone', *, length=256, steps=16,
         return tokens, {**timing, 'samples':batch_size, 'generated_tokens':batch_size*length,
                         'prefix_length':prefix_length, 'generated_length':length,
                         'vocab_cap':vocab_cap, 'sampler':sampler, 'remaining_masks':remaining_masks,
-                        'token_seed':2718+sample_offset,
-                        'reveal_seed':1729+sample_offset if mode != 'backbone' else None}
+                        'token_seed':token_seed,
+                        'reveal_seed':reveal_seed if mode != 'backbone' else None}
     # Reproducible inputs are not replicated experiments: each configuration
     # is run once and generates different examples across sample IDs.
     orders = []
     for sample_id in range(sample_offset, sample_offset+batch_size):
-        rng = torch.Generator().manual_seed(1729+sample_id)
+        rng = torch.Generator().manual_seed(2 * sample_id + 1)
         orders.append(torch.randperm(length, generator=rng)+prefix_length)
     order = torch.stack(orders).to(device)
-    generator = torch.Generator(device=device).manual_seed(2718+sample_offset)
+    generator = torch.Generator(device=device).manual_seed(token_seed)
     calls = 0
     backbone_seconds = 0.
     sampler_seconds = 0.
